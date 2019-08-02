@@ -1,3 +1,6 @@
 index:
    path: /
    controller: App\Controller\PagesController::index
+saisieObs:
+   path: /saisie-obs
+   controller: App\Controller\PagesController::saisieObs

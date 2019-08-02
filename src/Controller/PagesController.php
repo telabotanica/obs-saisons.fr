@@ -13,14 +13,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class PagesController extends AbstractController
 {
 	/*
-	 * Index axtion.
+	 * Index action.
 	 *
-	 * @param Request $request
-	 *
-	 * @Route("/", name="homepage)"
+	 * @Route("/", name="homepage")
 	 */
-	public function index(Request $request)
+	public function index()
 	{
 		return $this->render('pages/accueil.html.twig');
 	}
+
+	/*
+	 * @Route("/saisie-obs", name="saisie_obs")
+	 */
+	public function saisieObs()
+	{
+		return $this->render('pages/saisie-obs.html.twig');
+	}
+
 }
