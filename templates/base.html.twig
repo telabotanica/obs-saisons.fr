@@ -2,129 +2,36 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>{% block title 'Accueil | Observatoire des saisons' %}</title>
+		{# set page title #}
+		{% set pageName = 'Accueil' %}
+		{% if breadcrumbs is defined %}
+			{% set pageName = breadcrumbs|last %}
+		{% endif %}
+		<title>{% block title pageName ~ ' | Observatoire des saisons' %}</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="{{ asset('media/layout/icons/logo_ods.svg') }}" type="image/svg+xml">
+		{# steelsheet #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
 	</head>
+
 	<body>
 		<div class="global-layout">
 			{% block menu %}
-				<div id="menu-accueil" class="menu">
-					<a href="#" class="site-name ods-inline-block">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254050b5f0b6b35261cf2_logoODS_texte.png" alt="" class="logo">
-					</a>
-					<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce3df4c575ff6b49e05230a_close.svg" alt="" class="close-menu-img pointer" width="10">
-					<div class="nav">
-						<a href="/" class="nav-item home ods-inline-block ods--current">
-							<div>Accueil</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>À propos</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Actualités</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Évènements</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Espèces à observer</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Participer</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Résultats</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Outils &amp; ressources</div>
-						</a>
-						<a href="#" class="nav-item ods-inline-block">
-							<div>Relais</div>
-						</a>
-						<a href="#" class="nav-item resp-connect ods-inline-block">
-							<div>Connexion</div>
-						</a>
-					</div>
-					<div class="social-links">
-						<div class="social-icon-link first pointer">
-							<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254640b5f0b74c3261dbb_Trac%C3%A9%20183.svg" alt="" width="10">
-						</div>
-						<div class="social-icon-link pointer">
-							<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254640b5f0b0136261dbc_Trac%C3%A9%20184.svg" alt="" width="20">
-						</div>
-						<div class="social-icon-link pointer">
-							<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254647c5e2fdf36032a0e_Trac%C3%A9%20185.svg" alt="" width="20">
-						</div>
-					</div>
-				</div>
+				{% include 'layout/menu.html.twig' %}
 			{% endblock %}
-			<div class="main home">
-				<div class="topbar home">
+			<div class="main{{  app.request.attributes.get('_route') is same as('index') ? ' home' }}">
 				{% block topbar %}
-					<div class="topbar-left skewed">
-						<div class="text-block-18">
-							<span>Contribuez</span> à la recherche sur le changement climatique !
-						</div>
-						<div class="right-links">
-							<a href="#" class="topbar-link">Comment ça marche&nbsp;?</a>
-							<a href="#" class="topbar-link">Connexion</a>
-						</div>
-					</div>
-					<a href="#" class="site-name responsive ods-inline-block">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254050b5f0b6b35261cf2_logoODS_texte.png" alt="" class="logo">
-						<h1 class="site-name-text">Observatoire des Saisons</h1>
-					</a>
-					<div class="topbar-right">
-						<a href="#" class="connexion ods-inline-block">
-								<div>Connexion</div>
-						</a>
-						<img id="menu-hamburger-img" src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce3dedb2c6b45486e256788_menu%20icn.svg" alt="" class="menu-img pointer" width="10">
-					</div>
+					{% include 'layout/topbar.html.twig' %}
 				{% endblock %}
-				</div>
 				{% block content %}{% endblock %}
-				<div class="footer">
 				{% block footer %}
-					<div class="footer-main">
-						<div class="footer-main-col">
-							<div class="footer-link-list margin-left-40">
-								<div class="footer-title">Près de chez vous</div>
-								<a href="#" class="footer-link _1">ODS&nbsp;Provence</a>
-								<a href="#" class="footer-link _1">Liste des relais</a>
-								<a href="#" class="footer-link _1">Liste des stations d'observation</a>
-							</div>
-							<div class="subfooter-left">
-								<a href="#" class="subfooter-link">FAQ /&nbsp;Aide</a>
-								<div class="bulllet"></div>
-								<a href="#" class="subfooter-link lower">Mentions légales</a>
-							</div>
-						</div>
-						<div class="footer-main-col">
-							<div class="footer-link-list">
-								<div class="footer-title">Enseignants, pros, assos</div>
-								<a href="#" class="footer-link">Devenir relais</a>
-								<a href="#" class="footer-link">Formations et outils</a>
-								<a href="#" class="footer-link">Ressources</a>
-							</div>
-						</div>
-					</div>
-					<div class="footer-right">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce38ab132ca5b97209e30b4_logos.png" alt="" class="footer-logos" width="160">
-						<div>
-							<a href="#" class="button ods-button">Contactez-nous</a>
-						</div>
-						<div class="subfooter-right">
-							<div class="text-block-21">Site réalisé par&nbsp; </div>
-							<a href="#" class="subfooter-link">Tela Botanica</a>
-						</div>
-					</div>
+					{% include 'layout/footer.html.twig' %}
 				{% endblock %}
-				</div>
 			</div>
 		</div>
-		{% block overlay %}{% endblock %}
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}

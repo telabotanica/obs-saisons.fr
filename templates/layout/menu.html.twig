@@ -1,0 +1,31 @@
+<div class="menu">
+	{% set activeMenuItem = 'accueil' %}
+	{% if breadcrumbs is defined %}
+		{% set activeMenuItem = breadcrumbs|keys|first %}
+	{% endif %}
+	<a href="/" class="site-name ods-inline-block">
+		<img src="{{ asset('media/layout/logoodstexte.png') }}" alt="" class="logo">
+	</a>
+	<img src="{{ asset('media/layout/icons/close.svg') }}" alt="" class="close-menu-img pointer" width="10">
+	<div class="nav">
+		<a href="/" class="nav-item home ods-inline-block{{ activeMenuItem is same as ('accueil') ? ' ods--current' }}">
+			<div>Accueil</div>
+		</a>
+		{% for menuItem, menuItemTitle in constant('App\\Controller\\PagesController::MENU') %}
+			<a href="{{ path(menuItem) }}" class="nav-item ods-inline-block{{ activeMenuItem is same as (menuItem) ? ' ods--current' }}">
+				<div>{{ menuItemTitle }}</div>
+			</a>
+		{% endfor %}
+		<a href="#" class="nav-item resp-connect ods-inline-block">
+			<div>Connexion</div>
+		</a>
+	</div>
+	<div class="social-links">
+		<div class="social-icon-link first pointer">
+			<img src="{{ asset('media/layout/icons/fcbk.svg') }}" alt="ods facebook" width="10">
+		</div>
+		<div class="social-icon-link pointer">
+			<img src="{{ asset('media/layout/icons/twtr.svg') }}" alt="ods tweeter" width="20">
+		</div>
+	</div>
+</div>
