@@ -1,0 +1,310 @@
+.breadcrumb-link {
+	font-family: 'Averia Serif Libre', 'Trebuchet MS', 'Georgia', serif;
+	color: #2f2826;
+	font-size: 18px;
+	font-weight: 400;
+	text-decoration: none;
+}
+
+.text-block-18 {
+	padding: 0 15px 3px;
+	background-color: transparent;
+	font-family: 'Averia Serif Libre', 'Trebuchet MS', 'Georgia', serif;
+	color: #302926;
+	font-size: 1.75vw;
+	font-weight: 400;
+}
+
+.breadcrumbs {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	margin-right: 20px;
+	-webkit-align-self: center;
+	-ms-flex-item-align: center;
+	align-self: center;
+	-webkit-box-flex: 0;
+	-webkit-flex: 0 0 auto;
+	-ms-flex: 0 0 auto;
+	flex: 0 0 auto;
+}
+
+.breadcrumb-item {
+	margin-right: 20px;
+	padding-right: 30px;
+	background-image: url('../assets/right-arrow-green.svg');
+	background-position: 100% 50%;
+	background-size: 6px;
+	background-repeat: no-repeat;
+	font-size: 15px;
+	text-decoration: none;
+}
+
+.breadcrumb-link {
+	font-family: 'Averia Serif Libre', 'Trebuchet MS', 'Georgia', serif;
+	color: #2f2826;
+	font-size: 18px;
+	font-weight: 400;
+	text-decoration: none;
+}
+
+.breadcrumb-active-page {
+	font-family: 'Averia Serif Libre', 'Trebuchet MS', 'Georgia', serif;
+	color: #837569;
+	font-size: 18px;
+}
+
+.topbar {
+	position: relative;
+	z-index: 201;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	overflow: hidden;
+	height: 86px;
+	min-height: 80px;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	-webkit-box-align: stretch;
+	-webkit-align-items: stretch;
+	-ms-flex-align: stretch;
+	align-items: stretch;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	align-self: auto;
+	background-color: #f7ebdf;
+}
+
+.topbar.home {
+overflow: visible;
+}
+
+.topbar-left {
+	display: none;
+}
+
+.right-links {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	height: 100%;
+	padding-top: 5px;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+.topbar-link {
+	position: relative;
+	z-index: 1;
+	margin-left: 40px;
+	-webkit-box-flex: 0;
+	-webkit-flex: 0 0 auto;
+	-ms-flex: 0 0 auto;
+	flex: 0 0 auto;
+	color: #456d27;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.site-name {
+	position: static;
+	left: 0;
+	top: 0;
+	right: auto;
+	bottom: auto;
+	display: none;
+	height: 80px;
+	min-height: 80px;
+	-webkit-box-pack: start;
+	-webkit-justify-content: flex-start;
+	-ms-flex-pack: start;
+	justify-content: flex-start;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	color: #555;
+	text-decoration: none;
+}
+
+.site-name.responsive {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	padding-left: 20px;
+}
+
+.logo {
+	width: 180px;
+}
+
+.site-name-text {
+	display: none;
+}
+
+.topbar-right {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	width: auto;
+	-webkit-box-pack: end;
+	-webkit-justify-content: flex-end;
+	-ms-flex-pack: end;
+	justify-content: flex-end;
+	padding-right: 20px;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	-ms-grid-row-align: auto;
+	align-self: auto;
+}
+
+.connexion {
+	position: relative;
+	z-index: 2;
+	display: none;
+	width: 100%;
+	height: 100%;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-self: auto;
+	-ms-flex-item-align: auto;
+	-ms-grid-row-align: auto;
+	align-self: auto;
+	background-color: #fff;
+	color: #777;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.menu-img {
+	display: block;
+	width: 24px;
+}
+
+@media screen and ( min-width: 480px ) {
+
+}
+
+@media screen and ( min-width: 768px ) {
+	.topbar-right {
+		padding-right: 30px;
+	}
+}
+
+@media screen and ( min-width: 992px ) {
+	.topbar {
+		-webkit-box-pack: start;
+		-webkit-justify-content: flex-start;
+		-ms-flex-pack: start;
+		justify-content: flex-start;
+	}
+
+	.topbar-left {
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		height: 100%;
+		padding-right: 30px;
+		padding-left: 40px;
+		-webkit-box-pack: justify;
+		-webkit-justify-content: space-between;
+		-ms-flex-pack: justify;
+		justify-content: space-between;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		-ms-flex-align: center;
+		align-items: center;
+		-webkit-align-self: center;
+		-ms-flex-item-align: center;
+		align-self: center;
+		-webkit-box-flex: 1;
+		-webkit-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+		border-right: 1px none #f7ebdf;
+		border-right-style: none;
+		border-left: 1px none #f7ebdf;
+		border-left-style: none;
+		background-color: #f1eae2;
+		color: #777;
+	}
+
+	.site-name {
+		left: initial;
+		top: initial;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		padding-left: 30px;
+	}
+
+	.site-name.responsive {
+		display: none;
+	}
+
+	.site-name-text {
+		display: block;
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-left: 10px;
+		font-size: 14px;
+		text-decoration: none;
+	}
+
+	.topbar-link {
+		-webkit-box-flex: 1;
+		-moz-box-flex: 1;
+		-webkit-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+		white-space: nowrap;
+	}
+
+	.topbar-right {
+		display: none;
+		width: 280px;
+		padding-right: initial;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+	}
+
+	.connexion {
+		display: none;
+	}
+
+	.menu-img {
+		display: none;
+		width: 40px;
+	}
+}

@@ -1,3 +1,39 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+accueil:
+   path: /
+   controller: App\Controller\PagesController::index
+apropos:
+   path: /apropos
+   controller: App\Controller\PagesController::aproposPage
+actualites:
+   path: /actualites
+   controller: App\Controller\PagesController::actualitesPage
+actu:
+   path: /actualites/actu
+   controller: App\Controller\PagesController::actuPage
+evenements:
+   path: /evenements
+   controller: App\Controller\PagesController::evenementsPage
+evenement:
+   path: /evenements/evenement
+   controller: App\Controller\PagesController::evenementPage
+especes:
+   path: /especes
+   controller: App\Controller\PagesController::especesPage
+participer:
+   path: /participer
+   controller: App\Controller\PagesController::participer
+station-obs:
+   path: /participer/station-obs
+   controller: App\Controller\PagesController::stationObs
+station-page:
+   path: /participer/station-obs/station-page
+   controller: App\Controller\PagesController::stationPage
+resultats:
+   path: /resultats
+   controller: App\Controller\PagesController::resultatsPage
+outils-ressources:
+   path: /outils-ressources
+   controller: App\Controller\PagesController::outilsRessourcesPage
+relais:
+   path: /relais
+   controller: App\Controller\PagesController::relaisPage

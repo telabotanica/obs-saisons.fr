@@ -1,0 +1,38 @@
+<div class="topbar{{  app.request.attributes.get('_route') is same as('accueil') ? ' home' }}">
+	<div class="topbar-left">
+		{% if breadcrumbs is defined %}
+			<div class="breadcrumbs">
+				<div class="breadcrumb-item">
+					<a href="/" class="breadcrumb-link">Accueil</a>
+				</div>
+				{% for slug, breadcrumb in breadcrumbs %}
+					{% if loop.last %}
+					<div class="breadcrumb-active-page">{{ breadcrumb }}</div>
+					{% else %}
+					<div class="breadcrumb-item">
+						<a href="{{ path(slug) }}" class="breadcrumb-link">{{ breadcrumb }}</a>
+					</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% else %}
+			<div class="text-block-18">
+				<span>Contribuez</span> à la recherche sur le changement climatique !
+			</div>
+		{% endif %}
+		<div class="right-links">
+			<a href="{{ path('participer') }}" class="topbar-link">Comment ça marche&nbsp;?</a>
+			<a href="#" class="topbar-link">Connexion</a>
+		</div>
+	</div>
+	<a href="/" class="site-name responsive ods-inline-block">
+		<img src="{{ asset('media/layout/logoodstexte.png') }}" alt="Observatoire des Saisons" class="logo">
+		<h1 class="site-name-text">Observatoire des Saisons</h1>
+	</a>
+	<div class="topbar-right">
+		<a href="#" class="connexion ods-inline-block">
+			<div>Connexion</div>
+		</a>
+		<img id="menu-hamburger-img" src="{{ asset('media/layout/icons/menu-hamburger.svg') }}" alt="icone menu" class="menu-img pointer" width="10">
+	</div>
+</div>
