@@ -1,0 +1,42 @@
+.help-block {
+    @include order(1);
+    @include flex-none;
+    margin-top: 0;
+    padding: 30px;
+    border: 1px none #e2d7ce;
+    border-radius: 2px;
+    background-color: $green725760;
+    font-size: 14px;
+    line-height: 22px;
+
+    @include media(sm) {
+        padding: 60px;
+        line-height: 25px;
+    }
+
+    @include media(md) {
+        margin-top: 80px;
+    }
+}
+
+
+.helper-title {
+    margin-bottom: 20px;
+    @include font_title_bold;
+    font-size: 24px;
+
+    @include media(sm) {
+        font-size: 34px;
+    }
+}
+
+.sep {
+    width: 60px;
+    height: 3px;
+    margin-bottom: 15px;
+    background-color: $grey131117;
+
+    @include media(sm) {
+        width: 100px;
+    }
+}

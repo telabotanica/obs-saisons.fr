@@ -1,0 +1,19 @@
+@mixin icons {
+    $icons: ('cadenas', 'calendrier', 'leaf', 'pointer', 'right-arrow-green', 'right-arrow-orange', 'search', 'person', 'add-circle', 'export', 'help-circle', 'edit-calendar');
+    @each $icon in $icons {
+        .#{$icon}-icon {
+            background-image: image-url($icon);
+        }
+    }
+}
+
+@include icons;
+
+@mixin pre-text-icon($url: null, $size: 12, $font-size: 13, $position: 0 50%, $padding-left: null) {
+    @if not $padding-left {
+        $padding-left: $size + $font-size;
+    }
+    padding-left: $padding-left * 1px;
+    font-size: $font-size *1px;
+    @include background-image($url, $position, $size * 1px);
+}

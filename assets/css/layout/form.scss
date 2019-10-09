@@ -1,0 +1,190 @@
+/******************************************/
+/*                 form                   */
+/******************************************/
+.ods-form {
+	margin: 0 0 15px;
+}
+
+._2-col-form {
+	@extend %display-flex-column;
+	margin-bottom: 20px;
+
+	@include media(md) {
+		@include flex-direction-row;
+	}
+}
+
+.form-col {
+	@extend %flex-1;
+
+	&.small {
+		@extend %flex-none;
+
+		width: auto;
+
+		@include media(sm) {
+			width: 320px;
+		}
+
+		@include media(md) {
+			width: 180px;
+			margin-left: 20px;
+		}
+
+		&.check {
+			padding-top: 20px;
+			padding-left: 0;
+
+			@include media(md) {
+				padding-top: 30px;
+				padding-left: 10px;
+			}
+		}
+	}
+
+}
+
+%input {
+	display: block;
+	width: 100%;
+	height: 40px;
+	padding: 8px 12px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: grey(20);
+	vertical-align: middle;
+	background-color: #fff;
+	border: 1px solid grey(80);
+}
+
+.text-field {
+	@extend %input;
+	border-radius: 4px;
+	@include background-image(image-url('calendrier'), 94% 50%, 18px);
+}
+
+.select-field {
+	@extend %input;
+	background-color: $white_a1;
+	&.and-help {
+		margin-bottom: 5px;
+	}
+}
+
+.checkbox-label {
+	margin-left: 5px;
+	color: $grey131117;
+}
+
+.upload-zone {
+	@extend %display-flex;
+	@extend %justify-content-center;
+	@extend %align-items-center;
+	margin-bottom: 140px;
+	height: 84px;
+	border: 2px dashed grey(67);
+
+	@include media(sm) {
+		margin-bottom: inherit;
+	}
+}
+
+.ods-form-done {
+	@extend %hide;
+	padding: 20px;
+	text-align: center;
+	background-color: grey(87);
+}
+
+.ods-form-fail {
+	@extend %hide;
+	margin-top: 10px;
+	padding: 10px;
+	background-color: #ffdede;
+}
+
+.ods-checkbox {
+	display: block;
+	margin-bottom: 5px;
+	padding-left: 20px;
+}
+
+.ods-checkbox-input {
+	float: left;
+	@include gap(margin, (right, bottom));
+	margin-top: 4px;
+	margin-left: -20px;
+	line-height: normal;
+}
+
+.ods-form-label {
+	display: inline-block;
+	@include pointer;
+	font-weight: normal;
+	margin-bottom: 0;
+}
+
+.search-form {
+	@extend %align-self-center;
+	@extend %flex-1;
+	@include gap(margin, (right, bottom));
+
+	@include media(md) {
+		margin-right: 20px;
+	}
+}
+
+.search-field {
+	@extend %input;
+	height: 50px;
+	margin-bottom: 20px;
+	@include background-image(image-url('search'), 20px 50%, 18px);
+	font-size: 16px;
+	border: none;
+	border-radius: 4px;
+
+	@include media(md) {
+		margin-bottom: 0;
+	}
+
+	@include media(md, lg) {
+		height: 40px;
+	}
+}
+
+/******************************************/
+/*          div-blocks                    */
+/******************************************/
+.div-block-9 {
+	@extend %display-flex;
+	@extend %justify-content-space-between;
+	margin-top: 25px;
+}
+
+/******************************************/
+/*          text-blocks                   */
+/******************************************/
+.text-block-16 {
+	color: grey(60);
+	font-size: 14px;
+	font-style: italic;
+}
+
+.upload-zone-placeholder {
+	margin-left: 10px;
+	color: #8e8484;
+	font-size: 15px;
+	font-weight: 600;
+
+	@include media(sm) {
+		font-size: 14px;
+	}
+}
+
+.field-help-text {
+	margin-left: 25px;
+	color: $grey281146;
+	font-size: 15px;
+	line-height: 23px;
+}

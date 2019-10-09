@@ -1,0 +1,148 @@
+
+$third-pc: 100/3;
+
+@mixin pointer {
+	cursor: pointer;
+	touch-action: manipulation;
+}
+
+@mixin green-text-semi-bold {
+	color: $green;
+	font-weight: 600;
+}
+/**************************************************
+* HIDE
+*************************************************/
+%hide {
+	display: none;
+}
+
+.hidden {
+	display: none !important;
+}
+/**************************************************
+* HELPER CLASSES
+*************************************************/
+.ods-inline-block {
+	max-width: 100%;
+	display: inline-block;
+}
+
+
+
+/******************************************/
+/*           backgrounds                  */
+/******************************************/
+@function image-url($name, $extention: "svg", $depth: 1) {
+	$url: "";
+	@if $depth != 0 {
+		$base: "../";
+		@for $i from 1 through $depth {
+			$url: $base + $url;
+		}
+	}
+	@return url($url + "assets/" + quote($name + "." + $extention));
+}
+
+@mixin background-image($url: "default", $position: 0 0, $size: cover, $repeat: no-repeat) {
+	@if $url == "default" {
+		$url: image-url('example-bg', 'png');
+	}
+	background-image: $url;
+	background-position: $position;
+	background-size: $size;
+	background-repeat: $repeat;
+}
+/******************************************/
+/*       paddings & margins               */
+/******************************************/
+@mixin gap($type, $directions, $size: 0){
+	@if $directions == "v" {
+		$directions: (top, bottom);
+	}
+	@else if $directions == "h" {
+		$directions: (right, left)
+	}
+	@each $direction in $directions {
+		#{$type}-#{$direction}: $size;
+	}
+}
+
+@mixin padding-v($size) {
+	padding-top: $size;
+	padding-bottom: $size;
+}
+
+@mixin padding-h($size) {
+	padding-left: $size;
+	padding-right: $size;
+}
+
+@mixin margin-h($size) {
+	margin-left: $size;
+	margin-right: $size;
+}
+
+@mixin margin-v($size) {
+	margin-top: $size;
+	margin-bottom: $size;
+}
+
+/******************************************/
+/*          width & height                */
+/******************************************/
+@mixin square-block($size, $prefix: null) {
+	@if $prefix {
+		$prefix: $prefix + "-";
+	}
+	#{$prefix}width: $size;
+	#{$prefix}height: $size;
+}
+
+/******************************************/
+/*           position                     */
+/******************************************/
+@mixin position($position: static, $top: auto, $right: auto, $bottom: auto, $left: auto, $z-index: auto) {
+	position: $position;
+	left: $left;
+	top: $top;
+	right: $right;
+	bottom: $bottom;
+	z-index: $z-index;
+}
+
+/********************************************/
+/*            border                        */
+/********************************************/
+@mixin border($directions, $color, $style: solid, $width: 1px) {
+	@if $directions == "v" {
+		$directions: (top, bottom);
+	}
+	@else if $directions == "h" {
+		$directions: (left, right);
+	}
+	@each $direction in $directions {
+		border-#{$direction}-width: $width;
+		border-#{$direction}-style: $style;
+		border-#{$direction}-color: $color;
+	}
+}
+
+/********************************************/
+/*           member-avatar                  */
+/********************************************/
+@mixin member-avatar($size) {
+	@include square-block($size);
+	margin-right: 0;
+	border: 2px solid #fff;
+	border-radius: 50px;
+	@include background-image("default", 50% 50%);
+}
+
+%member-avatar-sm {
+	@include member-avatar(26px);
+}
+
+%member-avatar-md {
+	@include member-avatar(50px);
+}

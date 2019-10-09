@@ -1,0 +1,46 @@
+.page-header {
+    padding: 40px;
+
+    @include media(xs, sm) {
+        padding-bottom: 30px;
+    }
+
+    @include media(md) {
+        padding-top: 60px;
+    }
+}
+
+/****************************/
+
+.page-title {
+    margin-top: 0;
+    font-size: 24px;
+    line-height: 30px;
+
+    @include media(sm) {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    @include media(md) {
+        font-size: 34px;
+    }
+
+    @include media(lg) {
+        margin-top: 10px;
+    }
+}
+
+.page-subtitle {
+    color: $grey131117;
+    margin-bottom: 20px;
+
+    @include media(lg) {
+        color: $grey181217;
+    }
+
+    strong {
+        font-weight: 600;
+    }
+}
+

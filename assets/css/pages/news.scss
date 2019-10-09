@@ -1,0 +1,235 @@
+%margin-bottom-20px {
+    margin-bottom: 20px;
+}
+
+%publication-date-style {
+    width: 80%;
+    @include gap(margin, "h", auto);
+
+    @include media(sm) {
+        width: 70%;
+    }
+}
+
+/*************************************/
+
+.publication-date {
+    @extend %publication-date-style;
+    @include uppercase-small-text;
+
+    strong {
+        @include green-text-semi-bold;
+    }
+}
+
+.rich-text-block {
+    @extend %publication-date-style;
+
+    &::after {
+        clear: both;
+    }
+
+    &::before,
+    &::after {
+        content: " ";
+        display: table;
+        @include grid-column(1, 2);
+        @include grid-row(1, 2);
+    }
+
+    h2 {
+        font-size: 20px;
+        line-height: 26px;
+
+        @include media(sm) {
+            @include font_title_bold;
+
+            font-size: 25px;
+            line-height: 30px;
+        }
+
+        @include media(md) {
+            font-size: 34px;
+            line-height: 36px;
+        }
+    }
+
+    blockquote {
+        font-size: 16px;
+        line-height: 24px;
+
+        @include media(sm) {
+            font-size: 18px;
+            line-height: 28px;
+        }
+
+        @include media(md) {
+            line-height: 32px;
+        }
+    }
+
+    img {
+        width: 100%;
+        margin-top: 10px;
+
+        @include background-image("default", 0 0, 125px);
+
+        @include media(sm) {
+            margin-top: 30px;
+        }
+    }
+
+    figure {
+        position: relative;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+
+        @include gap(margin, "h", auto);
+
+        text-align: center;
+        clear: both;
+
+        @media screen and (min-width:1000px) {
+            max-width: 1000px;
+        }
+
+        > figcaption {
+            display: block;
+            @extend %margin-bottom-20px;
+
+            font-size: 14px;
+            color: $grey281146;
+
+            @include media(sm) {
+                margin-bottom: 30px;
+                font-size: 15px;
+            }
+        }
+
+    }
+
+    h3 {
+        @extend %margin-bottom-20px;
+
+        @include font_title_bold;
+
+        font-size: 18px;
+
+        @include media(sm) {
+            font-size: 22px;
+        }
+
+        @include media(md) {
+            font-size: 24px;
+        }
+    }
+
+    p {
+        @extend %margin-bottom-20px;
+
+        color: $grey131117;
+        font-size: 14px;
+        line-height: 23px;
+
+        @include media(sm) {
+            font-size: 16px;
+            line-height: 28px;
+        }
+    }
+
+    a {
+        color: $green;
+    }
+}
+
+/*************************************/
+
+.other-articles {
+    @extend %display-flex-column;
+    @extend %publication-date-style;
+    height: auto;
+    margin-top: 50px;
+
+    @include media(sm) {
+        @include flex-direction-row;
+        height: 200px;
+    }
+}
+
+.linked-article {
+    @mixin linked-article-txt-padding-h($size){
+        padding-right: $size;
+        &:last-child {
+            padding-left: $size;
+        }
+    }
+
+    @extend %display-flex-column;
+    @extend %justify-content-center;
+    @extend %align-items-stretch;
+    @extend %align-self-center;
+    @extend %flex-1;
+
+    max-width: 100%;
+
+    @include gap(padding, "v", 10px);
+    @include linked-article-txt-padding-h(0);
+
+    font-size: 14px;
+    color: grey(20);
+
+    @include border((top, right, bottom), $grey262075) ;
+
+    @include media(xs, sm) {
+        border-right-style: none;
+    }
+
+    @include media(sm) {
+        height: 200px;
+
+        @include gap(padding, "v");
+        @include linked-article-txt-padding-h(20px);
+    }
+
+    @include media(md) {
+        font-size: 16px;
+        @include linked-article-txt-padding-h(50px);
+    }
+
+    @include media(lg) {
+        @include linked-article-txt-padding-h(80px);
+    }
+
+    &:last-child {
+        border-right-style: none;
+
+        @include media(xs, sm) {
+            border-top-style: none;
+        }
+
+        @include media(sm) {
+            padding-right: 0;
+            font-size: 16px;
+        }
+    }
+}
+
+.linked-article-title {
+    color: $green;
+    text-decoration: none;
+
+    h4 {
+        @include font_title;
+        font-size: 18px;
+        line-height: 26px;
+
+        @include media(md) {
+            font-size: 22px;
+        }
+    }
+}
+
+.linked-article-date {
+    @include uppercase-small-text;
+}

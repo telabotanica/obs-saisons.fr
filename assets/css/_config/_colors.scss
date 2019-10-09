@@ -1,0 +1,27 @@
+/**************************************************
+* SETTINGS
+**************************************************/
+@function grey($light, $alpha: 1) {
+    @return hsla(0, 0%, $light * 1%, $alpha);
+}
+
+$grey131117: #2f2826;
+$grey181217: #302926;
+$grey281146: #837569;
+$grey262075: #ccbeb3;
+$grey306092: #f7ebdf;
+$grey303394: #f5f0eb;
+
+$green: #456d27;
+$green705459: #bccf5f;
+$green715559: #bcd05f;
+$green715560: #bcd15f;
+$green725760: #bcd35f;
+
+$brown: #8b481a;
+
+$grey131117_a1: rgba($grey131117, 0.1);/*#2f2826*/
+$grey131117_a0: rgba($grey131117, 0);/*#2f2826*/
+$grey281146_a1: rgba($grey281146, 0.1);/*#837569;*/
+$green_a1: rgba($green, 0.1);/*#456d27;*/
+$white_a1: hsla(27, 0%, 100%, 0.1);/*#ffffff*/

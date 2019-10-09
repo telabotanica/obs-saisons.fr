@@ -1,0 +1,32 @@
+/**************************************************
+* BREAKPOINTS
+**************************************************/
+// media()
+@mixin media($media, $media2: null) {
+  $breakpoints-map: (
+    xs: null,
+    sm: 480,
+    md: 768,
+    lg: 992
+  );
+  $media-min: "";
+  $media-max: "";
+
+  $min: map_get($breakpoints-map, $media);
+  $max: null;
+
+  @if $min{
+    $media-min: " and (min-width: " + $min + "px)";
+  }
+
+  @if $media2 {
+    $max: map_get($breakpoints-map, $media2);
+    @if $max {
+      $media-max: " and (max-width: " + ($max - 1) + "px)";
+    }
+  }
+
+  $media-query: $media-min + $media-max;
+
+  @media screen #{$media-query} { @content }
+}
