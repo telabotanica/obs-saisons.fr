@@ -1,0 +1,46 @@
+{% set headers = {
+    'actualites': {
+        'title':'Actualités',
+        'subtitle':'Vos <strong>actualites</strong> de l\'Observatoire des saisons.'
+    },
+    'apropos': {
+        'title':'À propos de l\'Observatoire des saisons',
+        'subtitle':'Participez au programme de <strong>l\'ODS</strong>.'
+    },
+    'evenements': {
+        'title': 'Evenements',
+        'subtitle': 'Vos <strong>évènements</strong> de l\'Observatoire des saisons.'
+    },
+    'especes': {
+        'title': 'Espèces à observer',
+        'subtitle': 'Toutes les espèces du programme <strong>Observatoire des saisons</strong>.'
+    },
+    'participer': {
+        'title': 'Participer',
+        'subtitle': 'Participez au programme de <strong>l\'Observatoire des saisons</strong>.'
+    },
+    'station-obs': {
+        'title': 'Stations d\'observation',
+        'subtitle': 'Les <strong>stations d’observation</strong> sont les zones où se trouvent les plantes ou animaux que vous souhaitez observer. <br>Vous pouvez rejoindre une station existante ou en créer une nouvelle.'
+    },
+    'resultats': {
+        'title': 'Les résultats',
+        'subtitle': 'Tous les résultats du programme <strong>Observatoire des saisons</strong>.'
+    },
+    'outils': {
+        'title': 'Outils',
+        'subtitle': 'Tous les outils du programme <strong>Observatoire des saisons</strong>.'
+    },
+    'ressources': {
+        'title': 'Ressources',
+        'subtitle': 'Toutes les ressources du programme <strong>Observatoire des saisons</strong>.'
+    },
+    'relais': {
+        'title': 'Contactez les relais ODS de votre région',
+        'subtitle': 'Tous les relais du programme <strong>Observatoire des saisons</strong> près de chez vous.'
+    }
+} %}
+<div class="page-header">
+    <h2 class="page-title">{{ headers[header]['title'] }}</h2>
+    <p class="page-subtitle">{{ headers[header]['subtitle']|raw }}</p>
+</div>

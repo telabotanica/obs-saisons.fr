@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% if header is not defined %}
+    {% set header = route %}
+{% endif %}
+
+{% block content %}
+    {% block top_content %}{% endblock %}
+    <div class="content page">
+        <div class="pages-container">
+            {% include 'layout/header.html.twig' %}
+            {% block main_content %}{% endblock %}
+        </div>
+    </div>
+    {% block bottom_content %}
+    {% endblock %}
+{% endblock content %}
