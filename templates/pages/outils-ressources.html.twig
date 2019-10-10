@@ -1,20 +1,6 @@
-{% extends 'base.html.twig' %}
-
-{% block content %}
-	<div class="content page stations">
-		<div class="stations-container">
-			<div class="species-list">
-				<div class="stations-header">
-					<h2 class="heading">Outils</h2>
-					<p class="paragraph-2">Tous les outils du programme <span class="text-span-3">Obseratoire des saisons</span>.</p>
-				</div>
-			</div>
-			<div class="species-list">
-				<div class="stations-header">
-					<h2 class="heading">Ressources</h2>
-					<p class="paragraph-2">Toutes les ressources du programme <span class="text-span-3">Obseratoire des saisons</span>.</p>
-				</div>
-			</div>
-		</div>
-	</div>
+{% extends 'basic-page-template.html.twig' %}
+{% set header_names = route|split('-') %}
+{% set header = header_names[0] %}
+{% block main_content %}
+    {% include 'layout/header.html.twig' with {header: header_names[1]} %}
 {% endblock %}

@@ -1,0 +1,160 @@
+.hero-header {
+    position: relative;// for author mini block
+
+    @extend %display-flex-column;
+    @extend %align-items-center;
+    @include order(1);
+
+    min-height: 340px;
+    background-color: $grey303394;
+
+    @include media(lg) {
+        @include flex-direction-row;
+
+        background-color: #e7e2dc;
+    }
+}
+
+.hero-header-media-part {
+    @extend %display-flex-column;
+    @extend %align-self-stretch;
+
+    width: 100%;
+    height: 200px;
+    min-width: 180px;
+    @include background-image("default", (0 0, 50% 50%));
+
+    &.map {
+        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba($grey281146, 0.3)), to(rgba($grey281146, 0.3))), image-url('map', 'png');
+        background-image: linear-gradient(180deg, rgba($grey281146, 0.3), rgba($grey281146, 0.3)), image-url('map', 'png');
+    }
+
+    @include media(sm) {
+        height: 280px;
+    }
+
+    @include media(lg) {
+        width: $third-pc * 1%;
+        height: auto;
+    }
+}
+
+.contributions-mini-block {
+    @include position(absolute, 0, 0);
+
+    @extend %display-flex;
+    @extend %justify-content-flex-end;
+    @extend %align-items-flex-end;
+    @extend %align-self-flex-end;
+
+    @include square-block(70px);
+
+    margin: 20px;
+    border: 3px solid #fff;
+    border-radius: 4px;
+
+    @include background-image("default", 0 0, 125px);
+
+    @include font_default_semi_bold;
+    font-size: 12px;
+    box-shadow: 0 1px 3px 0 rgba(#000, 0.2);
+
+    .contributions-number {
+        @extend %flex-1;
+
+        padding-right: 10px;
+        background-image: -webkit-gradient(linear, left top, left bottom, from($grey131117_a0), to(#000));
+        background-image: linear-gradient(180deg, $grey131117_a0, #000);
+        color: #fff;
+        text-align: right;
+    }
+
+    @include media(lg) {
+        position: static;
+        @include gap(margin, (left, bottom));
+    }
+}
+
+
+.hero-header-content {
+    @extend %display-flex-column;
+    @extend %flex-1;
+
+    padding: 30px 20px;
+
+    @include media(sm) {
+        padding: 40px 6% 0;
+    }
+
+    @include media(md, lg) {
+        margin-top: 20px;
+    }
+
+    @include media(lg) {
+        min-width: 500px;
+        padding: 40px;
+    }
+}
+
+.hero-header-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+
+    @include font-title_bold;
+    font-size: 18px;
+
+    .lighter {
+        color: $grey281146;
+    }
+
+    @include media(sm) {
+        font-size: 28px;
+    }
+
+    @include media(lg) {
+        font-size: 32px;
+    }
+}
+
+
+.hero-header-subtitle {
+    font-size: 14px;
+    line-height: 25px;
+
+    @include media(sm) {
+        line-height: 22px;
+    }
+}
+
+.hero-header-detail {
+    display: block;
+    @extend %align-self-flex-start;
+
+    @include gap(padding, "v", 10px);
+
+    color: $brown;
+    font-size: 14px;
+
+    &.map {
+        padding-right: 20px;
+
+        @include background-image(image-url('right-arrow-orange'), 98% 51%, 6px);
+    }
+}
+
+.privacy-status {
+    @extend %hide;
+
+    @include media(lg) {
+        @include position(absolute, 0, 0);
+
+        display: block;
+
+        @include gap(margin, (top, right), 20px);
+        padding: 3px 10px;
+        border-radius: 4px;
+        background-color: rgba($grey281146, 0.2);
+        color: $grey131117;
+        font-size: 12px;
+    }
+}

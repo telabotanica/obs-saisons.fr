@@ -1,0 +1,30 @@
+/******************************************/
+/*               breadcrumbs              */
+/******************************************/
+
+%breadcrumb-item {
+  margin-right: 20px;
+  @include font_title;
+  font-size: 18px;
+}
+
+.breadcrumbs {
+  @include display-flex;
+  @include align-self-center;
+  @include flex-none;
+}
+
+.breadcrumb-active-page {
+  @extend %breadcrumb-item;
+  color: $grey281146;
+}
+
+.breadcrumb-link {
+  display: block;
+  @extend %breadcrumb-item;
+  padding-right: 30px;
+  @include font_title;
+  color: $grey131117;
+  text-decoration: none;
+  @include background-image(image-url("right-arrow-green"), 100% 50%, 6px);
+}

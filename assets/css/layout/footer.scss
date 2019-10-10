@@ -1,0 +1,144 @@
+%subfooter-flex {
+	@include display-flex;
+	@include justify-content-flex-start;
+	@include align-items-center;
+}
+
+.footer {
+	@extend %display-flex-column;
+	@include flex-none;
+	padding: 40px 4%;
+	background-color: #38312f;
+
+	@include media(md) {
+		@include flex-direction-row;
+	}
+}
+
+.footer-main {
+	@extend %display-flex-column;
+	@include flex-1;
+
+	@include media(sm) {
+		@include flex-direction-row;
+	}
+}
+
+.footer-right {
+	@extend %display-flex-column;
+	@include align-items-center;
+	width: auto;
+	@include gap(padding, "v", 80px);
+
+	@include media(md)  {
+		@include justify-content-space-between;
+		@include flex-none;
+		width: 280px;
+		@include gap(padding, "v", 60px);
+	}
+}
+
+.footer-main-col {
+	@include flex-auto;
+	margin-right: 20px;
+	padding: 60px 20px 0;
+
+	@include media(sm) {
+		@include gap(padding, "v", 60px);
+		padding-left: 10px;
+		padding-right: unset;
+	}
+
+	@include media(md) {
+		padding-left: 0;
+	}
+}
+
+.footer-link-list {
+	@extend %display-flex-column;
+	@include justify-content-flex-start;
+	color: grey(67);
+	width: auto;
+	@include gap(margin, "h", auto);
+	font-size: 16px;
+
+	@include media(sm) {
+		margin-right: 20px;
+		&.fist {
+			padding-right: 10px;
+			margin-left: 40px;
+		}
+	}
+}
+
+.footer-title {
+	@include font_title_bold;
+	color: #c5b3af;
+	font-size: 18px;
+
+	@include media(md) {
+		font-size: 20px;
+	}
+}
+
+.footer-link {
+	margin-top: 10px;
+	margin-bottom: 0;
+	color: $green715559;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.footer-logos {
+	margin-top: 0;
+	margin-bottom: 20px;
+}
+
+.subfooter-left {
+	position: static;
+	@extend %subfooter-flex;
+	width: auto;
+	margin-top: 40px;
+	padding-left: 0;
+
+	@include media(xs, sm) {
+		@include gap(margin, "h", auto);
+	}
+	@include media(sm) {
+		position: absolute;
+		padding-left: 40px;
+	}
+
+	@include media(md) {
+		margin-top: 81px;
+	}
+}
+
+.subfooter-right {
+	@extend %subfooter-flex;
+	margin-top: 60px;
+	color: #7a7570;
+	font-size: 13px;
+}
+
+.subfooter-link {
+	@include flex-none;
+	color: $green705459;
+	font-size: 13px;
+	text-decoration: none;
+	&.lower {
+		color: #9b8783;
+	}
+
+	@include media(md) {
+		@include flex-initial;
+	}
+}
+
+.bulllet {
+	@include flex-none;
+	@include square-block(4px);
+	@include gap(margin, "h", 15px);
+	border-radius: 20px;
+	background-color: grey(53);
+}

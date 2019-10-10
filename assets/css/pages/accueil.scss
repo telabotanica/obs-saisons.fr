@@ -1,0 +1,583 @@
+.actus-une {
+	position: relative;
+	z-index: 2;
+	@extend %display-flex-column;
+	@include justify-content-flex-start;
+	height: auto;
+	min-height: 600px;
+
+	@include media(sm) {
+		height: 400px;
+	}
+
+	@include media(md) {
+		@include flex-direction-row;
+		@include justify-content-flex-end;
+		height: 70vh;
+		min-height: 560px;
+	}
+
+	@include media(lg) {
+		min-height: 540px;
+	}
+}
+
+.actus-une-img {
+	@include position(static, 0, 0, 0, 0);
+
+	@include display-flex;
+	@include flex-1;
+
+	border-right: 1px none #000;
+
+	@include background-image("default", 50% 50%);
+
+	background-color: $green715560;
+}
+
+.actus-une-content {
+	@include position(relative, auto, 0, 0, 0);
+	@extend %display-flex-column;
+	@include align-items-stretch;
+	width: 100%;
+	height: 320px;
+	min-width: 0;
+	padding: 30px 20px;
+	background-color: #312a26;
+	color: #dfcebe;
+
+	@include media(sm) {
+		top: 0;
+		left: auto;
+		min-width: 340px;
+		@include gap(padding, "h", 40px);
+	}
+
+	@include media(md) {
+		width: 40%;
+		height : auto;
+	}
+
+	@include media(lg) {
+		width: $third-pc * 1%;
+	}
+}
+
+.content-narrow-header {
+	@include display-flex;
+	@include align-items-center;
+	height: 65px;
+	margin-bottom: 0;
+	padding-bottom: 0;
+
+	&.bottom-div {
+		@include flex-wrap-wrap;
+		height: 30px;
+		margin-top: 0;
+		border-bottom: 1px none grey(47);
+
+		@include media(md, lg) {
+			margin-top: 60px;
+		}
+
+		@include media(lg) {
+			height: auto;
+		}
+	}
+
+	&.obs {
+		height: 60px;
+	}
+}
+
+.content-narrow-title {
+	@include font_default;
+	@include align-self-flex-start;
+	@include flex-1;
+	@include gap(margin, "v");
+	color: $green715560;
+	font-size: 14px;
+	line-height: 30px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+
+	&.dark {
+		color: #1f321e;
+	}
+
+	&.orange {
+		color: $brown;
+	}
+}
+
+/* c'est les flèches des titres, migrer vers les boutons? */
+.div-block-12 {
+	@include position(absolute, 0, 0);
+	@include display-flex;
+}
+
+.nav-arrow {
+	@include display-flex;
+	@include justify-content-center;
+	@include align-items-center;
+	@include square-block(60px);
+	margin-left: 0;
+	border-left: 1px solid #5a514d;
+	background-color: transparent;
+
+	&.light {
+		border-left-color: #c5b3a4;
+	}
+}
+
+.inactive {
+	opacity: 0.3;
+	-webkit-filter: saturate(20%);
+	filter: saturate(20%);
+}
+/* fin flèches*/
+
+.actus-une-title {
+	margin-top: 40px;
+	@include font_title_bold;
+	font-size: 24px;
+	line-height: 1.2em;
+
+	@include media(sm) {
+		font-size: 32px;
+	}
+}
+
+.actus-une-date {
+	color: #b9aca4;
+	font-size: 11px;
+	font-weight: 400;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+/* c'est les boutons, migrer vers boutons? */
+.div-block-11 {
+	@include position(absolute, auto, 0, 0, 0);
+	@include display-flex;
+	@include justify-content-flex-start;
+	@include align-items-center;
+	@include align-self-flex-start;
+	height: 90px;
+	@include gap(margin, "h");
+	padding-left: 40px;
+	border-top: 1px none #47423f;
+	background-color: $green715560;
+
+	&.beige {
+		background-color: #e7803a;
+	}
+}
+
+.link-2 {
+	background-color: transparent;
+	color: $grey181217;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-decoration: none;
+	text-transform: uppercase;
+
+	&.fonce {
+		color: #2b2523;
+		font-size: 14px;
+	}
+}
+/* fin boutons */
+
+.content.home {
+	@extend %display-flex-column;
+	overflow: hidden;
+
+	@include media(md) {
+		@include flex-direction-row;
+		@include flex-none;
+	}
+}
+
+.content-une-block {
+	@extend %display-flex-column;
+	@include align-items-flex-start;
+	@include justify-content-space-around;
+	@include flex-initial;
+	width: 100%;
+	height: 70vh;
+	min-height: 720px;
+	padding: 20px;
+	padding-bottom: 40px;
+	background-color: $green715559;
+	color: $grey181217;
+
+	@include media(sm) {
+		@include gap(padding, "h", 40px);
+	}
+
+	@include media(md) {
+		@include justify-content-space-between;
+		width: 60%;
+		padding-top: 60px;
+	}
+
+	@include media(lg) {
+		width: $third-pc * 2%;
+	}
+}
+
+.content-block-infos {
+	@extend %display-flex-column;
+	@include align-self-center;
+	@include align-items-flex-start;
+	width: auto;
+	max-width: none;
+	@include gap(margin, "h");
+	@include gap(padding, "h");
+
+	&.horiz {
+		@extend %display-flex-column;
+		@include justify-content-space-between;
+		@include align-items-flex-start;
+		@include align-self-flex-start;
+		max-width: none;
+		@include gap(margin, (bottom, left), 40px);
+		padding: 40px;
+		border-radius: 4px;
+		background-color: rgba($grey181217, 0.9);
+	}
+
+	@include media(md){
+		@include align-self-inherit;
+	}
+}
+
+.div-block-13 {
+	@extend %display-flex-column;
+	@include align-items-flex-start;
+	@include align-self-flex-start;
+}
+
+.content-blocks-title {
+	width: auto;
+	margin-bottom: 18px;
+	@include font_title_bold;
+	font-size: 18px;
+	line-height: 1.2em;
+
+	&.small {
+		margin-bottom: 15px;
+		font-size: 28px;
+	}
+
+	@include media(sm){
+		font-size: 20px;
+	}
+
+	@include media(md){
+		font-size: 32px;
+	}
+}
+
+.paragraph-5 {
+	margin-bottom: 20px;
+	color: #192c1c;
+	font-size: 16px;
+	line-height: 28px;
+
+	@include media(lg) {
+		font-size: 18px;
+	}
+}
+
+.content-block-img {
+	@include align-self-center;
+	@include square-block(auto);
+	max-width: 80%;
+	min-width: 50px;
+	@include gap(margin, "h");
+	margin-left: -20px;
+	border-radius: 0;
+	background-color: transparent;
+
+	@include media(md) {
+		max-width: 60%;
+	}
+
+	@include media(lg) {
+		max-width: 55%;
+	}
+}
+
+.content-block-link {
+	@include display-flex;
+	@include justify-content-flex-start;
+	@include align-items-center;
+	margin-top: 10px;
+	color: grey(13);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.text-block-20 {
+	@include align-self-flex-start;
+	padding-bottom: 4px;
+	border-bottom: 2px solid #3694ac;
+	color: $grey131117;
+	font-weight: 600;
+	@include pointer;
+
+	&-copy {
+		@extend .text-block-20;
+		color: $green725760;
+	}
+}
+
+.ods-list-unstyled {
+	padding-left: 0;
+	list-style: none;
+}
+
+/*************************************/
+
+.next-event {
+	position: relative;
+	@extend %display-flex-column;
+	@include justify-content-flex-start;
+	@include align-self-stretch;
+	@include flex-initial;
+	width: 100%;
+	height: auto;
+	max-height: none;
+	min-height: 460px;
+	min-width: 0;
+	padding: 30px 20px;
+	background-color: #e0cebe;
+
+	@include media(sm) {
+		min-width: 340px;
+	}
+
+	@include media(md) {
+		width: 40%;
+		min-height: 720px;
+	}
+
+	@include media(lg) {
+		width: $third-pc * 1%;
+		height: 70vh;
+		@include gap(padding, "h", 30px);
+	}
+}
+
+.next-event-descr {
+	margin-top: 40px;
+	margin-bottom: 20px;
+	@include font_title_bold;
+	color: $grey131117;
+	font-size: 30px;
+	line-height: 1.2em;
+}
+
+.next-event-title {
+	@include font_default;
+	margin-top: 0;
+	margin-bottom: 10px;
+	color: $brown;
+	font-size: 22px;
+	line-height: 30px;
+}
+
+.next-event-city {
+	color: $grey131117;
+	font-size: 13px;
+}
+
+/*********************************/
+
+.now {
+	@extend %display-flex-column;
+	@include justify-content-flex-end;
+	@include align-items-flex-start;
+	@include flex-initial;
+	width: 100%;
+	height: 380px;
+	min-height: 670px;
+	padding: 0 20px;
+	@include background-image("default", (0 0, 0 0, 50% 50%));
+	background-color: grey(68);
+	color: #fff;
+
+	@include media(sm) {
+		@include gap(padding, "h");
+	}
+
+	@include media(md) {
+		width: 60%;
+		height: 340px;
+	}
+
+	@include media(lg){
+		width: $third-pc * 2%;
+		height: auto;
+		background-position: 50% 50%;
+	}
+}
+
+.recent-obs {
+	position: relative;
+	@include flex-initial;
+	width: 100%;
+	height: auto;
+	min-height: 660px;
+	min-width: 340px;
+	padding: 20px;
+	padding-top: 30px;
+
+	border-top: 1px none grey(87);
+	background-color: $grey306092;
+
+	@include media(sm) {
+		@include gap(padding, "h", 30px);
+	}
+
+	@include media(md) {
+		width: 40%;
+		min-height: 670px;
+	}
+
+	@include media(lg) {
+		width: $third-pc * 1%;
+	}
+}
+
+.recent-obs-item {
+	@include display-flex;
+	@include align-items-center;
+	width: 100%;
+	margin-bottom: 10px;
+	@include  gap(padding, "v");
+	border-top: 1px none #dbcec3;
+	background-color: $grey306092;
+	font-size: 14px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.recent-obs-item-content {
+	@extend %display-flex-column;
+	@include justify-content-center;
+	@include align-items-flex-start;
+	@include align-self-stretch;
+	@include flex-1;
+	height: auto;
+	margin-left: 15px;
+	border: 1px none #000;
+}
+
+.recent-obs-title {
+	color: $grey131117;
+	font-size: 15px;
+	line-height: 20px;
+	font-weight: 600;
+}
+
+.recent-obs-item-stade {
+	color: #615552;
+	font-size: 13px;
+	line-height: 20px;
+	font-weight: 400;
+}
+
+/*********************************/
+
+.number-obs-container {
+	@include display-flex;
+	overflow: hidden;
+
+	@include media(md) {
+		& .banner-number .mosaic img {
+			@include grid-justify-self(stretch);
+		}
+	}
+}
+
+.banner-number {
+	@extend %display-flex-column;
+	@include justify-content-center;
+	@include align-items-center;
+	@include flex-1;
+	height: auto;
+	background-color: $grey131117;
+
+	@include media(md) {
+		@include flex-direction-row;
+	}
+}
+
+.div-block-20 {
+	@extend %display-flex-column;
+	@include justify-content-center;
+	@include align-items-center;
+	@include align-self-stretch;
+	@include flex-1;
+	padding-bottom: 85px;
+	padding-top: 80px;
+
+	@include media(md) {
+		@include  gap(padding, "v");
+	}
+}
+
+.number-obs {
+	@include font_title;
+	color: $green725760;
+	font-size: 100px;
+	line-height: 110px;
+
+	@include media(sm) {
+		font-size: 110px;
+	}
+
+	@include media(md) {
+		font-size: 135px;
+	}
+}
+
+.text-block-37 {
+	margin-top: 0;
+	@include font_title_light;
+	color: $grey306092;
+	font-size: 20px;
+
+	@include media(sm) {
+		font-size: 22px;
+	}
+
+	@include media(md) {
+		margin-top: 20px;
+		font-size: 28px;
+	}
+}
+
+.mosaic {
+	@extend %hide;
+	min-width: 340px;
+	background-color: $grey281146;
+
+	@include media(md) {
+		width: 40%;
+		@include display-grid;
+		@include grid-align-self(stretch);
+		grid-auto-columns: 1fr;
+		grid-column-gap: 0;
+		grid-row-gap: 0;
+		@include grid-template-columns(1fr 1fr);
+		@include grid-template-rows(auto auto);
+	}
+	@include media(lg) {
+		width: $third-pc * 1%;
+	}
+}

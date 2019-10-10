@@ -1,0 +1,80 @@
+.global-layout {
+    display: block;
+    @extend %flex-direction-row;
+    height: auto;
+
+    @include media(xs, md) {
+        overflow: visible;
+        width: 100vw;
+    }
+
+    @include media(md) {
+        @include display-flex;
+    }
+}
+
+.main {
+    @extend %flex-direction-column;
+    @extend %flex-1;
+    overflow: hidden;
+    margin-left: 0;
+    display: block;
+    box-shadow: 1px 1px 3px 0 rgba(#000, 0.1);
+
+    &.home {
+        position: static;
+    }
+
+    @include media(lg) {
+        margin-left: 280px;
+    }
+}
+
+.content.page {
+    background-color: $grey303394;
+
+    @include media(lg) {
+        @include border((top, left), $grey306092);
+    }
+
+    &.news {
+        padding-top: 20px;
+        padding-bottom: 60px;
+
+        @include media(sm) {
+            padding-top: 40px;
+        }
+
+        @include media(md) {
+            padding-top: 60px;
+            padding-bottom: 100px;
+        }
+
+        @include media(lg) {
+            padding-top: 80px;
+        }
+    }
+}
+
+.pages-container {
+    @extend %display-flex-column;
+    @extend %flex-wrap-nowrap;
+
+    width: 100%;
+
+    @include gap(padding, (right, bottom, left));
+
+    background-color: $grey303394;
+
+    @include media(md) {
+        @include gap(padding, "h", 8%);
+        padding-bottom: 100px;
+    }
+
+    @include media(md, lg) {
+        &.narrow {
+            @include gap(padding, "h", 6%);
+        }
+    }
+}
+

@@ -1,232 +1,162 @@
-{% extends 'base.html.twig' %}
+{% extends 'basic-page-template.html.twig' %}
 
-{% block content %}
-	<div class="content page stationslist">
-		<div class="stations-container list">
-			<div class="stations-header">
-				<h2 class="heading">Stations d'observation</h2>
-				<p class="paragraph-2">Les <span class="text-span-3">stations d’observation</span> sont les zones où se trouvent les plantes ou animaux que vous souhaitez observer. <br>Vous pouvez rejoindre une station existante ou en créer une nouvelle.</p>
-			</div>
-			<div class="species-list-actionbar search">
-				<div class="species-list-title search">
-					<div class="search-form ods-form">
-						<form id="email-form" name="email-form" data-name="Email Form">
-							<input type="text" class="search-field ods-input" maxlength="256" name="Search" data-name="Search" placeholder="             Ville, code postal..." id="Search">
-						</form>
-						<div class="ods-form-done">
-							<div>Thank you! Your submission has been received!</div>
-						</div>
-						<div class="ods-form-fail">
-							<div>Oops! Something went wrong while submitting the form.</div>
-						</div>
-					</div>
+{% block main_content %}
+	<div class="actionbar search">
+		<div class="actionbar-left-list-block search">
+			<div class="search-form ods-form">
+				<form id="email-form" name="email-form" data-name="Email Form">
+					<input type="text" class="search-field ods-input" maxlength="256" name="Search" data-name="Search" placeholder="             Ville, code postal..." id="Search">
+				</form>
+				<div class="ods-form-done">
+					<div>Thank you! Your submission has been received!</div>
 				</div>
-				<div class="tabs-holder list">
-					<div class="text-block-28">Toutes les stations</div>
-					<div class="text-block-28 not">Mes stations</div>
+				<div class="ods-form-fail">
+					<div>Oops! Something went wrong while submitting the form.</div>
 				</div>
-			</div>
-			<div class="ods-layout-grid grid-2">
-				<div class="station-card add">
-					<div class="div-block-5">
-						<img src="{{ asset('media/layout/icons/marker-pointer-add.svg') }}" alt="" class="add-station-icon" width="50">
-						<div class="div-block-6"></div>
-						<div class="text-block-7">Votre station n'existe pas encore ?</div>
-						<a href="#" class="button add ods-button">Créer une station</a></div>
-				</div>
-				<a href="#" class="station-card ods-inline-block">
-					<div class="station-card-header _1" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d65881a4d28e05d5d20_lecoq.jpg')"></div>
-					<div class="station-card-body">
-						<h4 class="card-heading">Jardin Lecoq</h4>
-						<div class="card-detail">Clermont-Ferrand (63)</div>
-						<div class="card-detail type">Ville</div>
-					</div>
-					<div class="station-card-footer">
-						<div class="div-block">
-							<img src="{{ asset('media/layout/icons/person.svg') }}" alt="" width="12">
-							<div class="text-block-5">12</div>
-						</div>
-						<div class="div-block-2">
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3-copy">
-								<div class="text-block-6">+4</div>
-							</div>
-						</div>
-					</div>
-				</a>
-				<a href="#" class="station-card ods-inline-block">
-					<div class="station-card-header _2" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6418ef415f23c8a071_lys.jpg')">
-						<div class="div-block-4">
-							<img src="{{ asset('media/layout/icons/cadenas.svg') }}" alt="" width="18">
-						</div>
-					</div>
-					<div class="station-card-body">
-						<h4 class="card-heading">Près du parc de l'étang, long de la Lys</h4>
-						<div class="card-detail">Armentières (59)</div>
-						<div class="card-detail type">Ville</div>
-					</div>
-					<div class="station-card-footer">
-						<div class="div-block">
-							<img src="{{ asset('media/layout/icons/person.svg') }}" alt="" width="12">
-							<div class="text-block-5">1</div>
-						</div>
-						<div class="div-block-2">
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" class="image-2">
-							</div>
-						</div>
-					</div>
-				</a>
-				<a href="#" class="station-card ods-inline-block">
-					<div class="station-card-header _3" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6449753670304b79fa_montjuzet.jpg')">
-						<div class="div-block-4">
-							<img src="{{ asset('media/layout/icons/cadenas.svg') }}" alt="" width="18">
-						</div>
-					</div>
-					<div class="station-card-body">
-						<h4 class="card-heading">Parc Montjuzet</h4>
-						<div class="card-detail">Clermont-Ferrand (63)</div>
-						<div class="card-detail type">Ville</div>
-					</div>
-					<div class="station-card-footer">
-						<div class="div-block">
-							<img src="{{ asset('media/layout/icons/person.svg') }}" alt="" width="12">
-							<div class="text-block-5">4</div>
-						</div>
-						<div class="div-block-2">
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3-copy">
-								<div class="text-block-6">+1</div>
-							</div>
-						</div>
-					</div>
-				</a>
-				<a href="#" class="station-card ods-inline-block">
-					<div class="station-card-header _4" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6439b40365bea3de53_gergo.jpg')"></div>
-					<div class="station-card-body">
-						<h4 class="card-heading">Plateau de Gergovie</h4>
-						<div class="card-detail">Clermont-Ferrand (63)</div>
-						<div class="card-detail type">Campagne</div>
-					</div>
-					<div class="station-card-footer">
-						<div class="div-block">
-							<img src="{{ asset('media/layout/icons/person.svg') }}" alt="" width="12">
-							<div class="text-block-5">8</div>
-						</div>
-						<div class="div-block-2">
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" class="image-2">
-							</div>
-						</div>
-					</div>
-				</a>
-				<a href="#" class="station-card ods-inline-block">
-					<div class="station-card-header _5" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6418ef419fc9c8a074_chanturgue.jpg')"></div>
-					<div class="station-card-body">
-						<h4 class="card-heading">Plateau de Chanturgue</h4>
-						<div class="card-detail">Clermont-Ferrand (63)</div>
-						<div class="card-detail type">Campagne</div>
-					</div>
-					<div class="station-card-footer">
-						<div class="div-block">
-							<img src="{{ asset('media/layout/icons/person.svg') }}" alt="" width="12">
-							<div class="text-block-5">4</div>
-						</div>
-						<div class="div-block-2">
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3-copy">
-								<div class="text-block-6">+2</div>
-							</div>
-						</div>
-					</div>
-				</a>
-				<a href="#" class="station-card ods-inline-block">
-					<div class="station-card-header _6" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44e0439b403141ba3e01a_etang.jpg')"></div>
-					<div class="station-card-body">
-						<h4 class="card-heading">Parc de l'étang</h4>
-						<div class="card-detail">Armentières (59)</div>
-						<div class="card-detail type">Ville</div>
-					</div>
-					<div class="station-card-footer">
-						<div class="div-block">
-							<img src="{{ asset('media/layout/icons/person.svg') }}" alt="" width="12">
-							<div class="text-block-5">1</div>
-						</div>
-						<div class="div-block-2">
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3">
-								<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" class="image-2">
-							</div>
-							<div class="div-block-3-copy">
-								<div class="text-block-6">+4</div>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-			<div class="help-block">
-				<h4 class="helper-title">Besoin d'aide ?</h4>
-				<div class="sep"></div>
-				<p>Cliquez sur une station pour accéder à la liste des observations qui y ont été faites.
-					<br>Vous pourrez découvrir la liste des espèces à observer pour chaque station et ajouter vos propres observations.
-					<br>
-					<br>Consultez la page
-					<a href="{{ path('participer') }}" class="green-link">protocole</a> pour en savoir plus.
-				</p>
 			</div>
 		</div>
+		<div class="tabs-holder list">
+			<div class="tab">Toutes les stations</div>
+			<div class="tab not">Mes stations</div>
+		</div>
+	</div>
+	<div class="cards-grid-container">
+		<div class="card add">
+			<div class="add-card-content">
+				<img src="{{ asset('media/layout/icons/marker-pointer-add.svg') }}" alt="" class="add-card-icon" width="50">
+				<div class="add-card-text">Votre station n'existe pas encore ?</div>
+				<a href="#" class="button bt-add">Créer une station</a>
+			</div>
+		</div>
+		<a href="#" class="card">
+			<div class="card-header" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d65881a4d28e05d5d20_lecoq.jpg')"></div>
+			<div class="card-body">
+				<h4 class="card-heading">Jardin Lecoq</h4>
+				<div class="card-detail pointer-icon">Clermont-Ferrand (63)</div>
+				<div class="card-detail leaf-icon">Ville</div>
+			</div>
+			<div class="card-footer">
+				<div class="card-footer-left">
+					<div class="members-number person-icon">12</div>
+				</div>
+				<div class="card-footer-right">
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg')"></div>
+					<div class="member-avatar-sm more-members">+4</div>
+				</div>
+			</div>
+		</a>
+		<a href="#" class="card">
+			<div class="card-header" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6418ef415f23c8a071_lys.jpg')">
+				<div class="private-icon"></div>
+			</div>
+			<div class="card-body">
+				<h4 class="card-heading">Près du parc de l'étang, long de la Lys</h4>
+				<div class="card-detail pointer-icon">Armentières (59)</div>
+				<div class="card-detail leaf-icon">Ville</div>
+			</div>
+			<div class="card-footer">
+				<div class="card-footer-left">
+					<div class="members-number person-icon">1</div>
+				</div>
+				<div class="card-footer-right">
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg')"></div>
+				</div>
+			</div>
+		</a>
+		<a href="#" class="card">
+			<div class="card-header" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6449753670304b79fa_montjuzet.jpg')">
+				<div class="private-icon"></div>
+			</div>
+			<div class="card-body">
+				<h4 class="card-heading">Parc Montjuzet</h4>
+				<div class="card-detail pointer-icon">Clermont-Ferrand (63)</div>
+				<div class="card-detail leaf-icon">Ville</div>
+			</div>
+			<div class="card-footer">
+				<div class="card-footer-left">
+					<div class="members-number person-icon">4</div>
+				</div>
+				<div class="card-footer-right">
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg')"></div>
+					<div class="member-avatar-sm more-members">+1</div>
+				</div>
+			</div>
+		</a>
+		<a href="#" class="card">
+			<div class="card-header" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6439b40365bea3de53_gergo.jpg')"></div>
+			<div class="card-body">
+				<h4 class="card-heading">Plateau de Gergovie</h4>
+				<div class="card-detail pointer-icon">Clermont-Ferrand (63)</div>
+				<div class="card-detail leaf-icon">Campagne</div>
+			</div>
+			<div class="card-footer">
+				<div class="card-footer-left">
+					<div class="members-number person-icon">8</div>
+				</div>
+				<div class="card-footer-right">
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg')"></div>
+				</div>
+			</div>
+		</a>
+		<a href="#" class="card">
+			<div class="card-header" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6418ef419fc9c8a074_chanturgue.jpg')"></div>
+			<div class="card-body">
+				<h4 class="card-heading">Plateau de Chanturgue</h4>
+				<div class="card-detail pointer-icon">Clermont-Ferrand (63)</div>
+				<div class="card-detail leaf-icon">Campagne</div>
+			</div>
+			<div class="card-footer">
+				<div class="card-footer-left">
+					<div class="members-number person-icon">4</div>
+				</div>
+				<div class="card-footer-right">
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg')"></div>
+					<div class="member-avatar-sm more-members">+2</div>
+				</div>
+			</div>
+		</a>
+		<a href="#" class="card">
+			<div class="card-header" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44e0439b403141ba3e01a_etang.jpg')"></div>
+			<div class="card-body">
+				<h4 class="card-heading">Parc de l'étang</h4>
+				<div class="card-detail pointer-icon">Armentières (59)</div>
+				<div class="card-detail leaf-icon">Ville</div>
+			</div>
+			<div class="card-footer">
+				<div class="card-footer-left">
+					<div class="members-number  person-icon">1</div>
+				</div>
+				<div class="card-footer-right">
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg')"></div>
+					<div class="member-avatar-sm" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg')"></div>
+					<div class="member-avatar-sm more-members">+4</div>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="help-block">
+		<h4 class="helper-title">Besoin d'aide ?</h4>
+		<div class="sep"></div>
+		<p>Cliquez sur une station pour accéder à la liste des observations qui y ont été faites.
+			<br>Vous pourrez découvrir la liste des espèces à observer pour chaque station et ajouter vos propres observations.
+			<br>
+			<br>Consultez la page
+			<a href="{{ path('participer') }}" class="green-link">protocole</a> pour en savoir plus.
+		</p>
 	</div>
 {% endblock %}

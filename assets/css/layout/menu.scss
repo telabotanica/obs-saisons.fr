@@ -1,0 +1,130 @@
+.menu {
+	@include position(fixed, 0, 0, 0, auto, 2000);
+	@extend %display-flex-column;
+	@include flex-initial;
+	overflow: auto;
+	height: auto;
+	width: 280px;
+	margin-right: -280px;
+	padding-top: 80px;
+	background-color: #fff;
+	box-shadow: 0 0 20px 0 grey(0, 0.15);
+
+	@include media(md) {
+		height: 100vh;
+	}
+
+	@include media(lg) {
+		right: auto;
+		left: 0;
+		z-index: inherit;
+		overflow: visible;
+		height: auto;
+		@include gap(margin, "h");
+		padding-top: 0;
+		box-shadow: unset;
+	}
+}
+
+.site-name {
+	@include position(static, 0, auto, auto, 0, 2000);
+	@extend %hide;
+	height: 80px;
+	min-height: 80px;
+	max-width: 100%;
+	@include justify-content-flex-start;
+	@include align-items-center;
+	color: grey(33);
+	text-decoration: none;
+
+	@include media(lg) {
+		left: initial;
+		top: initial;
+		@include display-flex;
+		padding-left: 30px;
+	}
+}
+
+.logo {
+	width: 180px;
+}
+
+.close-menu-img {
+	@include position(absolute, 0, 0);
+	display: block;
+	width: 20px;
+	height: 40px;
+	margin-top: 20px;
+	margin-right: 30px;
+
+	@include media(lg) {
+		display: none;
+	}
+}
+
+.nav {
+	@extend %display-flex-column;
+	@include flex-none;
+	@include gap(padding, "h", 30px);
+
+	@include media(md) {
+		@include flex-1;
+	}
+}
+
+.nav-item {
+	@include gap(padding, "v", 15px);
+	padding-left: 0;
+	border-top: 1px solid #eee9e6;
+	color: $grey181217;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: 0.5px;
+	text-decoration: none;
+	text-transform: uppercase;
+
+	&.ods--current {
+		padding-left: 26px;
+		border-left: 4px solid grey(53);
+	}
+
+	&.home {
+		@include display-flex;
+		border-top-style: none;
+		border-left-color: $green705459;
+
+		@include media(lg) {
+			display: none;
+		}
+	}
+
+	&.resp-connect {
+		display: block;
+		@include gap(padding, "v", 20px);
+		background-color: transparent;
+
+		@include media(lg) {
+			display: none;
+		}
+	}
+}
+
+.social-links {
+	position: static;
+	@include display-flex;
+	@include flex-none;
+	width: 100%;
+	height: 80px;
+	border-top: 1px solid #f7ebdf;
+}
+
+.social-icon-link {
+	@include display-flex;
+	@include justify-content-center;
+	@include align-items-center;
+	width: $third-pc * 1%;
+
+	&.first {
+		box-shadow: none;
+	}
+}

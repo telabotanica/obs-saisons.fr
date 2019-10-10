@@ -1,10 +1,10 @@
-/*@-ms-viewport {
+@-ms-viewport {
 	width: device-width;
 }
 
 @viewport {
 	width: device-width;
-}*/
+}
 
 * {
 	-webkit-box-sizing: border-box;
@@ -432,8 +432,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: 'Averia Serif Libre', 'Trebuchet MS', 'Georgia', serif;
-	font-weight: bold;
+	@include font_title_bold;
 	margin-bottom: 10px;
 }
 
@@ -510,7 +509,7 @@ textarea {
 label {
 	display: block;
 	margin-bottom: 10px;
-	color: #2f2826;
+	color: $grey131117;
 	font-size: 15px;
 	font-weight: 600;
 }
@@ -529,6 +528,6 @@ figure {
 
 figcaption {
 	margin-top: 5px;
-	color: #777;
+	color: grey(47);
 	text-align: center;
 }

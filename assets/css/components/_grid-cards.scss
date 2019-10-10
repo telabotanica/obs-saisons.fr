@@ -1,0 +1,177 @@
+/**************************/
+/*     grid container     */
+/**************************/
+.cards-grid-container {
+    @include display-grid;
+    @include justify-content(start);
+    @extend %align-items-stretch;
+    padding-top: 0;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: row;
+    @include grid-template-columns(1fr);
+    grid-template-columns: repeat(auto-fit, 100%);
+    @include grid-template-rows(auto auto);
+    @include grid-gap(10px, 15px);
+    direction: ltr;
+
+    @include media(xs, md) {
+        margin-bottom: 10px;
+    }
+    @include media(sm) {
+        padding-top: 30px;
+    }
+
+    @include media(md) {
+        @include grid-row-gap(30px);
+        @include grid-template-columns(1fr 1fr);
+        grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    }
+}
+
+/**************************/
+/*   each card container  */
+/**************************/
+.card {
+    @extend %display-flex-column;
+    @extend %justify-content-space-between;
+    @extend %flex-initial;
+    height: auto;
+    width: 100%;
+    min-height: 420px;
+    min-width: 200px;
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 2px 3px 0 $grey281146_a1;
+    text-decoration: none;
+
+    @include media(lg) {
+        width: auto;
+    }
+
+    // add card specific
+    &.add {
+        @extend %justify-content-center;
+        @extend %align-self-stretch;
+        padding-bottom: 10px;
+
+        @include media(xs,md) {
+            @include square-block(0, "min");
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        @include media(sm) {
+            width: auto;
+            padding-bottom: 0;
+        }
+    }
+}
+
+/***********************/
+/*      add card       */
+/***********************/
+.add-card-content {
+    @extend %display-flex-column;
+    @extend %align-items-center;
+    @include gap(margin, "h", 30px);
+    @include gap(padding, "v", 30px);
+
+    @include media(md) {
+        @include gap(margin, "h", 25px);
+        padding-bottom: 13px;
+    }
+}
+
+.add-card-icon {
+    @extend %hide;
+
+    @include media(md) {
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+}
+
+.add-card-text {
+    color: $grey131117;
+    text-align: center;
+    padding-top: 10px;
+    border-top: 1px solid $grey306092;
+}
+
+/************************/
+/*     card header      */
+/************************/
+.card-header {
+    display: block;
+    height: 180px;
+    @include background-image("default", 50% 50%);
+
+    @include media(sm) {
+        @include display-flex;
+        @include justify-content-flex-end;
+        @include align-items-flex-start;
+    }
+}
+
+// lock icon
+.private-icon {
+    @extend %display-flex;
+    @extend %justify-content-center;
+    @extend %align-items-center;
+    @include square-block(40px);
+    @include gap(margin, (top, right), 10px);
+    border-radius: 50px;
+    @include background-image(image-url("cadenas"), 50% 50%, 16px);
+    background-color: rgba($grey131117, 0.8);
+}
+
+/**************************/
+/*      card body         */
+/**************************/
+.card-body {
+    @extend %flex-1;
+    padding: 10px 25px 20px;
+}
+
+// card title
+.card-heading {
+    @include font_title_semi_bold;
+    color: $grey131117;
+    margin-bottom: 15px;
+    font-size: 20px;
+    line-height: 30px;
+
+    @include media(sm) {
+        font-size: 26px;
+    }
+
+    @include media(md) {
+        margin-bottom: 10px;
+        font-size: 22px;
+    }
+}
+
+.card-detail {
+    @include pre-text-icon;
+    @include uppercase-small-text;
+}
+
+/**************************/
+/*     card footer        */
+/**************************/
+.card-footer {
+    @extend %display-flex;
+    @extend %justify-content-space-between;
+    @extend %align-items-center;
+    @include  gap(margin, "h", 25px);
+    padding-top: 12px;
+    padding-bottom: 20px;
+    border-top: 1px solid grey(86);
+
+    &-left,
+    &-right {
+        @extend %display-flex;
+    }
+}
+
+

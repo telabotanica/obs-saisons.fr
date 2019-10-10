@@ -1,0 +1,111 @@
+.overlay {
+	@include position(fixed, 0, 0, 0, 0, 1000);
+	@include display-flex;
+	@include justify-content-center;
+	@include align-items-center;
+	background-color: rgba($grey131117, 0.9);
+}
+
+.saisie-container {
+	@include position(fixed, 0, 0, 0, 0, 1);
+	@extend %display-flex-column;
+	@include flex-1;
+	padding: 20px;
+	padding-bottom: 200px;
+	max-width: 680px;
+	overflow: auto;
+	background-color: #fff;
+
+	@include media(sm) {
+		@include gap(padding, "h", 60px);
+		padding-bottom: 40px;
+	}
+
+	@include media(md) {
+		border-radius: 2px;
+		position: static;
+	}
+}
+
+.saisie-header {
+	@include gap(margin, "v");
+	padding-top: 15px;
+	padding-bottom: 20px;
+	font-size: 24px;
+	border-bottom: 1px solid grey(87);
+	@include font_title_bold;
+
+	@include media(sm) {
+		padding-top: 20px;
+		padding-bottom: 30px;
+	}
+	@include media(sm, md) {
+		font-size: 32px;
+	}
+}
+
+.text-span-2 {
+	@extend %hide;
+
+	@include media(md) {
+		display: inline;
+		color: $green;
+	}
+}
+
+.saisie {
+	margin-top: 30px;
+}
+
+.saisie-aide {
+	@extend %display-flex-column;
+	padding: 20px;
+	border: 1px solid grey(87);
+	border-radius: 4px;
+	background-color: #f3f9fa;
+
+	@include media(sm) {
+		@include flex-direction-row;
+	}
+}
+
+.saisie-aide-txt {
+	@extend %display-flex-column;
+	@include flex-1;
+	padding-left: 0;
+
+	@include media(sm) {
+		padding-left: 15px;
+	}
+}
+
+.text-block-14 {
+	color: $grey281146;
+	font-size: 14px;
+}
+
+.text-block-15 {
+	font-weight: 600;
+}
+
+.div-block-9 {
+	@include display-flex;
+	@include justify-content-space-between;
+	margin-top: 25px;
+}
+
+.text-block-16 {
+	color: grey(60);
+	font-size: 14px;
+	font-style: italic;
+}
+
+.saisie-footer {
+	@include position(fixed, auto, 0, 0, 0, 2000);
+	@include display-flex;
+	margin-top: 20px;
+
+	@include media(sm) {
+		position: static;
+	}
+}
