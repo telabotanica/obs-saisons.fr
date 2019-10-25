@@ -6,11 +6,10 @@
 {% block content %}
     {% block top_content %}{% endblock %}
     <div class="content page">
-        <div class="pages-container">
-            {% include 'layout/header.html.twig' %}
+        <div class="pages-container {{ page_container_classes|default }}">
+            {% block header_content %}{% include 'layout/header.html.twig' %}{% endblock %}
             {% block main_content %}{% endblock %}
         </div>
     </div>
-    {% block bottom_content %}
-    {% endblock %}
+    {% block bottom_content %}{% endblock %}
 {% endblock content %}
