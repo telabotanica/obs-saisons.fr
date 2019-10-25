@@ -1,78 +1,40 @@
+{# exemple evenements #}
+{% set list_cards = [
+	{
+		'events_dates':[[22, 'JAN'], [26,'JAN']],
+		'heading': ['Stage de terrain autour de St-Hippolyte-du-Fort', 'St-Hippolyte-du-Fort (30)'],
+		'details': {'info_date': ['Coco L\'Asticot', '28/12/2018']}
+	},
+	{
+		'events_dates':[[4, 'AVR'], [16,'JUIN']],
+		'heading': ['Exposition les 4 saisons de Soisson', 'Soisson (02)'],
+		'details': {'info_date': ['Grégoire de Tours', '8/02/2019']}
+	},
+	{
+		'events_dates':[[1,'MAI']],
+		'heading': ['Colloque \"Le muguet pète un cable\"', 'Vichy (03)'],
+		'details': {'info_date': ['Coq Licot', '8/03/2019']}
+	},
+	{
+		'events_dates':[[1, 'OCT'], [1,'NOV']],
+		'heading': ['Inventaire d\'automne des Couleuvres de Montpellier', 'Aimargues (30)'],
+		'details': {'info_date': ['Philippe Frêche', '8/01/2019']}
+	}
+] %}
+{# end exemple evenements #}
+
+{#********************************************************************************************************************#}
 {% extends 'basic-page-template.html.twig' %}
 
 {% block main_content %}
-	<div class="list-cards-container">
-		<div class="species-list-item">
-			<div class="species-img" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4551b881a4d39495d7ebc_abricotier-1024x678.jpg')"></div>
-			<div class="species-item-name">
-				<a href="#" class="indiv-item-name">Abricotier</a>
-				<div class="text-block-11">Prunus armeniaca</div>
-			</div>
-			<div class="species-item-stades">
-				<div class="dernier-stade">2 individus • 18&nbsp;observations</div>
-				<div><span class="bolder">Floraison</span> - le 18/03/2019</div>
-			</div>
-			<div class="dual-squared-buttons-container">
-				<a href="#" class="dual-squared-button help-circle-icon">
-					<div class="squared-button-label">FICHE</div>
-				</a>
-				<a href="#" class="dual-squared-button other edit-calendar-icon">
-					<div class="squared-button-label">
-						<div class="text-block-30">Éditer</div>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="species-list-item">
-			<div class="species-img" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce45563497536c0094bb9ed_amandier.jpg')"></div>
-			<div class="species-item-name">
-				<a href="#" class="indiv-item-name">Amandier</a>
-				<div class="text-block-11">Prunus dulcis</div>
-			</div>
-			<div class="species-item-stades">
-				<div class="dernier-stade">1 individu • 9&nbsp;observations</div>
-				<div><span class="bolder">Scénescence</span> - le 18/09/2018</div>
-			</div>
-			<div class="dual-squared-buttons-container">
-				<a href="#" class="dual-squared-button help-circle-icon">
-					<div class="squared-button-label">FICHE</div>
-				</a>
-				<a href="#" class="dual-squared-button other edit-calendar-icon">
-					<div class="squared-button-label">
-						<div class="text-block-34">Éditer</div>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="species-list-item">
-			<div class="species-img" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4559818ef412a0ac8dc66_bouleau.jpg')"></div>
-			<div class="species-item-name">
-				<a href="#" class="indiv-item-name">Bouleau</a>
-				<div class="text-block-11">Betula pendula</div>
-			</div>
-			<div class="species-item-stades">
-				<div class="dernier-stade">2 individus • 11&nbsp;observations</div>
-				<div><span class="bolder">Scénescence</span> - le 18/09/2018</div>
-			</div>
-			<div class="dual-squared-buttons-container">
-				<a href="#" class="dual-squared-button help-circle-icon">
-					<div class="squared-button-label">FICHE</div>
-				</a>
-				<a href="#" class="dual-squared-button other edit-calendar-icon">
-					<div class="squared-button-label">Éditer</div>
-				</a>
-			</div>
-		</div>
-		<div class="actionbar bottom">
-			<a href="#" class="squared-button export-icon">
-				<div class="squared-button-label green">EXPORTER</div>
-			</a>
-			<a href="#" class="squared-button add-circle-icon">
-				<div class="squared-button-label green">AJOUTER</div>
-			</a>
-		</div>
-	</div>
+	{# add events list-card #}
+	{% set list_cards = list_cards|merge([{'add': ['Vous souhaitez proposer un évènement ?', 'Saisir un évènement']}]) %}
+
+	{% for id, datas in list_cards %}
+		{% include 'components/list-cards.html.twig' with {template: 'evenement'}%}
+	{% endfor %}
 {% endblock %}
+
 {% block bottom_content %}
 	{% include 'layout/overlay.html.twig' %}
 	<a href="#" class="button bt-open-form">Saisir un évènement</a>
