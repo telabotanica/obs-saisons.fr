@@ -1,0 +1,16 @@
+{#
+    datas: array
+        text* string (may contain html to display)
+        help_page_uri# string | 'participer'
+        help_label# string | 'protocole'
+        help text# string |  'pour en savoir plus.'
+
+#}
+<div class="help-block">
+    <h4 class="helper-title">Besoin d'aide ?</h4>
+    <div class="sep"></div>
+    <p>{{ datas[0]|raw }}
+        Consultez la page
+        <a href="{{ path(datas[1]|default('participer')) }}" class="green-link">{{ datas[2]|default('protocole') }}</a>{{ datas[3]|default(' pour en savoir plus.') }}
+    </p>
+</div>
