@@ -1,0 +1,23 @@
+{#
+    type#: 'search' || 'title'
+    text*: string
+#}
+{% set type = datas.type|default('title') %}
+<div class="actionbar-list-block {{ type == 'search' ? 'search' }}">
+    {% if type == 'search' %}
+        <div class="search-form ods-form">
+            <form id="email-form" name="email-form" data-name="Email Form">
+                <input type="text" class="search-field ods-input" maxlength="256" name="Search" data-name="Search" placeholder="{{ datas.text|default }}" id="Search">
+            </form>
+            <div class="ods-form-done">
+                <div>Resultats de votre recherche</div>
+            </div>
+            <div class="ods-form-fail">
+                <div>Votre recherche n'a pas donné de resultats</div>
+            </div>
+        </div>
+    {# {% elseif type == 'title' %} #}
+    {% else %}
+        <div class="actionbar-title">{{ datas.text|raw }}</div>
+    {% endif %}
+</div>

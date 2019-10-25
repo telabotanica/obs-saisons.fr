@@ -1,0 +1,10 @@
+{#
+    xs_hide: boolean
+    icon: string ($icons in _icons.scss)
+    green: boolean
+    label: string
+#}
+
+<a href="#" class="squared-button {{ datas.xs_hide|default(false) ? 'hide-on-xs' }} {{ datas.icon|default('add-circle') }}-icon">
+    <div class="squared-button-label {{ datas.green|default(true) ? 'green' }}">{{ datas.label|default('ajouter') }}</div>
+</a>

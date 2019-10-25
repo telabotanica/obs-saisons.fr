@@ -1,0 +1,29 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    template#: string
+    datas#: object
+        classes#: string
+        components*: array
+            component* array
+                component_name* string (side-block, tabs-holder, squared-button, dual-squared-button)
+                component_datas# object
+#}
+
+{% if datas is not defined %}
+    {% set datas = {
+        'classes': 'bottom',
+        'components': [
+            ['squared-button', {'icon': 'export', 'label': 'exporter'}],
+            ['squared-button']
+        ]
+    } %}
+{% endif %}
+<div class="actionbar {{ datas.classes|default }}">
+    {% for component in datas.components %}
+        {% set path = component[0] == 'squared-button' ? 'buttons' : 'actionbar-components' %}
+        {% include "components/#{path}/#{component[0]}.html.twig" with {datas: component[1]|default} %}
+    {% endfor %}
+</div>
