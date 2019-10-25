@@ -1,0 +1,71 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    datas: array
+        card object
+            add#: object (if the card is add with button add)
+                image#: string (uri) | 'media/layout/icons/marker-pointer-add.svg'
+                text#: string (description) | 'Votre station n\'existe pas encore ?'
+                button#: string (button label) | 'Créer une station'
+            header#: object
+                template#: string (template name in "components/cards-components/header-#{header_template}.html.twig") | 'image'
+                datas*: array (for template "image")
+                    images* string
+                    icon_name# string | 'private'
+                    additionnal_class# string
+            body#: object
+                template#: string (template name in "components/cards-components/body-#{body_template}.html.twig") | 'station'
+                datas*: array (for template "stations") | 3 items
+                    heading* string
+                    rows_of_items* array | 2 items
+                        text* string
+                        icon_name# string | if datas [3 items] one icon is 'pointer' the other is 'leaf' (note that right now you can't have datas [3 items] and no icons)
+            footer#: object
+                template#: string (template name in "components/cards-components/footer-#{footer_template}.html.twig") | 'members'
+                datas#: array (for template 'members')
+                    number_of_members# int | 1
+                    spiecies_images# array
+                        spiecies_image_url* string
+#}
+<div class="cards-grid-container">
+    {%  for card in datas %}
+
+        {% if card.add is defined %}
+
+            <div class="card add">
+                <div class="add-card-content">
+                    <img src="{{ asset(card.add.image|default('media/layout/icons/marker-pointer-add.svg')) }}" alt="" class="add-card-icon" width="50">
+                    <div class="add-card-text">{{ card.add.text|default('Votre station n\'existe pas encore ?') }}</div>
+                    <a href="#" class="button bt-add">{{ card.add.button|default('Créer une station') }}</a>
+                </div>
+            </div>
+
+        {% else %}
+
+            <a href="#" class="card">
+                {% if card.header is defined %}
+                    {% set header_template = card.header.template|default('image') %}
+                    {% include "components/cards-components/header-#{header_template}.html.twig" with {datas: card.header.datas|default} %}
+                {% endif %}
+
+                {% if card.body is defined %}
+                    <div class="card-body">
+                        {% set body_template = card.body.template|default('station') %}
+                        {% include "components/cards-components/body-#{body_template}.html.twig" with {datas: card.body.datas}%}
+                    </div>
+                {% endif %}
+
+                {% if card.footer is defined %}
+                    <div class="card-footer">
+                        {% set footer_template = card.footer.template|default('members') %}
+                        {% include "components/cards-components/footer-#{footer_template}.html.twig" with {datas: card.footer.datas|default}%}
+                    </div>
+                {% endif %}
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+</div>

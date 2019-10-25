@@ -1,0 +1,24 @@
+{#
+    number_of_members# int | 1
+    spiecies_images# array
+        spiecies_image_url* string
+#}
+{% if datas is not defined %}
+    {% set datas = [1] %}
+{% endif  %}
+<div class="card-footer-item">
+    <div class="members-number person-icon">{{ datas[0]|default(1)|raw }}</div>
+</div>
+{% if datas[1] is defined %}
+    <div class="card-footer-item">
+        {% set chips_number = 0 %}
+        {% for chip in datas[1]|slice(0,4) %}
+            {% set chips_number = chips_number + 1 %}
+            <div class="species-sm" style="background-image: url({{ chip|raw }})"></div>
+        {% endfor %}
+        {% if chips_number < datas[1]|length %}
+            {% set more_species = datas[1]|length - chips_number %}
+            <div class="species-sm more-species {{ more_species > 9 ? 'tens' : (more_species > 99 ? 'hundreds') }}">+{{ more_species }}</div>
+        {% endif %}
+    </div>
+{% endif %}
