@@ -1,30 +1,29 @@
-.list-cards-container {
-    margin-top: 10px;
-    background-color: #fff;
+%list-cards-height {
+    height: 100px;
+    min-height: 80px;
 
     @include media(sm) {
-        margin-top: 0;
-        background-color: transparent;
+        height: 15vh;
+        min-height: 120px;
     }
 
     @include media(md) {
-        margin-top: 40px;
-    }
-
-    @include media(lg) {
-        margin-top: 60px;
+        height: 24vh;
+        min-height: 160px;
     }
 }
 
-.species-list-item {
+.list-cards-item {
     @extend %display-flex;
     @extend %flex-direction-row;
     @extend %align-items-center;
+    @extend %list-cards-height;
 
     margin: 0;
     padding: 0;
     background-color: #fff;
     box-shadow: 0 1px 3px 0 rgba(#000, 0.1);
+    overflow: hidden;
 
     @include media(xs,sm) {
         &:nth-child(odd) {
@@ -44,28 +43,30 @@
             margin-bottom: 0;
         }
     }
+
+    &-add {
+        @extend .list-cards-item;
+        @include media(xs,lg) {
+            display: none;
+        }
+    }
 }
 
-.species-img {
-    @include square-block(100px);
-    min-height: 80px;
-
-    @include background-image("default", 50% 50%);
+.list-card-img {
+    width: 100px;
+    @extend %list-cards-height;
+    background-size: cover;
 
     @include media(sm) {
         width: 140px;
-        height: 15vh;
-        min-height: 120px;
     }
 
     @include media(md) {
         width: $third-pc * 1%;
-        height: 24vh;
-        min-height: 160px;
     }
 }
 
-.species-item-name {
+.item-name-block {
     @extend %display-flex-column;
     @extend %justify-content-center;
     @extend %align-items-flex-start;
@@ -87,18 +88,19 @@
     }
 }
 
-.indiv-item-name {
+.item-heading-dropdown {
     padding-right: 15px;
     padding-left: 0;
     -webkit-transition: none 0ms ease;
     transition: none 0ms ease;
 
-    @include background-image(image-url('right-arrow-orange'), 100% 56%, 6px);
+    @include background-image(null, 100% 56%, 6px);
 
     @include font_title_bold;
     color: grey(20);
     font-size: 16px;
     text-decoration: none;
+
 
     @include media(sm) {
         padding-right: 20px;
@@ -110,9 +112,23 @@
     @include media(md) {
         font-size: 24px;
     }
+
+    &.right-arrow-orange-icon:hover {
+        @include media(sm) {
+            padding-right: 30px;
+        }
+    }
+
+    &.down-arrow-icon {
+        background-size: 10px;
+
+        @include media(md) {
+            background-size: 12px;
+        }
+    }
 }
 
-.text-block-11 {
+.item-name {
     @extend %hide;
 
     margin-top: 5px;
@@ -123,17 +139,22 @@
     @include media(sm) {
         display: block;
     }
+
+    &.pointer-orange-icon {
+        @include background-image(null, 0 50%, 12px);
+        padding-left: 18px;
+    }
 }
 
-.species-item-stades {
+.item-details {
     position: relative;
     z-index: 1000;
 
     @extend %hide;
 
     width: 240px;
+    padding-left: 20px;
     margin-right: 20px;
-    padding-top: 4px;
     color: $grey281146;
     font-size: 14px;
 
@@ -143,16 +164,37 @@
         @include justify-content-center;
         @include flex-1;
     }
+
+    &.flex-none {
+        @extend %flex-none;
+    }
+
+    .grey {
+        margin-bottom: 5px;
+
+        @include font_default_semi_bold;
+        line-height: 20px;
+    }
+
+    .bolder {
+        color: $grey131117;
+        @include font_default_semi_bold;
+    }
 }
 
-.dernier-stade {
-    margin-bottom: 5px;
+.add-list-card {
+    @include display-flex;
+    @include flex-direction-column;
+    @include justify-content-center;
+    @include flex-1;
+    padding: 20px 40px;
 
-    @include font_default_semi_bold;
-    line-height: 20px;
+    .icon-add-list-card {
+        @include background-image(null, center, 50px);
+        color: #bcd35f;
+        @include square-block(100%);
+        margin-bottom: 5px;
+    }
+
 }
 
-.bolder {
-    color: $grey131117;
-    font-weight: 600;
-}

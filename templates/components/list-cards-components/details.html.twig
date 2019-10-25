@@ -1,0 +1,22 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    datas*: object
+        grey_text:# array
+            first int
+            secound int
+        info_date:# array
+            name string
+            date string
+
+#}
+{% if datas.grey_text is defined %}
+    <div class="grey">{{ datas['grey_text'][0] }} individus • {{ datas['grey_text'][1] }}&nbsp;observations</div>
+{% endif %}
+
+{% if datas.info_date is defined %}
+    <div><span class="bolder">{{ datas['info_date'][0] }}</span> - le {{ datas['info_date'][1] }}</div>
+{% endif %}
+
