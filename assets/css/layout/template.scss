@@ -71,9 +71,21 @@
         padding-bottom: 100px;
     }
 
-    @include media(md, lg) {
-        &.narrow {
+    &.narrow {
+        @include media(xs,sm) {
+            padding-top: 10px;
+        }
+
+        @include media(md) {
+            padding-top: 40px;
+        }
+
+        @include media(md, lg) {
             @include gap(padding, "h", 6%);
+        }
+
+        @include media(lg) {
+            padding-top: 60px;
         }
     }
 }
