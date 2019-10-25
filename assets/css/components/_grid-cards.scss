@@ -168,8 +168,7 @@
     padding-bottom: 20px;
     border-top: 1px solid grey(86);
 
-    &-left,
-    &-right {
+    &-item {
         @extend %display-flex;
     }
 }

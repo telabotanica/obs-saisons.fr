@@ -22,7 +22,7 @@
 			{% block menu %}
 				{% include 'layout/menu.html.twig' %}
 			{% endblock %}
-			<div class="main{{  app.request.attributes.get('_route') is same as('index') ? ' home' }}">
+			<div class="main {{ app.request.attributes.get('_route') is same as('index') ? 'home' }}">
 				{% block topbar %}
 					{% include 'layout/topbar.html.twig' %}
 				{% endblock %}
