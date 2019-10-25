@@ -1,0 +1,123 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    id*: int
+    datas*: array
+        periods* object
+            [stade_name]*: array of 2
+                begining* date (0000-mm-dd)
+                end* date (0000-mm-dd)
+            ...
+        individuals* object
+            name*: string
+            observations#: object
+                [year ( date("Y") )]*: array
+                    obs* object
+                        image*: string (url)
+                        stade*: string
+                        date*: string
+#}
+{% set periods = datas[0] %}
+{% set individuals = datas[1] %}
+
+{% set stades_labels = [
+    'Feuillaison',
+    'Floraison',
+    'Fructification',
+    'Scénescence'
+] %}
+{% set stades = periods|keys %}
+{% set actual_stades_labels = [] %}
+{% for i in 0..stades|length - 1 %}
+    {% if 'apparition' in stades[i] %}
+        {% set actual_stades_labels = actual_stades_labels|merge(['1ère appariton']) %}
+    {% elseif stades_labels[i]|convert_encoding('us-ascii//TRANSLIT','utf-8')|lower ==  stades[i] %}
+        {% set actual_stades_labels = actual_stades_labels|merge([stades_labels[i]]) %}
+    {% endif %}
+{% endfor %}
+
+{% set years = [] %}
+{% for indiv in individuals %}
+    {% for year in  indiv.observations|keys %}
+        {% if year not in years %}
+            {% set years = years|merge([year]) %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+{% set first_year = max(years|default("now"|date("Y"))) %}
+
+<div class="periods-calendar hidden" data-id="{{ id }}">
+    <div class="table-container">
+        <div class="grid top">
+            <div class="grid_1-3_1-2 dropdown">
+                <div class="dropdown-toggle" style="{{ years|length > 1 ? 'cursor: pointer;' }}">
+                    <div class="active-year {{ years|length > 1 ? 'down-arrow-icon' }}">{{ first_year }}</div>
+                </div>
+                {% if years|length > 1 %}
+                    <nav class="dropdown-list hidden" style="{{ "height: #{(years|length) - 1 * 45}px;" }}{{ years|length > 5 ? "overflow: scroll;" }}">
+                        {% for year in years %}
+                            <a href="#" class="dropdown-link {{ year == first_year ? 'hidden' }}">{{ year }}</a>
+                        {% endfor %}
+                    </nav>
+                {% endif %}
+            </div>
+            {% for i in 3..14 %}
+                {% set month = "0000-#{i - 2}-01"|date("M")|trans  %}
+                <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 month">{{ month }}</div>
+                {% if month == ("now"|date("M")|trans) %}
+                    <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 table-colomn active-month top"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% for indiv in individuals %}
+            {% if first_year in indiv.observations|keys %}
+                <div class="individu-header">
+                    <h5 class="individu-name">{{ indiv.name }}</h5>
+                    <a href="#" class="table-action">
+                        <div>Saisir une observation</div>
+                    </a>
+                </div>
+
+                <div class="grid content-{{ stades|length }}">
+                    {% for i in 1..stades|length %}
+                        {% set stade = stades[i-1] %}
+                        {% set column_start = (periods[stade][0]|date("n")) + 2 %}
+                        {% set column_end = (periods[stade][1]|date("n")) + 3 %}
+
+                        <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stade {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ actual_stades_labels[i-1] }}</div>
+                        <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
+                        <div class="stade-period {{ stade }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};" }}"></div>
+                    {% endfor %}
+                    {% if indiv['observations'][first_year] is defined %}
+                        {% include 'components/obs_chips.html.twig' with {observations: indiv['observations'][first_year] } %}{# will also take actual_stades_labels #}
+                    {% endif %}
+                    {% for i in 3..13 %}
+                        <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ stades|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }}"></div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="individu-footer">
+            <a href="" class="table-action add open" data-open="obs">
+                <div>Ajouter un nouvel individu</div>
+                <div class="add-button-like add-circle-icon"></div>
+            </a>
+            <div class="table-mask-button">
+                <div class="up-arrow-green-icon">Masquer le détail</div>
+            </div>
+        </div>
+    </div>
+    <div class="helper-legend">
+        <div class="legends">
+            {% for i in 0..stades|length - 1 %}
+                <div class="stade-period {{ stades[i] }} legend"></div>
+            {% endfor %}
+        </div>
+        <div class="helper-legend-text">Périodes à laquelle est observée ce stade en moyenne les années précédentes</div>
+        <a href="#" class="hide-button eye-crossed-icon" title="Ne plus afficher ce message"></a>
+    </div>
+</div>
