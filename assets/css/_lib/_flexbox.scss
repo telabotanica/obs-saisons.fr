@@ -421,3 +421,15 @@ $flex-args: map-keys($flex-map);
     @include flex-defaults($arg);
   }
 }
+
+/*****************************************/
+
+@mixin display-flex-justify-content-center {
+  @include display-flex;
+  @include justify-content-center;
+}
+
+@mixin display-flex-center {
+  @include display-flex-justify-content-center;
+  @include align-items-center;
+}

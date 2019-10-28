@@ -42,6 +42,12 @@
 
             height: 100px;
         }
+
+        &.right {
+            @include media(xs, md) {
+                @include flex-direction-column-reverse;
+            }
+        }
     }
 
     &.bottom {
@@ -67,7 +73,7 @@
     }
 }
 
-.actionbar-left-list-block {
+.actionbar-list-block {
     @extend %hide;
 
     @extend %flex-direction-row;

@@ -8,7 +8,7 @@
 }
 
 
-.member-avatar-sm {
+.species-sm {
     @extend %display-flex;
     @extend %justify-content-center;
     @extend %align-items-center;
@@ -18,7 +18,7 @@
     margin-right: -8px;
     background-color: grey(52);
 
-    &.more-members {
+    &.more-species {
         @extend %align-self-center;
 
         margin-right: 0;
@@ -28,5 +28,12 @@
         font-weight: 700;
         background-image: none;
         background-color: $green;
+
+        &.tens {
+            font-size: 9px;
+        }
+        &.hundreds {
+            font-size: 8px;
+        }
     }
 }

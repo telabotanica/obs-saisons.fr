@@ -26,16 +26,10 @@ $button-color-map: (
   )
 );
 
-
 @mixin button-colors($type) {
   $properties: map_get($button-color-map, $type);
   background-color: map_get($properties, background-color);
   color: map_get($properties, color);
-}
-
-@mixin button-flex {
-  @include display-flex;
-  @include justify-content-center;
 }
 
 .button {
@@ -60,10 +54,15 @@ $button-color-map: (
 
     @include button-colors(add);
     text-align: center;
+
+    &.orange {
+      background-color: $orange;
+      color: $grey181217;
+    }
   }
 
   @mixin bt-fixed-on-sm {
-    @include button-flex;
+    @include display-flex-justify-content-center;
 
     max-width: 100%;
     border-radius: 0;
@@ -126,55 +125,20 @@ $button-color-map: (
     }
   }
 }
-/**********************************************/
-/* BUTTONS SQUARED
-/**********************************************/
-@mixin button-flex-align-items-center {
-  @include button-flex;
-  @include align-items-center;
-}
-
-@mixin squared-button-style($media-query) {
-  @if $media-query == xs {
-    @include background-image(null, 50% 50%, 20px 30px);
-    position: relative;
-    width: 40px;
-    height: 50px;
-    max-width: 100%;
-    text-decoration: none;
-  } @else if $media-query == sm {
-    width: 50px;
-    background-size: 30px;
-  } @else if $media-query == md {
-    width: 100px;
-    margin-left: 0;
-    border-radius: 0;
-  } @else if $media-query == lg {
-    width: 120px;
-  }
-}
-
-@mixin squared-buttons-container($media-query) {
-  $margin-values: (xs: 5px, sm: 30px, md: 0);
-  @if $media-query == xs {
-    @include button-flex-align-items-center;
-  }
-  margin-right: map_get($margin-values, $media-query);
-}
 
 /**********************************************/
 /* BUTTONS SQUARED ACTIONBAR
 /**********************************************/
 .squared-button {
-  @include squared-buttons-container(xs);
-  @include squared-button-style(xs);
+  @include squared-block-container(xs);
+  @include squared-block-style(xs);
   margin-left: 5px;
   @include gap(padding, "v");
   color: $green725760;
 
   @include media(sm) {
-    @include squared-buttons-container(sm);
-    @include squared-button-style(sm);
+    @include squared-block-container(sm);
+    @include squared-block-style(sm);
     @include align-self-center;
     margin-left: 30px;
     border-radius: 4px;
@@ -182,15 +146,15 @@ $button-color-map: (
   }
 
   @include media(md) {
-    @include squared-buttons-container(md);
-    @include squared-button-style(md);
+    @include squared-block-container(md);
+    @include squared-block-style(md);
     @include align-self-stretch;
     height: auto;
     padding-bottom: 6px;
   }
 
   @include media(lg) {
-    @include squared-button-style(lg);
+    @include squared-block-style(lg);
   }
 
   @include media(xs, sm) {
@@ -204,53 +168,17 @@ $button-color-map: (
 /**********************************************/
 /* BUTTONS SQUARED lIST-CARDS
 /**********************************************/
-.dual-squared-buttons-container {
-  @include squared-buttons-container(xs);
-  @include flex-direction-row;
-
-  @include media(sm) {
-    @include squared-buttons-container(sm);
-  }
-
-  @include media(md) {
-    @include flex-direction-column;
-    @include squared-buttons-container(md);
-  }
-}
-
 .dual-squared-button {
-  @include button-flex-align-items-center;
-  @include squared-button-style(xs);
-  @include align-self-stretch;
-
-  margin-left: 10px;
-  border-radius: 4px;
+  @include dual-block;
   color: rgba($grey131117, 0);
-  font-size: 14px;
-  font-weight: 700;
 
   @include media(sm) {
-    @include squared-button-style(sm);
-    margin-left: 5px;
     background-color: #e1dcd7;
   }
 
-  @include media(md) {
-    @include flex-1;
-    @include squared-button-style(md);
-  }
 
-  @include media(lg) {
-    @include squared-button-style(lg);
-  }
-
-  &.other {
-    @include media(xs,sm) {
-      margin-left: 0;
-    }
-
+  &:last-child {
     @include media(sm) {
-      background-size: 27px;
       background-color: #eeeae7;
     }
   }
@@ -260,34 +188,84 @@ $button-color-map: (
 /* BUTTONS SQUARED LABELS
 /**********************************************/
 .squared-button-label {
-  @extend %hide;
+  @include squared-block-label;
 
   @include media(md) {
-    @include position(absolute, 0, 0, 0, 0);
-    @include button-flex-align-items-center;
-    opacity: 0;
-    -webkit-transition: opacity 200ms ease;
-    transition: opacity 200ms ease;
-
-    @include font_default_semi_bold;
     color: $grey281146;
-    font-size: 13px;
-    line-height: 20px;
-    text-align: center;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background-color: #e4dfda;
-    border-radius: 1px;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &.green {
-    background-color: #aec15a;
-    @include green-text-semi-bold;
+    background-color: $grey301687;
   }
 }
+
+/**********************************************/
+/* SQUARED BLOCKS EVENTS
+/**********************************************/
+
+.event-date {
+  @include dual-block;
+  background-color: $orange;
+  color: #fff;
+  text-align: center;
+  border-radius: 0;
+
+  @include media(xs,md) {
+    margin-left: 20px;
+    font-size: 10px;
+    line-height: 18px;
+  }
+
+
+  &.last {
+    background-color: rgba($orange, 0.7);
+
+    @include media(xs,md) {
+      margin-left: 0;
+    }
+
+    &::before{
+      @include position(absolute, 0, auto, auto, 50%);
+      content: "";
+      @include square-block(0);
+      @include border('h', transparent, solid, 10px);
+      border-top: 10px solid $orange;
+      -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      -o-transform: translateX(-50%);
+      transform: translateX(-50%);
+
+      @include media(xs,md) {
+        left: 0;
+        top: 50%;
+        border-top-width: 8px;
+        border-top-color: transparent;
+        border-bottom-width: 8px;
+        border-bottom-style: solid;
+        border-bottom-color: transparent;
+        border-left-width: 8px;
+        border-left-color: #ff7f2a;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  &:only-child {
+    @include media(xs,sm) {
+      width: 80px;
+    }
+
+    @include media(sm,md) {
+      width: 100px;
+    }
+
+    @include media(xs,md) {
+      margin-left: 20px;
+    }
+  }
+
+
+}
+
 
 

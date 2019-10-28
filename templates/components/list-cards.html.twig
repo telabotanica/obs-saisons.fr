@@ -1,0 +1,60 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    id*: int
+    template#: string | 'observation'
+    datas*: object (for "stations")
+        add#: array
+            text* string (description)
+            button* string (button label)
+        image#: string (url)
+        events_dates#: array of 1 (1 day), or 2 (begining - end) (template = "event")
+            date* array of 2 (todo: let this be a date then reformat as below.)
+                day* int
+                month* string of 3 (e.g. nov), or 4 (i.e. juin & juil)
+        heading*: array
+            heading* string (with dropdown)
+            sub_heading# string (item-name)
+        details#: object (e.g. for "stations")
+            statistics#: array
+                individuals int
+                observations int
+            stage#: array
+                stage_name string
+                stage_date string
+    buttons#: array (all list cards have same buttons) | if defined by [], dual-squared-button [['help-circle', 'fiche'],['edit-calendar', 'éditer']]
+#}
+<div class="list-cards-item{{ datas.add is defined ? '-add' }}" data-id="{{ id }}">
+    {% if datas.add is defined %}
+        <div class="add-list-card">
+            <div class="icon-add-list-card add-square{{ template == 'evenement' ? '-orange' }}-icon"></div>
+            <div class="add-card-text">{{ datas['add'][0] }}</div>
+            <a href="#" class="button bt-add {{ template == 'evenement' ? 'orange' }}">{{ datas['add'][1] }}</a>
+        </div>
+
+    {% else %}
+        {% if datas.events_dates is defined %}
+            {% include "components/list-cards-components/event-dates.html.twig" with {datas: datas.events_dates}%}
+        {% endif %}
+
+        {% if datas.image is defined %}
+            <div class="list-card-img {{ datas.image == 'default' ? 'bg-default' }}" style="{{ datas.image is defined and datas.image != 'default' ? "background-image: url(#{datas.image})" }}"></div>
+        {% endif %}
+
+        <div class="item-name-block">
+            {% include "components/list-cards-components/heading.html.twig" with {datas: datas.heading} %}
+        </div>
+
+        {% if datas.details is defined %}
+            <div class="item-details {{ template == 'evenement' ? 'flex-none' }}">
+                {% include "components/list-cards-components/details.html.twig" with {datas: datas.details} %}
+            </div>
+        {% endif %}
+
+        {% if buttons is defined %}
+            {% include "components/buttons/dual-squared-button.html.twig" with {datas: buttons}%}
+        {% endif %}
+    {% endif %}
+</div>

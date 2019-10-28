@@ -1,0 +1,518 @@
+@mixin simple-calendar-grid-blocks($column-start, $column-end, $row-start, $row-end) {
+    .grid_#{$column-start}-#{$column-end}_#{$row-start}-#{$row-end} {
+        grid-column-start: $column-start;
+        grid-column-end: $column-end;
+        grid-row-start: $row-start;
+        grid-row-end: $row-end;
+    }
+}
+
+@mixin calendar-grid-blocks($fixed-direction, $fixed-digits, $first, $last) {
+    @if $fixed-direction == 'row' {
+        @for $i from $first through ($last - 1) {
+            @include simple-calendar-grid-blocks($i, $i + 1, nth($fixed-digits,1), nth($fixed-digits,2));
+        }
+    }
+    @else {
+        @for $i from $first through ($last - 1) {
+             @include simple-calendar-grid-blocks(nth($fixed-digits,1), nth($fixed-digits,2), $i, $i + 1);
+        }
+    }
+}
+
+/**************************************************/
+/* dropdown */
+@include simple-calendar-grid-blocks(1, 3, 1, 2);
+/* month */
+@include calendar-grid-blocks('row', (1,2), 3, 15);
+
+/* table-intitule-stade */
+@include calendar-grid-blocks('colomn', (1,3), 1, 5);
+/* table-row */
+@include calendar-grid-blocks('colomn', (3,15), 1, 5);
+
+/* table-colomn */
+@include calendar-grid-blocks('row', (1,2), 3, 14);
+@include calendar-grid-blocks('row', (1,3), 3, 14);
+@include calendar-grid-blocks('row', (1,4), 3, 14);
+@include calendar-grid-blocks('row', (1,5), 3, 14);
+
+/**************************************************/
+.periods-calendar {
+    @include media(sm,md) {
+        margin-top: -10px;
+    }
+}
+
+@mixin hide_on_small {
+    @include media(xs,md) {
+        display: none;
+    }
+}
+
+.table-container {
+    @include media(md) {
+        margin-bottom: 30px;
+        border-bottom: 1px solid grey(87);
+        background-color: #fff;
+    }
+}
+
+.grid {
+    @include media(md) {
+        @include display-grid;
+        grid-auto-columns: 1fr;
+        @include grid-template-columns(grid-repeat(14, 1fr));
+    }
+
+    &.top {
+        @include media(md) {
+            @include grid-template-rows(60px);
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+        }
+    }
+
+    &.content {
+        @include media(md) {
+            @for $i from 1 through 4 {
+                &-#{$i} {
+                    @include grid-template-rows(grid-repeat($i, 50px));
+                }
+            }
+        }
+    }
+}
+
+/**************************************************/
+.dropdown {
+    position: relative;
+    z-index: 900;
+    @include display-flex-center;
+    @include flex-direction-column;
+    @include gap(padding, "v", 5px);
+    background-color: #fff;
+    border-top: 1px solid grey(87);
+    color: grey(33);
+    font-size: 14px;
+    letter-spacing: 2px;
+
+    @include media(sm) {
+        background-color: transparent;
+    }
+
+    @include media(md) {
+        display: inline-block;
+        @include grid-align-self(stretch);
+        @include grid-justify-self(stretch);
+        width: 100%;
+        @include gap(padding, "v", 0);
+        @include gap(margin, "h", auto);
+        text-align: left;
+        border-top: none;
+    }
+}
+
+@mixin ods-dropdowns {
+    position: relative;
+    @include gap(margin, "h", auto);
+    color: grey(13);
+    text-align: left;
+    vertical-align: top;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dropdown-toggle {
+    @include ods-dropdowns;
+    @include display-flex-center;
+    height: 100%;
+    border-radius: 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+
+    @include media(md) {
+        @include gap(padding, "v", 8px);
+        @include gap(padding, "h", 15px);
+        border-right: 1px solid grey(87);
+        font-size: 18px;
+        line-height: 20px;
+    }
+
+    .active-year {
+        @include background-image(null, 100% 50%, 10px);
+        padding-right: 20px;
+
+        @include media(md) {
+            background-size: 12px;
+        }
+    }
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    min-width: 50%;
+    min-height: 50px;
+    max-height: 180px;
+    background-color: #fdfaf7;
+    border-top: 1px solid $grey301486;
+    box-shadow: 0 1px 3px 0 rgba(#000, 0.1);
+
+    @include media(md) {
+        min-width: 100%;
+    }
+}
+
+.dropdown-link {
+    @include ods-dropdowns;
+    display: block;
+    padding: 10px 20px;
+    background: $grey303394;
+    text-align: center;
+    opacity: 0.7;
+
+    &:nth-child(odd) {
+        background: #fff;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+/**************************************************/
+@mixin individu-block {
+    @include justify-content-space-between;
+    height: 60px;
+    background-color: $green725760;
+}
+.individu-header {
+    @include display-flex;
+    @include justify-content-center;
+    @include align-items-center;
+    @include gap(padding, 'v', 8px);
+    background-color: rgba(188, 211, 95, 0.2);
+
+    @include media(sm) {
+        background-color: transparent;
+        @include border('v', grey(87));
+    }
+
+    @include media(md){
+        @include individu-block;
+        @include gap(padding, 'v', 0);
+        padding-left: 20px;
+        font-size: 16px;
+        border-style: none;
+    }
+}
+
+.individu-footer {
+    @include display-flex;
+    @include justify-content-center;
+    @include align-items-center;
+    @include gap(padding, 'v', 20px);
+    background-color: #cde275;
+
+    @include media(md) {
+        @include individu-block;
+        @include flex-direction-row-reverse;
+        @include align-self-stretch;
+        padding: 0;
+    }
+}
+
+.individu-name {
+    color: $grey131117;
+    @include font_default_semi_bold;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    @include media(sm) {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    @include media(md) {
+        @include font-title-bold;
+        font-size: 18px;
+        text-transform: capitalize;
+    }
+}
+
+.table-action {
+    @include display-flex;
+    @include align-items-center;
+    max-width: 100%;
+    height: 100%;
+    @include gap(padding, "h", 20px);
+    color: $green;
+    @include font_default_semi_bold;
+    font-size: 14px;
+    text-decoration: none;
+
+    @include hide_on_small;
+
+    &.add {
+        @include display-flex;
+        padding-right: 0;
+    }
+}
+
+.add-button-like {
+    @include display-flex-center;
+    @include align-self-stretch;
+    width: 64px;//paddings-right/left + background-size
+    @include gap(padding, "h", 20px);
+    margin-left: 20px;
+    @include background-image(null, 50% 50%, 24px);
+    background-color: $green704555;
+
+    @include hide_on_small;
+}
+
+.table-mask-button {
+    @include display-flex;
+    @include justify-content-space-between;
+    @include align-items-center;
+    @include align-self-stretch;
+
+    width: 164px;
+    padding-left: 20px;
+    cursor: pointer;
+
+    @include font_default_semi_bold;
+    color: $green;
+    font-size: 13px;
+
+    @include hide_on_small;
+
+    .up-arrow-green-icon {
+        @include background-image(null, 0 50%, 12px);
+
+        padding-left: 32px;//20px + background-size
+    }
+}
+
+/**************************************************/
+.month {
+    @include display-flex-justify-content-center;
+    @include grid-justify-self(center);
+    @include grid-align-self(center);
+    @include flex-1;
+    @include font_default_semi_bold;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    @include hide_on_small;
+}
+
+/**************************************************/
+.table-colomn {
+    border-right: 1px dashed $grey301486;
+
+    @include hide_on_small;
+
+    &.active-month {
+        background-color: rgba($green725760, 0.2);
+    }
+
+    &.top {
+        border-left: 1px dashed $grey301486;
+    }
+}
+
+/**************************************************/
+.table-intitule-stade {
+    @include display-flex;
+    @include justify-content-flex-start;
+    @include align-items-center;
+    @include grid-align-self(center);
+    @include grid-justify-self(start);
+    @include square-block(100%);
+    padding-left: 20px;
+    @include border((right, bottom), grey(87));
+    background-color: rgba($green725760, 0.2);
+    @include font_default_semi_bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+
+    @include hide_on_small;
+
+    &.darker {
+        background-color: rgba($green725760, 0.3);
+    }
+
+    &.last {
+        border-bottom-style: none;
+    }
+}
+
+
+/**************************************************/
+.table-row {
+    border-bottom: 1px solid grey(87);
+
+    @include hide_on_small;
+
+    &.darker {
+        background-color: #fdfaf7;
+    }
+
+    &.last {
+        border-bottom-style: none;
+    }
+}
+
+
+/**************************************************/
+.stade-period {
+    position: relative;
+    @include grid-align-self(center);
+    @include grid-justify-self(center);
+    z-index: 50;
+    width: 80%;
+    height: 10px;
+    border-radius: 20px;
+    opacity: 0.3;
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+
+    @include hide_on_small;
+
+    &.feuillaison{
+        background-color: $green725760;
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+
+    &.floraison {
+        background-color: $orange;
+        grid-row-start: 2;
+        grid-row-end: 3;
+    }
+
+    &.appariton,
+    &.fructification {
+        background-color: $blue;
+        grid-row-start: 3;
+        grid-row-end: 4;
+    }
+
+    &.scenescence {
+        background-color: $red;
+        grid-row-start: 4;
+        grid-row-end: 5;
+    }
+}
+
+
+/**************************************************/
+.stade-marker {
+    @include display-flex;
+    height: 100px;
+    @include background-image(null, 0 50%, 100px 100px);
+    background-color: #fff;
+
+    @include media(md) {
+        position: relative;
+        z-index: 100;
+        @include square-block(44px);
+        @include grid-align-self(center);
+        @include grid-justify-self(center);
+        @include background-image(null, 50% 50%);
+        border: 2px solid #fff;
+        border-radius: 50px;
+        background-color: grey(59);
+        box-shadow: 0 5px 8px 0 rgba($grey281146, 0.25);
+    }
+
+    &:nth-child(even) {
+        @include media(xs,sm) {
+            background-color: $grey303394;
+        }
+    }
+
+    &-text {
+        @include display-flex;
+        @include justify-content-center;
+        @include flex-direction-column;
+        @include align-content-flex-start;
+        @include flex-1;
+        margin-left: 100px;/* background-size + 20px */
+        padding-left: 20px;
+
+        @include media(sm) {
+            border-bottom: 1px solid grey(87);
+        }
+
+        @include media(md) {
+            display: none;
+        }
+
+        &.last {
+            border-bottom: none;
+        }
+    }
+}
+
+.stade-text {
+    @include font_default_semi_bold
+    font-size: 16px;
+}
+
+.stade-date {
+    color: $grey281146;
+    font-size: 13px;
+}
+
+/****************************************************/
+.helper-legend {
+    @include display-flex;
+    @include justify-content-space-between;
+    margin-bottom: 60px;
+    padding-left: 20px;
+    border: 1px solid $grey301486;
+    border-radius: 4px;
+    background-color: grey(100, 0.5);
+
+    @include hide_on_small;
+
+    .legends{
+        @include display-flex;
+        padding: 20px 0;
+
+        .legend{
+            width: 20px;
+            margin-right: 5px;
+
+            &.last {
+                margin-right: 20px;
+            }
+        }
+    }
+}
+
+.helper-legend-text {
+    padding: 20px 0;
+    margin-left: 10px;
+    color: $grey281146;
+    font-size: 15px;
+    @include font_default_italic;
+}
+
+.hide-button {
+    width: 65px;
+    height: auto;
+    margin-left: 10px;
+    background-color: $grey301687;
+    border-radius: 0 4px 4px 0;
+
+    @include background-image(null, 50% 50%, 24px);
+}
+
+/**********************************************************/

@@ -1,0 +1,12 @@
+{#
+    heading* string
+    rows_of_items* array | 2 items
+        text* string
+        icon_name# string | if datas [3 items] one icon is 'pointer' the other is 'leaf' (note that right now you can't have datas [3 items] and no icons)
+#}
+<h4 class="card-heading">{{ datas[0] }}</h4>
+{% set default_icons = (datas|length == 3 and datas[1][1] is not defined and datas[2][1] is not defined ? ['pointer','leaf']) %}
+{% for index, row in datas|slice(1) %}
+    {% set icon = row[1] is defined ? row[1] : (default_icons[index] is defined) ? default_icons[index] %}
+    <div class="card-detail {{ icon ? "#{icon}-icon" }}">{{ row[0]|raw }}</div>
+{% endfor %}

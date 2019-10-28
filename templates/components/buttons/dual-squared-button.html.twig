@@ -1,0 +1,34 @@
+{#
+    datas#: array of 2
+        button object
+            url#: string (the href of link)
+            icon*: string ($icons in icons.scss)
+            data_attr#: array
+                action* string (e.g. "open")
+                target* string (e.g. "indiv" to record new individual of a given species)
+            label*: string
+#}
+{% if datas is not defined or datas is empty %}
+    {% set datas = [
+        {
+            'icon': 'help-circle',
+            'label': 'fiche'
+        },
+        {
+            'icon': 'edit-calendar',
+            'data_attr': ['open', 'indiv'],
+            'label': 'saisir'
+        }
+    ] %}
+{% endif %}
+<div class="dual-blocks-container">
+    {% for button in datas %}
+        {% if button.data_attr is defined %}
+            {% set action = button['data_attr'][0] %}
+            {% set target = button['data_attr'][1] %}
+        {% endif %}
+        <a href="{{ button.url|default }}" class="dual-squared-button {{ button.icon }}-icon {{ action|default }}" {{ button.data_attr is defined ? "data-#{action}\=#{target}" }}>
+            <div class="squared-button-label">{{ button.label }}</div>
+        </a>
+    {% endfor %}
+</div>

@@ -1,0 +1,29 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    actual_stades_labels* array
+        [stade_label]* string
+    observations*: object
+        obs* object
+            image*: string (url)
+            stade*: string
+            date*: string
+#}
+
+{% for obs in observations %}
+    {% set column_start = (obs.date|date("n")) + 2 %}
+    {% set row_start = 0 %}
+    {% for stade_label in actual_stades_labels %}
+        {% if stade_label == obs.stade|split(' - ')|first  %}
+            {% set row_start = loop.index %}
+        {% endif %}
+    {% endfor %}
+    <div class="stade-marker" style="{{ "background-image: url(#{obs.image}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}">
+        <div class="stade-marker-text {{ loop.last ? 'last' }}">
+            <div class="stade-text">{{ obs.stade }}</div>
+            <div class="stade-date">Le {{ obs.date|date("j F Y")|trans }}</div>
+        </div>
+    </div>
+{% endfor %}

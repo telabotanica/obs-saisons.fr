@@ -1,0 +1,21 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default
+
+    template#: string
+    datas*: object
+        tabs#: array (required if default not defined)
+            label*: string
+#}
+{% set default_templates = ['station', 'observation'] %}
+
+{% if template in default_templates %}
+    {% set datas = {'tabs': ["Toutes les #{template}s", "Mes #{template}s"]} %}
+{% endif %}
+
+<div class="tabs-holder {{ template == 'station' ? 'list' }}">
+    {% for tab in datas.tabs %}
+        <div class="tab {{ not loop.first ? 'not' }}">{{ tab }}</div>
+    {% endfor %}
+</div>

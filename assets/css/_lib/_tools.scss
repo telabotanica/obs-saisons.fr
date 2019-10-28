@@ -53,6 +53,11 @@ $third-pc: 100/3;
 	background-size: $size;
 	background-repeat: $repeat;
 }
+
+.bg-default {
+	@include background-image("default", 50% 50%);
+}
+
 /******************************************/
 /*       paddings & margins               */
 /******************************************/
@@ -125,6 +130,115 @@ $third-pc: 100/3;
 		border-#{$direction}-width: $width;
 		border-#{$direction}-style: $style;
 		border-#{$direction}-color: $color;
+	}
+}
+
+/********************************************/
+/*            DUAL BLOCKS
+/********************************************/
+@mixin squared-block-container($media-query) {
+	$margin-values: (xs: 5px, sm: 30px, md: 0);
+	@if $media-query == xs {
+		@include display-flex-center;
+	}
+	margin-right: map_get($margin-values, $media-query);
+}
+
+@mixin squared-block-style($media-query) {
+	@if $media-query == xs {
+		@include background-image(null, 50% 50%, 20px 30px);
+		position: relative;
+		width: 40px;
+		height: 50px;
+		max-width: 100%;
+		text-decoration: none;
+	} @else if $media-query == sm {
+		width: 50px;
+		background-size: 30px;
+	} @else if $media-query == md {
+		width: 100px;
+		margin-left: 0;
+		border-radius: 0;
+	} @else if $media-query == lg {
+		width: 120px;
+	}
+}
+
+.dual-blocks-container {
+	@include squared-block-container(xs);
+	@include flex-direction-row;
+
+	@include media(sm) {
+		@include squared-block-container(sm);
+	}
+
+	@include media(md) {
+		@include squared-block-container(md);
+		@include flex-direction-column;
+	}
+}
+
+@mixin dual-block {
+	@include display-flex-center;
+	@include squared-block-style(xs);
+	@include align-self-stretch;
+
+	margin-left: 10px;
+	border-radius: 4px;
+	font-size: 14px;
+	font-weight: 700;
+
+	@include media(sm) {
+		@include squared-block-style(sm);
+		margin-left: 5px;
+	}
+
+	@include media(md) {
+		@include flex-1;
+		@include squared-block-style(md);
+	}
+
+	@include media(lg) {
+		@include squared-block-style(lg);
+	}
+
+	&:last-child {
+		@include media(xs,sm) {
+			margin-left: 0;
+		}
+
+		@include media(sm) {
+			background-size: 27px;
+		}
+	}
+}
+
+@mixin squared-block-label {
+	@extend %hide;
+
+	@include media(md) {
+		@include position(absolute, 0, 0, 0, 0);
+		@include display-flex-center;
+		opacity: 0;
+		-webkit-transition: opacity 200ms ease;
+		transition: opacity 200ms ease;
+
+		@include font_default_semi_bold;
+		font-size: 13px;
+		line-height: 20px;
+		text-align: center;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		border-radius: 1px;
+	}
+
+	&:hover {
+		opacity: 1;
+	}
+
+	&.green {
+		background-color: $green704555;
+		@include green-text-semi-bold;
 	}
 }
 
