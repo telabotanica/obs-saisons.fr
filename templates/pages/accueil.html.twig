@@ -5,63 +5,57 @@
 		<div class="actus-une-content">
 			<div class="content-narrow-header bottom-div">
 				<h4 class="content-narrow-title">Actualités</h4>
-				<div class="div-block-12">
-					<a href="#" class="nav-arrow ods-inline-block">
-						<img src="{{ asset('media/layout/icons/left-arrow-green.svg') }}" alt="" class="inactive" width="15" height="15">
-					</a>
-					<a href="#" class="nav-arrow ods-inline-block">
-						<img src="{{ asset('media/layout/icons/right-arrow-green.svg') }}" alt="" width="15" height="15">
-					</a>
-				</div>
+				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+					'before': {},
+					'after': {'path': 'actu'}
+				}}%}
 			</div>
 			<h4 class="actus-une-title">Vos plus belles photos du début d'année</h4>
 			<div class="actus-une-date">12 janvier 2019</div>
-			<div class="div-block-11">
-				<a href="{{ path('actualites') }}" class="link-2">toutes les actualités</a>
-			</div>
+			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'actualites', button_label: 'toutes les actualités'} %}
 		</div>
 	</div>
 	<div class="content home">
-		<div class="content-une-block _2">
+		<div class="content-une-block">
 			<img src="{{ asset('media/layout/Fichier 3.svg') }}" alt="" class="content-block-img" height="50">
 			<div class="content-block-infos">
 				<h3 class="content-narrow-title dark">Comment participer ?</h3>
 				<h4 class="content-blocks-title">En quelques minutes, devenez un observateur des saisons !</h4>
-				<p class="paragraph-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat...</p>
-				<a href="{{ path('participer') }}" class="content-block-link w-inline-block">
-					<div class="text-block-20">En savoir plus</div>
+				<p class="content-blocks-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat...</p>
+				<a href="{{ path('participer') }}" class="content-block-link">
+					<div class="home-link">En savoir plus</div>
 				</a>
 			</div>
 		</div>
 		<div class="next-event">
 			<div class="content-narrow-header bottom-div">
 				<h4 class="content-narrow-title orange">Évènements</h4>
-				<div class="div-block-12">
-					<a href="#" class="nav-arrow light ods-inline-block">
-						<img src="{{ asset('media/layout/icons/left-arrow-orange.svg') }}" alt="" class="inactive" width="15" height="15">
-					</a>
-					<a href="#" class="nav-arrow light ods-inline-block">
-						<img src="{{ asset('media/layout/icons/right-arrow-orange.svg') }}" alt="" width="15" height="15">
-					</a>
-				</div>
+				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+					'before': {},
+					'after': {'path':'evenement'},
+					'arrow_color': 'orange',
+					'borders': 'light'
+				}} %}
 			</div>
 			<div class="next-event-descr">Stage de terrain autour de<br>St-Hippolyte-du-Fort</div>
 			<div>
 				<h5 class="next-event-title">22 - 26 Janvier 2019</h5>
 				<div class="next-event-city">St-Hippolyte-du-Fort (30)</div>
 			</div>
-			<div class="div-block-11 beige">
-				<a href="{{ path('evenements') }}" class="link-2 fonce">tous les évènements</a>
-			</div>
+			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'evenements', button_label: 'tous les évènements', button_color: 'orange'} %}
 		</div>
 	</div>
 	<div class="content home">
 		<div class="now" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
 			<div class="content-block-infos horiz">
-				<div class="div-block-13">
+				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+					'after': {'path': 'especes'},
+					'borders': 'no-border'
+				}} %}
+				<div class="infos-insert">
 					<h3 class="content-narrow-title">à Observer en ce moment</h3>
 					<h4 class="content-blocks-title small">Sorbier des oiseleurs</h4>
-					<div class="text-block-20-copy pointer">Comment l'observer ?</div>
+					<a href="{{ path('especes') }}" class="home-link green pointer">Comment l'observer ?</a>
 				</div>
 			</div>
 		</div>
@@ -71,7 +65,7 @@
 			</div>
 			<ul class="ods-list-unstyled">
 				<li>
-					<a href="#" class="recent-obs-item ods-inline-block">
+					<a href="#" class="recent-obs-item">
 						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" width="80">
 						<div class="recent-obs-item-content first">
 							<div class="recent-obs-title">Chêne blanc</div>
@@ -80,7 +74,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="recent-obs-item ods-inline-block">
+					<a href="#" class="recent-obs-item">
 						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" width="80">
 						<div class="recent-obs-item-content">
 							<div class="recent-obs-title">Chêne blanc</div>
@@ -89,7 +83,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="recent-obs-item ods-inline-block">
+					<a href="#" class="recent-obs-item">
 						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b1baf268acc_small04.jpg" alt="" width="80">
 						<div class="recent-obs-item-content">
 							<div class="recent-obs-title">Chêne blanc</div>
@@ -98,7 +92,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="recent-obs-item ods-inline-block">
+					<a href="#" class="recent-obs-item">
 						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" width="80">
 						<div class="recent-obs-item-content">
 							<div class="recent-obs-title">Chêne blanc</div>
@@ -107,7 +101,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#" class="recent-obs-item ods-inline-block">
+					<a href="#" class="recent-obs-item">
 						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" width="80">
 						<div class="recent-obs-item-content">
 							<div class="recent-obs-title">Chêne blanc</div>
@@ -116,16 +110,14 @@
 					</a>
 				</li>
 			</ul>
-			<div class="div-block-11">
-				<a href="{{ path('stations') }}" class="link-2">ajoutez&nbsp;une observation</a>
-			</div>
+			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'stations', button_label: 'ajoutez une observation'} %}
 		</div>
 	</div>
 	<div class="number-obs-container">
 		<div class="banner-number">
-			<div class="div-block-20">
+			<div class="number-obs-infos">
 				<div class="number-obs">2138</div>
-				<div class="text-block-37">Observations en 2018</div>
+				<div class="number-obs-period">Observations en 2018</div>
 			</div>
 			<div class="mosaic">
 				<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b1baf268acc_small04.jpg" id="w-node-2fd297a8c71e-1ac511a1" alt="">
