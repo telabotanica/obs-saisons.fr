@@ -1,31 +1,33 @@
+{% set activeMenuItem = breadcrumbs is defined ? breadcrumbs|keys|first : 'accueil' %}
 <div class="menu">
-	{% set activeMenuItem = 'accueil' %}
-	{% if breadcrumbs is defined %}
-		{% set activeMenuItem = breadcrumbs|keys|first %}
-	{% endif %}
 	<a href="/" class="site-name">
 		<img src="{{ asset('media/layout/logoodstexte.png') }}" alt="" class="logo">
 	</a>
 	<img src="{{ asset('media/layout/icons/close.svg') }}" alt="" class="close-menu-img pointer" width="10">
 	<div class="nav">
-		<a href="/" class="nav-item home ods-inline-block{{ activeMenuItem is same as ('accueil') ? ' ods--current' }}">
+		<a href="/" class="nav-item home{{ activeMenuItem == ('accueil') ? ' active' }}">
 			<div>Accueil</div>
 		</a>
+
 		{% for menuItem, menuItemTitle in constant('App\\Controller\\PagesController::MENU') %}
-			<a href="{{ path(menuItem) }}" class="nav-item ods-inline-block{{ activeMenuItem is same as (menuItem) ? ' ods--current' }}">
+			<a href="{{ path(menuItem) }}" class="nav-item{{ activeMenuItem == menuItem ? ' active' }}">
 				<div>{{ menuItemTitle }}</div>
 			</a>
 		{% endfor %}
-		<a href="#" class="nav-item resp-connect ods-inline-block">
+
+		<a href="#" class="nav-item resp-connect">
 			<div>Connexion</div>
 		</a>
 	</div>
 	<div class="social-links">
-		<div class="social-icon-link first pointer">
+		<a href="http://www.facebook.com/pages/Observatoire-des-Saisons/167300616656493" class="social-icon-link first">
 			<img src="{{ asset('media/layout/icons/fcbk.svg') }}" alt="ods facebook" width="10">
-		</div>
-		<div class="social-icon-link pointer">
+		</a>
+		<a href="http://twitter.com/#!/ObservSaisons" class="social-icon-link">
 			<img src="{{ asset('media/layout/icons/twtr.svg') }}" alt="ods tweeter" width="20">
-		</div>
+		</a>
+		<a href="http://www.flickr.com/groups/ods/" class="social-icon-link">
+			<img src="{{ asset('media/layout/icons/flickr.svg') }}" alt="ods flickr" width="25">
+		</a>
 	</div>
 </div>
