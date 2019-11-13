@@ -1,4 +1,4 @@
-<div class="topbar{{  app.request.attributes.get('_route') is same as('accueil') ? ' home' }}">
+<div class="topbar{{  app.request.attributes.get('_route') == 'accueil' ? ' home' }}">
 	<div class="topbar-left">
 		{% if breadcrumbs is defined %}
 			{% include 'components/breadcrumbs.html.twig' %}
@@ -15,6 +15,6 @@
 		<h1 class="site-name-text">Observatoire des Saisons</h1>
 	</a>
 	<div class="topbar-right">
-		<img id="menu-hamburger-img" src="{{ asset('media/layout/icons/menu-hamburger.svg') }}" alt="icone menu" class="menu-img pointer" width="10">
+		<img id="menu-hamburger-img" src="{{ asset('media/layout/icons/menu-hamburger.svg') }}" alt="icone menu" class="menu-img" width="10">
 	</div>
 </div>
