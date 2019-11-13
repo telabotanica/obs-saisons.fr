@@ -1,0 +1,51 @@
+.accordion-block {
+    width: 100%;
+    @include gap(padding, 'v', 20px);
+}
+
+.accordion-title-dropdown {
+    @include gap(padding, 'v', 20px);
+    padding-right: 15px;
+    padding-left: 40px;
+    -webkit-transition: none 0ms ease;
+    transition: none 0ms ease;
+
+    @include background-image(null, 100% 53%, 6px);
+
+    @include font_title_bold;
+    color: grey(20);
+    font-size: 16px;
+    text-decoration: none;
+    outline: none !important;
+
+    @include media(sm) {
+        padding-right: 20px;
+        -webkit-transition: padding 200ms ease;
+        transition: padding 200ms ease;
+        font-size: 22px;
+    }
+
+    @include media(md) {
+        font-size: 24px;
+    }
+
+    /********v*********/
+    @include media(lg) {
+        padding-left: 40px;
+    }
+    /*******A**********/
+
+    &.right-arrow-orange-icon:hover {
+        @include media(sm) {
+            padding-right: 30px;
+        }
+    }
+
+    &.down-arrow-icon {
+        background-size: 10px;
+
+        @include media(md) {
+            background-size: 12px;
+        }
+    }
+}
