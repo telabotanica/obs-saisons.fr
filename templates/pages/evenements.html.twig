@@ -1,24 +1,35 @@
 {# exemple evenements #}
-{% set list_cards = [
+{% set events = [
 	{
-		'events_dates':[[22, 'JAN'], [26,'JAN']],
-		'heading': ['Stage de terrain autour de St-Hippolyte-du-Fort', 'St-Hippolyte-du-Fort (30)'],
-		'details': {'info_date': ['Coco L\'Asticot', '28/12/2018']}
+		'title': 'Stage de terrain autour de St-Hippolyte-du-Fort',
+		'start_date': '2019-01-22',
+		'end_date': '2019-01-26',
+		'author': 'Coco L\'Asticot',
+		'publication_date': '2018-12-28',
+		'location': 'St-Hippolyte-du-Fort (30)'
 	},
 	{
-		'events_dates':[[4, 'AVR'], [16,'JUIN']],
-		'heading': ['Exposition les 4 saisons de Soisson', 'Soisson (02)'],
-		'details': {'info_date': ['Grégoire de Tours', '8/02/2019']}
+		'title': 'Exposition les 4 saisons de Soisson',
+		'start_date': '2019-04-04',
+		'end_date': '2019-06-16',
+		'author': 'Grégoire de Tours',
+		'publication_date': '2019-02-08',
+		'location': 'Soisson (02)'
 	},
 	{
-		'events_dates':[[1,'MAI']],
-		'heading': ['Colloque \"Le muguet pète un cable\"', 'Vichy (03)'],
-		'details': {'info_date': ['Coq Licot', '8/03/2019']}
+		'title': 'Colloque \"Le muguet pète un cable\"',
+		'start_date': '2019-05-12',
+		'author': 'Coq Licot',
+		'publication_date': '2019-03-08',
+		'location': 'Vichy (03)'
 	},
 	{
-		'events_dates':[[1, 'OCT'], [1,'NOV']],
-		'heading': ['Inventaire d\'automne des Couleuvres de Montpellier', 'Aimargues (30)'],
-		'details': {'info_date': ['Philippe Frêche', '8/01/2019']}
+		'title': 'Inventaire d\'automne des Couleuvres de Montpellier',
+		'start_date': '2019-10-01',
+		'end_date': '2019-11-01',
+		'author': 'Philippe Frêche',
+		'publication_date': '2019-01-08',
+		'location': 'Aimargues (30)'
 	}
 ] %}
 {# end exemple evenements #}
@@ -26,16 +37,55 @@
 {#********************************************************************************************************************#}
 {% extends 'basic-page-template.html.twig' %}
 
-{% block main_content %}
-	{# add events list-card #}
-	{% set list_cards = list_cards|merge([{'add': ['Vous souhaitez proposer un évènement ?', 'Saisir un évènement']}]) %}
+{% set headers = {
+	'evenements': {
+		'title': 'Evenements',
+		'subtitle': 'Vos <strong>évènements</strong> de l\'Observatoire des saisons.'
+	}
+} %}
 
-	{% for id, datas in list_cards %}
-		{% include 'components/list-cards.html.twig' with {template: 'evenement'}%}
+{% block main_content %}
+
+	{# add events list-card #}
+	{% set list_cards = [] %}
+	{% for event in events %}
+		{% set event_dates = [event.start_date] %}
+		{% if event.end_date is defined %}
+			{% set event_dates = event_dates|merge([event.end_date]) %}
+		{% endif %}
+
+		{% set list_cards = list_cards|merge([{
+			'slug': 'evenement',
+			'events_dates': event_dates,
+			'heading': {
+				'is_link': true,
+				'title': event.title,
+				'text': event.location
+			},
+			'details': {
+				'infos': {
+					'bolder': event.author,
+					'lighter': event.publication_date|date("j/m/Y")
+				}
+			}
+		}]) %}
 	{% endfor %}
+	{% set list_cards = list_cards|merge(
+		[{
+			'add': {
+				'text': 'Vous souhaitez proposer un évènement ?',
+				'button': 'Saisir un évènement'
+			}
+		}]
+	) %}
+
+	{% for id, list_card in list_cards %}
+		{% include 'components/list-cards.html.twig' %}
+	{% endfor %}
+
 {% endblock %}
 
 {% block bottom_content %}
-	{% include 'layout/overlay.html.twig' %}
+	{% include 'layout/overlay.html.twig' with {id: route} %}
 	<a href="#" class="button bt-open-form">Saisir un évènement</a>
 {% endblock %}
