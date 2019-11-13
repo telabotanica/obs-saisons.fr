@@ -281,7 +281,7 @@
 
     width: 164px;
     padding-left: 20px;
-    cursor: pointer;
+    @include pointer;
 
     @include font_default_semi_bold;
     color: $green;
