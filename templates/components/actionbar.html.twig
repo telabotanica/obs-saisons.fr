@@ -1,29 +1,38 @@
 {#
     #: optionnal,
     *: required,
-    |: default
+    @: generic data name (i.e. type of data which must be found here),
+    [int..int]: array indexes ([...] if no precise length defined)
 
-    template#: string
-    datas#: object
+    route#: string
+    actionbar#: object
         classes#: string
-        components*: array
-            component* array
-                component_name* string (side-block, tabs-holder, squared-button, dual-squared-button)
-                component_datas# object
+        components*: array of 1 to 3
+            [...](component) object
+                name*: string (side-block, tabs-holder, squared-button)
+                data||@component_name# (e.g. side_block): object
+                    @component_data (any)
 #}
 
-{% if datas is not defined %}
-    {% set datas = {
+{% if actionbar is not defined %}
+    {% set actionbar = {
         'classes': 'bottom',
         'components': [
-            ['squared-button', {'icon': 'export', 'label': 'exporter'}],
-            ['squared-button']
+            {
+                'name': 'squared-button',
+                'data': {
+                    'icon': 'export',
+                    'label': 'exporter'
+                }
+            },
+            {'name': 'squared-button'}
         ]
     } %}
 {% endif %}
-<div class="actionbar {{ datas.classes|default }}">
-    {% for component in datas.components %}
-        {% set path = component[0] == 'squared-button' ? 'buttons' : 'actionbar-components' %}
-        {% include "components/#{path}/#{component[0]}.html.twig" with {datas: component[1]|default} %}
+
+<div class="actionbar {{ actionbar.classes|default }}">
+    {% for component in actionbar.components %}
+        {% set path = component.name == 'squared-button' ? 'buttons' : 'actionbar-components' %}
+        {% include "components/#{path}/#{component.name}.html.twig" with {(component.name|replace({'-':'_'})): component.data|default} %}
     {% endfor %}
 </div>

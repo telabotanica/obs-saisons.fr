@@ -173,6 +173,7 @@
     text-align: center;
     border-bottom: 2px solid $green;
     color: $grey131117;
+    @include pointer;
 
     @include media(sm) {
         margin-right: 40px;
