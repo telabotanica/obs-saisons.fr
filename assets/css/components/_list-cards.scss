@@ -76,6 +76,8 @@
     padding-left: 0;
     margin-left: 15px;
     font-size: 15px;
+    outline: none;
+    text-decoration: none;
 
     @include media(sm) {
         min-width: 280px;
@@ -157,16 +159,13 @@
     margin-right: 20px;
     color: $grey281146;
     font-size: 14px;
+    text-align: center;
 
     @include media(lg) {
         @include display-flex;
         @include flex-direction-column;
         @include justify-content-center;
         @include flex-1;
-    }
-
-    &.flex-none {
-        @extend %flex-none;
     }
 
     .grey {
