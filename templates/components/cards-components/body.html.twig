@@ -1,0 +1,22 @@
+{#
+    #: optionnal,
+    *: required,
+    |: default,
+    [int..int]: array indexes ([...] if no precise length defined)
+
+    body*: object
+        heading*: string
+        rows*: array
+            [...](item*) object
+                icon_name#: string | if body [3 items] one icon is 'pointer' the other is 'leaf' (note that right now you can't have body [3 items] and no icons)
+                text*: string
+
+{% if card_item is defined %}
+    {% set body = card_item %}
+{% endif %}#}
+
+<h4 class="card-heading">{{ body.heading }}</h4>
+
+{% for row in body.rows %}
+    <div class="card-detail {{ row.icon_name ? "#{row.icon_name}-icon" }}">{{ row.text|raw }}</div>
+{% endfor %}
