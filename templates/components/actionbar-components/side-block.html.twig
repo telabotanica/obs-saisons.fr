@@ -1,13 +1,19 @@
 {#
-    type#: 'search' || 'title'
-    text*: string
+    #: optionnal,
+    *: required,
+    |: default
+
+    side_block||component_data*: object
+        type#: string (i.e. 'search' or 'title') | 'title'
+        text(type==search: #, else *): string
 #}
-{% set type = datas.type|default('title') %}
+
+{% set type = side_block.type|default('title') %}
 <div class="actionbar-list-block {{ type == 'search' ? 'search' }}">
     {% if type == 'search' %}
         <div class="search-form ods-form">
             <form id="email-form" name="email-form" data-name="Email Form">
-                <input type="text" class="search-field ods-input" maxlength="256" name="Search" data-name="Search" placeholder="{{ datas.text|default }}" id="Search">
+                <input type="text" class="search-field" maxlength="256" name="Search" data-name="Search" placeholder="{{ side_block.text|default }}" id="Search">
             </form>
             <div class="ods-form-done">
                 <div>Resultats de votre recherche</div>
@@ -16,8 +22,8 @@
                 <div>Votre recherche n'a pas donné de resultats</div>
             </div>
         </div>
-    {# {% elseif type == 'title' %} #}
+    {# {% elseif side_block.type == 'title' %} #}
     {% else %}
-        <div class="actionbar-title">{{ datas.text|raw }}</div>
+        <div class="actionbar-title">{{ side_block.text|raw }}</div>
     {% endif %}
 </div>

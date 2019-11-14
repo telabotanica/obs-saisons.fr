@@ -110,33 +110,6 @@
 	}
 }
 
-/* c'est les flèches des titres, migrer vers les boutons? */
-.div-block-12 {
-	@include position(absolute, 0, 0);
-	@include display-flex;
-}
-
-.nav-arrow {
-	@include display-flex;
-	@include justify-content-center;
-	@include align-items-center;
-	@include square-block(60px);
-	margin-left: 0;
-	border-left: 1px solid #5a514d;
-	background-color: transparent;
-
-	&.light {
-		border-left-color: #c5b3a4;
-	}
-}
-
-.inactive {
-	opacity: 0.3;
-	-webkit-filter: saturate(20%);
-	filter: saturate(20%);
-}
-/* fin flèches*/
-
 .actus-une-title {
 	margin-top: 40px;
 	@include font_title_bold;
@@ -155,40 +128,6 @@
 	letter-spacing: 1px;
 	text-transform: uppercase;
 }
-
-/* c'est les boutons, migrer vers boutons? */
-.div-block-11 {
-	@include position(absolute, auto, 0, 0, 0);
-	@include display-flex;
-	@include justify-content-flex-start;
-	@include align-items-center;
-	@include align-self-flex-start;
-	height: 90px;
-	@include gap(margin, "h");
-	padding-left: 40px;
-	border-top: 1px none #47423f;
-	background-color: $green715560;
-
-	&.beige {
-		background-color: #e7803a;
-	}
-}
-
-.link-2 {
-	background-color: transparent;
-	color: $grey181217;
-	font-size: 15px;
-	font-weight: 600;
-	letter-spacing: 1px;
-	text-decoration: none;
-	text-transform: uppercase;
-
-	&.fonce {
-		color: #2b2523;
-		font-size: 14px;
-	}
-}
-/* fin boutons */
 
 .content.home {
 	@extend %display-flex-column;
@@ -229,6 +168,7 @@
 }
 
 .content-block-infos {
+	position: relative;
 	@extend %display-flex-column;
 	@include align-self-center;
 	@include align-items-flex-start;
@@ -254,7 +194,7 @@
 	}
 }
 
-.div-block-13 {
+.infos-insert {
 	@extend %display-flex-column;
 	@include align-items-flex-start;
 	@include align-self-flex-start;
@@ -281,7 +221,7 @@
 	}
 }
 
-.paragraph-5 {
+.content-blocks-text {
 	margin-bottom: 20px;
 	color: #192c1c;
 	font-size: 16px;
@@ -321,16 +261,16 @@
 	text-decoration: none;
 }
 
-.text-block-20 {
+.home-link {
 	@include align-self-flex-start;
 	padding-bottom: 4px;
 	border-bottom: 2px solid #3694ac;
 	color: $grey131117;
 	font-weight: 600;
 	@include pointer;
+	text-decoration: none;
 
-	&-copy {
-		@extend .text-block-20;
+	&.green {
 		color: $green725760;
 	}
 }
@@ -457,6 +397,7 @@
 	@include display-flex;
 	@include align-items-center;
 	width: 100%;
+	max-width: 100%;
 	margin-bottom: 10px;
 	@include  gap(padding, "v");
 	border-top: 1px none #dbcec3;
@@ -517,7 +458,7 @@
 	}
 }
 
-.div-block-20 {
+.number-obs-infos {
 	@extend %display-flex-column;
 	@include justify-content-center;
 	@include align-items-center;
@@ -546,7 +487,7 @@
 	}
 }
 
-.text-block-37 {
+.number-obs-period {
 	margin-top: 0;
 	@include font_title_light;
 	color: $grey306092;

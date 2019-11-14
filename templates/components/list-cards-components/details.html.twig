@@ -3,20 +3,18 @@
     *: required,
     |: default
 
-    datas*: object
-        grey_text:# array
-            first int
-            secound int
-        info_date:# array
-            name string
-            date string
+    details*: object
+        grey_text:#  string
+        infos:# object
+            bolder*: string
+            lighter*: string
 
 #}
-{% if datas.grey_text is defined %}
-    <div class="grey">{{ datas['grey_text'][0] }} individus • {{ datas['grey_text'][1] }}&nbsp;observations</div>
+{% if details.grey_text is defined %}
+    <div class="grey">{{ details.grey_text|raw }}</div>
 {% endif %}
 
-{% if datas.info_date is defined %}
-    <div><span class="bolder">{{ datas['info_date'][0] }}</span> - le {{ datas['info_date'][1] }}</div>
+{% if details.infos is defined %}
+    <div><{{ route in ['actualites', 'evenements'] ? 'a href=#' : 'span' }} class="bolder">{{ details.infos.bolder }}</{{ route in ['actualites', 'evenements'] ? 'a' : 'span' }}> - {{ details.infos.lighter }}</div>
 {% endif %}
 

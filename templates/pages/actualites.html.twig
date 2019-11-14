@@ -1,36 +1,72 @@
 {# exemple actualites #}
-{% set list_cards = [
-{
-	'image': 'https://images.pexels.com/photos/86715/nandina-buds-pink-floral-86715.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
-	'heading': ['Les premiers bourgeonnements 2019 : observez'],
-	'details': {'info_date': ['Sylvain Bouleau', '8/01/2019']}
-},
-{
-	'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce25406d0cadbda9e302c8b_chouette.jpg',
-	'heading': ['Vos plus belles photos du début d\'année'],
-	'details': {'info_date': ['Tela Botanica', '12/01/2019']}
-},
-{
-	'image': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chaffinch_%28Fringilla_coelebs%29.jpg/800px-Chaffinch_%28Fringilla_coelebs%29.jpg',
-	'heading': ['Comment reconnaître le cri du pinson des arbres ?'],
-	'details': {'info_date': ['Boulébill', '8/01/2019']}
-}
+{% set all_news = [
+	{
+		'title': 'Les premiers bourgeonnements 2019 : observez',
+		'image': 'https://images.pexels.com/photos/86715/nandina-buds-pink-floral-86715.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+		'author': 'Sylvain Bouleau',
+		'publication_date': '2019-01-08'
+	},
+	{
+		'title': 'Vos plus belles photos du début d\'année',
+		'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce25406d0cadbda9e302c8b_chouette.jpg',
+		'author': 'Tela Botanica',
+		'publication_date': '2019-01-12'
+	},
+	{
+		'title': 'Comment reconnaître le cri du pinson des arbres ?',
+		'image': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chaffinch_%28Fringilla_coelebs%29.jpg/800px-Chaffinch_%28Fringilla_coelebs%29.jpg',
+		'author': 'Boulébill',
+		'publication_date': '2019-01-08'
+	}
 ] %}
 {# end exemple actualites #}
 
 {#********************************************************************************************************************#}
 {% extends 'basic-page-template.html.twig' %}
 
-{% block main_content %}
-	{# add news button #}
-	{% set list_cards = list_cards|merge([{'add': ['Vous souhaitez nous faire partager une actualité ?', 'Saisir une actualité']}]) %}
+{% set headers = {
+	'actualites': {
+		'title': 'Actualités',
+		'subtitle': 'Vos <strong>actualites</strong> de l\'Observatoire des saisons.'
+	}
+} %}
 
-	{% for id, datas in list_cards %}
-		{% include 'components/list-cards.html.twig' with {template: 'actualites'}%}
+{% block main_content %}
+
+	{# add news list-card #}
+	{% set list_cards = [] %}
+	{% for news in all_news %}
+		{% set list_cards = list_cards|merge([{
+			'slug': 'actu',
+			'image': news.image,
+			'heading': {
+				'is_link': true,
+				'title': news.title
+			},
+			'details': {
+				'infos': {
+					'bolder': news.author,
+					'lighter': news.publication_date|date("j/m/Y")
+				}
+			}
+		}]) %}
 	{% endfor %}
+	{% set list_cards = list_cards|merge(
+		[{
+			'add': {
+				'text': 'Vous souhaitez nous faire partager une actualité ?',
+				'button': 'Saisir une actualité'
+			}
+		}]
+	) %}
+
+	{% for id, list_card in list_cards %}
+		{% include 'components/list-cards.html.twig' %}
+	{% endfor %}
+
 {% endblock %}
 
 {% block bottom_content %}
-	{% include 'layout/overlay.html.twig' %}
+	{% include 'layout/overlay.html.twig' with {id: route} %}
 	<a href="#" class="button bt-open-form">Saisir une actualité</a>
 {% endblock %}

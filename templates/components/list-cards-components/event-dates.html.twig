@@ -1,17 +1,14 @@
 {#
-    datas*: array (todo: maybe set default to today's date)
-        date* array of 2 (todo: let this be a date then reformat as below.)
-            day* int
-            month* string of 3 (e.g. nov), or 4 (i.e. juin & juil)
+    *: required,
+    [int..int]: array indexes ([...] if no precise length defined)
+
+    events_dates*: array of 1 or 2
+        [...](date*) date
 #}
 <div class="dual-blocks-container">
-    <div class="event-date">
-        {{ datas[0][0] }}<br>{{ datas[0][1] }}
+    {% for date in events_dates %}
+    <div class="event-date {{ loop.index == 2 ? 'last' }}">
+        {{ date|date("j") }}<br>{{ date|date("M") }}
     </div>
-
-    {% if datas[1] is defined %}
-        <div class="event-date last">
-            {{ datas[1][0] }}<br>{{ datas[1][1] }}
-        </div>
-    {% endif %}
+    {% endfor %}
 </div>

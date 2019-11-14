@@ -138,11 +138,16 @@
 .search-field {
 	@extend %input;
 	height: 50px;
+	padding-left: 20%;
 	margin-bottom: 20px;
 	@include background-image(image-url('search'), 20px 50%, 18px);
 	font-size: 16px;
 	border: none;
 	border-radius: 4px;
+
+	@include media(sm) {
+		padding-left: 15%;
+	}
 
 	@include media(md) {
 		margin-bottom: 0;
@@ -150,6 +155,10 @@
 
 	@include media(md, lg) {
 		height: 40px;
+	}
+
+	@include media(lg) {
+		padding-left: 10%;
 	}
 }
 

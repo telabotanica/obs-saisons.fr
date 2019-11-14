@@ -1,0 +1,23 @@
+{#
+    *: required
+
+    arrows#: object
+        arrow_color#: string | 'green'
+        before#: object
+            path#: string | 'accueil'
+        after#: object
+            path#: string | 'accueil'
+        borders#: string (if defined: 'light'||'no-border')
+#}
+<div class="nav-arrow-buttons">
+    {% if arrows.before is defined %}
+        <a href="{{ path(arrows.before.path|default('accueil')) }}" class="nav-arrow {{ arrows.borders|default }}">
+            <img src="{{ asset("media/layout/icons/left-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="précédant" class="{{ arrows.before.path is not defined ? 'inactive'  }}" width="15" height="15">
+        </a>
+    {% endif %}
+    {% if arrows.after is defined %}
+        <a href="{{ path(arrows.after.path|default('accueil')) }}" class="nav-arrow {{ arrows.borders|default }}">
+            <img src="{{ asset("media/layout/icons/right-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="suivant" class="{{ arrows.after.path is not defined ? 'inactive'  }}" width="15" height="15">
+        </a>
+    {% endif %}
+</div>

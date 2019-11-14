@@ -1,10 +1,15 @@
 {#
-    xs_hide: boolean
-    icon: string ($icons in _icons.scss)
-    green: boolean
-    label: string
+    #: optionnal,
+    *: required,
+    |: default
+
+    squared_button*: object
+        xs_hide#: boolean | false
+        icon#: string ($icons in _icons.scss) | 'add-circle'
+        green#: boolean | true
+        label#: string | 'ajouter'
 #}
 
-<a href="#" class="squared-button {{ datas.xs_hide|default(false) ? 'hide-on-xs' }} {{ datas.icon|default('add-circle') }}-icon">
-    <div class="squared-button-label {{ datas.green|default(true) ? 'green' }}">{{ datas.label|default('ajouter') }}</div>
+<a href="#" class="squared-button {{ squared_button.xs_hide|default(false) ? 'hide-on-xs' }} {{ squared_button.icon|default('add-circle') }}-icon">
+    <div class="squared-button-label {{ squared_button.green|default(true) ? 'green' }}">{{ squared_button.label|default('ajouter') }}</div>
 </a>

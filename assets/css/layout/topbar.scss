@@ -1,12 +1,3 @@
-.breadcrumb-link {
-	margin-right: 20px;
-	padding-right: 30px;
-	@include font_title;
-	color: $grey131117;
-	text-decoration: none;
-	@include background-image(image-url('right-arrow-green'), 100% 50%, 6px);
-}
-
 .site-title {
 	padding: 0 15px 3px;
 	margin: 0;

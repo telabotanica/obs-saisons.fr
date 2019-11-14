@@ -1,0 +1,10 @@
+{#
+    *: required
+
+    button_path*: string
+    button_label*: string
+    button_color#: string
+#}
+<div class="full-block-width-button {{ button_color|default }}">
+    <a href="{{ path(button_path) }}" class="full-block-width-button-link">{{ button_label }}</a>
+</div>

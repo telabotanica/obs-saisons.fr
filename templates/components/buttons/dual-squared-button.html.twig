@@ -1,33 +1,37 @@
 {#
-    datas#: array of 2
-        button object
+    #: optionnal,
+    *: required,
+    |: default,
+    [int..int]: array indexes ([...] if no precise length defined)
+
+    dual_squared_buttons||data#: array
+        [0..1](button) object
             url#: string (the href of link)
             icon*: string ($icons in icons.scss)
-            data_attr#: array
-                action* string (e.g. "open")
-                target* string (e.g. "indiv" to record new individual of a given species)
+            data_attr#: object
+                action*: string (e.g. "open")
+                target*: string (e.g. "indiv" to record new individual of a given species)
             label*: string
 #}
-{% if datas is not defined or datas is empty %}
-    {% set datas = [
+{% if dual_squared_buttons is not defined or dual_squared_buttons is empty %}
+    {% set dual_squared_buttons = [
         {
             'icon': 'help-circle',
             'label': 'fiche'
         },
         {
             'icon': 'edit-calendar',
-            'data_attr': ['open', 'indiv'],
+            'data_attr': {
+                'action': 'open',
+                'target': 'indiv'
+            },
             'label': 'saisir'
         }
     ] %}
 {% endif %}
 <div class="dual-blocks-container">
-    {% for button in datas %}
-        {% if button.data_attr is defined %}
-            {% set action = button['data_attr'][0] %}
-            {% set target = button['data_attr'][1] %}
-        {% endif %}
-        <a href="{{ button.url|default }}" class="dual-squared-button {{ button.icon }}-icon {{ action|default }}" {{ button.data_attr is defined ? "data-#{action}\=#{target}" }}>
+    {% for button in dual_squared_buttons %}
+        <a href="{{ button.url|default }}" class="dual-squared-button {{ button.icon }}-icon {{ button.data_attr.action|default }}" {{ button.data_attr is defined ? "data-#{button.data_attr.action}\=#{button.data_attr.target}" }}>
             <div class="squared-button-label">{{ button.label }}</div>
         </a>
     {% endfor %}

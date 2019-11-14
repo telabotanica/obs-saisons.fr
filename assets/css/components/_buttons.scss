@@ -263,8 +263,76 @@ $button-color-map: (
       margin-left: 20px;
     }
   }
+}
 
+/**********************************************/
+/* FULL BLOCK WIDTH BUTTON
+/**********************************************/
 
+.full-block-width-button {
+  @include position(absolute, auto, 0, 0, 0);
+  @include display-flex;
+  @include justify-content-flex-start;
+  @include align-items-center;
+  @include align-self-flex-start;
+  height: 90px;
+  @include gap(margin, "h");
+  padding-left: 40px;
+  border-top: 1px none #47423f;
+  background-color: $green715560;
+
+  &.orange {
+    background-color: #e7803a;
+  }
+}
+
+.full-block-width-button-link {
+  background-color: transparent;
+  color: $grey181217;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &.fonce {
+    color: #2b2523;
+    font-size: 14px;
+  }
+}
+
+/**********************************************/
+/* NAV-ARROW-BUTTONS
+/**********************************************/
+
+.nav-arrow-buttons {
+  @include position(absolute, 0, 0);
+  @include display-flex;
+}
+
+.nav-arrow {
+  @include display-flex;
+  @include justify-content-center;
+  @include align-items-center;
+  @include square-block(60px);
+  max-width: 100%;
+  margin-left: 0;
+  border-left: 1px solid #5a514d;
+  background-color: transparent;
+
+  &.light {
+    border-left-color: #c5b3a4;
+  }
+
+  &.no-border{
+    border-left-color: transparent;
+  }
+}
+
+.inactive {
+  opacity: 0.3;
+  -webkit-filter: saturate(20%);
+  filter: saturate(20%);
 }
 
 

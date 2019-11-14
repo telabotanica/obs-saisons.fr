@@ -73,6 +73,8 @@
 }
 
 .nav-item {
+	display: inline-block;
+	max-width: 100%;
 	@include gap(padding, "v", 15px);
 	padding-left: 0;
 	border-top: 1px solid #eee9e6;
@@ -83,7 +85,7 @@
 	text-decoration: none;
 	text-transform: uppercase;
 
-	&.ods--current {
+	&.active {
 		padding-left: 26px;
 		border-left: 4px solid grey(53);
 	}

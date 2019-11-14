@@ -3,16 +3,17 @@
     *: required,
     |: default
 
-    datas*: array
-        heading* string (with dropdown)
-        sub_heading# string (item-name)
+    route*: string
+    slug*: string | 'actu'
+    heading*: object
+        is_link#: boolean | false
+        title*: string (with dropdown)
+        text#: string (item-name)
 #}
-{% if template == 'observation' %}
-    <a href="#" class="item-heading-dropdown right-arrow-orange-icon">{{ datas[0] }}</a>
-{% else %}
-    <div class="item-heading-dropdown">{{ datas[0] }}</div>
-{% endif %}
-{% if datas[1] is defined %}
-    <div class="item-name {{ template == 'evenement' ? 'pointer-orange-icon' }}">{{ datas[1] }}</div>
-{% endif %}
 
+<{{ heading.is_link|default(false) ? "a href=#{path(slug|default('actu'))}" : 'div' }} class="item-name-block">
+    <{{ route == 'observations' ? "a href=\#" : 'div' }} class="item-heading-dropdown {{ route == 'observations' ? 'right-arrow-orange-icon' }}">{{ heading.title }}</{{ route  == 'observations' ? 'a' : 'div' }}>
+    {% if heading.text is defined %}
+        <div class="item-name {{ route == 'evenements' ? 'pointer-orange-icon' }}">{{ heading.text }}</div>
+    {% endif %}
+</{{ heading.is_link|default(false) ? 'a' : 'div' }}>

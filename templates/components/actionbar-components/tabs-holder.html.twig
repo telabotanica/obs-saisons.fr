@@ -1,21 +1,21 @@
 {#
     #: optionnal,
     *: required,
-    |: default
+    [int..int]: array indexes ([...] if no precise length defined)
 
-    template#: string
-    datas*: object
-        tabs#: array (required if default not defined)
-            label*: string
+    route#: string
+    tabs_holder# (defined if 'route' not in ['stations', 'observations'] defined below): array
+        [...](tab*) object
+            title*: string
+            reference#: string
 #}
-{% set default_templates = ['station', 'observation'] %}
 
-{% if template in default_templates %}
-    {% set datas = {'tabs': ["Toutes les #{template}s", "Mes #{template}s"]} %}
+{% if route in ['stations', 'observations'] %}
+    {% set tabs_holder = [{'title':"Toutes les #{route}"}, {'title':"Mes #{route}", 'reference': user_id}] %}
 {% endif %}
 
-<div class="tabs-holder {{ template == 'station' ? 'list' }}">
-    {% for tab in datas.tabs %}
-        <div class="tab {{ not loop.first ? 'not' }}">{{ tab }}</div>
+<div class="tabs-holder{{ route == 'stations' ? ' list' }}" data-active="{{ tabs_holder[0]['reference']|default('all') }}">
+    {% for tab in tabs_holder %}
+        <div class="tab {{ not loop.first ? 'not' }}" data-tab="{{ tab.reference|default('all') }}">{{ tab.title }}</div>
     {% endfor %}
 </div>

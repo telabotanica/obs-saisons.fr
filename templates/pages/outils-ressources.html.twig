@@ -1,6 +1,11 @@
 {% extends 'basic-page-template.html.twig' %}
-{% set header_names = route|split('-') %}
-{% set header = header_names[0] %}
-{% block main_content %}
-    {% include 'layout/header.html.twig' with {header: header_names[1]} %}
-{% endblock %}
+{% set headers = {
+    'outils': {
+        'title': 'Outils',
+        'subtitle': 'Tous les outils du programme <strong>Observatoire des saisons</strong>.'
+    },
+    'ressources': {
+        'title': 'Ressources',
+        'subtitle': 'Toutes les ressources du programme <strong>Observatoire des saisons</strong>.'
+    }
+} %}

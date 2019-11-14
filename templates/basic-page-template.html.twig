@@ -1,15 +1,25 @@
 {% extends 'base.html.twig' %}
-{% if header is not defined %}
-    {% set header = route %}
+{% if headers is not defined %}
+    {% set headers = {'header':{}} %}
 {% endif %}
 
 {% block content %}
     {% block top_content %}{% endblock %}
+
     <div class="content page">
         <div class="pages-container {{ page_container_classes|default }}">
-            {% block header_content %}{% include 'layout/header.html.twig' %}{% endblock %}
-            {% block main_content %}{% endblock %}
+
+            {% for header in headers %}
+                {% block header_content %}
+                    {% include 'layout/header.html.twig' %}
+                {% endblock %}
+
+                {% block main_content %}{% endblock %}
+
+            {% endfor %}
+
         </div>
     </div>
+
     {% block bottom_content %}{% endblock %}
 {% endblock content %}
