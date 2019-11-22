@@ -9,7 +9,7 @@
 			<div>Accueil</div>
 		</a>
 
-		{% for menuItem, menuItemTitle in constant('App\\Controller\\PagesController::MENU') %}
+		{% for menuItem, menuItemTitle in constant('App\\Service\\BreadcrumbsGenerator::MENU') %}
 			<a href="{{ path(menuItem) }}" class="nav-item{{ activeMenuItem == menuItem ? ' active' }}">
 				<div>{{ menuItemTitle }}</div>
 			</a>

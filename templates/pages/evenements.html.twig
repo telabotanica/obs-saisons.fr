@@ -1,40 +1,3 @@
-{# exemple evenements #}
-{% set events = [
-	{
-		'title': 'Stage de terrain autour de St-Hippolyte-du-Fort',
-		'start_date': '2019-01-22',
-		'end_date': '2019-01-26',
-		'author': 'Coco L\'Asticot',
-		'publication_date': '2018-12-28',
-		'location': 'St-Hippolyte-du-Fort (30)'
-	},
-	{
-		'title': 'Exposition les 4 saisons de Soisson',
-		'start_date': '2019-04-04',
-		'end_date': '2019-06-16',
-		'author': 'Grégoire de Tours',
-		'publication_date': '2019-02-08',
-		'location': 'Soisson (02)'
-	},
-	{
-		'title': 'Colloque \"Le muguet pète un cable\"',
-		'start_date': '2019-05-12',
-		'author': 'Coq Licot',
-		'publication_date': '2019-03-08',
-		'location': 'Vichy (03)'
-	},
-	{
-		'title': 'Inventaire d\'automne des Couleuvres de Montpellier',
-		'start_date': '2019-10-01',
-		'end_date': '2019-11-01',
-		'author': 'Philippe Frêche',
-		'publication_date': '2019-01-08',
-		'location': 'Aimargues (30)'
-	}
-] %}
-{# end exemple evenements #}
-
-{#********************************************************************************************************************#}
 {% extends 'basic-page-template.html.twig' %}
 
 {% set headers = {
@@ -49,13 +12,13 @@
 	{# add events list-card #}
 	{% set list_cards = [] %}
 	{% for event in events %}
-		{% set event_dates = [event.start_date] %}
-		{% if event.end_date is defined %}
-			{% set event_dates = event_dates|merge([event.end_date]) %}
+		{% set event_dates = [event.startDate] %}
+		{% if event.endDate != event.startDate %}
+			{% set event_dates = event_dates|merge([event.endDate]) %}
 		{% endif %}
 
 		{% set list_cards = list_cards|merge([{
-			'slug': 'evenement',
+			'slug': event.slug,
 			'events_dates': event_dates,
 			'heading': {
 				'is_link': true,
@@ -65,7 +28,7 @@
 			'details': {
 				'infos': {
 					'bolder': event.author,
-					'lighter': event.publication_date|date("j/m/Y")
+					'lighter': event.createdAt|date("j/m/Y")
 				}
 			}
 		}]) %}

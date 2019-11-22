@@ -10,7 +10,7 @@
         add#: object
             text*: string (description)
             button*: string (button label)
-        slug#: string | 'actu'
+        slug#: string | route
         image#: string (url)
         events_dates#: array of 1 (1 day), or 2 (begining - end) (route = "evenements")
             [...](date*) date
@@ -39,7 +39,7 @@
         ]
     )
 #}
-{% set slug = list_card.slug|default('actu') %}
+{% set slug = list_card.slug|default(route) %}
 <div class="list-cards-item{{ list_card.add is defined ? '-add' }}" data-id="{{ id }}">
     {% if list_card.add is defined %}
         <div class="add-list-card">
