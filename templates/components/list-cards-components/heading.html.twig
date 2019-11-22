@@ -4,15 +4,18 @@
     |: default
 
     route*: string
-    slug*: string | 'actu'
+    slug*: string | route
     heading*: object
         is_link#: boolean | false
         title*: string (with dropdown)
         text#: string (item-name)
 #}
-
-<{{ heading.is_link|default(false) ? "a href=#{path(slug|default('actu'))}" : 'div' }} class="item-name-block">
-    <{{ route == 'observations' ? "a href=\#" : 'div' }} class="item-heading-dropdown {{ route == 'observations' ? 'right-arrow-orange-icon' }}">{{ heading.title }}</{{ route  == 'observations' ? 'a' : 'div' }}>
+{% if heading.is_link|default(false) %}
+    <a href="{{ route in ['actualites','evenements'] ? path("#{route}_show", {'slug': slug}) : path(slug|default(route)) }}" class="item-name-block">
+{% else %}
+    <div class="item-name-block">
+{% endif %}
+    <{{ route == 'observations' ? "a href=\#" : 'div' }} class="item-heading-dropdown {{ route == 'observations' ? 'right-arrow-orange-icon' }}">{{ heading.title|raw }}</{{ route  == 'observations' ? 'a' : 'div' }}>
     {% if heading.text is defined %}
         <div class="item-name {{ route == 'evenements' ? 'pointer-orange-icon' }}">{{ heading.text }}</div>
     {% endif %}

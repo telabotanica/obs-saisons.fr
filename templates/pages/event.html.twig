@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+	<div class="content page news">
+		<div class="publication-date">
+			Publié le {{ event.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ event.author }}</strong>
+		</div>
+		<div class="rich-text-block">
+			<div class="event-dates-container">
+				{% set events_dates = [event.startDate] %}
+				{% if event.endDate != event.startDate %}
+					{% set events_dates = events_dates|merge([event.endDate]) %}
+				{% endif %}
+				{% include 'components/list-cards-components/event-dates.html.twig' %}
+			</div>
+			<h2>{{ event.title|raw }}</h2>
+			{{ event.content|raw }}
+		</div>
+		{% if nextPreviousEvents is defined %}
+			<div class="other-articles">
+				{% for nextPrevious in nextPreviousEvents %}
+					{% include 'components/next-previous.html.twig' with {template : 'evenements'} %}
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

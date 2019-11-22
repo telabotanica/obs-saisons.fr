@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block content %}
 	<div class="actus-une">
-		<div class="actus-une-img" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce25406d0cadbda9e302c8b_chouette.jpg');"></div>
+		<div class="actus-une-img" style="background-image: url({{ lastArticle.cover }});"></div>
 		<div class="actus-une-content">
 			<div class="content-narrow-header bottom-div">
 				<h4 class="content-narrow-title">Actualités</h4>
 				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 					'before': {},
-					'after': {'path': 'actu'}
+					'after': {'path': ''}
 				}}%}
 			</div>
-			<h4 class="actus-une-title">Vos plus belles photos du début d'année</h4>
-			<div class="actus-une-date">12 janvier 2019</div>
+			<h4 class="actus-une-title">{{ lastArticle.title }}</h4>
+			<div class="actus-une-date">{{ lastArticle.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
 			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'actualites', button_label: 'toutes les actualités'} %}
 		</div>
 	</div>
@@ -32,15 +32,24 @@
 				<h4 class="content-narrow-title orange">Évènements</h4>
 				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 					'before': {},
-					'after': {'path':'evenement'},
+					'after': {'path':''},
 					'arrow_color': 'orange',
 					'borders': 'light'
 				}} %}
 			</div>
-			<div class="next-event-descr">Stage de terrain autour de<br>St-Hippolyte-du-Fort</div>
+			<div class="next-event-descr">{{ lastEvent.title }}</div>
 			<div>
-				<h5 class="next-event-title">22 - 26 Janvier 2019</h5>
-				<div class="next-event-city">St-Hippolyte-du-Fort (30)</div>
+				{% set startDate = '' %}
+				{% if lastEvent.startDate|date("Y") != lastEvent.endDate|date("Y") %}
+					{% set startDate = (lastEvent.startDate|localizeddate('none', 'none', 'fr', null, 'd MMMM Y')) ~ ' - ' %}
+				{% elseif lastEvent.startDate|date("m") != lastEvent.endDate|date("m") %}
+					{% set startDate = (lastEvent.startDate|localizeddate('none', 'none', 'fr', null, 'd MMMM')) ~ ' - ' %}
+				{% elseif lastEvent.startDate|date("j") != lastEvent.endDate|date("j") %}
+					{% set startDate = (lastEvent.startDate|localizeddate('none', 'none', 'fr', null, 'd')) ~ ' - ' %}
+				{% endif %}
+
+				<h5 class="next-event-title">{{ startDate ~ lastEvent.endDate|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</h5>
+				<div class="next-event-city">{{ lastEvent.location }}</div>
 			</div>
 			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'evenements', button_label: 'tous les évènements', button_color: 'orange'} %}
 		</div>
@@ -49,7 +58,7 @@
 		<div class="now" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
 			<div class="content-block-infos horiz">
 				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
-					'after': {'path': 'especes'},
+					'after': {'path': ''},
 					'borders': 'no-border'
 				}} %}
 				<div class="infos-insert">

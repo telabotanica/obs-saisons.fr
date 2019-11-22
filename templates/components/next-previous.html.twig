@@ -1,0 +1,17 @@
+{#
+    *: required
+
+    template*: string
+    nextPrevious*: object (if not empty:)
+        slug*: string
+        title*: string
+        createdAt*: date
+#}
+<div class="linked-article">
+    {% if nextPrevious is not empty %}
+        <a href="{{ path("#{template}_show", {'slug':nextPrevious.slug}) }}" class="linked-article-title"><h4>{{ nextPrevious.title }}</h4></a>
+        <div class="linked-article-date">Le {{ nextPrevious.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
+    {% else %}
+        <a href="{{ path(template) }}" class="linked-article-title">Revenir aux <h4>{{ (template == 'actualites' ? 'Actualités' : 'Évènements') }}</h4></a>
+    {% endif %}
+</div>

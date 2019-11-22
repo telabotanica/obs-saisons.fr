@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+	<div class="content page news">
+		<div class="publication-date">Le {{ article.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ article.author }}</strong></div>
+		<div class="rich-text-block">
+			<h2>{{ article.title|raw }}</h2>
+			{{ article.content|raw }}
+		</div>
+		{% if nextPreviousArticles is defined %}
+			<div class="other-articles">
+				{% for nextPrevious in nextPreviousArticles %}
+					{% include 'components/next-previous.html.twig' with {template : 'actualites'} %}
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
