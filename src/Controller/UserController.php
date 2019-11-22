@@ -55,8 +55,6 @@ class UserController extends AbstractController
      */
     public function loginPage()
     {
-        $user = $this->getUser();
-        dump($user);
         if ($this->isGranted(UserVoter::LOGGED)) {
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
 
