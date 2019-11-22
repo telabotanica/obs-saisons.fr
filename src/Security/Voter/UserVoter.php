@@ -2,10 +2,9 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-
-use App\Entity\User;
 
 class UserVoter extends Voter
 {
@@ -23,7 +22,7 @@ class UserVoter extends Voter
 
         switch ($attribute) {
             case self::LOGGED:
-                return ($user instanceof User);
+                return $user instanceof User;
                 break;
             case self::REGISTER:
                 return !($user instanceof User);

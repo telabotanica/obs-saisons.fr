@@ -11,10 +11,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     public const STATUS_DISABLED = 0;
-    public const STATUS_ACTIVE   = 1;
-    public const STATUS_PENDING  = 2;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_PENDING = 2;
 
-    public const ROLE_USER  = 'ROLE_USER';
+    public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
@@ -79,21 +79,24 @@ class User implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername (): string {
+    public function getUsername(): string
+    {
         return (string) $this->getEmail();
     }
 
     /**
      * @see UserInterface
      */
-    public function getSalt () {
+    public function getSalt()
+    {
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
      * @see UserInterface
      */
-    public function eraseCredentials () {
+    public function eraseCredentials()
+    {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }

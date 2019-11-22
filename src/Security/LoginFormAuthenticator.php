@@ -19,75 +19,83 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LoginFormAuthenticator extends AbstractFormLoginAuthenticator {
-	use TargetPathTrait;
+class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
+{
+    use TargetPathTrait;
 
-	private $entityManager;
-	private $router;
-	private $csrfTokenManager;
-	private $passwordEncoder;
+    private $entityManager;
+    private $router;
+    private $csrfTokenManager;
+    private $passwordEncoder;
 
-	public function __construct ( EntityManagerInterface $entityManager, RouterInterface $router, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder ) {
-		$this->entityManager    = $entityManager;
-		$this->router           = $router;
-		$this->csrfTokenManager = $csrfTokenManager;
-		$this->passwordEncoder  = $passwordEncoder;
-	}
+    public function __construct(EntityManagerInterface $entityManager, RouterInterface $router, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->entityManager = $entityManager;
+        $this->router = $router;
+        $this->csrfTokenManager = $csrfTokenManager;
+        $this->passwordEncoder = $passwordEncoder;
+    }
 
-	public function supports ( Request $request ) {
-		return ( $request->attributes->get( '_route' ) === 'user_login' )
-			   && $request->isMethod( 'POST' )
-			   && $request->request->has( 'email' )
-			   && $request->request->has( 'password' )
-			   && $request->request->has( '_csrf_token' );
-	}
+    public function supports(Request $request)
+    {
+        return ('user_login' === $request->attributes->get('_route'))
+               && $request->isMethod('POST')
+               && $request->request->has('email')
+               && $request->request->has('password')
+               && $request->request->has('_csrf_token');
+    }
 
-	public function getCredentials ( Request $request ) {
-		$credentials = [
-				'email'      => $request->request->get( 'email' ),
-				'password'   => $request->request->get( 'password' ),
-				'csrf_token' => $request->request->get( '_csrf_token' ),
-		];
-		$request->getSession()->set(
-				Security::LAST_USERNAME,
-				$credentials[ 'email' ]
-		);
+    public function getCredentials(Request $request)
+    {
+        $credentials = [
+                'email' => $request->request->get('email'),
+                'password' => $request->request->get('password'),
+                'csrf_token' => $request->request->get('_csrf_token'),
+        ];
+        $request->getSession()->set(
+                Security::LAST_USERNAME,
+                $credentials['email']
+        );
 
-		return $credentials;
-	}
+        return $credentials;
+    }
 
-	public function getUser ( $credentials, UserProviderInterface $userProvider ) {
-		$token = new CsrfToken( 'authenticate', $credentials[ 'csrf_token' ] );
-		if ( !$this->csrfTokenManager->isTokenValid( $token ) ) {
-			throw new InvalidCsrfTokenException();
-		}
+    public function getUser($credentials, UserProviderInterface $userProvider)
+    {
+        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+        if (!$this->csrfTokenManager->isTokenValid($token)) {
+            throw new InvalidCsrfTokenException();
+        }
 
-		/**
-		 * @var \App\Entity\User $user
-		 */
-		$user = $this->entityManager->getRepository( User::class )->findOneBy( [ 'email' => $credentials[ 'email' ] ] );
+        /**
+         * @var \App\Entity\User
+         */
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
-		if ( $user === NULL ) {
-			throw new CustomUserMessageAuthenticationException( 'Cet utilisateur est inconnu.' );
-		}
+        if (null === $user) {
+            throw new CustomUserMessageAuthenticationException('Cet utilisateur est inconnu.');
+        }
 
-		return $user;
-	}
+        return $user;
+    }
 
-	public function checkCredentials ( $credentials, UserInterface $user ) {
-		return $this->passwordEncoder->isPasswordValid( $user, $credentials[ 'password' ] );
-	}
+    public function checkCredentials($credentials, UserInterface $user)
+    {
+        return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
+    }
 
-	public function onAuthenticationSuccess ( Request $request, TokenInterface $token, $providerKey ) {
-		if ( $targetPath = $this->getTargetPath( $request->getSession(), $providerKey ) ) {
-			return new RedirectResponse( $targetPath );
-		}
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    {
+        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+            return new RedirectResponse($targetPath);
+        }
 
-		// return new RedirectResponse( $this->router->generate( 'user_dashboard' ) );
-		return new RedirectResponse( $this->router->generate( 'homepage' ) );
-	}
+        // return new RedirectResponse( $this->router->generate( 'user_dashboard' ) );
+        return new RedirectResponse($this->router->generate('homepage'));
+    }
 
-	protected function getLoginUrl () {
-		return $this->router->generate( 'user_login' );
-	}
+    protected function getLoginUrl()
+    {
+        return $this->router->generate('user_login');
+    }
 }
