@@ -25,7 +25,15 @@ php bin/console doctrine:migrations:migrate
 
 If you have npm installed run :
 ```bash
+npm install
 npm run dev
+```
+
+## Run php-cs-fixer
+
+```
+cp .php_cs.dist .php_cs
+php vendor/bin/php-cs-fixer fix --diff --dry-run
 ```
 
 ## Dev server
