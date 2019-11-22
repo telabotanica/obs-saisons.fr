@@ -5,8 +5,7 @@ namespace App\Service;
 use App\Entity\News;
 
 /**
- * Class NewsGenerator
- * @package App\Service
+ * Class NewsGenerator.
  */
 class NewsGenerator
 {
@@ -21,7 +20,7 @@ class NewsGenerator
     public $events;
 
     /**
-     * NewsGenerator constructor
+     * NewsGenerator constructor.
      */
     public function __construct()
     {
@@ -42,7 +41,7 @@ class NewsGenerator
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
-                'slug' => '2019/01/les-premiers-bourgeonnements-2019-observez'
+                'slug' => '2019/01/les-premiers-bourgeonnements-2019-observez',
             ],
             [
                 'id' => 12,
@@ -50,7 +49,7 @@ class NewsGenerator
                 'cover' => 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce25406d0cadbda9e302c8b_chouette.jpg',
                 'author' => 'Tela Botanica',
                 'createdAt' => new \DateTime('2019-01-12'),
-                'content' =>  '
+                'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <figure>
                         <img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce25406d0cadbda9e302c8b_chouette.jpg" alt="">
@@ -60,7 +59,7 @@ class NewsGenerator
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
-                'slug' => '2019/01/vos-plus-belles-photos-du-debut-dannee'
+                'slug' => '2019/01/vos-plus-belles-photos-du-debut-dannee',
             ],
             [
                 'id' => 427,
@@ -68,7 +67,7 @@ class NewsGenerator
                 'cover' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chaffinch_%28Fringilla_coelebs%29.jpg/800px-Chaffinch_%28Fringilla_coelebs%29.jpg',
                 'author' => 'Boulébill',
                 'createdAt' => new \DateTime('2019-01-08'),
-                'content' =>  '
+                'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <figure>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chaffinch_%28Fringilla_coelebs%29.jpg/800px-Chaffinch_%28Fringilla_coelebs%29.jpg" alt="">
@@ -78,11 +77,11 @@ class NewsGenerator
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
-                'slug' => '2019/01/comment-reconnaitre-le-cri-du-pinson-des-arbres'
-            ]
+                'slug' => '2019/01/comment-reconnaitre-le-cri-du-pinson-des-arbres',
+            ],
         ];
 
-        foreach ($articles as $articleData ) {
+        foreach ($articles as $articleData) {
             $article = new News();
             $article->setCategory('article');
             $article->setId($articleData['id']);
@@ -104,14 +103,14 @@ class NewsGenerator
                 'end_date' => new \DateTime('2019-01-26'),
                 'author' => 'Coco L\'Asticot',
                 'createdAt' => new \DateTime('2018-12-28'),
-                'content' =>  '
+                'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <h3>Un autre sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
                 'location' => 'St-Hippolyte-du-Fort (30)',
-                'slug' => 'stage-de-terrain-autour-de-st-hippolyte-du-fort'
+                'slug' => 'stage-de-terrain-autour-de-st-hippolyte-du-fort',
             ],
             [
                 'id' => 17,
@@ -120,14 +119,14 @@ class NewsGenerator
                 'end_date' => new \DateTime('2019-06-16'),
                 'author' => 'Grégoire de Tours',
                 'createdAt' => new \DateTime('2019-02-08'),
-                'content' =>  '
+                'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <h3>Un autre sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
                 'location' => 'Soisson (02)',
-                'slug' => 'exposition-les-4-saisons-de-soisson'
+                'slug' => 'exposition-les-4-saisons-de-soisson',
             ],
             [
                 'id' => 29,
@@ -135,14 +134,14 @@ class NewsGenerator
                 'start_date' => new \DateTime('2019-05-12'),
                 'author' => 'Coq Licot',
                 'createdAt' => new \DateTime('2019-03-08'),
-                'content' =>  '
+                'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <h3>Un autre sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
                 'location' => 'Vichy (03)',
-                'slug' => 'colloque-le-muguet-pete-un-cable'
+                'slug' => 'colloque-le-muguet-pete-un-cable',
             ],
             [
                 'id' => 37,
@@ -151,18 +150,18 @@ class NewsGenerator
                 'end_date' => new \DateTime('2019-11-01'),
                 'author' => 'Philippe Frêche',
                 'createdAt' => new \DateTime('2019-01-08'),
-                'content' =>  '
+                'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <h3>Un autre sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
                 'location' => 'Aimargues (30)',
-                'slug' => 'inventaire-dautomne-des-couleuvres-de-montpellier'
-            ]
+                'slug' => 'inventaire-dautomne-des-couleuvres-de-montpellier',
+            ],
         ];
 
-        foreach ($events as $eventData ) {
+        foreach ($events as $eventData) {
             $event = new News();
             $event->setCategory('event');
             $event->setId($eventData['id']);
@@ -175,7 +174,6 @@ class NewsGenerator
             $event->setStartDate($eventData['start_date']);
             if (isset($eventData['end_date'])) {
                 $event->setEndDate($eventData['end_date']);
-
             }
 
             $this->events[] = $event;
@@ -183,12 +181,12 @@ class NewsGenerator
     }
 
     /**
-     * @param string $category
      * @return News
      */
     public function generateNews(string $category): array
     {
-        $news = ($category === 'article') ? $this->articles : $this->events;
+        $news = ('article' === $category) ? $this->articles : $this->events;
+
         return $news;
     }
 }

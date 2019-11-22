@@ -66,16 +66,12 @@ class News
      */
     private $endDate;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
      * @return $this
      */
     public function setId(int $id): self
@@ -85,16 +81,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCategory(): ?string
     {
         return $this->category;
     }
 
     /**
-     * @param string $category
      * @return $this
      */
     public function setCategory(string $category): self
@@ -104,16 +96,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
     /**
-     * @param string $slug
      * @return $this
      */
     public function setSlug(string $slug): self
@@ -123,16 +111,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
      * @return $this
      */
     public function setTitle(string $title): self
@@ -142,16 +126,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
     /**
-     * @param string $content
      * @return $this
      */
     public function setContent(string $content): self
@@ -161,16 +141,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
     /**
-     * @param \DateTimeInterface|null $createdAt
      * @return $this
      */
     public function setCreatedAt(?\DateTimeInterface $createdAt): self
@@ -180,16 +156,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLocation(): ?string
     {
         return $this->location;
     }
 
     /**
-     * @param string|null $location
      * @return $this
      */
     public function setLocation(?string $location): self
@@ -199,16 +171,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
     public function getStartDate(): \DateTimeInterface
     {
         return $this->startDate;
     }
 
     /**
-     * @param \DateTimeInterface $startDate
      * @return $this
      */
     public function setStartDate(\DateTimeInterface $startDate): self
@@ -218,17 +186,16 @@ class News
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getEndDate(): ?\DateTimeInterface
     {
-        if (null == $this->endDate) return self::getStartDate();
+        if (null == $this->endDate) {
+            return self::getStartDate();
+        }
+
         return $this->endDate;
     }
 
     /**
-     * @param \DateTimeInterface|null $endDate
      * @return $this|null
      */
     public function setEndDate(\DateTimeInterface $endDate = null): ?self
@@ -238,16 +205,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCover(): ?string
     {
         return $this->cover;
     }
 
     /**
-     * @param string|null $cover
      * @return $this
      */
     public function setCover(?string $cover): self
@@ -257,16 +220,12 @@ class News
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getAuthor(): ?string
     {
         return $this->author;
     }
 
     /**
-     * @param string $author
      * @return $this
      */
     public function setAuthor(string $author): self

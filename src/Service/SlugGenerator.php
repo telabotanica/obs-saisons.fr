@@ -3,39 +3,36 @@
 namespace App\Service;
 
 /**
- * Class SlugGenerator
- * @package App\Service
+ * Class SlugGenerator.
  */
 class SlugGenerator
 {
     /**
-     * @param string $title
-     * @param \DateTime|null $date
      * @return string
+     *
      * @throws \Exception
      */
     public function generateSlug(string $title, \DateTime $date = null)
     {
         if (null === $date) {
-           $date = new \DateTime("now");
-
+            $date = new \DateTime('now');
         }
-        $slug = $date->format("y").'/'.$date->format("m").'/'.$this->slugify(strtolower($title));
+        $slug = $date->format('y').'/'.$date->format('m').'/'.$this->slugify(strtolower($title));
+
         return $slug;
     }
 
     /**
-     * @param String $string
      * @return string|string[]|null
      */
-    public function slugify(String $string) {
+    public function slugify(string $string)
+    {
         $string = strtolower($string);
 
-        if ( !preg_match( '/[\x80-\xff]/' , $string ) ) {
+        if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;
-
         }
-        $chars = array(
+        $chars = [
             // Decompositions for Latin-1 Supplement
             chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
             chr(195).chr(130) => 'A', chr(195).chr(131) => 'A',
@@ -91,7 +88,7 @@ class SlugGenerator
             chr(196).chr(172) => 'I', chr(196).chr(173) => 'i',
             chr(196).chr(174) => 'I', chr(196).chr(175) => 'i',
             chr(196).chr(176) => 'I', chr(196).chr(177) => 'i',
-            chr(196).chr(178) => 'IJ',chr(196).chr(179) => 'ij',
+            chr(196).chr(178) => 'IJ', chr(196).chr(179) => 'ij',
             chr(196).chr(180) => 'J', chr(196).chr(181) => 'j',
             chr(196).chr(182) => 'K', chr(196).chr(183) => 'k',
             chr(196).chr(184) => 'k', chr(196).chr(185) => 'L',
@@ -107,13 +104,13 @@ class SlugGenerator
             chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
             chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
             chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',
-            chr(197).chr(146) => 'OE',chr(197).chr(147) => 'oe',
-            chr(197).chr(148) => 'R',chr(197).chr(149) => 'r',
-            chr(197).chr(150) => 'R',chr(197).chr(151) => 'r',
-            chr(197).chr(152) => 'R',chr(197).chr(153) => 'r',
-            chr(197).chr(154) => 'S',chr(197).chr(155) => 's',
-            chr(197).chr(156) => 'S',chr(197).chr(157) => 's',
-            chr(197).chr(158) => 'S',chr(197).chr(159) => 's',
+            chr(197).chr(146) => 'OE', chr(197).chr(147) => 'oe',
+            chr(197).chr(148) => 'R', chr(197).chr(149) => 'r',
+            chr(197).chr(150) => 'R', chr(197).chr(151) => 'r',
+            chr(197).chr(152) => 'R', chr(197).chr(153) => 'r',
+            chr(197).chr(154) => 'S', chr(197).chr(155) => 's',
+            chr(197).chr(156) => 'S', chr(197).chr(157) => 's',
+            chr(197).chr(158) => 'S', chr(197).chr(159) => 's',
             chr(197).chr(160) => 'S', chr(197).chr(161) => 's',
             chr(197).chr(162) => 'T', chr(197).chr(163) => 't',
             chr(197).chr(164) => 'T', chr(197).chr(165) => 't',
@@ -129,12 +126,12 @@ class SlugGenerator
             chr(197).chr(184) => 'Y', chr(197).chr(185) => 'Z',
             chr(197).chr(186) => 'z', chr(197).chr(187) => 'Z',
             chr(197).chr(188) => 'z', chr(197).chr(189) => 'Z',
-            chr(197).chr(190) => 'z', chr(197).chr(191) => 's'
-        );
+            chr(197).chr(190) => 'z', chr(197).chr(191) => 's',
+        ];
 
-        $string = strtr( $string, $chars );
-        $string = preg_replace( '/([^.a-z0-9]+)/i', '-', $string );
+        $string = strtr($string, $chars);
+        $string = preg_replace('/([^.a-z0-9]+)/i', '-', $string);
 
-        return  preg_replace( '/[^A-Za-z0-9_]/', '', $string);
+        return  preg_replace('/[^A-Za-z0-9_]/', '', $string);
     }
 }
