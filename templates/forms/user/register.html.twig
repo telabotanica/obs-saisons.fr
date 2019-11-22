@@ -1,0 +1,16 @@
+<form method="post" action="{{ path('user_register') }}">
+	<div class="form-rows">
+		<div class="form-row form-row__field">
+			<label for="register-form-email">Adresse e-mail</label>
+			<input id="register-form-email" type="email" name="email" placeholder="Entrez votre adresse e-mail ici…" required autofocus>
+		</div>
+		<div class="form-row form-row__field">
+			<label for="register-form-password">Mot de passe</label>
+			<input id="register-form-password" type="password" name="password" placeholder="Entrez votre mot de passe ici…" required>
+		</div>
+	</div>
+	<div class="form-row form-row__submit">
+		<input type="hidden" name="action" value="register">
+		<button type="submit">S’inscrire</button>
+	</div>
+</form>

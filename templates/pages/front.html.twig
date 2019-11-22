@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	{% include 'components/app-flashes.html.twig' %}
+	<section class="main main__front-page">
+		<div class="main--header main--header__cover">
+			<div class="main--header--image">
+				<img src="https://www.obs-saisons.fr/themes/ods/logo.png" alt="image-header">
+			</div>
+			<div class="main--header--content content-container">
+				{% include 'components/app-flashes.html.twig' %}
+
+				<div class="narrow">
+					<p class="small-title">Bienvenue sur l’Observatoire des Saisons</p>
+
+					<h1 class="h1">
+						Faire des trucs chouettes
+					</h1>
+
+					{# <p><a class="cta__white" href="{{ path('groups_index') }}">Voir les groupes</a></p> #}
+				</div>
+			</div>
+		</div>
+		<div class="main--content content-container">
+			<section>
+				<h2>L’Observatoire des Saisons</h2>
+
+
+				{% if not is_granted(constant('App\\Security\\Voter\\UserVoter::LOGGED')) %}
+					<a href="{{ path('user_login') }}">Se connecter</a>
+				{% else %}
+					<a href="{{ path('user_logout') }}">Se déconnecter</a><br>
+					<a href="{{ path('user_dashboard') }}">Dashboard</a><br>
+					<a href="{{ path('user_dashboard') }}">Ajouter une obs</a><br>
+				{% endif %}
+
+			</section>
+		</div>
+	</section>
+{% endblock %}

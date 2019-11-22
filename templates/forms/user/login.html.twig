@@ -1,0 +1,18 @@
+<form method="post" action="{{ path('user_login') }}">
+	<div class="form-rows">
+		<div class="form-row form-row__field">
+			<label for="login-form-email">Adresse e-mail</label>
+			<input id="login-form-email" type="email" name="email" value="{{ last_username }}" placeholder="Entrez votre adresse e-mail ici…" required autofocus>
+		</div>
+		<div class="form-row form-row__field">
+			<label for="login-form-password">Mot de passe</label>
+			<input id="login-form-password" type="password" name="password" placeholder="Entrez votre mot de passe ici…" required>
+		</div>
+	</div>
+	<div class="form-row form-row__submit">
+		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+		<input type="hidden" name="_remember_me" value="1">
+		<button type="submit">Se connecter</button>
+		<a href="{{ path('user_forgotten_password') }}">Mot de passe oublié ?</a>
+	</div>
+</form>
