@@ -4,7 +4,7 @@
 
 namespace App\Controller;
 
-use App\Entity\News;
+use App\Entity\Post;
 use App\Service\BreadcrumbsGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,17 +30,17 @@ class PagesController extends AbstractController
 
     /**
      * Index action.
-     *
-     * @Route("/", name="accueil")
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/", name="homepage")
      */
     public function index()
     {
         $lastArticle = $this->getDoctrine()->getRepository(News::class)->setCategory('article')->findLast();
         $lastEvent = $this->getDoctrine()->getRepository(News::class)->setCategory('event')->findLast();
 
-        return $this->render('pages/accueil.html.twig', [
-            'lastArticle' => $lastArticle,
-            'lastEvent' => $lastEvent,
+        return $this->render('pages/homepage.html.twig', [
+            'lastArticles' => $lastArticles,
+            'lastEvents' => $lastEvents,
         ]);
     }
 

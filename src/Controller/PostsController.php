@@ -2,39 +2,42 @@
 
 namespace App\Controller;
 
-use App\Entity\News;
+use App\Entity\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class NewsController.
+ * Class PostsController.
  */
-class NewsController extends PagesController
+class PostsController extends PagesController
 {
     /* ************************************************ *
      * actualites
      * ************************************************ */
-
     /**
-     * @Route("/actualites", name="actualites")
+     * @Route("/actualites/{page<\d+>}", name="actualites")
      */
     public function actualitesIndex(
-        Request $request
+        Request $request,
+        int $page = 1
     ) {
-        $articleRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('article');
+        $articleRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('article');
         $articles = $articleRepository->findAll();
 
         return $this->render('pages/actualites.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
+            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
+            'route' => 'actualites',
             'articles' => $articles,
+            'pagination' => [
+                'currentPage' => $page,
+                'lastPage' => 10
+            ]
         ]);
     }
 
     /* ************************************************ *
      * article
      * ************************************************ */
-
     /**
      * @Route("/actualites/{slug<\d*\/\d*\/.+>}", name="actualites_show")
      */
@@ -42,16 +45,19 @@ class NewsController extends PagesController
         Request $request,
         string $slug
     ) {
-        $articleRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('article');
+        $articleRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('article');
         $article = $articleRepository->findBySlug($slug);
-        // todo: redirect to 404 page
+        // @TODO: redirect to 404 page
         if (null === $article) {
             return $this->index($manager);
         }
 
         $nextPreviousArticles = $articleRepository->findNextPrevious($article->getId());
 
-        $activePageBreadCrumb[$slug] = $article->getTitle();
+        $activePageBreadCrumb = [
+            'slug' => $slug,
+            'title' => $article->getTitle()
+        ];
 
         return $this->render('pages/article.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
@@ -63,20 +69,24 @@ class NewsController extends PagesController
     /* ************************************************ *
      * evenements
      * ************************************************ */
-
-    /**
-     * @Route("/evenements", name="evenements")
+     /**
+     * @Route("/evenements/{page<\d+>}", name="evenements")
      */
     public function evenementsIndex(
-        Request $request
+        Request $request,
+        int $page = 1
     ) {
-        $eventRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('event');
+        $eventRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('event');
         $events = $eventRepository->findAll();
 
         return $this->render('pages/evenements.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
+            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
+            'route' => 'evenements',
             'events' => $events,
+            'pagination' => [
+                'currentPage' => $page,
+                'lastPage' => 10
+            ]
         ]);
     }
 
@@ -87,20 +97,23 @@ class NewsController extends PagesController
     /**
      * @Route("/evenements/{slug<\d*\/?\d*\/?.+>}", name="evenements_show")
      */
-    public function evenementPage(
+    public function eventPage(
         Request $request,
         string $slug
     ) {
-        $eventRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('event');
+        $eventRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('event');
         $event = $eventRepository->findBySlug($slug);
-        // todo: redirect to 404 page
+        // @TODO: redirect to 404 page
         if (null === $event) {
             return $this->index($manager);
         }
 
         $nextPreviousEvents = $eventRepository->findNextPrevious($event->getId());
 
-        $activePageBreadCrumb[$slug] = $event->getTitle();
+        $activePageBreadCrumb = [
+            'slug' => $slug,
+            'title' => $event->getTitle()
+        ];
 
         return $this->render('pages/event.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),

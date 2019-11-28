@@ -2,12 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\News;
+use App\Entity\Post;
 
 /**
- * Class NewsGenerator.
+ * Class PostsGenerator.
  */
-class NewsGenerator
+class PostsGenerator
 {
     /**
      * @var array
@@ -20,7 +20,7 @@ class NewsGenerator
     public $events;
 
     /**
-     * NewsGenerator constructor.
+     * PostsGenerator constructor.
      */
     public function __construct()
     {
@@ -66,7 +66,7 @@ class NewsGenerator
                 'title' => 'Comment reconnaître le cri du pinson des arbres ?',
                 'cover' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chaffinch_%28Fringilla_coelebs%29.jpg/800px-Chaffinch_%28Fringilla_coelebs%29.jpg',
                 'author' => 'Boulébill',
-                'createdAt' => new \DateTime('2019-01-08'),
+                'createdAt' => new \DateTime('2019-01-05'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <figure>
@@ -82,7 +82,7 @@ class NewsGenerator
         ];
 
         foreach ($articles as $articleData) {
-            $article = new News();
+            $article = new Post();
             $article->setCategory('article');
             $article->setId($articleData['id']);
             $article->setCreatedAt($articleData['createdAt']);
@@ -99,10 +99,10 @@ class NewsGenerator
             [
                 'id' => 3,
                 'title' => 'Stage de terrain autour de St-Hippolyte-du-Fort',
-                'start_date' => new \DateTime('2019-01-22'),
-                'end_date' => new \DateTime('2019-01-26'),
+                'start_date' => new \DateTime('2019-12-22'),
+                'end_date' => new \DateTime('2019-12-26'),
                 'author' => 'Coco L\'Asticot',
-                'createdAt' => new \DateTime('2018-12-28'),
+                'createdAt' => new \DateTime('2019-11-21'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <h3>Un autre sous-titre ici</h3>
@@ -115,10 +115,10 @@ class NewsGenerator
             [
                 'id' => 17,
                 'title' => 'Exposition les 4 saisons de Soisson',
-                'start_date' => new \DateTime('2019-04-04'),
-                'end_date' => new \DateTime('2019-06-16'),
+                'start_date' => new \DateTime('2019-12-21'),
+                'end_date' => new \DateTime('2019-12-27'),
                 'author' => 'Grégoire de Tours',
-                'createdAt' => new \DateTime('2019-02-08'),
+                'createdAt' => new \DateTime('2019-10-08'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <h3>Un autre sous-titre ici</h3>
@@ -131,7 +131,7 @@ class NewsGenerator
             [
                 'id' => 29,
                 'title' => 'Colloque "Le muguet pète un cable"',
-                'start_date' => new \DateTime('2019-05-12'),
+                'start_date' => new \DateTime('2020-05-12'),
                 'author' => 'Coq Licot',
                 'createdAt' => new \DateTime('2019-03-08'),
                 'content' => '
@@ -146,8 +146,8 @@ class NewsGenerator
             [
                 'id' => 37,
                 'title' => 'Inventaire d\'automne des Couleuvres de Montpellier',
-                'start_date' => new \DateTime('2019-10-05'),
-                'end_date' => new \DateTime('2019-11-01'),
+                'start_date' => new \DateTime('2020-10-05'),
+                'end_date' => new \DateTime('2020-11-01'),
                 'author' => 'Philippe Frêche',
                 'createdAt' => new \DateTime('2019-01-08'),
                 'content' => '
@@ -162,7 +162,7 @@ class NewsGenerator
         ];
 
         foreach ($events as $eventData) {
-            $event = new News();
+            $event = new Post();
             $event->setCategory('event');
             $event->setId($eventData['id']);
             $event->setCreatedAt($eventData['createdAt']);
@@ -181,12 +181,12 @@ class NewsGenerator
     }
 
     /**
-     * @return News
+     * @return Post[]
      */
-    public function generateNews(string $category): array
+    public function generatePosts(string $category): array
     {
-        $news = ('article' === $category) ? $this->articles : $this->events;
+        $posts = ('article' === $category) ? $this->articles : $this->events;
 
-        return $news;
+        return $posts;
     }
 }
