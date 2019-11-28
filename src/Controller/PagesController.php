@@ -35,8 +35,8 @@ class PagesController extends AbstractController
      */
     public function index()
     {
-        $lastArticle = $this->getDoctrine()->getRepository(News::class)->setCategory('article')->findLast();
-        $lastEvent = $this->getDoctrine()->getRepository(News::class)->setCategory('event')->findLast();
+        $lastArticles = $this->getDoctrine()->getRepository(Post::class)->setPosts('article')->findLastFeaturedPosts();
+        $lastEvents = $this->getDoctrine()->getRepository(Post::class)->setPosts('event')->findLastFeaturedPosts();
 
         return $this->render('pages/homepage.html.twig', [
             'lastArticles' => $lastArticles,
