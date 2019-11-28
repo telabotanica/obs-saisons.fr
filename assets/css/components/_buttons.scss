@@ -329,9 +329,12 @@ $button-color-map: (
 }
 
 .inactive {
-  opacity: 0.3;
-  -webkit-filter: saturate(20%);
-  filter: saturate(20%);
+  pointer-events: none;
+  img {
+    opacity: 0.3;
+    -webkit-filter: saturate(20%);
+    filter: saturate(20%);
+  }
 }
 
 

@@ -2,22 +2,23 @@
     *: required
 
     arrows#: object
+        target*: string
         arrow_color#: string | 'green'
         before#: object
-            path#: string | 'accueil'
+            path#: string | 'homepage'
         after#: object
-            path#: string | 'accueil'
+            path#: string | 'homepage'
         borders#: string (if defined: 'light'||'no-border')
 #}
-<div class="nav-arrow-buttons">
+<div class="nav-arrow-buttons" data-target="{{ arrows.target }}">
     {% if arrows.before is defined %}
-        <a href="{{ path(arrows.before.path|default('accueil')) }}" class="nav-arrow {{ arrows.borders|default }}">
-            <img src="{{ asset("media/layout/icons/left-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="précédant" class="{{ arrows.before.path is not defined ? 'inactive'  }}" width="15" height="15">
+        <a href="{{ path(arrows.before.path|default('homepage')) }}" class="nav-arrow prev {{ arrows.borders|default }} {{ arrows.before.path is not defined ? 'inactive'  }}"  data-direction="prev">
+            <img src="{{ asset("media/layout/icons/left-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="précédant" class="" width="15" height="15">
         </a>
     {% endif %}
     {% if arrows.after is defined %}
-        <a href="{{ path(arrows.after.path|default('accueil')) }}" class="nav-arrow {{ arrows.borders|default }}">
-            <img src="{{ asset("media/layout/icons/right-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="suivant" class="{{ arrows.after.path is not defined ? 'inactive'  }}" width="15" height="15">
+        <a href="{{ path(arrows.after.path|default('homepage')) }}" class="nav-arrow next {{ arrows.borders|default }} {{ arrows.after.path is not defined ? 'inactive'  }}" data-direction="next">
+            <img src="{{ asset("media/layout/icons/right-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="suivant" class="" width="15" height="15">
         </a>
     {% endif %}
 </div>
