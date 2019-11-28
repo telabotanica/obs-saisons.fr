@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\News;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,10 +19,9 @@ class NewsController extends PagesController
      * @Route("/actualites", name="actualites")
      */
     public function actualitesIndex(
-        Request $request,
-        ObjectManager $manager
+        Request $request
     ) {
-        $articleRepository = $manager->getRepository(News::class)->setCategory('article');
+        $articleRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('article');
         $articles = $articleRepository->findAll();
 
         return $this->render('pages/actualites.html.twig', [
@@ -42,10 +40,9 @@ class NewsController extends PagesController
      */
     public function articlePage(
         Request $request,
-        ObjectManager $manager,
         string $slug
     ) {
-        $articleRepository = $manager->getRepository(News::class)->setCategory('article');
+        $articleRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('article');
         $article = $articleRepository->findBySlug($slug);
         // todo: redirect to 404 page
         if (null === $article) {
@@ -71,10 +68,9 @@ class NewsController extends PagesController
      * @Route("/evenements", name="evenements")
      */
     public function evenementsIndex(
-        Request $request,
-        ObjectManager $manager
+        Request $request
     ) {
-        $eventRepository = $manager->getRepository(News::class)->setCategory('event');
+        $eventRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('event');
         $events = $eventRepository->findAll();
 
         return $this->render('pages/evenements.html.twig', [
@@ -93,10 +89,9 @@ class NewsController extends PagesController
      */
     public function evenementPage(
         Request $request,
-        ObjectManager $manager,
         string $slug
     ) {
-        $eventRepository = $manager->getRepository(News::class)->setCategory('event');
+        $eventRepository = $this->getDoctrine()->getRepository(News::class)->setCategory('event');
         $event = $eventRepository->findBySlug($slug);
         // todo: redirect to 404 page
         if (null === $event) {

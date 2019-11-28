@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\News;
 use App\Service\BreadcrumbsGenerator;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,10 +33,10 @@ class PagesController extends AbstractController
      *
      * @Route("/", name="accueil")
      */
-    public function index(ObjectManager $manager)
+    public function index()
     {
-        $lastArticle = $manager->getRepository(News::class)->setCategory('article')->findLast();
-        $lastEvent = $manager->getRepository(News::class)->setCategory('event')->findLast();
+        $lastArticle = $this->getDoctrine()->getRepository(News::class)->setCategory('article')->findLast();
+        $lastEvent = $this->getDoctrine()->getRepository(News::class)->setCategory('event')->findLast();
 
         return $this->render('pages/accueil.html.twig', [
             'lastArticle' => $lastArticle,
