@@ -3,8 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		{# set page title #}
-		{% set pageName = breadcrumbs is defined ? breadcrumbs|last : 'Accueil' %}
-		<title>{% block title pageName ~ ' | Observatoire des saisons' %}</title>
+		<title>{% block title "#{breadcrumbs|default|last|default('Accueil')} | Observatoire des saisons" %}</title>
 
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,13 +21,35 @@
 				{% include 'layout/menu.html.twig' %}
 			{% endblock %}
 
-			<div class="main {{ app.request.attributes.get('_route') is same as('index') ? 'home' }}">
+			<div class="main {{ app.request.attributes.get('_route') == 'homepage' ? 'home' }}">
 
 				{% block topbar %}
 					{% include 'layout/topbar.html.twig' %}
 				{% endblock %}
 
-				{% block content %}{% endblock %}
+				{% block content %}
+					{% block top_content %}{% endblock %}
+
+					<div class="content page">
+						<div class="pages-container {{ page_container_classes|default }}">
+
+							{% if headers is not defined %}
+								{% set headers = {'header':{}} %}
+							{% endif %}
+							{% for header in headers %}
+								{% block header_content %}
+									{% include 'layout/header.html.twig' %}
+								{% endblock %}
+
+								{% block main_content %}{% endblock %}
+
+							{% endfor %}
+
+						</div>
+					</div>
+
+					{% block bottom_content %}{% endblock %}
+				{% endblock %}
 
 				{% block footer %}
 					{% include 'layout/footer.html.twig' %}
