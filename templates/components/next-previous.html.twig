@@ -5,12 +5,28 @@
     nextPrevious*: object (if not empty:)
         slug*: string
         title*: string
-        createdAt*: date
+        createdAt#: date
+        startDate#: date
+        endDate#: date
 #}
 <div class="linked-article">
     {% if nextPrevious is not empty %}
         <a href="{{ path("#{template}_show", {'slug':nextPrevious.slug}) }}" class="linked-article-title"><h4>{{ nextPrevious.title }}</h4></a>
-        <div class="linked-article-date">Le {{ nextPrevious.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
+        <div class="linked-article-date">
+            {% if template == 'actualites' %}
+                Le {{ nextPrevious.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}
+            {% elseif template == 'evenements' %}
+                {% set startDate = '' %}
+                {% if nextPrevious.startDate|date("Y") != nextPrevious.endDate|date("Y") %}
+                    {% set startDate = (nextPrevious.startDate|localizeddate('none', 'none', 'fr', null, 'd MMM Y')) ~ ' au ' %}
+                {% elseif nextPrevious.startDate|date("m") != nextPrevious.endDate|date("m") %}
+                    {% set startDate = (nextPrevious.startDate|localizeddate('none', 'none', 'fr', null, 'd MMM')) ~ ' au ' %}
+                {% elseif nextPrevious.startDate|date("j") != nextPrevious.endDate|date("j") %}
+                    {% set startDate = (nextPrevious.startDate|localizeddate('none', 'none', 'fr', null, 'd')) ~ ' au ' %}
+                {% endif %}
+                {{ startDate == '' ? 'Évènement' }} du {{ startDate ~ nextPrevious.endDate|localizeddate('none', 'none', 'fr', null, 'd MMM Y') }}
+            {% endif %}
+        </div>
     {% else %}
         <a href="{{ path(template) }}" class="linked-article-title">Revenir aux <h4>{{ (template == 'actualites' ? 'Actualités' : 'Évènements') }}</h4></a>
     {% endif %}
