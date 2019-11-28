@@ -180,6 +180,16 @@ class PostsGenerator
         }
     }
 
+    public function getArticles(): array
+    {
+        return $this->articles;
+    }
+
+    public function getEvents(): array
+    {
+        return $this->events;
+    }
+
     /**
      * @return Post[]
      */
