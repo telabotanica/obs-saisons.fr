@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-	<div class="content page news">
+	<div class="content page posts">
 		<div class="publication-date">
 			Publié le {{ event.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ event.author }}</strong>
 		</div>

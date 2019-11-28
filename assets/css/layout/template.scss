@@ -1,6 +1,6 @@
 .global-layout {
     display: block;
-    @extend %flex-direction-row;
+    @include flex-direction-row;
     height: auto;
 
     @include media(xs, md) {
@@ -14,8 +14,8 @@
 }
 
 .main {
-    @extend %flex-direction-column;
-    @extend %flex-1;
+    @include flex-direction-column;
+    @include flex-1;
     overflow: hidden;
     margin-left: 0;
     display: block;
@@ -37,7 +37,7 @@
         @include border((top, left), $grey306092);
     }
 
-    &.news {
+    &.posts {
         padding-top: 20px;
         padding-bottom: 60px;
 
@@ -57,8 +57,9 @@
 }
 
 .pages-container {
-    @extend %display-flex-column;
-    @extend %flex-wrap-nowrap;
+    @include display-flex;
+    @include flex-direction-column;
+    @include flex-wrap-nowrap;
 
     width: 100%;
 
