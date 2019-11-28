@@ -2,11 +2,11 @@
     <div class="breadcrumb-item">
         <a href="/" class="breadcrumb-link">Accueil</a>
     </div>
-    {% for slug, breadcrumb in breadcrumbs %}
+    {% for routeName, breadcrumb in breadcrumbs %}
         {% if loop.last %}
             <div class="breadcrumb-active-page">{{ breadcrumb }}</div>
         {% else %}
-            <a href="{{ path(slug) }}" class="breadcrumb-link">{{ breadcrumb }}</a>
+            <a href="{{ path(routeName) }}" class="breadcrumb-link">{{ breadcrumb }}</a>
         {% endif %}
     {% endfor %}
 </div>

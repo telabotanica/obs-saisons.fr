@@ -1,0 +1,40 @@
+.pagination-container {
+    @include display-flex;
+    @include justify-content-center;
+    @include align-content-center;
+    background-color: transparent;
+    max-width: 100vw;
+
+    .pagination {
+        @include display-flex;
+        @include flex-direction-row;
+        @include justify-content-space-between;
+        @include align-items-center;
+        height: 40px;
+        padding: 0;
+        margin: 0;
+        background-color: transparent;
+        font-size: 15px;
+        font-weight: 900;
+        color: $blue;
+        .page {
+            &.current {
+                color: #fff;
+                background-color: $blue;
+                font-size: 15px;
+                font-weight: 900;
+                cursor: auto;
+            }
+            a {
+                padding: 10px;
+                color: $blue;
+                text-decoration: none;
+                @include background-image(null, 50%, 6px);
+
+                @include media(sm)  {
+                    padding: 20px;
+                }
+            }
+        }
+    }
+}

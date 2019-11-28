@@ -22,33 +22,53 @@ class BreadcrumbsGenerator
         'station-page' => 'Page de la station',
     ];
 
-    /**
-     * @return array
-     */
-    public function getBreadcrumbs(string $currentUrl, array $activePageBreadCrumb = null)
-    {
-        // slices current url in $urlParts
-        if (preg_match("/\d{4}\/\d{2}\/.+/", $currentUrl, $matches)) {
-            $newsSLug = $matches[0];
-            $currentUrl = str_replace($newsSLug, '', $currentUrl);
-        }
-        $urlParts = array_filter(explode('/', $currentUrl));
-        if (isset($newsSLug)) {
-            array_push($urlParts, $newsSLug);
-        }
+    private $trails;
 
-        // builds breadcrumbs array
+    public function __construct()
+    {
+        $this->trails = [];
+    }
+
+    public function addTrail(string $label, string $route)
+    {
+        $this->trails[] = [
+            'label' => $label,
+            'route' => $route
+        ];
+    }
+
+    public function getTrails(): array
+    {
         $breadcrumbs = [];
-        if (empty($activePageBreadCrumb)) {
-            $activePageBreadCrumb = [];
-        }
-        $pageBreadCrumbs = array_merge(self::MENU, self::OTHER_BREADCRUMBS, $activePageBreadCrumb);
-        foreach ($urlParts as $urlPart) {
-            if (!empty($urlPart)) {
-                $breadcrumbs[$urlPart] = (isset($pageBreadCrumbs[$urlPart])) ? $pageBreadCrumbs[$urlPart] : $urlPart;
-            }
+        foreach ($this->trails as $trail) {
+            $breadcrumbs[$trail['route']] = $trail['label'];
         }
 
         return $breadcrumbs;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBreadcrumbs(string $currentUrl, array $activePageBreadCrumb = [])
+    {
+        // remove slug part of the called page url (bc slug contains slash)
+        if (!empty($activePageBreadCrumb)) {
+            $currentUrl = str_replace($activePageBreadCrumb['slug'], '', $currentUrl);
+        }
+        // get routes
+        $urlParts = array_filter(explode('/', $currentUrl));
+
+        // builds breadcrumbs
+        $pageBreadCrumbs = array_merge(self::MENU, self::OTHER_BREADCRUMBS);
+        foreach ($urlParts as $urlPart) {
+            $this->addTrail($pageBreadCrumbs[$urlPart] ?? $urlPart, $urlPart);
+        }
+
+        if (!empty($activePageBreadCrumb)) {
+            $this->addTrail($activePageBreadCrumb['title'], $activePageBreadCrumb['slug']);
+        }
+
+        return $this->getTrails();
     }
 }

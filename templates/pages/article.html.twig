@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-	<div class="content page news">
+	<div class="content page posts">
 		<div class="publication-date">Le {{ article.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ article.author }}</strong></div>
 		<div class="rich-text-block">
 			<h2>{{ article.title|raw }}</h2>

@@ -27,6 +27,8 @@
 @import "components/breadcrumbs";
 @import "components/help-block";
 @import "components/accordion-block";
+@import "components/pagination";
+
 /**************************************************
 * LAYOUTS
 *************************************************/
@@ -43,6 +45,6 @@
 /**************************************************
 * PAGES
 *************************************************/
-@import "pages/accueil";
-@import "pages/news";
+@import "pages/homepage";
+@import "pages/posts";
 @import "pages/stations";

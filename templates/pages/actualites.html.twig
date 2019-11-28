@@ -1,15 +1,15 @@
-{% extends 'basic-page-template.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% set headers = {
 	'actualites': {
 		'title': 'Actualités',
-		'subtitle': 'Vos <strong>actualites</strong> de l\'Observatoire des saisons.'
+		'subtitle': 'Vos <strong>actualités</strong> de l\'Observatoire des saisons.'
 	}
 } %}
 
 {% block main_content %}
 
-	{# add news list-card #}
+	{# add posts list-card #}
 	{% set list_cards = [] %}
 	{% for article in articles %}
 		{% set list_cards = list_cards|merge([{
@@ -39,6 +39,8 @@
 	{% for id, list_card in list_cards %}
 		{% include 'components/list-cards.html.twig' %}
 	{% endfor %}
+
+	{% include 'components/pagination.html.twig' %}
 
 {% endblock %}
 

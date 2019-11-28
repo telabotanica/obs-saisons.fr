@@ -1,4 +1,4 @@
-{% extends 'basic-page-template.html.twig' %}
+{% extends 'base.html.twig' %}
 {% set headers = {
     'outils': {
         'title': 'Outils',
@@ -9,3 +9,12 @@
         'subtitle': 'Toutes les ressources du programme <strong>Observatoire des saisons</strong>.'
     }
 } %}
+
+{% for header in headers %}
+    {% block header_content %}
+        {% include 'layout/header.html.twig' %}
+    {% endblock %}
+
+    {% block main_content %}{% endblock %}
+
+{% endfor %}

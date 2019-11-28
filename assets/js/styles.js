@@ -175,10 +175,51 @@ function toggleAccodionBlock() {
 	});
 }
 
+function switchToNextOnHomepage() {
+	$('.nav-arrow').off('click').on('click', function (event) {
+		event.preventDefault();
+
+		var $thisBlock = $(this).closest('.nav-arrow-buttons'),
+			targetClass = '.'+$thisBlock.data('target'),
+			$visibleTargetPost = $(targetClass).not('.hidden'),
+			isActuUne = (targetClass === '.actu-une-container'),
+			direction = $(this).data('direction');
+
+		function findNextTarget($element, targetClass, direction) {
+			$ret = (direction === 'prev') ? $element.prev(targetClass) : $element.next(targetClass);
+			valid = ( null !== $ret && undefined !== $ret && !$.isEmptyObject( $ret ) );
+			if (  null !== $ret && undefined !== $ret.length ) {
+				valid = ( valid  && 0 < $ret.length );
+			}
+			return valid ? $ret : valid;
+		}
+
+		$visibleTargetPost.addClass('hidden');
+		$thisBlock.find('.nav-arrow.inactive').removeClass('inactive');
+		var $newTargetPost = findNextTarget($visibleTargetPost, targetClass, direction);
+		if ($newTargetPost) {
+			if (!findNextTarget($newTargetPost, targetClass, direction)) {
+				$thisBlock.find('.nav-arrow.'+direction).addClass('inactive');
+			}
+			$newTargetPost.removeClass('hidden');
+			if (isActuUne) {
+				var imageClass = '.actus-une-img',
+					$visibleTargetImage = $(imageClass).not('.hidden');
+				$visibleTargetImage.addClass('hidden');
+				$newTargetImage = findNextTarget($visibleTargetImage, imageClass, direction);
+				if ($newTargetImage) {
+					$newTargetImage.removeClass('hidden');
+				}
+			}
+		}
+	});
+}
+
 $( document ).ready( function() {
 	addModsTouchClass();
 	toggleMenuSmallDevices();
 	toggleOverlay();
+	switchToNextOnHomepage();
 	switchTabs();
 	toggleCalendar();
 	toggleDateSelection();
