@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Post;
-use App\Service\PostsGenerator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -13,19 +12,14 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 class PostRepository extends ServiceEntityRepository
 {
     /**
-     * @var array
+     * @var Post[]|array
      */
     private $posts;
 
     /**
-     * @var null
+     * @var string
      */
     private $category;
-
-    /**
-     * @var bool
-     */
-    private $isSorted;
 
     /**
      * PostRepository constructor.
@@ -33,39 +27,47 @@ class PostRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
-        $this->category = null;
-        $this->isSorted = false;
     }
 
     /**
      * @return $this
      */
-    public function setPosts(string $category)
+    public function setPosts(string $category): self
     {
         $this->category = $category;
-        $this->posts = (new PostsGenerator())->generatePosts($this->category);
+
+        $queryParameterSet = $this->createQueryBuilder('p')
+            ->andWhere('p.category = :val')
+            ->setParameter('val', $category)
+        ;
+        if ('event' === $category) {
+            $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'ASC')
+                ->addOrderBy('p.endDate', 'ASC');
+        } else {
+            $queryOrdered = $queryParameterSet->orderBy('p.createdAt', 'DESC');
+        }
+
+        $this->posts = $queryOrdered->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
         // uncomment to filter outdated events
         /*if ('event' === $this->category) {
             $this->posts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
         }*/
 
-        $this->isSorted = usort($this->posts, 'self::usortPostsCallback');
-
         return $this;
     }
 
     /**
-     * @return Post|Post[]|array
+     * @return Post[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         return $this->posts;
     }
 
-    /**
-     * @return Post
-     */
-    public function findBySlug(string $slug)
+    public function findBySlug(string $slug): ?Post
     {
         $ret = null;
         foreach ($this->posts as $post) {
@@ -78,10 +80,7 @@ class PostRepository extends ServiceEntityRepository
         return $ret;
     }
 
-    /**
-     * @return Post
-     */
-    public function findById(int $id)
+    public function findById(int $id): ?Post
     {
         $ret = null;
         foreach ($this->posts as $post) {
@@ -94,18 +93,7 @@ class PostRepository extends ServiceEntityRepository
         return $ret;
     }
 
-    /**
-     * @return Post
-     */
-    public function findLastFeaturedPost()
-    {
-        return reset($this->posts);
-    }
-
-    /**
-     * @return array
-     */
-    public function findLastFeaturedPosts(int $limit = 3)
+    public function findLastFeaturedPosts(int $limit = 3): array
     {
         $lastPublishedPost[0] = reset($this->posts);
         // validate limit
@@ -121,10 +109,7 @@ class PostRepository extends ServiceEntityRepository
         return $lastPublishedPost;
     }
 
-    /**
-     * @return array
-     */
-    public function findNextPrevious(int $id)
+    public function findNextPrevious(int $id): array
     {
         $nextPrevious = [
             'previous' => $this->findNext($id),
@@ -134,26 +119,17 @@ class PostRepository extends ServiceEntityRepository
         return $nextPrevious;
     }
 
-    /**
-     * @return Post[]|null
-     */
-    public function findNext(int $id)
+    public function findNext(int $id): ?Post
     {
         return $this->findNextOrPreviousPost($id);
     }
 
-    /**
-     * @return Post[]|null
-     */
-    public function findPrevious(int $id)
+    public function findPrevious(int $id): ?Post
     {
         return $this->findNextOrPreviousPost($id, -1);
     }
 
-    /**
-     * @return Post[]|null
-     */
-    private function findNextOrPreviousPost(int $id, int $direction = 1)
+    private function findNextOrPreviousPost(int $id, int $direction = 1): ?Post
     {
         $matchingPost = null;
         // validate $direction
@@ -163,7 +139,7 @@ class PostRepository extends ServiceEntityRepository
 
         $referencePost = $this->findById($id);
         foreach ($this->posts as $key => $post) {
-            if ($referencePost == $post) {
+            if ($referencePost === $post) {
                 // posts are sorted from the most recent (or closest start date for events) to the oldest,
                 // so next post is the one before in the $this->posts, previous post is the one after in $this->posts
                 $matchingPostKey = $key - (1 * $direction);
@@ -179,34 +155,12 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return bool
+     * @throws \Exception
      */
-    public function filterOutdatedEventscallback(Post $post)
+    public function filterOutdatedEventscallback(Post $post): bool
     {
         $validPost = ($post->getEndDate() >= (new \DateTime('now')));
 
         return $validPost;
-    }
-
-    /**
-     * @return int
-     */
-    public function usortPostsCallback(Post $postA, Post $postB)
-    {
-        if ('event' === $this->category) {
-            $compared = ($postA->getStartDate() <=> $postB->getStartDate());
-            if (0 === $compared) {
-                $compared = ($postA->getEndDate() <=> $postB->getEndDate());
-            }
-        }
-
-        if (!isset($compared) || 0 === $compared) {
-            $compared = -($postA->getCreatedAt() <=> $postB->getCreatedAt());
-            if (0 === $compared) {
-                $compared = strcmp($postA->getTitle(), $postB->getTitle());
-            }
-        }
-
-        return $compared;
     }
 }

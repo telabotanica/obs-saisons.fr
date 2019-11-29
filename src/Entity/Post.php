@@ -71,16 +71,6 @@ class Post
         return $this->id;
     }
 
-    /**
-     * @return $this
-     */
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getCategory(): ?string
     {
         return $this->category;
@@ -171,7 +161,7 @@ class Post
         return $this;
     }
 
-    public function getStartDate(): \DateTimeInterface
+    public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
     }
@@ -198,7 +188,7 @@ class Post
     /**
      * @return $this|null
      */
-    public function setEndDate(\DateTimeInterface $endDate = null): ?self
+    public function setEndDate(\DateTimeInterface $endDate = null): self
     {
         $this->endDate = $endDate;
 
