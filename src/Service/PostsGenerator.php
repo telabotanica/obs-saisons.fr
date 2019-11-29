@@ -35,9 +35,9 @@ class PostsGenerator
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <figure>
                         <img src="https://images.pexels.com/photos/86715/nandina-buds-pink-floral-86715.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="">
-                        <figcaption>Un chouette oiseau</figcaption>
+                        <figcaption>Ça bourgeonne</figcaption>
                     </figure>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -55,7 +55,7 @@ class PostsGenerator
                         <img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce25406d0cadbda9e302c8b_chouette.jpg" alt="">
                         <figcaption>Un chouette oiseau</figcaption>
                     </figure>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -71,9 +71,9 @@ class PostsGenerator
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
                     <figure>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Chaffinch_%28Fringilla_coelebs%29.jpg/800px-Chaffinch_%28Fringilla_coelebs%29.jpg" alt="">
-                        <figcaption>Un chouette oiseau</figcaption>
+                        <figcaption>On en pince pour ce son</figcaption>
                     </figure>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -84,7 +84,6 @@ class PostsGenerator
         foreach ($articles as $articleData) {
             $article = new Post();
             $article->setCategory('article');
-            $article->setId($articleData['id']);
             $article->setCreatedAt($articleData['createdAt']);
             $article->setContent($articleData['content']);
             $article->setTitle($articleData['title']);
@@ -105,7 +104,7 @@ class PostsGenerator
                 'createdAt' => new \DateTime('2019-11-21'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -121,7 +120,7 @@ class PostsGenerator
                 'createdAt' => new \DateTime('2019-10-08'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -136,7 +135,7 @@ class PostsGenerator
                 'createdAt' => new \DateTime('2019-03-08'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -152,7 +151,7 @@ class PostsGenerator
                 'createdAt' => new \DateTime('2019-01-08'),
                 'content' => '
                     <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros.</blockquote>
-                    <h3>Un autre sous-titre ici</h3>
+                    <h3>Un sous-titre ici</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam semper lorem sollicitudin metus faucibus bibendum. Cras porttitor consequat lectus, eu imperdiet mauris feugiat vel. In volutpat nunc et tortor euismod, sit amet commodo dui eleifend. Curabitur non feugiat eros. <strong>Sed vulputate</strong> vestibulum orci at lacinia. Suspendisse nibh eros, <a href="#">cursus a ante finibus</a>, egestas varius arcu. Suspendisse quis luctus tortor, eu imperdiet nisl. Donec eu metus sagittis, placerat sem vel, tincidunt nisl. In ut arcu justo. Pellentesque hendrerit quam nisi, a pretium orci scelerisque in. Etiam eget nunc enim. Vivamus et nisl malesuada, efficitur magna a, pulvinar velit.</p>
                     <p>Integer non enim faucibus augue tristique sodales. In sodales arcu eu mollis facilisis. Donec imperdiet ornare risus. Praesent lacinia justo at eleifend consectetur. Curabitur scelerisque varius ante ut ullamcorper. Donec sodales viverra dapibus. Vestibulum tempus neque tellus, ac iaculis leo euismod ac. <a href="#">Nullam nec facilisis</a> eros. Vivamus est purus, efficitur a odio ultrices, condimentum sollicitudin risus. Sed mi mi, pretium facilisis magna sit amet, auctor luctus ligula.</p>
                 ',
@@ -164,7 +163,6 @@ class PostsGenerator
         foreach ($events as $eventData) {
             $event = new Post();
             $event->setCategory('event');
-            $event->setId($eventData['id']);
             $event->setCreatedAt($eventData['createdAt']);
             $event->setContent($eventData['content']);
             $event->setTitle($eventData['title']);
@@ -180,11 +178,17 @@ class PostsGenerator
         }
     }
 
+    /**
+     * @return Post[]
+     */
     public function getArticles(): array
     {
         return $this->articles;
     }
 
+    /**
+     * @return Post[]
+     */
     public function getEvents(): array
     {
         return $this->events;
