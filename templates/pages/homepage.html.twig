@@ -49,16 +49,7 @@
 				<a href="{{ path("evenements_show", {'slug': lastEvent.slug}) }}" class="next-event-container {{ not loop.first ? 'hidden' }}">
 					<div class="next-event-descr">{{ lastEvent.title }}</div>
 					<div>
-						{% set startDate = '' %}
-						{% if lastEvent.startDate|date("Y") != lastEvent.endDate|date("Y") %}
-							{% set startDate = (lastEvent.startDate|localizeddate('none', 'none', 'fr', null, 'd MMMM Y')) ~ ' - ' %}
-						{% elseif lastEvent.startDate|date("m") != lastEvent.endDate|date("m") %}
-							{% set startDate = (lastEvent.startDate|localizeddate('none', 'none', 'fr', null, 'd MMMM')) ~ ' - ' %}
-						{% elseif lastEvent.startDate|date("j") != lastEvent.endDate|date("j") %}
-							{% set startDate = (lastEvent.startDate|localizeddate('none', 'none', 'fr', null, 'd')) ~ ' - ' %}
-						{% endif %}
-
-						<h5 class="next-event-title">{{ startDate ~ lastEvent.endDate|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</h5>
+						<h5 class="next-event-title">{{ eventDatesDisplay(lastEvent.startDate,lastEvent.endDate) }}</h5>
 						<div class="next-event-city">{{ lastEvent.location }}</div>
 					</div>
 				</a>
