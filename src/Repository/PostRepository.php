@@ -7,7 +7,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * Class PostRepository.
+ * @method Post|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Post|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class PostRepository extends ServiceEntityRepository
 {
@@ -51,6 +53,7 @@ class PostRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+
         // uncomment to filter outdated events
         /*if ('event' === $this->category) {
             $this->posts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
@@ -72,19 +75,6 @@ class PostRepository extends ServiceEntityRepository
         $ret = null;
         foreach ($this->posts as $post) {
             if ($slug === $post->getSlug()) {
-                $ret = $post;
-                break;
-            }
-        }
-
-        return $ret;
-    }
-
-    public function findById(int $id): ?Post
-    {
-        $ret = null;
-        foreach ($this->posts as $post) {
-            if ($id === $post->getId()) {
                 $ret = $post;
                 break;
             }
@@ -137,7 +127,7 @@ class PostRepository extends ServiceEntityRepository
             return $matchingPost;
         }
 
-        $referencePost = $this->findById($id);
+        $referencePost = $this->find($id);
         foreach ($this->posts as $key => $post) {
             if ($referencePost === $post) {
                 // posts are sorted from the most recent (or closest start date for events) to the oldest,
