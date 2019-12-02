@@ -1,29 +1,32 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-	<div class="actus-une">
-		{% for lastArticle in lastArticles %}
-			<div class="actus-une-img {{ not loop.first ? 'hidden' }}" style="background-image: url({{ lastArticle.cover }});"></div>
-		{% endfor %}
-		<div class="actus-une-content">
-			<div class="content-narrow-header bottom-div">
-				<h4 class="content-narrow-title">Actualités</h4>
-				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
-					'target': 'actu-une-container',
-					'before': {},
-					'after': {'path': ''}
-				}}%}
-			</div>
+	{% if lastArticles[0] %}
+		<div class="actus-une">
 			{% for lastArticle in lastArticles %}
-				<a href="{{ path("actualites_show", {'slug': lastArticle.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
-					<h4 class="actus-une-title">{{ lastArticle.title }}</h4>
-					<div class="actus-une-date">{{ lastArticle.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
-				</a>
+				<div class="actus-une-img {{ not loop.first ? 'hidden' }}" style="background-image: url({{ lastArticle.cover }});"></div>
 			{% endfor %}
-			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'actualites', button_label: 'toutes les actualités'} %}
+			<div class="actus-une-content">
+				<div class="content-narrow-header bottom-div">
+					<h4 class="content-narrow-title">Actualités</h4>
+					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+						'target': 'actu-une-container',
+						'before': {},
+						'after': {'path': ''}
+					}}%}
+				</div>
+				{% for lastArticle in lastArticles %}
+					<a href="{{ path("actualites_show", {'slug': lastArticle.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
+						<h4 class="actus-une-title">{{ lastArticle.title }}</h4>
+						<div class="actus-une-date">{{ lastArticle.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
+					</a>
+				{% endfor %}
+				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'actualites', button_label: 'toutes les actualités'} %}
+			</div>
 		</div>
-	</div>
+	{% endif %}
+
 	<div class="content home">
-		<div class="content-une-block">
+		<div class="content-une-block" {{ false == lastEvents[0] ? 'style=width:100%;'}}>
 			<img src="{{ asset('media/layout/Fichier 3.svg') }}" alt="" class="content-block-img" height="50">
 			<div class="content-block-infos">
 				<h3 class="content-narrow-title dark">Comment participer ?</h3>
@@ -34,28 +37,30 @@
 				</a>
 			</div>
 		</div>
-		<div class="next-event">
-			<div class="content-narrow-header bottom-div">
-				<h4 class="content-narrow-title orange">Évènements</h4>
-				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
-					'target': 'next-event-container',
-					'before': {},
-					'after': {'path':''},
-					'arrow_color': 'orange',
-					'borders': 'light'
-				}} %}
+		{% if lastEvents[0] %}
+			<div class="next-event">
+				<div class="content-narrow-header bottom-div">
+					<h4 class="content-narrow-title orange">Évènements</h4>
+					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+						'target': 'next-event-container',
+						'before': {},
+						'after': {'path':''},
+						'arrow_color': 'orange',
+						'borders': 'light'
+					}} %}
+				</div>
+				{% for lastEvent in lastEvents %}
+					<a href="{{ path("evenements_show", {'slug': lastEvent.slug}) }}" class="next-event-container {{ not loop.first ? 'hidden' }}">
+						<div class="next-event-descr">{{ lastEvent.title }}</div>
+						<div>
+							<h5 class="next-event-title">{{ eventDatesDisplay(lastEvent.startDate,lastEvent.endDate) }}</h5>
+							<div class="next-event-city">{{ lastEvent.location }}</div>
+						</div>
+					</a>
+				{% endfor %}
+				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'evenements', button_label: 'tous les évènements', button_color: 'orange'} %}
 			</div>
-			{% for lastEvent in lastEvents %}
-				<a href="{{ path("evenements_show", {'slug': lastEvent.slug}) }}" class="next-event-container {{ not loop.first ? 'hidden' }}">
-					<div class="next-event-descr">{{ lastEvent.title }}</div>
-					<div>
-						<h5 class="next-event-title">{{ eventDatesDisplay(lastEvent.startDate,lastEvent.endDate) }}</h5>
-						<div class="next-event-city">{{ lastEvent.location }}</div>
-					</div>
-				</a>
-			{% endfor %}
-			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'evenements', button_label: 'tous les évènements', button_color: 'orange'} %}
-		</div>
+		{% endif %}
 	</div>
 	<div class="content home">
 		<div class="now especes" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
