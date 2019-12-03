@@ -7,7 +7,7 @@ use App\Entity\User;
 use App\Security\Voter\UserVoter;
 use App\Service\EmailSender;
 use DateTime;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -81,7 +81,7 @@ class UserController extends AbstractController
      */
     public function register(
             Request $request,
-            ObjectManager $manager,
+            EntityManagerInterface $manager,
             EmailSender $mailer,
             TokenGeneratorInterface $tokenGenerator,
             UserPasswordEncoderInterface $passwordEncoder
@@ -147,7 +147,7 @@ class UserController extends AbstractController
     public function activate(
             Request $request,
             string $token,
-            ObjectManager $manager,
+            EntityManagerInterface $manager,
             SessionInterface $session,
             TokenStorageInterface $tokenStorage,
             EventDispatcherInterface $eventDispatcher
@@ -202,7 +202,7 @@ class UserController extends AbstractController
      */
     public function forgottenPassword(
             Request $request,
-            ObjectManager $manager,
+            EntityManagerInterface $manager,
             EmailSender $mailer,
             TokenGeneratorInterface $tokenGenerator
     ) {
@@ -264,7 +264,7 @@ class UserController extends AbstractController
     public function resetPassword(
             Request $request,
             string $token,
-            ObjectManager $manager,
+            EntityManagerInterface $manager,
             UserPasswordEncoderInterface $passwordEncoder
     ) {
         if ($request->isMethod('POST')) {
@@ -298,7 +298,7 @@ class UserController extends AbstractController
      */
     public function dashboard(
             Request $request,
-            ObjectManager $manager
+            EntityManagerInterface $manager
     ) {
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
