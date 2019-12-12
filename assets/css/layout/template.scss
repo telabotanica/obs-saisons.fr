@@ -73,6 +73,7 @@
     }
 
     &.narrow {
+        background-color: $grey303394;
         @include media(xs,sm) {
             padding-top: 10px;
         }
