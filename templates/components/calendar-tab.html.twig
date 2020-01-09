@@ -26,31 +26,28 @@
     'Feuillaison',
     'Floraison',
     'Fructification',
-    'Scénescence'
+    'Sénescence'
 ] %}
 {% set stades = periods|keys %}
 {% set actual_stades_labels = [] %}
 {% for i in 0..stades|length - 1 %}
     {% if 'apparition' in stades[i] %}
-        {% set actual_stades_labels = actual_stades_labels|merge(['1ère appariton']) %}
-    {% elseif stades_labels[i]|convert_encoding('us-ascii//TRANSLIT','utf-8')|lower ==  stades[i] %}
+        {% set actual_stades_labels = actual_stades_labels|merge(['1ere apparition']) %}
+    {% elseif stades_labels[i] == stades[i] %}
         {% set actual_stades_labels = actual_stades_labels|merge([stades_labels[i]]) %}
     {% endif %}
 {% endfor %}
 
-{% set years = [] %}
-{% for indiv in individuals %}
-    {% for year in  indiv.observations|keys %}
-        {% if year not in years %}
-            {% set years = years|merge([year]) %}
-        {% endif %}
-    {% endfor %}
-{% endfor %}
-{% set first_year = max(years|default("now"|date("Y"))) %}
+
+{% set years = calendar.years %}
+{% set first_year = max(years|default(["now"|date("Y")])) %}
 
 <div class="periods-calendar" data-id="{{ id }}" style="display:none;">
+
     <div class="table-container">
         <div class="grid top">
+
+            {# Display years dropdown #}
             <div class="grid_1-3_1-2 dropdown">
                 <div class="dropdown-toggle" style="{{ years|length > 1 ? 'cursor: pointer;' }}">
                     <div class="active-year {{ years|length > 1 ? 'down-arrow-icon' }}">{{ first_year }}</div>
@@ -63,11 +60,13 @@
                     </nav>
                 {% endif %}
             </div>
+
+            {# Display months #}
             {% for i in 3..14 %}
                 {% set month = "0000-#{i - 2}-01"|localizeddate('none', 'none', 'fr', null, 'MMM')  %}
                 <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 month">{{ month }}</div>
                 {% if month == ("now"|localizeddate('none', 'none', 'fr', null, 'MMM')) %}
-                    <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 table-colomn active-month top"></div>
+                    <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 table-colomn active-month top  {{ loop.last ? 'last-column' }}"></div>
                 {% endif %}
             {% endfor %}
         </div>
@@ -82,23 +81,26 @@
             </div>
 
             <div class="grid content-{{ stades|length }}">
+
                 {% for i in 1..stades|length %}
                     {% set stade = stades[i-1] %}
+
                     {% set column_start = (periods[stade][0]|date("n")) + 2 %}
                     {% set column_end = (periods[stade][1]|date("n")) + 3 %}
 
                     <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stade {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ actual_stades_labels[i-1] }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
-                    <div class="stade-period {{ stade }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};" }}"></div>
+                    <div class="stade-period {{ stade|convert_encoding('us-ascii//TRANSLIT','utf-8')|lower }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};" }}"></div>
                 {% endfor %}
+
 
                 {% for year in indiv.observations|keys %}
                     {% set hide = (year != first_year) %}
                     {% include 'components/obs_chips.html.twig' with {observations: indiv['observations'][year] } %}{# will also take actual_stades_labels #}
                 {% endfor %}
 
-                {% for i in 3..13 %}
-                    <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ stades|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }}"></div>
+                {% for i in 3..14 %}
+                    <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ stades|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }} {{ loop.last ? 'last-column' }}"></div>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -113,10 +115,11 @@
             </div>
         </div>
     </div>
+
     <div class="helper-legend">
         <div class="legends">
             {% for i in 0..stades|length - 1 %}
-                <div class="stade-period {{ stades[i] }} legend"></div>
+                <div class="stade-period {{ stades[i]|convert_encoding('us-ascii//TRANSLIT','utf-8')|lower }} legend"></div>
             {% endfor %}
         </div>
         <div class="helper-legend-text">Périodes à laquelle est observée ce stade en moyenne les années précédentes</div>
