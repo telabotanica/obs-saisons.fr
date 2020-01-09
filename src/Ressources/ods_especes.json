@@ -1,0 +1,517 @@
+[
+	{
+		"nom_vernaculaire":"Abricotier",
+		"nom_scientifique":"Prunus armeniaca",
+		"description":"L'abricotier est un arbre fruitier hermaphrodite, cultiv\u00e9 pour son fruit l'abricot mais \u00e9galement pr\u00e9sent \u00e0 l'\u00e9tat sauvage. Il peut atteindre plus de 6 m\u00e8tre de haut et \u00e0 une forte v\u00e9g\u00e9tation.\r\nLes fleurs sont blanches et grandes, dispos\u00e9es en corymbe et apparaissent avant les feuilles. Chaque bouton \u00e0 fleurs donne une inflorescence disposant de cinq p\u00e9tales et cinq s\u00e9pales. La floraison a lieu de mars \u00e0 mai, ce qui rend l'arbre sensible aux gels printanier.\r\nLes feuilles sont alternes, sessiles et les bords sont cr\u00e9nel\u00e9s dent\u00e9s.\r\nLe fruit de forme globuleuse est une drupe comestible \u00e0 peau velout\u00e9e, de couleur jaune orang\u00e9. Le noyau du fruit est non adh\u00e9rent \u00e0 la chair et contient une amande qui peut \u00eatre douce ou am\u00e8re.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"abricotier bergeron",
+		"nom_scientifique":"Prunus armeniaca var. bergeron",
+		"description":"Appel\u00e9e plus rarement 'Gabrielle Bergeron', cette vari\u00e9t\u00e9 est issue d'un semis de hasard obtenu vers 1920 par M. Bergeron \u00e0 Saint-Cyr au Mont d'Or dans le Rh\u00f4ne. Sa floraison semi-tardive, son autofertilit\u00e9 et sa bonne r\u00e9sistance au gel printanier lui assurent une tr\u00e8s bonne productivit\u00e9. L'abricot Bergeron est une vari\u00e9t\u00e9 tardive de bon calibre. De forme un peu ovale, orang\u00e9 avec une joue rouge \u00e0 l'insolation, le fruit a une chair orange fonc\u00e9e, ferme, peu juteuse et acidul\u00e9e.\r\n\r\n<p> Calendrier ph\u00e9nologique : <p>\r\n<p> Fleurs : deuxi\u00e8me quinzaine de mars <p>\r\n<p> Feuilles : d\u00e9but avril <p>\r\n<p> Fruits : fin juillet \u00e0 fin ao\u00fbt <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"abricotier rouge du Roussillon",
+		"nom_scientifique":"Prunus armeniaca var. rouge du Roussillon",
+		"description":"Apparu vers 1830 d'un semis de hasard dans les Pyr\u00e9n\u00e9es orientales, il s\u2019agit de l'abricotier des r\u00e9gions de Sud. Cette vari\u00e9t\u00e9 autofertile poss\u00e8de une bonne r\u00e9sistance au gel. La fleur appara\u00eet d\u00e9but mars avant la feuille, et le fruit arrive \u00e0 maturit\u00e9 en juillet.  Les fruits sont assez gros, avec une chair semi-adh\u00e9rente au noyau, de couleur jaune dor\u00e9e lav\u00e9e de vermillon. Leur chair est fondante et parfum\u00e9e, concentr\u00e9e en sucre avec un go\u00fbt tr\u00e8s prononc\u00e9. Ils ont une tenue excellente en conserve.\r\n\r\n<p> Calendrier ph\u00e9nologique : <p> \r\n<p> Fleurs : d\u00e9but mars <p> \r\n<p> Feuilles : fin mars <p> \r\n<p> Fruits : de d\u00e9but juillet \u00e0 mi-ao\u00fbt <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"amandier",
+		"nom_scientifique":"Prunus dulcis",
+		"description":"L'amandier est un petit arbre de 5 \u00e0 10 m de haut au feuillage caduc. Il vit de 50 \u00e0 80 ans et se multiplie par semis ou par greffes. Il en existe deux vari\u00e9t\u00e9s : amara (amer) et dulcis (doux). Sa feuille elle est oblongue, lanc\u00e9ol\u00e9e et dent\u00e9e. Ses fleurs solitaires, en fascicules ou en grappes, naissant souvent avant les Feuilles ont 5 s\u00e9pales, 5 p\u00e9tales et pr\u00e9sentent une couleur blanche, parfois rose \u00e0 rouge. Son fruit, l'amande est une drupe, dont l'enveloppe ext\u00e9rieure, de couleur verte, s\u00e8che \u00e0 maturit\u00e9 et se fend, pour r\u00e9v\u00e9ler une noix dure. La coque renferme une amande, qui est la partie consomm\u00e9e du fruit.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"amandier a\u00ef",
+		"nom_scientifique":"Prunus dulcis var. a\u00ef",
+		"description":"L'amandier A\u00ef est une vari\u00e9t\u00e9 traditionnellement cultiv\u00e9e en Provence depuis le XIX\u00b0 si\u00e8cle.  C\u2019est un arbre vigoureux et tr\u00e8s fertile, avec une floraison relativement tardive qui le met \u00e0 l\u2019abri des gel\u00e9es et permet sa culture dans le Nord de la France. Les fruits, qui se r\u00e9coltent mi-septembre, ont  une coque tendre de forme ronde. L\u2019amandon est aplati et charnu, avec un bon go\u00fbt sucr\u00e9.\r\n\r\n<p> Calendrier ph\u00e9nologique : <p>\r\n<p> Fleurs : deuxi\u00e8me quinzaine de mars <p>\r\n<p> Feuilles : fin mars <p>\r\n<p> Fruits : septembre <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"amandier princesse",
+		"nom_scientifique":"Prunus dulcis var. princesse",
+		"description":"Ancienne vari\u00e9t\u00e9 fran\u00e7aise cit\u00e9e d\u00e8s 1809, l'amandier Princesse est probablement originaire d'Ard\u00e8che. Cette vari\u00e9t\u00e9 est aussi parfois appel\u00e9e 'Pistache' en raison du go\u00fbt de l'amandon qui rappelle cet autre fruit \u00e0 coque. La floraison de l\u2019arbre est pr\u00e9coce, d\u00e8s le mois  de f\u00e9vrier. Il s\u2019agit d\u2019une vari\u00e9t\u00e9 \u00e0 coque tr\u00e8s tendre, pouvant pratiquement se casser \u00e0 mains nues. Le fruit, de tr\u00e8s bonne qualit\u00e9, est en grande partie r\u00e9colt\u00e9 vert d\u00e8s le d\u00e9but du mois de juillet. Son amandon allong\u00e9 a une saveur tr\u00e8s fine et se conserve bien sans rancir. La r\u00e9colte des fruits m\u00fbrs pour une utilisation en sec \u00e0 lieu au mois d\u2019ao\u00fbt. La vari\u00e9t\u00e9 Princesse est l\u2019amande utilis\u00e9e dans la fabrication des calissons d'Aix.\r\n\r\n<p> Calendrier ph\u00e9nologique : <p>\r\n<p> Fleurs : premi\u00e8re quinzaine de f\u00e9vrier <p>\r\n<p> Feuilles : fin f\u00e9vrier <p>\r\n<p> Fruits : ao\u00fbt-septembre <p>\r\n",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Arbre de Jud\u00e9e",
+		"nom_scientifique":"Cercis siliquastrum",
+		"description":"Arbre peu imposant, de moins de 6 m\u00e8tres. Ses rameaux, sont flexueux, et prennent des allures courb\u00e9es en zigzag.\r\nLe feuillage de l\u2019arbre de Jud\u00e9e est caduc, ses feuilles sont enti\u00e8res, \u00e0 nervation palm\u00e9e, arrondies et \u00e9chancr\u00e9es en c\u0153ur \u00e0 la base (cordiformes).\r\nLa floraison commence avant la feuillaison. Les fleurs naissent directement sur le tronc et les branches. Elles sont d\u2019un joli rose vif et group\u00e9es en grappes Elles sont form\u00e9es par un petit \u00e9tendard central (deux p\u00e9tales soud\u00e9s) recouvert par deux autres p\u00e9tales (les ailes), et une car\u00e8ne (deux p\u00e9tales soud\u00e9s) d\u00e9passant largement les autres p\u00e9tales.\r\nSes fruits, de longues gousses regroup\u00e9es de fa\u00e7on serr\u00e9e, sont glabres et rouge\u00e2tres. Elles deviennent brunes et s\u00e8ches \u00e0 maturit\u00e9 et restent jusqu\u2019au printemps suivant sur l\u2019arbre.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"bouleau",
+		"nom_scientifique":"Betula pendula",
+		"description":"Arbre de 20-25 m, port en colonne, \u00e0 cime peu dense et aux branches dress\u00e9es puis pendantes, allure souple et a\u00e9r\u00e9e. Tronc droit, rameaux d\u00e9pourvus de poils, souples et brillants, brun roux fonc\u00e9, avec des verrues r\u00e9sineuses gris\u00e2tres.\r\n\u00c9corce tr\u00e8s blanche, lisse et luisante, ger\u00e7ures horizontales noir\u00e2tres. Avec le temps elle se crevasse, s\u2019\u00e9paissit, et se noircit \u00e0 la base du tronc.\r\nGros bourgeon en c\u00f4ne, brun.\r\nFeuillage caduc \u00e0 feuilles triangulaires, dent\u00e9es, sans poils. Glandes r\u00e9sinif\u00e8res qui les rendent poisseuses.\r\nFleurs en chatons. Chatons m\u00e2les au bout des rameaux, pendants, 10 cm. Chatons femelles plus petits, 3 cm et dress\u00e9s.\r\nC\u00f4ne pendant contenant de nombreux petits fruits \u00e0 aile large (samares). Le c\u00f4ne se d\u00e9sagr\u00e8ge \u00e0 maturit\u00e9 sur l'arbre.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"cerisier",
+		"nom_scientifique":"Prunus avium",
+		"description":"Le cerisier est un petit arbre fruitier de 1 \u00e0 7 metres de\r\nhaut, avec un tronc lisse. Il vit de 50 \u00e0 100 ans mais les\r\nmaladies bact\u00e9riennes ou les ravageurs r\u00e9duisent bien\r\nsouvent sa dur\u00e9e de vie.\r\nSon feuillage est caduc avec des feuilles elliptiques de\r\n10-12 cm de long.\r\nSes fleurs sont blanches de 2 cm de diam\u00e8tre, port\u00e9es\r\npar un p\u00e9dicelle de 2 cm et group\u00e9es en grappes. Elles\r\napparaissent en mars-avril avant les feuilles et la pollinisation\r\nest animale.\r\nComme l'Amandier, le cerisier peut offrir des fruits doux\r\nmais aussi am\u00e8res issues des vari\u00e9t\u00e9s sauvages.\r\nLe fruits du cerisier est une drupe et porte un nom diff\u00e9rent\r\nen fonction de la vari\u00e9t\u00e9.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"cerisier burlat",
+		"nom_scientifique":"Prunus avium var. burlat",
+		"description":"L\u00e9onard Burlat en 1915 remarque par hasard un cerisier d\u2019une belle prestance. Il y pr\u00e9l\u00e8ve alors des greffons et les greffe sur un merisier de sa propri\u00e9t\u00e9 : la vari\u00e9t\u00e9 est n\u00e9e. De croissance rapide les premi\u00e8res ann\u00e9es, le cerisier Burlat peut atteindre 8 m\u00e8tres de haut comme de large. Ses feuilles caduques, ovales et allong\u00e9es vert fonc\u00e9 devenant jaune dor\u00e9 \u00e0 l'automne, apparaissent en m\u00eame temps que ses fleurs au mois de mars. Sa floraison,  blanche immacul\u00e9e, laisse place \u00e0 de nombreux fruits car il est tr\u00e8s fertile. Les cerises Burlat sont des fruits de calibre moyen, d'un ton rouge vif qui s'assombrit \u00e0 maturit\u00e9 \u00e0 partir de la mi-mai. Leur chair n\u2019est pas tr\u00e8s ferme, et leur go\u00fbt pr\u00e9sente un bon \u00e9quilibre entre les caract\u00e8res juteux, sucr\u00e9s et acidul\u00e9s. \r\n\r\n<p> Calendrier ph\u00e9nologique: <p>\r\n<p> Fleurs : fin mars \u2013 d\u00e9but avril <p>\r\n<p> Feuilles : d\u00e9but avril <p>\r\n<p> Fruits : deuxi\u00e8me quinzaine de mai, jusqu\u2019\u00e0 mi-juin <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"ch\u00eane blanc",
+		"nom_scientifique":"Quercus pubescens",
+		"description":"Arbre de 10 \u00e0 25 m de haut, de forme ronde, ample et claire. Tronc court et tortueux. Les Rameaux de l\u2019ann\u00e9e sont pubescents et gris\u00e2tres puis bruns, luisants et souples.\r\nEcorce noir\u00e2tre, profond\u00e9ment fissur\u00e9e en petites plaques carr\u00e9es rugueuses.\r\nPetit bourgeon ovale, brun gris\u00e2tre, pointu et pubescent (1-1,5 cm).\r\nFeuilles caduques parfois marcescentes (restent mortes sur l\u2019arbre et se font pousser par les nouvelles feuilles au printemps), assez petites, p\u00e9tiol\u00e9es, lob\u00e9es (pennatilob\u00e9es), glabres (sans poils) et vertes claires dessus, pubescentes (poilues) et gris\u00e2tres dessous.\r\nNombreuses fleurs m\u00e2les en chatons pendants et l\u00e2ches. Fleurs femelles solitaires et ou en petit groupe,\r\nminuscules, pubescentes et terminales.\r\nLes Fruits sont des ak\u00e8nes, un gland sph\u00e9rique est contenu dans une cupule grise velue et \u00e9cailleuse \u00e0 p\u00e9doncule\r\ncourt.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"cerisier griotte de Montmorency",
+		"nom_scientifique":"Prunus cerasus var. griotte de Montmorency",
+		"description":"Le cerisier griotte de Montmorency serait apparu dans la r\u00e9gion de Montmorency (Val d\u2019Oise) vers la fin du XVIe si\u00e8cle. C\u2019est une vari\u00e9t\u00e9 auto-fertile, au port buissonnant d'une vigueur moyenne et de productivit\u00e9 assez bonne. Il appartient \u00e0 la cat\u00e9gorie des cerises acides (prunus cerasus) et non des cerises douces (prunus avium). Les griottes de Montmorency sont des fruits de taille moyenne, de couleur rouge clair, \u00e0 la peau translucide et au long p\u00e9doncule. Leur chair jaune est molle, juteuse et acidul\u00e9e, ce qui les rend id\u00e9ales pour les confitures.\r\n\r\n<p> Calendrier ph\u00e9nologique : <p> \r\n<p> Fleurs : d\u00e9but avril <p> \r\n<p> Feuilles : d\u00e9but avril <p> \r\n<p> Fruits : mi-juin \u00e0 mi-juillet <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"\u00e9picea",
+		"nom_scientifique":"Picea abies",
+		"description":"http:\/\/fr.wikipedia.org\/wiki\/%C3%89pic%C3%A9a_commun",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"forsythia",
+		"nom_scientifique":"Forsythia intermedia",
+		"description":"Arbuste pouvant atteindre 3 m de haut. Ramification basse, au port souple mais solide, il est \u00e9rig\u00e9 et buissonnant.\r\nMultiples troncs, rameaux dress\u00e9s puis \u00e9tal\u00e9s.\r\n\u00c9corce teint\u00e9e de beige, tachet\u00e9e de marques.\r\nBourgeon \u00e9cailleux, pointu, brun-violet.\r\nFeuillage caduc, vert \u00e0 vert clair. Feuilles dispos\u00e9es de mani\u00e8re tr\u00e8s serr\u00e9e autour des rameaux. De forme ovale allong\u00e9e (lanc\u00e9ol\u00e9e), et grossi\u00e8rement dent\u00e9es sur la partie terminale de la feuille.\r\nFleurs en trompettes jaune-soleil \u00e0 4 p\u00e9tales non odorantes. Group\u00e9es en bouquets sur tout le long de la\r\ntige.\r\nFruits en capsules. Graines pourvues d'une aile courte.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"fr\u00eane commun",
+		"nom_scientifique":"Fraxinus excelsior",
+		"description":"Arbre de 20 \u00e0 40 m, \u00e9rig\u00e9 \u00e0 cime arrondie et clairsem\u00e9e.\r\nTronc droit, \u00e9lanc\u00e9, peut \u00eatre fourchu. Jeunes rameaux gros, plus ou moins aplatis, sans poils, gris clair ou gris\r\noliv\u00e2tre, avec des cicatrices de feuilles. Les branches principales presque \u00e0 la verticale et relativement a\u00e9r\u00e9es, s'affaissent avec l'\u00e2ge.\r\n\u00c9corce lisse, gris verd\u00e2tre ou jaun\u00e2tre chez les jeunes arbres, en vieillissant elle se ger\u00e7ure et se crevasse longitudinalement ou verticalement et vire au gris brun.\r\nBourgeons terminaux assez gros, noirs et luisants.\r\nFeuillage caduc, feuilles vertes fonc\u00e9es, compos\u00e9es de 7-15 folioles (petites feuilles) (imparipenn\u00e9es), dentel\u00e9es.\r\nFolioles ovales et pointus au sommet, seule la derni\u00e8re est p\u00e9tiol\u00e9e. Pas de poils sur la face sup\u00e9rieure, l\u00e9g\u00e8rement\r\nvelues en dessous.\r\nFleurs en petits bouquets denses et dress\u00e9s \u00e0 l\u2019extr\u00e9mit\u00e9 des rameaux. Sans p\u00e9tales,regroup\u00e9es en touffes rouge-violac\u00e9es, puis jaune-verd\u00e2tres. Arbre soit m\u00e2le, soit femelle, soit les deux.\r\nFruits en grappes retombantes : les samares ou \u00ab langues d'oiseau \u00bb (fruit sec, ak\u00e8ne port\u00e9 par une aile)\r\nlongs et aplatis, de couleur brun\u00e2tre.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Gen\u00eat d\u2019Espagne",
+		"nom_scientifique":"Spartium junceum",
+		"description":"Arbuste qui mesure en moyenne entre 1 et 3 m\u00e8tres et peut atteindre 5 m\u00e8tres, aux tiges cylindriques allong\u00e9es et dress\u00e9es. Les feuilles sont  lanc\u00e9ol\u00e9es (en forme de fer de lance), enti\u00e8res et velus sur la face inf\u00e9rieure. Elles sont \u00e9parses et pr\u00e9sentes sur l\u2019arbuste durant une courte p\u00e9riode.\r\nLes grandes fleurs (2 \u00e0 2,5 cm) sont jaune vif, dispos\u00e9es en grappes terminales allong\u00e9es et tr\u00e8s parfum\u00e9es. Elles sont form\u00e9es par un \u00e9tendard de grande taille (deux p\u00e9tales soud\u00e9s), deux autres p\u00e9tales (les ailes) et une car\u00e8ne centrale (deux p\u00e9tales soud\u00e9s) de forme tubul\u00e9e, pro\u00e9minente et dress\u00e9.\r\nLes fruits sont des gousses ovales de 6 \u00e0 8 centim\u00e8tres : les gousses jeunes sont pubescentes et deviennent presque glabres et  noires \u00e0 maturit\u00e9 ; elles contiennent entre 12 et 18 graines.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"H\u00eatre commun",
+		"nom_scientifique":" Fagus sylvatica L.",
+		"description":"C\u2019est un arbre \u00e0 tronc droit, pouvant atteindre 40 m\u00e8tres de hauteur, facilement identifiable gr\u00e2ce \u00e0 son \u00e9corce grise et lisse. \r\n\r\nLes feuilles sont ovales et aigu\u00ebs, avec des bords entiers ou cr\u00e9nel\u00e9s, cili\u00e9es quand elles sont jeunes (on dit que la feuille du h\u00eatre est \u201cpoilue\u201d, pour le diff\u00e9rencier du charme qui \u00e0 \u201cdes dents\u201d). \r\nLes fleurs m\u00e2les sont regroup\u00e9es en chatons globuleux pendant \u00e0 la base des jeunes rameaux.\r\nLes fleurs femelles sont group\u00e9es par deux dans une capsule verd\u00e2tre situ\u00e9e au bout des jeunes rameaux.\r\nLes fruits sont des fa\u00eenes en forme de pyramide \u00e0 3 faces, group\u00e9es par 2 \u00e0 4 dans une petite bogue h\u00e9riss\u00e9e qui s\u2019ouvre \u00e0 l\u2019automne.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"lilas",
+		"nom_scientifique":"Syringa vulgaris",
+		"description":"Arbuste de 2 \u00e0 10 m\u00e8tres au port buissonnant. Poss\u00e8de\r\nplusieurs troncs. Rameaux rigides et lisses, se terminent\r\npar deux bourgeons.\r\n\u00c9corce brune, fissur\u00e9e en \u00e9cailles fibreuses.\r\nBourgeon ovo\u00efde, globuleux.\r\nFeuillage caduc \u00e0 feuilles simples, de forme triangulaire avec la base en forme de coeur (feuille cordiforme), et\r\nle sommet pointu, 6-12 cm, vertes claires.\r\nPetite fleur en tube \u00e0 4 lobes, qui pr\u00e9sente une gamme nuanc\u00e9e de teintes, elles peuvent \u00eatre blanches,\r\nlilas ou violettes. Group\u00e9es en grappe dress\u00e9e (thyrses coniques), tr\u00e8s parfum\u00e9es.\r\nLe fruit est une capsule coriace \u00e0 2 loges. Graines ail\u00e9es.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"marronnier",
+		"nom_scientifique":"Aesculus hippocastanum",
+		"description":"Arbre au port en boule tr\u00e8s dense, 20-30 m. Tronc robuste et droit. Jeunes rameaux gros, bruns, couverts de petits pores (lenticelles) et de grosses cicatrices de feuilles.\r\n\u00c9corce brun-rouge\u00e2tre-gris\u00e2tre, lisse chez les jeunes individus, devenant \u00e9cailleuse et gris-noir\u00e2tre chez les adultes.\r\nGros bourgeons bruns, \u00e9cailleux et visqueux.\r\nGrandes feuilles caduques munies d'un long p\u00e9tiole.\r\nCompos\u00e9es de 5-7 folioles dent\u00e9es et sans p\u00e9tiole (sessiles), gaufr\u00e9es vertes, elles sont palmatilob\u00e9es (les\r\nfolioles ressemblent aux doigts d'une main). Les folioles sont de forme ovale, pointues au sommet (acumin\u00e9es).\r\nFleurs regroup\u00e9es en grappe pyramidale dress\u00e9e appel\u00e9e thyrse. En forme de doigt et de couleur blanche tachet\u00e9e de jaune ou de rose.\r\nLe fruit est une grosse capsule ou bogue, globuleuse, verte puis brune, \u00e0 piquants. Il renferme 1-3 graines non comestibles appel\u00e9es marrons, \u00e0 paroi lisse, brillante, d'un brun rouge\u00e2tre et \u00e0 large cicatrice blanch\u00e2tre (hile). \u00c0 ne pas confondre avec les ch\u00e2taignes ! <\/ br><\/ br>\r\nLire la suite : http:\/\/obs-saisons.fr\/aesculus_hippocastanum",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"m\u00e9l\u00e8ze",
+		"nom_scientifique":"Larix decidua",
+		"description":"http:\/\/fr.wikipedia.org\/wiki\/Larix_decidua",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"micocoulier",
+		"nom_scientifique":"Celtis australis",
+		"description":"Arbre de 5-25 m, port \u00e9tal\u00e9 \u00e0 arrondi. Tronc \u00e9lanc\u00e9 et r\u00e9gulier. Nombreux rameaux, fins, souvent pendants.\r\n\u00c9corce grise, lisse, parfois verruqueuse.\r\nFeuilles caduques en forme de fer de lance, l\u00e9g\u00e8rement asym\u00e9triques et arrondies \u00e0 la base, dent\u00e9es et rugueuses sur le dessus. Tr\u00e8s pointu au sommet, vert fonc\u00e9 dessus, vert gris\u00e2tre et velues dessous.\r\nFleurs insignifiantes, petites, sans p\u00e9tales, verd\u00e2tres.\r\nFruit charnu (drupe) \u00e0 un noyau, globuleux, vert, rouge puis brun noir\u00e2tre, tr\u00e8s salissant, longuement p\u00e9doncul\u00e9.\r\nNomm\u00e9 micocoule, il persiste sur l'arbre apr\u00e8s la chute des feuilles.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"noisetier",
+		"nom_scientifique":"Corylus avellana",
+		"description":"Arbrisseau 2-6 m, au port buissonnant. Compos\u00e9 de plusieurs troncs fins, dress\u00e9s et droits (multigaule), \u00e0\r\nsilhouette large, dense et arrondie. Poils glanduleux sur les jeunes rameaux rouge\u00e2tres.\r\n\u00c9corce lisse, mince, brun\u00e2tre-gris\u00e2tre, s\u2019\u00e9claircit avec l\u2019age. Couverte de petits points bruns (lenticelles).\r\nBourgeons petits et globuleux.\r\nFeuillage caduc \u00e0 larges feuilles arrondies, dent\u00e9es avec un sommet en pointe, un p\u00e9tiole court, vert terne sur\r\nle dessus, plus clair et poilu sur le dessous.\r\nFleurs m\u00e2les jaun\u00e2tres en chatons pendants, 2-8 cm, group\u00e9s par 2-4. Fleurs femelles petites en forme de\r\nbourgeons avec de minuscules stigmates (sortes de poils) rouges.\r\nFruit sec avec une seule graine (ak\u00e8ne) c'est la noisette ou aveline. Coque dure (cupule) et lisse avec de petites\r\nfeuilles \u00e0 la base (bract\u00e9es foliac\u00e9es). Graine comestible.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Noyer commun",
+		"nom_scientifique":"Juglans regia L.",
+		"description":"C\u2019est un arbre \u00e0 tronc court et de taille moyenne pouvant atteindre 25 m de haut. Les branches tr\u00e8s ramifi\u00e9es lui donnent une silhouette large et touffue.\r\nLes feuilles sont compos\u00e9es de 7 \u00e0 9 folioles ovales, dispos\u00e9es de part et d\u2019autre d\u2019un long p\u00e9tiole renfl\u00e9 \u00e0 la base. Les folioles ont un bord lisse. La foliole terminale est plus grande que les autres. Les feuilles sont r\u00e9parties de fa\u00e7on alterne de part et d\u2019autres du rameau. Elles d\u00e9gagent une odeur forte quand on les froisse.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Pin sylvestre",
+		"nom_scientifique":"Pinus sylvestris L.",
+		"description":"Cela peut \u00eatre un arbre majestueux ou au contraire bas, tr\u00e8s ramifi\u00e9 et tortueux. On le reconna\u00eet facilement gr\u00e2ce \u00e0 la couleur ocre saumon tr\u00e8s caract\u00e9ristique de  son \u00e9corce de dans la partie sup\u00e9rieur du tronc. \r\nLes feuilles (aiguilles), group\u00e9es par 2, courtes et \u00e9paisses, presque toujours vrill\u00e9es, peu piquantes, vert bleut\u00e9 glauque.\r\nLes fleurs m\u00e2les sont regroup\u00e9es en amas de chatons arrondis jaun\u00e2tres \u00e0 la base des pousses.\r\nles fleurs femelles sont des petits c\u00f4nes arrondis verd\u00e2tres \u00e0 rouges au sommet des pousses.\r\nLes fruits sont des petits c\u00f4nes allong\u00e9s de 3 \u00e0 8 cm de long, brun-roux fonc\u00e9 mat \u00e0 p\u00e9doncules tr\u00e8s courts. les graines assez petites sont munies d\u2019une petite aile membraneuse tr\u00e8s allong\u00e9e triangulaire.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"platane",
+		"nom_scientifique":"Platanus acerifolia",
+		"description":"Arbre de 30 \u00e0 40 m, forme arrondi, assez large. Tronc droit. Grosses branches flexueuses, tendance \u00e0 s'allonger, se tordre et peuvent toucher le sol. Les jeunes pousses\r\nsont recouvertes par un l\u00e9ger duvet.\r\n\u00c9corce d\u2019abord lisse et de couleur grise-oliv\u00e2tre puis se desquame par plaques aux contours arrondis, dont la chute d\u00e9couvre des zones jaunes et blanches. Aspect peau de serpent.\r\nBourgeons bruns et allong\u00e9s, l\u00e9g\u00e8rement stri\u00e9s.\r\nGrandes feuilles caduques \u00e0 long p\u00e9tiole, d\u00e9coup\u00e9es en 3-5 lobes dent\u00e9s et pointus. De couleur vert fonc\u00e9\r\nbrillant. Avec 3 nervures principales en \u00e9ventail fortement marqu\u00e9es. Consistance coriace qui les rend longues \u00e0 se d\u00e9grader.\r\nFleurs en petits chatons globuleux et pendants port\u00e9s sur le m\u00eame arbre et r\u00e9unis en capitules, les m\u00e2les sont jaun\u00e2tres et les femelles rouge\u00e2tres.\r\nLes Fruits sont des ak\u00e8nes (fruit sec qui ne contient qu'une seule graine et ne s'ouvre pas \u00e0 maturit\u00e9) poilus\r\nregroup\u00e9s en sph\u00e8re, d'abord vertes puis brunes, g\u00e9n\u00e9ralement group\u00e9es par 2 ou 4 au bout d\u2019un long p\u00e9doncule.",
+		"type_id":1,
+		"is_active":1
+	},
+
+	{
+		"nom_vernaculaire":"Peuplier noir d\u2019Italie",
+		"nom_scientifique":"Populus nigra var. italica M\u00fcnchh",
+		"description":"Il s\u2019agit  grand arbre de 25 \u00e0 30 m\u00e8tres de haut \u00e0 port fastigi\u00e9, c\u2019est \u00e0 dire \u00e9lanc\u00e9 et en forme de fuseau droit. \r\nLes feuilles sont vert fonc\u00e9 sur les deux faces, grandes, triangulaire \u00e0 p\u00e9tiole aplati, dent\u00e9es assez finement et de fa\u00e7on irr\u00e9guli\u00e8re.\r\nLes fleurs m\u00e2les sont regroup\u00e9es en chatons pendants assez courts, de couleur rouge violac\u00e9 et avec un p\u00e9doncule quasiment absent.\r\nCette esp\u00e8ce a \u00e9t\u00e9 clon\u00e9e \u00e0 partir d\u2019un individu m\u00e2le, tous les peupliers noirs d\u2019Italie que nous rencontrons en Europe sont donc identique g\u00e9n\u00e9tiquement, et ne font ni de fleurs femelles, ni de fruits.",
+		"type_id":1,
+		"is_active":1
+	},
+
+	{
+		"nom_vernaculaire":"poirier",
+		"nom_scientifique":"Pyrus communis",
+		"description":"Le poirier est un arbre fruitier, cultiv\u00e9 pour son fruit la\r\npoire. De taille moyenne, il peut atteindre 10 \u00e0 15 m de haut\r\net vivre jusqu'\u00e0 200 ans.\r\nSa feuille \u00e0 limbe ovale, finement dent\u00e9e sur le bord, a\r\nun p\u00e9tiole aussi long que le limbe.\r\nSes fleurs qui apparaissent en mars-avril sont blanches\r\net group\u00e9es en corymbes.\r\nSon fruit est la Poire. Elle est constitu\u00e9e d'un receptacle\r\nfloral, d'un piridion (ovaire inf\u00e8re) et est consid\u00e9r\u00e9e comme\r\nun faux fruit comme de nombreux fruits de Rosaceae tels la\r\npomme ou la n\u00e8fle.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"poirier Williams",
+		"nom_scientifique":"Pyrus communis var. Williams",
+		"description":"Originaire d\u2019Angleterre \u00e0 la fin du XVIII\u00b0 si\u00e8cle, le poirier Williams est aussi appel\u00e9 Bon Chr\u00e9tien Williams, William\\\\\\'s ou encore Bartlett aux Etats-Unis. De croissance moyenne, il peut atteindre 15 m\u00e8tres de haut et 10 m\u00e8tres de large. Ses fleurs blanches rehauss\u00e9es parfois de rose apparaissent fin mars d\u00e9but avril. Il donne de gros fruits verts qui se teintent de jaune \u00e0 maturit\u00e9, fin ao\u00fbt d\u00e9but septembre. Les poires Williams sont de bonne qualit\u00e9 gustative, avec une chair fine et fondante, qui est \u00e9galement juteuse, sucr\u00e9e et parfum\u00e9e.  \r\n\r\n <p> Calendrier Ph\u00e9nologique : <p> \r\n <p> Fleurs : fin mars \u2013 d\u00e9but avril <p> \r\n <p> Feuilles : apr\u00e8s la floraison <p> \r\n <p> Fruits : mi-ao\u00fbt jusqu\u2019\u00e0 fin septembre <p> ",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Pommier",
+		"nom_scientifique":"Malus domestica",
+		"description":"Le pommier est un arbre fruitier cultiv\u00e9 mais \u00e9galement pr\u00e9sent \u00e0 l'\u00e9tat sauvage. Sa taille varie de 2 \u00e0 16 m\u00e8tres et il peut vivre jusqu'\u00e0 100 ans. Sa feuille est simple, \u00e0 limbe dent\u00e9 et \u00e0 disposition alterne. Ses fleurs blanches apparaissent entre mai et juin et sont dispos\u00e9es en corymbe. Chaque bouton \u00e0 fleurs donne une inflorescence de cinq fleurs hermaphrodites \u00e0 sym\u00e9trie radiaire disposant chacune de cinq p\u00e9tales blancs et un calice compos\u00e9 de cinq s\u00e9pales. Son fruit est la pomme. Elle est constitu\u00e9e d'un r\u00e9ceptacle floral et est consid\u00e9r\u00e9e comme un faux fruit comme de nombreux fruits des Rosaceae tels la poire ou la n\u00e8fle.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"pommier cox orange pippin",
+		"nom_scientifique":"Malus pumila var. cox orange pippin",
+		"description":"Cette vari\u00e9t\u00e9, originaire d'Angleterre, a \u00e9t\u00e9 d\u00e9couverte par Richard Cox en 1825. Elle est issue d'un semis de Ribston Pippin et a \u00e9t\u00e9 multipli\u00e9e en France \u00e0 la fin du XIX\u00b0 si\u00e8cle. La floraison a lieu mi-avril, pour une r\u00e9colte du fruit \u00e0 maturit\u00e9 en octobre. Le fruit est de couleur jaune saumon\u00e9e, teint\u00e9e de rose et de rouge \u00e0 l'insolation. Sa chair qui tend vers le jaune est croquante, juteuse, l\u00e9g\u00e8rement acidul\u00e9e et tr\u00e8s parfum\u00e9e, avec un go\u00fbt proche de celui de la poire. On peut entendre bouger les p\u00e9pins d'une Cox lorsqu'on la secoue car ils ne sont pas bien \"accroch\u00e9s\" \u00e0 la chair.\r\n<p> Calendrier ph\u00e9nologique : <p> \r\n<p> Fleurs : mi-avril <p> \r\n<p> Feuilles : apr\u00e8s la floraison <p> \r\n<p> Fruits : d\u00e9but octobre <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"pommier golden delicious",
+		"nom_scientifique":"Malus pumila var. golden delicious",
+		"description":"Issue d\u2019un semis de hasard d\u00e9couvert \u00e0 la fin du XIX\u00b0 si\u00e8cle aux Etats-Unis, la Golden Delicious est aujourd\u2019hui la vari\u00e9t\u00e9 de pomme la plus produite dans le monde. Ce pommier poss\u00e8de en effet une bonne vigueur et une mise \u00e0 fruits rapide. Il fleurit d\u00e9but avril, pour des fruits qui arrivent \u00e0 maturit\u00e9 en septembre. Les pommes Golden Delicious sont des fruits de taille moyenne et forme allong\u00e9e, \u00e0 la peau lisse de couleur jaune dor\u00e9e avec pr\u00e9sence de lenticelles. Leur chair est parfum\u00e9e, sucr\u00e9e, croquante, juteuse et l\u00e9g\u00e8rement acidul\u00e9e, ce qui en fait d\u2019excellentes pommes \u00e0 couteau. \r\n\r\n<p> Calendrier ph\u00e9nologique : <p>\r\n<p> Fleurs : premi\u00e8re quinzaine d\u2019avril <p>\r\n<p> Feuilles : apr\u00e8s la floraison <p>\r\n<p> Fruits : premi\u00e8re quinzaine de septembre, jusqu\u2019en octobre.<p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"pommier reine de reinette",
+		"nom_scientifique":"Malus pumila var. reine de reinette",
+		"description":"La Reine des Reinettes \u2014 dont le nom proviendrait de \"Kroon Renet\", signifiant \"Reinette de la Couronne\" en n\u00e9erlandais \u2014 est n\u00e9e vers 1770. De floraison tardive, sa mise \u00e0 fruits est pr\u00e9coce et tr\u00e8s \u00e9tal\u00e9e. Le fruit, de taille petite \u00e0 moyenne et l\u00e9g\u00e8rement aplati, poss\u00e8de une peau lisse et jaune dor\u00e9e, stri\u00e9e de rouge et parsem\u00e9e de quelques grains gris-brun sur sa face expos\u00e9e au soleil. Sa chair blanch\u00e2tre est juteuse, sucr\u00e9e et l\u00e9g\u00e8rement acidul\u00e9e. Elle est assez ferme, mais se r\u00e9v\u00e8le fondante en bouche. Cuite, elle lib\u00e8re des parfums de miel et de coing.\r\n<p> Calendrier ph\u00e9nologique : <p>\r\n<p> Fleurs : deuxi\u00e8me quinzaine d\u2019avril <p>\r\n<p> Feuilles : apr\u00e8s la floraison <p>\r\n<p> Fruits : deuxi\u00e8me quinzaine d\u2019ao\u00fbt, jusqu\u2019\u00e0 fin septembre <p>",
+		"type_id":1,
+		"is_active":1
+	},
+
+	{
+		"nom_vernaculaire":"prunier",
+		"nom_scientifique":"Prunus domestica",
+		"description":"Le prunier est un arbre fruitier cultiv\u00e9 en verger ou sauvage (prunellier). Il pr\u00e9sente une taille moyenne entre 3 et 8 m\u00e8tres.\r\nLes fleurs sont blanches et apparaissent avant les feuilles, sur les rameaux de l'ann\u00e9e pass\u00e9e.\r\nSes feuilles sont dentel\u00e9es, presque ovales et sont\r\nfragiles. Les intemp\u00e9ries printani\u00e8res et les insectes sont tr\u00e8s redoutables pour ces derni\u00e8res.\r\nSon fruit est la prune. Elle est sph\u00e9rique ou oblongue, et est recouverte de \u00ab pruine \u00bb, qui est une fine pellicule cireuse. Le noyau est ovale et contient une amande g\u00e9n\u00e9ralement am\u00e8re.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"prunier mirabelle de Nancy",
+		"nom_scientifique":"Prunus domestica var. mirabelle de Nancy",
+		"description":"Le prunier Mirabelle de Nancy est un arbre au port un peu \u00e9vas\u00e9, vigoureux et autofertile. De croissance moyenne, il peut atteindre 8 m de haut. Ses feuilles caduques vert fonc\u00e9 sont ovales. Ses fleurs blanches apparaissent fin mars jusqu\\'\u00e0 mi-avril. Il porte de petits fruits ronds de couleur jaune orang\u00e9e, parsem\u00e9e de t\u00e2ches rouges ayant un point brun\u00e2tre au centre, et recouverts d\u2019une pruine fragile. A maturit\u00e9 courant ao\u00fbt, les fruits ont une chair jaune qui se d\u00e9tache du noyau.  Ils sont juteux et sucr\u00e9s, avec un l\u00e9ger go\u00fbt de miel.\r\n\r\n <p> Calendrier ph\u00e9nologique : <p> \r\n <p> Fleurs : fin mars \u2013 d\u00e9but avril <p> \r\n <p> Feuilles : apr\u00e8s la floraison <p> \r\n <p> Fruits : deuxi\u00e8me quinzaine d\u2019ao\u00fbt <p> ",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"prunier quetsche d'Alsace",
+		"nom_scientifique":"Prunus domestica var. quetsche",
+		"description":"Le Prunier Quetsche d'Alsace est un arbre au port \u00e9rig\u00e9 tr\u00e8s vigoureux et auto-fertile. Originaire du Proche-Orient, il a \u00e9t\u00e9 introduit en France aux temps des Croisades. De croissance moyenne, il peut atteindre 8 m\u00e8tres de haut. Ses feuilles caduques d'un vert fonc\u00e9 sont ovales. Ses fleurs blanches apparaissent en avril, et sa mise \u00e0 fruit arrive \u00e0 terme en septembre. Les quetsches sont de gros fruits allong\u00e9s de couleur violet fonc\u00e9, recouverts d\u2019une pruine blanch\u00e2tre. Leur chair est jaune verd\u00e2tre, ferme et peu juteuse. A la fois sucr\u00e9s et acides, ces fruits se consomment plus souvent en pruneau que frais.\r\n\r\n<p> Calendrier ph\u00e9nologique :  <p>\r\n<p> Fleurs : premi\u00e8re quinzaine d\u2019avril  <p>\r\n<p> Feuilles : apr\u00e8s la floraison <p>\r\n Fruits : deuxi\u00e8me quinzaine d\u2019ao\u00fbt jusqu\u2019\u00e0 fin septembre <p>",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"robinier faux-acacia",
+		"nom_scientifique":"Robinia pseudoacacia",
+		"description":"Arbre de 10 \u00e0 25 m, au port souvent drageonnant (rejets), formant des bosquets envahissants. Branches\r\nsinueuses, lisses, vert-rouge\u00e2tre et \u00e9pineuses (\u00e9pines larges regroup\u00e9es par paires). Tronc gris brun souvent\r\nfourchu.\r\n\u00c9corce d\u2019abord lisse et brun\u00e2tre puis \u00e9paisse gris-beige et profond\u00e9ment crevass\u00e9e dans le sens longitudinal,\r\nd\u00e9gage une odeur caract\u00e9ristique.\r\nBourgeons minuscules, cern\u00e9s par des stipules \u00e9pineuses.\r\nFeuilles caduques d\u00e9coup\u00e9es en un nombre impair de folioles dispos\u00e9es en rang le long de la nervure principale\r\n(feuille compos\u00e9e imparipenn\u00e9e), avec 3-10 folioles ovales.\r\nUne paire d'\u00e9pines aigu\u00ebs \u00e0 la base du p\u00e9tiole, ce sont les stipules port\u00e9es par les rameaux non florif\u00e8res, qui\r\npersistent plusieurs ann\u00e9es apr\u00e8s la chute des feuilles.\r\nElles sont d\u2019un vert vif acide \u00e0 vert moyen virant au jaune \u00e0 l\u2019automne.\r\nFleurs blanches, en grappes, pendantes, parfum\u00e9es et mellif\u00e8res.\r\nLe Fruit est une gousse aplatie, s\u00e8che et gris noir\u00e2tre, de 5-8 cm de long. Il contient 4-5 graines brillantes brunes\r\nou noir\u00e2tres en forme de haricot.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Sapin pectin\u00e9",
+		"nom_scientifique":"Abies alba L.",
+		"description":"Arbre majestueux pouvant d\u00e9passer les 50 m\u00e8tres de haut \u00e0 tronc droit, \u00e0 silhouette conique et \u00e0 branches horizontales. Son \u00e9corce grise \u00e0 gris argent\u00e9 avec des \u00e9cailles plus ou moins r\u00e9guli\u00e8res. Ses aiguilles arrondies ne piquent pas. \r\n\r\nLes aiguilles longues de 15 \u00e0 30 mm, non piquantes, plates, vert fonc\u00e9 dessus. Pr\u00e9sence de deux bandes blanches bien marqu\u00e9es \u00e0 la face inf\u00e9rieure des aiguilles. \r\n Les fleurs m\u00e2les sont regroup\u00e9es en chatons arrondis verd\u00e2tres \u00e0 jaun\u00e2tres voire rouge\u00e2tres sont des rameaux de l\u2019ann\u00e9e pr\u00e9c\u00e9dente. \r\n Les fleurs femelles sont des petits c\u00f4nes vert dress\u00e9s et isol\u00e9s sur des rameaux en haut de la cime.\r\n Les fruits sont des c\u00f4nes allong\u00e9s de 10 \u00e0 15 cm, dress\u00e9s, plus ou moins r\u00e9sineux; les \u00e9cailles minces sont d\u2019abord vertes puis brunes. Des petites ailes membraneuses (bract\u00e9es) pointues d\u00e9passent entre les \u00e9cailles. Le c\u00f4ne se disloque sur l\u2019arbre laissant appara\u00eetre les axes sur les rameaux.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"sorbier des oiseleurs",
+		"nom_scientifique":"Sorbus aucuparia",
+		"description":"Arbre de 10 \u00e0 20 m, de forme \u00e9rig\u00e9e avec un houppier \u00e9tal\u00e9 et peu dense. Tronc droit et court. Jeunes rameaux\r\nbrun-violac\u00e9s, lisses, luisants et poilus (pubescents).\r\n\u00c9corce d'abord lisse, gris clair, ensuite lisse fissur\u00e9e longitudinalement et gris-noir\u00e2tre.\r\nBourgeons en fuseaux, poilus, \u00e0 \u00e9caille gris brun.\r\nFeuilles caduques p\u00e9tiol\u00e9es, compos\u00e9es\r\n(imparipenn\u00e9es) \u00e0 9-15 folioles finement dent\u00e9es, un peu poilues au revers, vert sombre en dessus, p\u00e2les en\r\ndessous. Elles n\u2019ont pas forc\u00e9ment la m\u00eame teinte, on parle de \u00ab feuille discolore \u00bb.\r\nPetites fleurs \u00e0 5 p\u00e9tales arrondis blanc cr\u00e8me, group\u00e9es (inflorescence) en bouquets terminaux denses\r\n(corymbes), dress\u00e9s ou pench\u00e9s, \u00e0 forte odeur.\r\nFruits ou sorbes sont des baies rouges orang\u00e9es tr\u00e8s appr\u00e9ci\u00e9es par les oiseaux. Ils persistent longtemps sur\r\nl\u2019arbre en hiver, c\u2019est un type de drupe sph\u00e9rique en grappes abondantes.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Sureau noir",
+		"nom_scientifique":"Sambucus nigra L.",
+		"description":"Arbuste de 2 \u00e0 6 m\u00e8tres de haut, rarement un arbre (10 m maximum), \u00e0 tronc tordu et aux branches arqu\u00e9es. Son \u00e9corce est d\u2019abord grise assez mince puis devient plus \u00e9cailleuse et fendill\u00e9e.\r\nLes feuilles sont oppos\u00e9es, compos\u00e9es g\u00e9n\u00e9ralement de 5 folioles, en forme de lance, dent\u00e9es, l\u00e9g\u00e8rement pubescentes dessous et port\u00e9es par un p\u00e9tiole court.\r\nLes fleurs sont hermaphrodites, elles poss\u00e8dent 5 p\u00e9tales blancs et 5 \u00e9tamines. Elles sont r\u00e9guli\u00e8res, tr\u00e8s odorantes et regroup\u00e9es aux extr\u00e9mit\u00e9s des pousses en formant une inflorescence de 10 \u00e0 15 cm de diam\u00e8tre.\r\nLes fruits sont petits et charnus, globuleux et noirs (baies), group\u00e9s en grappes aux extr\u00e9mit\u00e9s des pousses et port\u00e9s par des p\u00e9doncules rouge\u00e2tres.",
+		"type_id":1,
+		"is_active":1
+	},
+
+	{
+		"nom_vernaculaire":"viorne tin",
+		"nom_scientifique":"Viburnum tinus",
+		"description":"Arbuste de 1 \u00e0 4 m\u00e8tres, au port compact, tr\u00e8s ramifi\u00e9 et arrondi. Jeunes pousses velues et rouge\u00e2tres.\r\n\u00c9corce marron gris\u00e2tre couverte de petits points (les lenticelles qui sont en fait des voies d\u2019a\u00e9rations) plus\r\nfonc\u00e9es.\r\nFeuilles persistantes, ovales, coriaces,\r\nlustr\u00e9es, vert fonc\u00e9 aux nervures plus claires, leur revers est rugueux plus p\u00e2le l\u00e9g\u00e8rement velu surtout au niveau de la nervure centrale et glanduleuse. Petit p\u00e9tiole.\r\nGroupement dense et bomb\u00e9 form\u00e9 de petites fleurs \u00e0 5 lobes ovales, de couleur blanc \u00e0 ros\u00e9. Les boutons\r\nfloraux sont roses.\r\nLes fruits sont de petites baies (drupes), ovo\u00efdes, d\u2019un bleu noir m\u00e9tallique et contenant une seule graine.",
+		"type_id":1,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Astragale de Marseille",
+		"nom_scientifique":"Astragalus tragacantha",
+		"description":"Petit buisson vivace, de 20 \u00e0 40 centim\u00e8tres de hauteur, tr\u00e8s ramifi\u00e9 et qui forme des coussins. L\u2019astragale s\u2019est adapt\u00e9e aux conditions rudes du littoral : port en boule pour optimiser l\u2019ombre et petites feuilles tr\u00e8s poilues et \u00e9pineuses pour limiter l\u2019\u00e9vapotranspiration.\r\nSon rachis (axe qui porte les folioles) cylindrique est persistant et lorsque les feuilles tombent, il devient alors une redoutable \u00e9pine. Les feuilles de l\u2019astragale sont vert-blanch\u00e2tre poilues, dispos\u00e9es de fa\u00e7on alterne et regroup\u00e9es en nombre pair entre 6 et 12 folioles oblongues.\r\nSes inflorescences sont des grappes compos\u00e9es de 7 \u00e0 8 grandes fleurs blanches (1,5 \u00e0 2 centim\u00e8tres).\r\nLes fruits sont des gousses oblongues velues contenant entre 2 et 8 graines.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"c\u00e9phalanth\u00e8re \u00e0 longues feuilles ",
+		"nom_scientifique":"Cephalanthera longifolia",
+		"description":"Le C\u00e9phalanth\u00e8re \u00e0 longues feuilles est une plante herbac\u00e9e vivace au port \u00e9lanc\u00e9 (20-60 cm)\r\nSes feuilles sont \u00e9troites, longues et rigides de couleur vert vif. Elles sont dispos\u00e9es sur deux rang\u00e9es oppos\u00e9es le long de la tige et de fa\u00e7on plus ou moins alternes.\r\nSon inflorescence est en \u00e9pi dense, long de 15 \u00e0 30 cm, \u00e0 fleurs nombreuses (6 \u00e0 18)\r\nSes fleurs sont blanches et assez grandes. Leur labelle est tach\u00e9 de jaune \u00e0 la base. Les s\u00e9pales sont allong\u00e9s, obtus, dirig\u00e9s vers l\u2019avant et plus longs que les p\u00e9tales. Pas d\u2019\u00e9peron.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Ciste cotonneux",
+		"nom_scientifique":"Cistus albidus",
+		"description":"Arbrisseau tr\u00e8s ramifi\u00e9 de 40 centim\u00e8tres \u00e0 1 m\u00e8tre de hauteur. Son feuillage est persistant, constitu\u00e9 de feuilles simples, sessiles, oppos\u00e9es et peu odorantes. Elles sont velout\u00e9es-blanch\u00e2tres, sans poils longs mais plut\u00f4t \u00e9toil\u00e9s. Aux heures tr\u00e8s ensoleill\u00e9es de la journ\u00e9e, les feuilles se maintiennent \u00e0 la verticale pour att\u00e9nuer l\u2019angle d\u2019incidence du rayonnement direct. Les tiges sont gr\u00eales et gris\u00e2tres.\r\nL\u2019inflorescence est une cyme unipare h\u00e9lico\u00efde constitu\u00e9e de fleurs rose-lilas \u00e0 5 p\u00e9tales \u00e0 l\u2019aspect \u00ab froiss\u00e9 \u00bb et 3 s\u00e9pales. Le fruit est une capsule globuleuse qui s\u2019ouvre par 5 valves.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Colchique d\u2019automne",
+		"nom_scientifique":"Colchicum autumnale L.",
+		"description":"Le colchique est une plante vivace, haute de 10 \u00e0 30 centim\u00e8tres. Il fleurit dans les prairies \u00e0 la fin de l\u2019\u00e9t\u00e9. La plante dispara\u00eet ensuite jusqu\u2019au printemps suivant, moment o\u00f9 \u00e9mergent les feuilles ainsi que les fruits. \r\nLes feuilles sont semi-dress\u00e9es, tr\u00e8s allong\u00e9es et assez larges, d\u2019un vert profond. \r\nLes fleurs sont hermaphrodites, solitaires, dress\u00e9es, de couleur rose-lilas port\u00e9es par un tube blanc. Les t\u00e9pales sont soud\u00e9s au niveau du tube inf\u00e9rieur puis divis\u00e9es en 6 parties en forme de lance. Les \u00e9tamines sont jaune orang\u00e9 (3 longues et 3 courtes). Le pistil poss\u00e8de des styles blanc ros\u00e9 d\u00e9passant les \u00e9tamines et termin\u00e9es en \u201ccrochet\u201d. \r\nLes fruits sont des capsules vertes en forme d\u2019obus et sont visibles au printemps, \u00e0 la base des feuilles. A maturit\u00e9, ils deviennent marron et 3 loges s\u2019ouvrent pour laisser sortir les petites graines noires.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"coquelicot",
+		"nom_scientifique":"Papaver rhoeas L.",
+		"description":"- . Plante annuelle, velue-h\u00e9riss\u00e9e \r\n- tige de 20-60 cm, dress\u00e9e, rameuse \r\n- feuilles pennatipartites, \u00e0 segments lanc\u00e9ol\u00e9s-aigus, incis\u00e9s-dent\u00e9s, les caulinaires sessiles, \u00e0 segment terminal tr\u00e8s d\u00e9velopp\u00e9 \r\n- p\u00e9doncules \u00e0 poils tr\u00e8s \u00e9tal\u00e9s \r\n- fleurs d'un rouge vif, grandes \r\n- filets des \u00e9tamines filiformes \r\n- stigmates 7-12, sur un disque lob\u00e9, \u00e0 lobes se recouvrant par les bords \r\n- capsule courtement obovale, glabre. Plante polymorphe.\r\n\r\nPour v\u00e9rifier votre identification vous pouvez visiter notre galerie d'images de cette plante : http:\/\/www.tela-botanica.org\/appli:pictoflora?masque=Papaver+rhoeas&tri=votes&ordre=desc&protocole=1&page=1&pas=100 \r\n",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Lavandin",
+		"nom_scientifique":"Lavandula intermedia",
+		"description":"Le lavandin est un petit arbrisseau vivace, cultiv\u00e9 et tr\u00e8s odorant.\r\nLe lavandin est issu d\u2019un m\u00e9lange entre Lavandula angustifolia, Mill. (lavande fine, ou lavande vraie)  et Lavandula latifolia, Medik. (lavande aspic).\r\nSon feuillage est persistant, les feuilles sont oppos\u00e9es, longues et pointues de couleur bleut\u00e9e et aux reflets argent\u00e9s.\r\nLes inflorescences sont des groupes de fleurs constitu\u00e9es de 5 p\u00e9tales soud\u00e9s, de couleur bleu-violac\u00e9 r\u00e9unies en t\u00eate serr\u00e9e, en forme d\u2019\u00e9pi.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"mauve",
+		"nom_scientifique":"Malva sylvestris",
+		"description":"Plante herbac\u00e9e vivace et poilue de 30-60 cm.\r\nLa tige est \u00e9rig\u00e9e parfois \u00e9tal\u00e9e.\r\nLes feuilles ont les bords largement dent\u00e9s, et arrondies (feuilles cr\u00e9nel\u00e9es). La feuille est verte fonc\u00e9e,\r\np\u00e9tiol\u00e9e.\r\nLes fleurs sont mauves avec des nervures plus fonc\u00e9es\r\nsur les 5 p\u00e9tales en forme de coeur.\r\nLes fruits sont des ak\u00e8nes (fruits secs ind\u00e9hiscent) regroup\u00e9s dans une capsule r\u00e9ticul\u00e9e, h\u00e9riss\u00e9e et velue.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Muguet",
+		"nom_scientifique":"Convallaria majalis L.",
+		"description":"La tige est verte, sa base est envelopp\u00e9e par des gaines. \r\nLes fleurs sont group\u00e9es par 4 \u00e0 9, parfum\u00e9es, blanches ou l\u00e9g\u00e8rement ros\u00e9es, en forme de clochettes, \u00e0 6 dents recourb\u00e9es. Elles sont group\u00e9es en grappes et orient\u00e9es d\u2019un seul c\u00f4t\u00e9. Chaque fleur poss\u00e8de 6 \u00e9tamines et un pistil \u00e0 style court. \r\nLes feuilles sont par 2, lisses et dress\u00e9es, longues et larges \u00e0 bords entiers, d\u2019un vert profond, \u00e0 nervures convergentes. \r\nLes fruits sont des petites baies rouges, qui sont toxiques.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Orchis bouc",
+		"nom_scientifique":"Himantoglossum hircinum",
+		"description":"L\u2019Orchis bouc est une plante herbac\u00e9e vivace, tr\u00e8s robuste, avec une tige allant de 20 \u00e0 90 cm de haut.\r\nSes feuilles sont \u00e9galement grandes et de couleur terne. Les rosettes de feuilles sont visibles d\u00e8s octobre et en voie de dess\u00e8chement ou fl\u00e9tries lors de la floraison.\r\nL\u2019inflorescence est en \u00e9pi plus ou moins dense, cylindrique et long de 15 \u00e0 30 cm.\r\nLes fleurs sont grandes, de couleur verd\u00e2tre bord\u00e9e de pourpre et ont une odeur souvent d\u00e9sagr\u00e9able faisant penser \u00e0 l\u2019odeur du bouc. Les s\u00e9pales et les p\u00e9tales forment un casque ovale de couleur vert-blanc vert-gris\u00e2tre et vein\u00e9 de pourpre \u00e0 l\u2019int\u00e9rieur. Petit \u00e9peron blanc.\r\nLe labelle est trilob\u00e9 : le lobe central est tr\u00e8s long (30 \u00e0 60 mm), torsad\u00e9 et fendu \u00e0 son extr\u00e9mit\u00e9; les lobes lat\u00e9raux sont plus court avec des bords ondul\u00e9s. \u00c0 part sa base qui est blanch\u00e2tre garnie de petites houppes papilleuses rouge-pourpre, le labelle est vert-blanc vert-pourpre.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Orchis g\u00e9ant",
+		"nom_scientifique":"Himantoglossum robertianum",
+		"description":"L\u2019Orchis g\u00e9ant (Himantoglossum robertianum) \r\nL\u2019Orchis g\u00e9ant est une plante herbac\u00e9e vivace qui mesure de 20 \u00e0 80 cm. Ses feuilles sont ovales, larges, charnues et luisantes, elles sont dispos\u00e9es en rosettes tandis que les feuilles sup\u00e9rieures sont dress\u00e9es. Ses fleurs sont pourpres ros\u00e9es plus ou moins ponctu\u00e9es. Leur label est allong\u00e9es et dispose de 4 lobes oblongs, l\u2019\u00e9peron est court et \u00e9pais. L\u2019inflorescence est un \u00e9pi dense. \r\nElle fleurit de janvier \u00e0 avril, sur des lieux sec, des pelouses et des bois clairs, mais \u00e9galement de plus en plus souvent au bord des routes. En effet, cette esp\u00e8ces autrefois rare est devenue fr\u00e9quente, elle semble profiter des activit\u00e9s anthropiques. Originaire du pourtour m\u00e9diterran\u00e9en elle remonte peu \u00e0 peu vers le nord, c\u2019est pour cela qu\u2019elle est tr\u00e8s int\u00e9ressante \u00e0 \u00e9tudier dans le cadre de l\u2019ODS.\r\nL\u2019Orchis g\u00e9ant (Himantoglossum robertianum) \r\nL\u2019Orchis g\u00e9ant est une plante herbac\u00e9e vivace qui mesure de 20 \u00e0 80 cm. Ses feuilles sont ovales, larges, charnues et luisantes, elles sont dispos\u00e9es en rosettes tandis que les feuilles sup\u00e9rieures sont dress\u00e9es. Ses fleurs sont pourpres ros\u00e9es plus ou moins ponctu\u00e9es. Leur label est allong\u00e9es et dispose de 4 lobes oblongs, l\u2019\u00e9peron est court et \u00e9pais. L\u2019inflorescence est un \u00e9pi dense. \r\nElle fleurit de janvier \u00e0 avril, sur des lieux sec, des pelouses et des bois clairs, mais \u00e9galement de plus en plus souvent au bord des routes. En effet, cette esp\u00e8ces autrefois rare est devenue fr\u00e9quente, elle semble profiter des activit\u00e9s anthropiques. Originaire du pourtour m\u00e9diterran\u00e9en elle remonte peu \u00e0 peu vers le nord, c\u2019est pour cela qu\u2019elle est tr\u00e8s int\u00e9ressante \u00e0 \u00e9tudier dans le cadre de l\u2019ODS.\r\nL\u2019Orchis g\u00e9ant (Himantoglossum robertianum) \r\nL\u2019Orchis g\u00e9ant est une plante herbac\u00e9e vivace qui mesure de 20 \u00e0 80 cm. Ses feuilles sont ovales, larges, charnues et luisantes, elles sont dispos\u00e9es en rosettes tandis que les feuilles sup\u00e9rieures sont dress\u00e9es. Ses fleurs sont pourpres ros\u00e9es plus ou moins ponctu\u00e9es. Leur label est allong\u00e9es et dispose de 4 lobes oblongs, l\u2019\u00e9peron est court et \u00e9pais. L\u2019inflorescence est un \u00e9pi dense. \r\nElle fleurit de janvier \u00e0 avril, sur des lieux sec, des pelouses et des bois clairs, mais \u00e9galement de plus en plus souvent au bord des routes. En effet, cette esp\u00e8ces autrefois rare est devenue fr\u00e9quente, elle semble profiter des activit\u00e9s anthropiques. Originaire du pourtour m\u00e9diterran\u00e9en elle remonte peu \u00e0 peu vers le nord, c\u2019est pour cela qu\u2019elle est tr\u00e8s int\u00e9ressante \u00e0 \u00e9tudier dans le cadre de l\u2019ODS.\r\n\r\n<p> Source : Guide de la flore des Alpes-Maritime du Mercantour \u00e0 la M\u00e9diterran\u00e9e par Lionel Carles et Ludovic Th\u00e9bault <p>\r\n",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Orchis sureau",
+		"nom_scientifique":"Dactylorhiza sambucina",
+		"description":"L\u2019Orchis sureau est une plante herbac\u00e9e vivace petite et robuste avec une tige de 10 \u00e0 30 cm.\r\nLes feuilles sont ovales assez larges, verniss\u00e9es, de couleur vert p\u00e2le et \u00e0 nervures m\u00e9dianes marqu\u00e9es. Elles sont r\u00e9parties sur toute la tige.\r\nL\u2019inflorescence est en \u00e9pi dense, court, de forme plus ou moins ovo\u00efde et haut de 4 \u00e0 7 cm.\r\nLes fleurs sont de taille moyenne, de couleur jaune ou rouge, rarement rose saumon. Ces diff\u00e9rences de couleurs sont observables sur une m\u00eame station. Le s\u00e9pale dorsal et les p\u00e9tales forment un casque. Les s\u00e9pales lat\u00e9raux sont \u00e9tal\u00e9s.\r\nLe labelle est trilob\u00e9 avec les lobes lat\u00e9raux plus ou moins rabattus vers l\u2019arri\u00e8re. Sa base est plus claire et pr\u00e9sente des ponctuations rouge\u00e2tre. L\u2019\u00e9peron est long, \u00e9pais, \u00e9galant ou d\u00e9passant l\u2019ovaire et incurv\u00e9 vers le bas. ",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Perce neige",
+		"nom_scientifique":"Galanthus nivalis L.",
+		"description":"Le perce neige est une plante vivace \u00e0 bulbe, de 15 \u00e0 25 centim\u00e8tres de haut.\r\nLes feuilles, par 2, sont lin\u00e9aires, plantes et car\u00e9n\u00e9es. Elles sont plus courte que la tige cylindrique.\r\nLa fleur solitaire est blanche et pendante. Les p\u00e9tales sont regroup\u00e9s en cloche au centre des 3 grands s\u00e9pales \u00e9tal\u00e9s blancs.  Les \u00e9tamines sont jaune-orang\u00e9, \u00e0 filets tr\u00e8s courts et \u00e0 anth\u00e8res dress\u00e9es. Le stigmate est simple.\r\nLe fruit est une capsule charnue.\r\nFloraison : De Janvier \u00e0 mars selon les r\u00e9gions \r\n",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"pissenlit",
+		"nom_scientifique":"Taraxacum officinale",
+		"description":"Taraxacum est un genre de plantes dicotyl\u00e9dones an\u00e9mochores appartenant \u00e0 la vaste famille des Asteraceae (Compos\u00e9es). C'est le genre des \u00ab pissenlits \u00bb v\u00e9ritables.\r\nLes esp\u00e8ces de Taraxacum se caract\u00e9risent par ce qu'on appelle couramment la fleur, qui est en fait un capitule, inflorescence dans laquelle les fleurs individuelles, les fleurons, sont ins\u00e9r\u00e9es les unes \u00e0 c\u00f4t\u00e9 des autres sur un r\u00e9ceptacle floral commun, les fleurons ext\u00e9rieurs portant souvent un ligule, languette qui simule le p\u00e9tale d'une fleur simple.\r\nDans la famille des Ast\u00e9rac\u00e9es, les pissenlits appartiennent \u00e0 la sous-famille des Lactucoideae, \u00e0 cause du latex qu'ils contiennent. On les classe aussi dans la tribu des Liguliflores en raison de leurs fleurs ligul\u00e9es (dont les extr\u00e9mit\u00e9s forment des languettes).\r\nLe nom g\u00e9n\u00e9rique Taraxacum semble venir de l'arabe tharakhchakon, qui d\u00e9signait une plante semblable au pissenlit commun.\r\nLe nom semble provenir, en parall\u00e8le, du grec ancien \u03c4\u03ac\u03c1\u03b1\u03be\u03b9\u03c2 \/ t\u00e1raxis, qui d\u00e9signait une inflammation de l'\u0153il : le latex du pissenlit passait en effet pour calmer les irritations oculaires.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"primev\u00e8re coucou",
+		"nom_scientifique":"Primula veris",
+		"description":"Plante herbac\u00e9e vivace de 10-30 cm.\r\nLa tige (hampe florale) est couverte de poils cotonneux, elle est droite, ferme et plus longue que les feuilles.\r\nLes feuilles sont en rosette \u00e0 la base, ovales, rid\u00e9es et se r\u00e9tr\u00e9cissent brusquement en un large p\u00e9tiole, la face\r\ninf\u00e9rieure est tr\u00e8s l\u00e9g\u00e8rement poilue.\r\nLes fleurs sont jaune-vif avec 5 taches orang\u00e9es \u00e0 l\u2019int\u00e9rieur. Tr\u00e8s odorantes. Elles sont \u00e0 plusieurs au bout\r\nde la tige et ont tendance \u00e0 toutes se pencher du m\u00eame cot\u00e9. Elles sont entour\u00e9es d\u2019un long tube (le calice) vert p\u00e2le en forme de clochette.\r\nLe fruit est une capsule ovo\u00efde dans le calice.",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"tussilage",
+		"nom_scientifique":"Tussilago farfara",
+		"description":" Plante vivace de 1-2 dm.  La tige est cotonneuse, et pourvue d'\u00e9cailles. La feuilles se d\u00e9veloppant apr\u00e8s les fleurs sont toutes radicales, souvent tr\u00e8s amples, p\u00e9tiol\u00e9es, vertes en dessus, blanches ou gris\u00e2tres et tomenteuses (avec des poils) en dessous. La fleur est dress\u00e9e solitaire, terminant la tige, souvent pench\u00e9e apr\u00e8s la floraison. \r\n\r\nFloraison : Mars - Avril\r\n\r\n- fleurs jaunes \u00e0 ligules de la circonf\u00e9rence d\u00e9passant les fleurs du centre. ",
+		"type_id":2,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"coucou gris",
+		"nom_scientifique":"Cuculus canorus",
+		"description":"Le Coucou gris (Cuculus canorus) est une esp\u00e8ce d\\'oiseau de la famille des cuculid\u00e9s d\u00e9nomm\u00e9 d\\'apr\u00e8s son chant.\r\nMigrateur largement r\u00e9pandu en Eurasie, c\\'est un oiseau discret d\\'environ 30 cm, insectivore, de la taille d\\'un faucon cr\u00e9cerelle ou d\\' un \u00e9pervier.\r\nLors de son s\u00e9jour en Europe (son arriv\u00e9e fin mars signe le retour du printemps), il fr\u00e9quente les milieux ouverts mais ses pattes zygodactyles comme celles des Picid\u00e9s trahissent une adaptation foresti\u00e8re ancienne.\r\nC\\'est un oiseau solitaire lors de la p\u00e9riode de nidification. Les femelles, polyandres, parasitent plusieurs esp\u00e8ces de passereaux en pondant leurs \u0153ufs un par un dans diff\u00e9rents nids. Une femelle peut pondre jusqu\\'\u00e0 une vingtaine d\\'\u0153ufs. Parmi les esp\u00e8ces parasit\u00e9es, on peut citer la Rousserolle turdo\u00efde, le Rouge-queue noir, les bergeronnettes... Au total, plus d\\'une dizaine d\\'esp\u00e8ces sont r\u00e9guli\u00e8rement parasit\u00e9es en Europe. Apr\u00e8s l\\'\u00e9closion, le poussin de coucou se d\u00e9barrasse du reste de la couv\u00e9e et reste seul au nid, aliment\u00e9 par des parents adoptifs bien plus petits que lui. D\u00e8s le d\u00e9but du mois de juillet les coucous adultes entament leur migration, alors que les jeunes restent encore un mois environ en Europe.\r\nLe coucou gris se reproduit \u00e0 la belle saison dans une aire qui comprend l\\'Europe, presque toute l\\'Asie et le nord du Maghreb. Ses quartiers d\\'hiver sont le sud de l\\'Afrique et l\\'Asie du Sud-Est.",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"\u00e9chasse blanche",
+		"nom_scientifique":"Himantopus himantopus",
+		"description":"http:\/\/www.oiseaux.net\/oiseaux\/charadriiformes\/echasse.blanche.html",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"gu\u00e9pier",
+		"nom_scientifique":"Merops apiaster",
+		"description":"http:\/\/www.oiseaux.net\/oiseaux\/coraciiformes\/guepier.d.europe.html",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"hirondelle des fen\u00eatres",
+		"nom_scientifique":"Delichon urbica",
+		"description":"L'Hirondelle de fen\u00eatre (Delichon urbicum) est une esp\u00e8ce de passereaux de la famille des Hirundinidae. Elle niche souvent, comme son nom l'indique, au-dessus d'une fen\u00eatre ou dans les g\u00eetages d'une charpente.\r\nDe loin, on la distingue de l'Hirondelle de chemin\u00e9e  par son croupion blanc pur, par une queue moins fourchue et sans filets, plus que par ses habitudes et lieux de vol. Au sol, o\u00f9 elle se pose rarement, ou sur les toits, ses pattes courtes et emplum\u00e9es de blanc lui donnent une allure \u00e9galement caract\u00e9ristique mais ne se voient que difficilement de loin.\r\nLes m\u00e2les sont d'un noir plus brillant (avec reflets m\u00e9talliques) que les femelles. Les juv\u00e9niles pr\u00e9sentent un plumage parfois gris\u00e2tre sur les flancs.\r\nSes cris doux et r\u00e9guliers (\"tchirp\" \"tshirrip\", r\u00e9p\u00e9t\u00e9) diff\u00e8rent de ceux de l'hirondelle rustique. Le chant est g\u00e9n\u00e9ralement produit par le m\u00e2le depuis l'int\u00e9rieur du nid (babil)\r\n",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"hirondelle rustique",
+		"nom_scientifique":"Hirundo rustica",
+		"description":"L'Hirondelle rustique (Hirundo rustica) est une petite esp\u00e8ce de passereau migrateur vivant en Europe, en Asie, en Afrique et en Am\u00e9rique. Elle est \u00e9galement connue sous le nom d'Hirondelle de chemin\u00e9e ou d'hirondelle des granges. Elle se distingue par sa longue rectrice  fourchue et sa gorge couleur marron. Elle niche dans un nid fait de terre s\u00e9ch\u00e9e, accroch\u00e9 sous un toit, aussi bien \u00e0 l'ext\u00e9rieur qu'\u00e0 l'int\u00e9rieur, en ville ou \u00e0 la campagne, souvent dans des granges ouvertes. Elle se nourrit essentiellement d'insectes attrap\u00e9s en vol.\r\nIl existe 6 sous-esp\u00e8ces d'Hirondelle rustique, se reproduisant toutes dans l'h\u00e9misph\u00e8re Nord. Quatre d'entre elles sont migratrices, et hivernent dans l'h\u00e9misph\u00e8re Sud, dans des r\u00e9gions parfois tr\u00e8s \u00e9loign\u00e9es comme l'Argentine, la province du Cap en Afrique du Sud ou le nord de l'Australie. Du fait de sa large distribution g\u00e9ographique, l'Hirondelle rustique n'est pas menac\u00e9e.\r\nL'Hirondelle rustique est un oiseau qui aime les paysages ouverts et qui utilise g\u00e9n\u00e9ralement les constructions humaines pour confectionner son nid. Cette esp\u00e8ce est commensale, elle s'est vraisemblablement beaucoup d\u00e9velopp\u00e9e avec l'expansion humaine. Cette esp\u00e8ce vit en association avec l'homme, son r\u00e9gime alimentaire insectivore faisant qu'elle soit tol\u00e9r\u00e9e dans les b\u00e2timents. De vieilles superstitions concernant cet oiseau et son nid ont \u00e9galement contribu\u00e9 \u00e0 la faire accepter. La litt\u00e9rature et la religion font souvent r\u00e9f\u00e9rence \u00e0 l'Hirondelle rustique, cet oiseau vivant proche de l'homme et le fascinant par ses habitudes migratoires. L'Hirondelle rustique est l'oiseau national de l'Estonie.",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"martinet noir",
+		"nom_scientifique":"Apus apus",
+		"description":"Le Martinet noir (Apus apus) est une esp\u00e8ce d'oiseau de la famille des apodid\u00e9s, fr\u00e9quent dans les villes et bourgades et est l'oiseau caract\u00e9ristique du ciel d'\u00e9t\u00e9 en France, en Suisse et en Belgique. Il y s\u00e9journe de fin avril \u00e0 mi-ao\u00fbt voire fin ao\u00fbt.\r\nExcellent voilier, le martinet peut atteindre des vitesses de 6 \u00e0 150 km\/h et passe sa vie enti\u00e8re dans les airs (4 mois\/an). Il ne se trouve \u00e0 terre que par accident et, bien s\u00fbr, l'\u00e9t\u00e9 dans des anfractuosit\u00e9s de toutes sortes afin d'y couver.\r\nSa vitesse en fait l'un des animaux les plus rapides. Extr\u00eamement pr\u00e9cis, il est capable de rejoindre son nid via un petit orifice de quelques centim\u00e8tres de diam\u00e8tre, apparemment sans diminuer son allure.\r\nLe Martinet noir passe l'hiver en Afrique, principalement au sud de l'\u00e9quateur, et migre \u00e0 la fin du printemps. D'abord visible dans le sud de l'Europe, il gagne peu \u00e0 peu l'ensemble du continent jusqu'\u00e0 la Scandinavie.\r\nLe martinet noir se nourrit du plancton a\u00e9rien qu'il recueille dans les couches inf\u00e9rieures de la troposph\u00e8re. Il capture plusieurs centaines esp\u00e8ces diff\u00e9rentes d'arthropodes qu'il est capable de reconna\u00eetre en plein vol. Si les conditions m\u00e9t\u00e9orologiques ne permettent pas une alimentation suffisante, le martinet peut changer de r\u00e9gion. Il dort en volant en groupe de fa\u00e7on circulaire ou au gr\u00e9 de courants a\u00e9riens en recherchant des zones d'inversion de temp\u00e9rature \u00e0 environ 1 500 m\u00e8tres d'altitude.\r\nCette esp\u00e8ce se distingue ais\u00e9ment de l'Hirondelle par son corps en forme de faucille, plus effil\u00e9 et plus grand, une coloration g\u00e9n\u00e9rale bien plus fonc\u00e9e et, mis \u00e0 part sa gorge, l'absence de zones blanches. De m\u00eame les grandes troupes qu'ils forment et les cris per\u00e7ants qu'ils poussent sont caract\u00e9ristiques. Ces poursuites stridentes, dans lesquelles \u00e0 partir de la mi-mai on observe beaucoup de jeunes adultes non nidificateurs, marquent les limites de la colonie de martinets.\r\n",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"milan noir",
+		"nom_scientifique":"Milvus migrans",
+		"description":"http:\/\/www.oiseaux.net\/oiseaux\/accipitriformes\/milan.noir.html",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"rossignol philom\u00e8le",
+		"nom_scientifique":"Luscinia megarhynchos",
+		"description":"Le rossignol philom\u00e8le (\u00c9tymologie : Lat. Philomela, du grec, chant; qui aime le chant) habite la for\u00eat, de pr\u00e9f\u00e9rence proche de l'eau, mais on peut le trouver aussi dans les jardins, les bosquets ou vergers. Son chant est des plus m\u00e9lodieux mais aussi des plus complexes, on dit qu'il chante, gringotte, quiritte ou trille, de jour comme de nuit. Il a fascin\u00e9 les chercheurs qui ont d\u00e9nombr\u00e9 entre 120 et 260 s\u00e9quences diff\u00e9rentes, elles durent en g\u00e9n\u00e9ral de 2 \u00e0 4 secondes. Le jeune m\u00e2le apprend \u00e0 chanter en \u00e9coutant les plus exp\u00e9riment\u00e9s et marque ainsi son territoire, ou tente de s\u00e9duire les femelles. D\u00e8s qu'ils sont appari\u00e9s, les m\u00e2les s'arr\u00eatent g\u00e9n\u00e9ralement de chanter la nuit. Ceci laisse supposer que le c\u00e9l\u00e8bre chant nocturne sert avant tout \u00e0 attirer les femelles. Les trilles du rossignol \u00e9taient jadis r\u00e9put\u00e9es calmer la douleur, acc\u00e9l\u00e9rer les gu\u00e9risons et adoucir la mort comme l'\u00e9voque le conte de Hans Christian Andersen l'empereur de Chine et le rossignol.",
+		"type_id":3,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"citron",
+		"nom_scientifique":"Gonepteryx rhamni",
+		"description":"http:\/\/expopapillon.free.fr\/esp.php3?num=20#haut",
+		"type_id":4,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"coccinelle",
+		"nom_scientifique":"Coccinella sp.",
+		"description":"http:\/\/fr.wikipedia.org\/wiki\/Coccinella",
+		"type_id":4,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Crapaud commun",
+		"nom_scientifique":"Bufo bufo",
+		"description":"Le crapaud commun vit\u00a0dans des milieux frais : boisements de feuillus ou mixtes, dans les jardins, dans des trous ou d\u2019anciens terriers, \u00e0 proximit\u00e9 des plans d\u2019eau en zones humides d\u2019eau douce. Les sites de reproduction sont des plans d\u2019eau de grande taille, m\u00eame ceux riches en poissons.\r\nOn le rencontre le plus souvent au moment des migrations nuptiales lorsqu\u2019il traverse les routes humides la nuit.",
+		"type_id":5,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Salamandre tachet\u00e9e",
+		"nom_scientifique":"Salamandra salamandra",
+		"description":"La coloration de la face sup\u00e9rieure du corps est noire, tachet\u00e9 de jaune vif, parfois de rouge, d\u2019orange ou de rose saumon\u00e9.\r\nLa salamandre se trouve principalement dans le bocage et les boisements de feuillus mixtes ou de plaine et d\u2019altitude, mais aussi dans les for\u00eats de pentes fra\u00eeches (h\u00eatraie ou \u00e9rabli\u00e8re), les boisements humides (types aulnaies et fr\u00eanaies) et les abords de sources. On peut la rencontrer en montagne dans d\u2019anciennes carri\u00e8res d\u2019ardoises.\r\n",
+		"type_id":5,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Couleuvre \u00e0 collier",
+		"nom_scientifique":"Natrix natrix",
+		"description":"D'aspect g\u00e9n\u00e9ral gris, gris-vert ou parfois marron, elle poss\u00e8de une s\u00e9rie de barres verticales noires sur les flancs du corps et un collier form\u00e9 de deux taches noires se rejoignant sur la nuque et accompagn\u00e9e d'un t\u00e2che blanc-jaune sur le cou.\r\nOn le trouve g\u00e9n\u00e9ralement dans des milieux humides (prairies humides, mares, roseli\u00e8res, berges de rivi\u00e8re, \u00e9tangs...) et, en moindre mesure, dans des clairi\u00e8res foresti\u00e8res, carri\u00e8res, landes, collines s\u00e8ches, lisi\u00e8res de jardin et m\u00eame de culture. Largement distribu\u00e9e en France mais moins abondante aujourd\u2019hui d\u00fb \u00e0 la diminution de ses proies, le recul de zones humides, la fragmentation des habitats et la disparition des sites de ponte.\r\n",
+		"type_id":6,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Couleuvre de Montpellier",
+		"nom_scientifique":"Malpolon monspessulanus",
+		"description":"La couleuvre de Montpellier est en activit\u00e9 uniquement le jour. Cette activit\u00e9 d\u00e9marre en mars et va jusqu'\u00e0 novembre, mais avec des sorties hivernales possibles par beau temps.\r\n\r\nOn la trouve dans des habitats secs\u00a0comme les  garrigues, maquis, boisements clairs, dans des aires de ch\u00eane vert, bordures de vignes, zones sableuses et  des marais. Elle peut s\u2019aventurer dans les parcs et jardins mais disparait quand la pression anthropique est trop forte.\r\nElle est de moins en moins abondante en raison du recul des garrigues et de la forte urbanisation sur le littoral. ",
+		"type_id":6,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"L\u00e9zard des murailles",
+		"nom_scientifique":"Podarcis muralis",
+		"description":"Tr\u00e8s commun  en France, il occupe une vaste gamme d\u2019habitats. En milieu naturel on le trouve le long de lisi\u00e8res foresti\u00e8res fournies en v\u00e9g\u00e9tation\u00a0: bois de feuillus et conif\u00e8res, friches, haies, talus enherb\u00e9s, garrigue.  En milieu anthropique\u00a0on le trouve dans les jardins, sur les murs et talus. \r\nAssez craintif, il faudra le surprendre se chauffant au soleil sur les pierres dans les chemins ou sur les murs.",
+		"type_id":6,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"L\u00e9zard vert",
+		"nom_scientifique":"Lacerta bilineata",
+		"description":"C'est un des plus grands l\u00e9zards sur notre territoire (jusqu'\u00e0 40 cm). \r\nSa queue est  robuste souvent 2 fois plus longue que le corps. \r\nLa coloration de cette esp\u00e8ce est tr\u00e8s variable\u00a0! Le m\u00e2le adulte est vert\/bleu vif avec des taches noires r\u00e9parties sur l\u2019ensemble du corps. La femelle pr\u00e9sente souvent 2 \u00e0 4 lignes blanches sur le dos. Le jeune est marron \u00e0 l\u2019exception de la gorge qui est verte. Le ventre est jaune \u00e0 vert tr\u00e8s clair et d\u00e9pourvu de t\u00e2ches. \r\nOn le trouve dans une vaste gamme d\u2019habitats\u00a0: le long de lisi\u00e8res foresti\u00e8res fournies en v\u00e9g\u00e9tation, bois de feuillus et conif\u00e8res, friches, haies, talus enherb\u00e9s, garrigue et jardins assez sauvages. \r\nVous le verrez le plus souvent\u00a0dans la v\u00e9g\u00e9tation basse o\u00f9 il trouve refuge ou sur les pierres se chauffant au soleil. ",
+		"type_id":6,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Tarente de Mauritanie",
+		"nom_scientifique":"Tarentola mauretanica",
+		"description":"Il s'agit d'une esp\u00e8ce typiquement m\u00e9diterran\u00e9enne qui s'accomode parfaitement \u00e0 l'espace urbain. Elle peut \u00eatre trouv\u00e9e\u00a0dans les habitations des villes et villages, plut\u00f4t dans des interstices de murs, derri\u00e8re les volets, les goutti\u00e8res et les lampad\u00e8res ! Vous l'observerez facilement sur des murs de pierres et des arbres, s rechauffant au soleil ou en chassant.",
+		"type_id":6,
+		"is_active":1
+	},
+	{
+		"nom_vernaculaire":"Tortue de Floride",
+		"nom_scientifique":"Trachemys scripta elegans",
+		"description":"La tortue de Floride a \u00e9t\u00e9 introduite en France par les animaleries qui la vendaient comme animal de compagnie. Une fois devenues trop encombrantes, beaucoup les ont rel\u00e2ch\u00e9es dans le milieu naturel ; elles posent des probl\u00e8mes car elles envahissent les milieux aquatiques au d\u00e9triment des esp\u00e8ces locales.\r\nOn la trouve\u00a0 en eau douce : les cours d\u2019eau calmes avec un fond boueux, les marais, bassins et \u00e9tangs, y-compris l\u00e0 o\u00f9 la v\u00e9g\u00e9tation est abondante. Elle est aussi visible sur les troncs d\u2019arbre en travers de la zone humide.\r\nSur les plans d\u2019eau, vous distinguerez des ombres sombres \u00e0 faible profondeur... d\u00e8s la sortie de leur t\u00eate vous p\u00f4uvez confirmer sa pr\u00e9sence !  Attention, la tortue de Floride est carnivore et n\u2019h\u00e9sitera pas \u00e0 vous mordre\u00a0si vous la capturez !\r\n",
+		"type_id":6,
+		"is_active":1
+	}
+]

@@ -1,0 +1,26 @@
+[
+	{
+		"nom":"arbre",
+		"reigne":"plantes"
+	},
+	{
+		"nom":"herbacée",
+		"reigne":"plantes"
+	},
+	{
+		"nom":"oiseaux",
+		"reigne":"animaux"
+	},
+	{
+		"nom":"insecte",
+		"reigne":"animaux"
+	},
+	{
+		"nom":"Amphibien",
+		"reigne":"animaux"
+	},
+	{
+		"nom":"reptile",
+		"reigne":"animaux"
+	}
+]
