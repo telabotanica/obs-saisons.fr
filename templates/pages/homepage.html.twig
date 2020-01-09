@@ -8,11 +8,12 @@
 			<div class="actus-une-content">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title">Actualités</h4>
+					{% set after = lastArticles[1] is defined ? {'path' : ''} : {} %}
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 						'target': 'actu-une-container',
 						'before': {},
-						'after': {'path': ''}
-					}}%}
+						'after': after
+					}} %}
 				</div>
 				{% for lastArticle in lastArticles %}
 					<a href="{{ path("actualites_show", {'slug': lastArticle.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
@@ -41,10 +42,11 @@
 			<div class="next-event">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title orange">Évènements</h4>
-					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+					{% set after = lastEvents[1] is defined ? {'path' : ''} : {} %}
+					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows: {
 						'target': 'next-event-container',
 						'before': {},
-						'after': {'path':''},
+						'after': after,
 						'arrow_color': 'orange',
 						'borders': 'light'
 					}} %}

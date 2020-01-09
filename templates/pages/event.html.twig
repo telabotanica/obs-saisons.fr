@@ -3,7 +3,7 @@
 {% block content %}
 	<div class="content page posts">
 		<div class="publication-date">
-			Publié le {{ event.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ event.author }}</strong>
+			Publié le {{ event.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ event.author.getDisplayName() }}</strong>
 		</div>
 		<div class="rich-text-block">
 			<div class="event-dates-container">

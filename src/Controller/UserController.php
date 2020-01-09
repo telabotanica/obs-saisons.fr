@@ -58,7 +58,7 @@ class UserController extends AbstractController
         if ($this->isGranted(UserVoter::LOGGED)) {
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
 
-            return $this->redirectToRoute('accueil');
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('pages/user/login.html.twig');

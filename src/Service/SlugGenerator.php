@@ -9,7 +9,6 @@ class SlugGenerator
 {
     /**
      * @return string
-     *
      * @throws \Exception
      */
     public function generateSlug(string $title, \DateTime $date = null)
@@ -17,7 +16,7 @@ class SlugGenerator
         if (null === $date) {
             $date = new \DateTime('now');
         }
-        $slug = $date->format('y').'/'.$date->format('m').'/'.$this->slugify(strtolower($title));
+        $slug = $date->format('Y').'/'.$date->format('m').'/'.$this->slugify(strtolower($title));
 
         return $slug;
     }
@@ -27,7 +26,7 @@ class SlugGenerator
      */
     public function slugify(string $string)
     {
-        $string = strtolower($string);
+        $string = preg_replace('/[\s]/', '-', strtolower($string));
 
         if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;
@@ -130,8 +129,8 @@ class SlugGenerator
         ];
 
         $string = strtr($string, $chars);
-        $string = preg_replace('/([^.a-z0-9]+)/i', '-', $string);
+        $string = preg_replace('/([^.a-z0-9\-]+)/i', '-', $string);
 
-        return  preg_replace('/[^A-Za-z0-9_]/', '', $string);
+        return  preg_replace('/[^A-Za-z0-9_\-]/', '', $string);
     }
 }
