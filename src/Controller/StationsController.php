@@ -56,9 +56,8 @@ class StationsController extends PagesController
                     ],
                 ],
             ];
-            $obsInStation = $obsRepository->findLastObsInStation($station->getId());
-            $footer =
-            [
+            $obsInStation = $obsRepository->findAllObsInStation($station->getId());
+            $footer = [
                 [
                     'counter' => [
                         'icon' => 'person-icon',
@@ -100,8 +99,6 @@ class StationsController extends PagesController
         $stationRepository = $this->getDoctrine()->getRepository(Station::class);
         $station = $stationRepository->findSationDataDisplayBySlug($slug);
 
-        //die(var_dump($station));
-
         $activePageBreadCrumb = [
             'slug' => $slug,
             'title' => $station['name'],
@@ -129,25 +126,36 @@ class StationsController extends PagesController
 
             if (isset($species['individuals'])) {
                 $individuals_count = count($species['individuals']);
-                $display_s_individuals = (1 === $individuals_count) ? '' : 's';
-                $display_s_obs_count = (1 === $species['obs_count']) ? '' : 's';
-                $list_card['details'] = [
-                    'grey_text' => '<span class=indiv-count>'.$individuals_count.'</span> individu'.$display_s_individuals.' • <span class=obs-count>'.$species['obs_count'].'</span> observation'.$display_s_obs_count,
+                $display_s_individuals = 's';
+                $display_s_obs = 's';
+                if (1 === $individuals_count) {
+                    $display_s_individuals = '';
+                }
+                if (1 === $species['obs_count']) {
+                    $display_s_obs = '';
+                }
+                $list_card += [
+                    'details' => [
+                        'grey_text' => '<span class=indiv-count>'.$individuals_count.'</span> individu'.$display_s_individuals.' • <span class=obs-count>'.$species['obs_count'].'</span> observation'.$display_s_obs,
+                    ],
+                    'calendar' => [
+                        'periods' => $species['periods'],
+                        'individuals' => $species['individuals'],
+                        'years' => $species['years'],
+                    ],
                 ];
                 if (!empty($species['last_obs_date']) && !empty($species['last_obs_stade'])) {
-                    $list_card['details']['infos'] = [
-                        'bolder' => $species['last_obs_stade'],
-                        'lighter' => 'le '.$species['last_obs_date'],
+                    $list_card['details'] += [
+                        'infos' => [
+                            'bolder' => $species['last_obs_stade'],
+                            'lighter' => 'le '.$species['last_obs_date'],
+                        ],
                     ];
                 }
-                $list_card['calendar'] = [
-                    'periods' => $species['periods'],
-                    'individuals' => $species['individuals'],
-                    'years' => $species['years'],
-                ];
             }
             $list_cards[] = $list_card;
         }
+
         return $list_cards;
     }
 }
