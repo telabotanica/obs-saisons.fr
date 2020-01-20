@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Individu;
 use App\Entity\Observation;
 use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Station|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,41 +21,29 @@ class StationRepository extends ServiceEntityRepository
         parent::__construct($registry, Station::class);
     }
 
-    /**
-     * @return station[]
-     */
-    public function findSationDataDisplayBySlug(string $slug): array
+   /* public function countContributors(Station $station)
     {
-        $sationData = [];
-
-        $station = $this->findOneBy(['slug' => $slug]);
-        // @TODO: redirect to 404 page
-        if (null === $station) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas');
-        }
-        $stationId = $station->getId();
-        $user = $station->getUser();
-
-        if (!empty($station)) {
-            $sationData = [
-                'slug' => $slug,
-                'isPublic' => $station->getIsPublic(),
-                'userId' => $user->getId(),
-                'name' => $station->getName(),
-                'description' => $station->getDescription(),
-                'latitude' => $station->getLatitude(),
-                'longitude' => $station->getLongitude(),
-                //'creator_avatar' => 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4536c881a4d14015d740b_Capture%20d%E2%80%99e%CC%81cran%202019-05-21%20a%CC%80%2021.37.04.png',
-                'creator_name' => $user->getDisplayName(),
-            ];
-        }
-        $sationData += $this->getEntityManager()
-            ->getRepository(Observation::class)
-            ->generateStationObsDisplayArray($stationId)
+        $manager = $this->getEntityManager();
+        $stationContributors = $manager->getRepository(Observation::class)
+            ->listObsContributors($station)
+        ;
+        $stationAuthors = $manager->getRepository(Individu::class)
+            ->listIndividusAuthors($station)
         ;
 
-        return $sationData;
-    }
+        $user = $station->getUser();
+        if (!empty($user) && !$stationAuthors->contains($user)) {
+            $stationAuthors->add($user);
+        }
+
+        foreach ($stationAuthors->toArray() as $author) {
+            if (!$stationContributors->contains($author)) {
+                $stationContributors->add($author);
+            }
+        }
+
+        return $stationContributors->count();
+    }*/
 
     // /**
     //  * @return Station[] Returns an array of Station objects

@@ -21,42 +21,46 @@ class EspeceRepository extends ServiceEntityRepository
         parent::__construct($registry, Espece::class);
     }
 
-    public function findDataToDisplayInStation(int $id): array
+    /*public function findEspeceDataToDisplayInStation(Espece $espece): array
     {
-        $manager = $this->getEntityManager();
+        $periods = [];
 
-        $evenementsEspeces = $manager->getRepository(EvenementEspece::class)
-            ->findBy(['espece' => $id], ['espece' => 'asc'])
+        $evenementsEspeces = $this->getEntityManager()
+            ->getRepository(EvenementEspece::class)
+            ->findBy(['espece' => $espece], ['espece' => 'asc'])
         ;
-        $loopEvenementNom = [];
         $loopStadeBbch = [];
-        $stades = [];
         foreach ($evenementsEspeces as $evenementEspece) {
-            $evenement = $manager->getRepository(Evenement::class)
-                ->find($evenementEspece->getEvenement())
-            ;
-            $evenementNom = ucfirst($evenement->getNom());
+            $evenement = $evenementEspece->getEvenement();
+            $evenementNom = Evenement::DISPLAY_LABELS[$evenement->getNom()];
             $StadeBbch = $evenement->getStadeBbch();
 
-            if (!in_array($evenementNom, $loopEvenementNom)) {
-                $loopEvenementNom[] = $evenementNom;
+            if (!in_array($evenementNom, array_keys($periods))) {
                 $loopStadeBbch[] = $StadeBbch;
-                $stades[$evenementNom] = [date_format($evenementEspece->getDateDebut(), 'Y-m-d')];
+                $periods[$evenementNom] = [
+                    'begin' => $evenementEspece->getDateDebut(),
+                    'end' => $evenementEspece->getDateFin(),
+                ];
             }
-            if (in_array($evenementNom, ['1ere apparition', 'Fructification']) || !in_array($StadeBbch, $loopStadeBbch)) {
-                array_push($stades[$evenementNom], date_format($evenementEspece->getDateFin(), 'Y-m-d'));
+            if (!in_array($StadeBbch, $loopStadeBbch)) {
+                $loopStadeBbch[] = $StadeBbch;
+                // the earliest begining date
+                if ($evenementEspece->getDateDebut() < $periods[$evenementNom]['begin']) {
+                    $periods[$evenementNom]['begin'] = $evenementEspece->getDateDebut();
+                }
+                // the latest ending date
+                if ($evenementEspece->getDateFin() > $periods[$evenementNom]['end']) {
+                    $periods[$evenementNom]['end'] = $evenementEspece->getDateFin();
+                }
             }
         }
-        $espece = $this->find($id);
 
         return [
-            'name' => $espece->getNomVernaculaire(),
-            'scientific_name' => $espece->getNomScientifique(),
-            'image' => $espece->getPhoto(),
-            'periods' => $stades,
+            'espece' => $espece,
+            'periods' => $periods,
             'individuals' => [],
         ];
-    }
+    }*/
 
     // /**
     //  * @return Espece[] Returns an array of Espece objects

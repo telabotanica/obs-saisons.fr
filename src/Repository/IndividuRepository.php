@@ -5,6 +5,10 @@ namespace App\Repository;
 use App\Entity\Espece;
 use App\Entity\Individu;
 use App\Entity\Observation;
+use App\Entity\Station;
+use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -21,57 +25,63 @@ class IndividuRepository extends ServiceEntityRepository
         parent::__construct($registry, Individu::class);
     }
 
-    public function findIdsForStationId(int $stationId): array
-    {
-        $ids = [];
-        $individus = $this->findBy(['station' => $stationId]);
-        foreach ($individus as $individu) {
-            $ids[] = $individu->getId();
-        }
-        return $ids;
-    }
-
-    /**
-     * @return Individu[]
-     */
-    public function findEspecesIndividusForStation(int $stationId)
+    public function findEspecesIndividusForStation(Station $station): array
     {
         return $this->createQueryBuilder('i')
             ->leftJoin('i.espece', 'espece')
             ->leftJoin('i.station', 'station')
-            ->where('station.id = :station_id')
-            ->setParameter('station_id', $stationId)
+            ->where('station = :station')
+            ->setParameter('station', $station)
             ->orderBy('i.espece', 'ASC')
             ->getQuery()
             ->getResult()
         ;
+
     }
 
-    public function generateEspecesIndividusDataArrayForStation(int $stationId): array
+    /*public function generateEspecesIndividusDataArrayForStation(Station $station): array
     {
         $stationDataDisplay = [];
         $manager = $this->getEntityManager();
         $especeRepository = $manager->getRepository(Espece::class);
         $observationRepository = $manager->getRepository(Observation::class);
 
-        $especesIndividusForStation = $this->findEspecesIndividusForStation($stationId);
-        $especeIds = [];
+        $especesIndividusForStation = $this->findEspecesIndividusForStation($station);
+        $especes = [];
         foreach ($especesIndividusForStation as $especeIndividuForStation) {
-            $especeId = $especeIndividuForStation->getEspece()->getId();
-            if (!in_array($especeId, $especeIds)) {
-                $especeIds[] = $especeId;
-                $especeDataDisplay = $especeRepository->findDataToDisplayInStation($especeId);
-                $especeDataDisplay += $observationRepository->findInfosObsInStationForEspece($stationId, $especeId);
-                array_push($stationDataDisplay, $especeDataDisplay);
+            $espece = $especeIndividuForStation->getEspece();
+            if (!in_array($espece, $especes)) {
+                $especes[] = $espece;
+                $especeDataDisplay = $especeRepository->findEspeceDataToDisplayInStation($espece);
+                $especeDataDisplay += $observationRepository->findInfosObsInStationForEspece($station, $espece);
+                $stationDataDisplay[] = $especeDataDisplay;
             }
-            $especeKey = array_search($especeId, $especeIds);
-            array_push($stationDataDisplay[$especeKey]['individuals'], [
+            $especeKey = array_search($espece, $especes);
+            $stationDataDisplay[$especeKey]['individuals'][] = [
                 'name' => $especeIndividuForStation->getNom(),
                 'observations' => [],
-            ]);
+            ];
         }
+
         return $stationDataDisplay;
     }
+
+    public function listIndividusAuthors(Station $station): ArrayCollection
+    {
+        $authors = new ArrayCollection();
+        if (null === $station) {
+            throw new \InvalidArgumentException('Station invalide ou non spécifiée');
+        }
+        $individus = $this->findBy(['station' => $station]);
+        foreach ($individus as $individu) {
+            $author = $individu->getUser();
+            if (!empty($author) && !$authors->contains($author)) {
+                $authors->add($author);
+            }
+        }
+
+        return $authors;
+    }*/
 
     // /**
     //  * @return Individu[] Returns an array of Individu objects

@@ -3,23 +3,25 @@
 {% set headers = {'header': {}} %}
 
 {% block top_content %}
-	{% include 'components/hero-header.html.twig' with {header: station} %}
+	{% include 'components/hero-header.html.twig' %}
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
 
 {% block header_content %}{% endblock %}
 {% block main_content %}
-	{% if station.isPublic %}
+	{% if station.getIsPublic() %}
 
 		{# displays top actionbar with species count #}
+		{% set species = stationData.getStationAllSpecies() %}
+		{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
 		{% include 'components/actionbar.html.twig' with {
 			actionbar: {
 				'components': [
 					{
 						'name': 'side-block',
 						'data': {
-							'text': "#{station.species|length} espèce#{station.species !=1 ? 's'} observée#{station.species !=1 ? 's'}"
+							'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
 						}
 					},
 					{'name': 'tabs-holder'},
@@ -48,7 +50,7 @@
 {% endblock %}
 
 {% block bottom_content %}
-	{% if station.isPublic %}
+	{% if station.getIsPublic() %}
 		{% include 'layout/overlay.html.twig' with {id: 'indiv'} %}
 
 		<a href="#" class="button bt-open-form">Saisir une observation</a>

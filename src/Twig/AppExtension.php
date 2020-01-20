@@ -1,5 +1,4 @@
 <?php
-
 // src/Twig/AppExtension.php
 
 namespace App\Twig;
@@ -9,8 +8,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Class AppExtension
- * @package App\Twig
+ * Class AppExtension.
  */
 class AppExtension extends AbstractExtension
 {
@@ -59,7 +57,8 @@ class AppExtension extends AbstractExtension
     {
         return datefmt_create(
             'fr_FR',
-            null, null,
+            null,
+            null,
             null,
             null,
             $pattern

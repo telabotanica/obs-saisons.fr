@@ -21,7 +21,6 @@ class Evenement
      */
     private $stade_bbch;
 
-
     /**
      * @ORM\Column(type="string", length=100)
      */
@@ -35,6 +34,22 @@ class Evenement
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $is_observable;
+
+    const DISPLAY_LABELS = [
+        'feuillaison' => 'Feuillaison',
+        'floraison' => 'Floraison',
+        'fructification' => 'Fructification',
+        'sénescence' => 'Sénescence',
+        '1ere apparition' => '1ere apparition',
+    ];
+
+    const CSS_CLASSES = [
+        'Feuillaison' => 'feuillaison',
+        'Floraison' => 'floraison',
+        'Fructification' => 'fructification',
+        'Sénescence' => 'senescence',
+        '1ere apparition' => 'apparition',
+    ];
 
     public function getId(): ?int
     {

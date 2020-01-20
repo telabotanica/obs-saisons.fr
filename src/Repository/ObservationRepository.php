@@ -2,9 +2,14 @@
 
 namespace App\Repository;
 
+use App\Entity\Espece;
+use App\Entity\Evenement;
 use App\Entity\Individu;
 use App\Entity\Observation;
+use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -20,87 +25,74 @@ class ObservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Observation::class);
     }
 
-    public function findAllObsInStation(int $stationId): array
+    public function findAllObsInStation(Station $station): ArrayCollection
     {
         $individusInStation = $this->getEntityManager()
             ->getRepository(Individu::class)
-            ->findIdsForStationId($stationId)
-        ;
+            ->findBy(['station' => $station]);
 
-        return $this->createQueryBuilder('o')
-            ->where('o.individu IN (:individusIds)')
-            ->setParameter('individusIds', $individusInStation)
-            ->addOrderBy('o.individu', 'ASC')
-            ->addOrderBy('o.obs_date', 'DESC')
-            ->getQuery()
-            ->getArrayResult()
-        ;
+        return new ArrayCollection(
+            $this->createQueryBuilder('o')
+                ->where('o.individu IN (:individus)')
+                ->setParameter('individus', $individusInStation)
+                ->addOrderBy('o.individu', 'ASC')
+                ->addOrderBy('o.obs_date', 'DESC')
+                ->getQuery()
+                ->getResult()
+        );
     }
 
-    public function findLastObsInStation(int $stationId, int $limit = 1): array
+    /*public function findLastObsInStation(Station $station, int $limit = 1): array
     {
         // get all obs in station
         if (0 > $limit) {
             $limit = null;
         }
 
-        return array_slice($this->findAllObsInStation($stationId), 0, $limit);
+        return array_slice($this->findAllObsInStation($station), 0, $limit);
     }
 
     // ready to use in station data array observations
-    public function generateStationObsDisplayArray(int $stationId): array
+    public function generateStationObsDisplayArray(Station $station): array
     {
-        $obsInStation = $this->findAllObsInStation($stationId);
-
-        $obsImages = (array) $this->findObsImages($obsInStation);
-        $lastObsImage = null;
-        if (!empty($obsImages[0]['image'])) {
-            $lastObsImage = $obsImages[0]['image'];
-        }
-
-        $obsParEspece = $this->generateStationObs($obsInStation);
-        $species = $this->getEntityManager()
+        $obsParEspece = $this->generateStationObs($station);
+        $obsDataBySpecies = $this->getEntityManager()
             ->getRepository(Individu::class)
-            ->generateEspecesIndividusDataArrayForStation($stationId)
+            ->generateEspecesIndividusDataArrayForStation($station)
         ;
-        foreach ($species as $speciesKey => $row) {
-            $especeScName = $row['scientific_name'];
+        foreach ($obsDataBySpecies as $speciesKey => $row) {
+            $especeScName = $row['espece']->getNomScientifique();
             if (isset($obsParEspece[$especeScName])) {
                 foreach ($row['individuals'] as $indivKey => $individual) {
                     $indivName = $individual['name'];
                     if (isset($obsParEspece[$especeScName][$indivName])) {
                         foreach ($obsParEspece[$especeScName][$indivName] as $year => $obsByYear) {
-                            if (!isset($species[$speciesKey]['individuals'][$indivKey]['observations'][$year])) {
-                                $species[$speciesKey]['individuals'][$indivKey]['observations'][$year] = [];
+                            if (!isset($obsDataBySpecies[$speciesKey]['individuals'][$indivKey]['observations'][$year])) {
+                                $obsDataBySpecies[$speciesKey]['individuals'][$indivKey]['observations'][$year] = [];
                             }
-                            $species[$speciesKey]['individuals'][$indivKey]['observations'][$year] = $obsByYear;
+                            $obsDataBySpecies[$speciesKey]['individuals'][$indivKey]['observations'][$year] = $obsByYear;
                         }
                     }
                 }
             }
         }
 
-        return [
-            'last_obs_image' => $lastObsImage,
-            'obs_images_count' => count($obsImages),
-            'species' => $species,
-        ];
+        return $obsDataBySpecies;
     }
 
     // Observations in station sorted by species individuals and year
-    private function generateStationObs(array $stationObsBySpecies): array
+    private function generateStationObs(Station $station): array
     {
         $obsParEspece = [];
+        $obsInStation = $this->findAllObsInStation($station);
         $especeScNames = [];
         $individuNames = [];
         $years = [];
-        foreach ($stationObsBySpecies as $obs) {
-            $thisObs = $this->find($obs['id']);
-            $year = date_format($obs['obs_date'], 'Y');
-            $especeScName = $thisObs->getIndividu()->getEspece()->getNomScientifique();
-            $individuName = $thisObs->getIndividu()->getNom();
-            $stade = ucfirst($thisObs->getEvenement()->getNom()).' - stade '.$thisObs->getEvenement()->getStadeBbch();
-            $author = $thisObs->getUser()->getId();
+        foreach ($obsInStation as $obs) {
+            $year = date_format($obs->getDateObs(), 'Y');
+            $especeScName = $obs->getIndividu()->getEspece()->getNomScientifique();
+            $individuName = $obs->getIndividu()->getNom();
+            $stade = Evenement::DISPLAY_LABELS[$obs->getEvenement()->getNom()].' - stade '.$obs->getEvenement()->getStadeBbch();
 
             if (!in_array($especeScName, $especeScNames)) {
                 $especeScNames[] = $especeScName;
@@ -115,74 +107,62 @@ class ObservationRepository extends ServiceEntityRepository
                 $obsParEspece[$especeScName][$individuName][$year] = [];
             }
             $obsParEspece[$especeScName][$individuName][$year][] = [
-                'image' => $obs['photo'],
+                'image' => $obs->getPhoto(),
                 'stade' => $stade,
-                'date' => $obs['obs_date'],
-                'author' => $author,
+                'date' => $obs->getDateObs(),
+                'author' => $obs->getUser(),
             ];
         }
 
         return $obsParEspece;
     }
 
-    public function findObsImages(array $obsInStation = null, int $stationId = null): array
+    public function findObsImages(Station $station): ArrayCollection
     {
-        $images = [];
-        // using station id
-        if (null === $obsInStation) {
-            if (null === $stationId) {
-                throw new \InvalidArgumentException('Station invalide ou non spécifiée');
-            }
-            $obsInStation = $this->findAllObsInStation($stationId);
+        $images = new ArrayCollection();
+        if (null === $station) {
+            throw new \InvalidArgumentException('Station invalide ou non spécifiée');
         }
+        $obsInStation = $this->findAllObsInStation($station);
         foreach ($obsInStation as $obs) {
-            if (!empty($obs['photo'])) {
-                $images[] = [
-                    'image' => $obs['photo'],
-                    'date' => $obs['obs_date'],
-                ];
+            $photo = $obs->getPhoto();
+            if (!empty($photo)) {
+                $images->add($photo);
             }
         }
-        usort($images, function ($a, $b) {
-            return $b['date'] <=> $a['date'];
-        });
-
+        // observations are sorted by obs_date
         return $images;
     }
 
-    public function countObsContributors(array $obsInStation = null, int $stationId = null): int
+    public function listObsContributors(Station $station): ArrayCollection
     {
-        $contributors = [];
-        // using station id
-        if (null === $obsInStation) {
-            if (null === $stationId) {
-                throw new \InvalidArgumentException('Station invalide ou non spécifiée');
-            }
-            $obsInStation = $this->findAllObsInStation($stationId);
+        $contributors = new ArrayCollection();
+        if (null === $station) {
+            throw new \InvalidArgumentException('Station invalide ou non spécifiée');
         }
+        $obsInStation = $this->findAllObsInStation($station);
         foreach ($obsInStation as $obs) {
-            $contributor = $this->find($obs['id'])->getUser()->getId();
-            if (!empty($contributor) && !in_array($contributor, $contributors)) {
-                $contributors[] = $contributor;
+            $contributor = $obs->getUser();
+            if (!empty($contributor) && !$contributors->contains($contributor)) {
+                $contributors->add($contributor);
             }
         }
 
-        return count($contributors);
+        return $contributors;
     }
 
     // Obsevations informations for given species in given station
-    public function findInfosObsInStationForEspece(int $stationId, int $espece_id): ?array
+    public function findInfosObsInStationForEspece(Station $station, Espece $espece): ?array
     {
         $infosObservationsForEspece = ['obs_count' => 0];
-        $obsInStation = $this->findAllObsInStation($stationId);
+        $obsInStation = $this->findAllObsInStation($station);
         $years = [];
 
         $loopObsDate = date('now');
         foreach ($obsInStation as $obs) {
-            $thisObs = $this->find($obs['id']);
-            $especeId = $thisObs->getIndividu()->getEspece()->getId();
-            if ($espece_id === $especeId) {
-                $obsDate = $obs['obs_date'];
+            $thisObsEspece = $obs->getIndividu()->getEspece();
+            if ($espece === $thisObsEspece) {
+                $obsDate = $obs->getDateObs();
                 $year = date_format($obsDate, 'Y');
                 if (!in_array($year, $years)) {
                     $years[] = $year;
@@ -191,8 +171,8 @@ class ObservationRepository extends ServiceEntityRepository
                 if ($loopObsDate < $obsDate) {
                     $loopObsDate = $obsDate;
                     $infosObservationsForEspece += [
-                        'last_obs_date' => date_format($obsDate, 'j/m/Y'),
-                        'last_obs_stade' => ucfirst($thisObs->getEvenement()->getNom()),
+                        'last_obs_date' => $obsDate,
+                        'last_obs_stade' => Evenement::DISPLAY_LABELS[$obs->getEvenement()->getNom()],
                     ];
                 }
             }
@@ -200,7 +180,7 @@ class ObservationRepository extends ServiceEntityRepository
         $infosObservationsForEspece['years'] = $years;
 
         return $infosObservationsForEspece;
-    }
+    }*/
 
     // /**
     //  * @return Observation[] Returns an array of Observation objects
