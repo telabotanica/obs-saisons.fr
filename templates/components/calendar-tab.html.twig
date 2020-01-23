@@ -4,7 +4,7 @@
     |: default
 
     id*: int
-    App\DisplayData\StationSpeciesDisplayData calendar
+    App\DisplayData\Station\StationSpeciesDisplayData calendar
 #}
 {% set periods = calendar.getPeriods() %}
 {% set stades = periods|keys %}
@@ -64,9 +64,9 @@
                 {% endfor %}
 
 
-                {% for observationsByYearDisplayData in individualData.getObservationsByYearDisplayData() %}
-                    {% set hide = (observationsByYearDisplayData.getYear() != first_year) %}
-                    {% include 'components/obs_chips.html.twig' with {observations: observationsByYearDisplayData.getThisYearObservations() } %}{# will also take stades #}
+                {% for stationObservationsByYearDisplayData in individualData.getStationObservationsByYearDisplayData() %}
+                    {% set hide = (stationObservationsByYearDisplayData.getYear() != first_year) %}
+                    {% include 'components/obs_chips.html.twig' with {observations: stationObservationsByYearDisplayData.getThisYearObservations() } %}{# will also take stades #}
                 {% endfor %}
 
                 {% for i in 3..14 %}
