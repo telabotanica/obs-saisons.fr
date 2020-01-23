@@ -24,15 +24,7 @@
 			]
 		}
 	} %}
-	{#{% set footer = [{
-		'counter' : {'icon': 'person-icon', 'count': station.members_count|default(1)}
-	}] %}#}
-	{#{% if station.species_images is defined %}
-        {% set footer = footer|merge([{
-            'avatars' : station.species_images
-        }]) %}
-    {% endif %}#}
-{# displays cards #}
+
 	{% include 'components/cards.html.twig' %}
 
 	{% include 'components/help-block.html.twig' with {

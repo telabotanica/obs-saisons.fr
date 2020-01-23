@@ -2,7 +2,7 @@
     *: required
 
     App\Entity\Station station*
-    App\DisplayData\StationDisplayData stationData*
+    App\DisplayData\Station\StationDisplayData stationData*
 #}
 {% set isPublic = station.getIsPublic() %}
 {% set images = stationData.getStationObsImages() %}

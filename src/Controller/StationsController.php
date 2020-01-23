@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\DisplayData\StationDisplayData;
+use App\DisplayData\Station\StationDisplayData;
 use App\Entity\Espece;
-use App\Entity\Observation;
 use App\Entity\Station;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,10 +26,6 @@ class StationsController extends PagesController
         $stationRepository = $this->getDoctrine()->getRepository(Station::class);
         $stations = $stationRepository->findAll();
         // setting cards data
-        /*$stationsDisplayData = new StationDisplayData($registry, $stations[0]);
-        $data = $stationsDisplayData->getEscpecesIndividus();
-        die(var_dump($data));*/
-
         $cards = $this->setStationCards($stations);
 
         return $this->render('pages/stations.html.twig', [
@@ -44,7 +39,6 @@ class StationsController extends PagesController
     {
         $cards = [];
         $manager = $this->getDoctrine();
-        $obsRepository = $manager->getRepository(Observation::class);
         foreach ($stations as $station) {
             $stationDisplayData = new StationDisplayData($station, $manager);
             $header = ['image' => $station->getHeaderImage()];
@@ -64,12 +58,11 @@ class StationsController extends PagesController
                     ],
                 ],
             ];
-            $countObsContributors = $stationDisplayData->getCountStationContributors();
             $footer = [
                 [
                     'counter' => [
                         'icon' => 'person-icon',
-                        'count' => $countObsContributors,
+                        'count' => $stationDisplayData->getCountStationContributors(),
                     ],
                 ],
                 [
@@ -115,11 +108,11 @@ class StationsController extends PagesController
         ];
 
         return $this->render('pages/station-page.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
-            'route' => 'observations',
+            'list_cards' => $this->setListCards($stationDisplayData->getStationAllSpeciesDisplayData()),
             'station' => $station,
             'stationData' => $stationDisplayData,
-            'list_cards' => $this->setListCards($stationDisplayData->getStationAllSpeciesDisplayData()),
+            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'route' => 'observations',
         ]);
     }
 

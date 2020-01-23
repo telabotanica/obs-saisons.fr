@@ -2,13 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\Espece;
 use App\Entity\Individu;
-use App\Entity\Observation;
 use App\Entity\Station;
-use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -38,50 +33,6 @@ class IndividuRepository extends ServiceEntityRepository
         ;
 
     }
-
-    /*public function generateEspecesIndividusDataArrayForStation(Station $station): array
-    {
-        $stationDataDisplay = [];
-        $manager = $this->getEntityManager();
-        $especeRepository = $manager->getRepository(Espece::class);
-        $observationRepository = $manager->getRepository(Observation::class);
-
-        $especesIndividusForStation = $this->findEspecesIndividusForStation($station);
-        $especes = [];
-        foreach ($especesIndividusForStation as $especeIndividuForStation) {
-            $espece = $especeIndividuForStation->getEspece();
-            if (!in_array($espece, $especes)) {
-                $especes[] = $espece;
-                $especeDataDisplay = $especeRepository->findEspeceDataToDisplayInStation($espece);
-                $especeDataDisplay += $observationRepository->findInfosObsInStationForEspece($station, $espece);
-                $stationDataDisplay[] = $especeDataDisplay;
-            }
-            $especeKey = array_search($espece, $especes);
-            $stationDataDisplay[$especeKey]['individuals'][] = [
-                'name' => $especeIndividuForStation->getNom(),
-                'observations' => [],
-            ];
-        }
-
-        return $stationDataDisplay;
-    }
-
-    public function listIndividusAuthors(Station $station): ArrayCollection
-    {
-        $authors = new ArrayCollection();
-        if (null === $station) {
-            throw new \InvalidArgumentException('Station invalide ou non spécifiée');
-        }
-        $individus = $this->findBy(['station' => $station]);
-        foreach ($individus as $individu) {
-            $author = $individu->getUser();
-            if (!empty($author) && !$authors->contains($author)) {
-                $authors->add($author);
-            }
-        }
-
-        return $authors;
-    }*/
 
     // /**
     //  * @return Individu[] Returns an array of Individu objects

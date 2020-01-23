@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Individu;
-use App\Entity\Observation;
 use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -20,30 +18,6 @@ class StationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Station::class);
     }
-
-   /* public function countContributors(Station $station)
-    {
-        $manager = $this->getEntityManager();
-        $stationContributors = $manager->getRepository(Observation::class)
-            ->listObsContributors($station)
-        ;
-        $stationAuthors = $manager->getRepository(Individu::class)
-            ->listIndividusAuthors($station)
-        ;
-
-        $user = $station->getUser();
-        if (!empty($user) && !$stationAuthors->contains($user)) {
-            $stationAuthors->add($user);
-        }
-
-        foreach ($stationAuthors->toArray() as $author) {
-            if (!$stationContributors->contains($author)) {
-                $stationContributors->add($author);
-            }
-        }
-
-        return $stationContributors->count();
-    }*/
 
     // /**
     //  * @return Station[] Returns an array of Station objects
