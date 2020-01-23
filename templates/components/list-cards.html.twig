@@ -40,7 +40,7 @@
     )
 #}
 {% set slug = list_card.slug|default(route) %}
-<div class="list-cards-item{{ list_card.add is defined ? '-add' }}" data-id="{{ id }}">
+<div {{ list_card.heading is defined and list_card.heading.title is defined? "id=#{list_card.heading.title|slugify}" }} class="list-cards-item{{ list_card.add is defined ? '-add' }}" data-id="{{ id }}">
     {% if list_card.add is defined %}
         <div class="add-list-card">
             <div class="icon-add-list-card add-square{{ route == 'evenements' ? '-orange' }}-icon"></div>

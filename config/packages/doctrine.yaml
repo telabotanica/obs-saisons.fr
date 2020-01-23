@@ -20,3 +20,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        dql:
+            datetime_functions:
+                YEAR: DoctrineExtensions\Query\Mysql\Year
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                DAY: DoctrineExtensions\Query\Mysql\Day
+                DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat
+            numeric_functions:
+                rand: DoctrineExtensions\Query\Mysql\Rand

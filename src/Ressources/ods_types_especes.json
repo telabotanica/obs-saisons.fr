@@ -1,10 +1,10 @@
 [
 	{
-		"nom":"arbre",
+		"nom":"arbres",
 		"reigne":"plantes"
 	},
 	{
-		"nom":"herbacée",
+		"nom":"herbacées",
 		"reigne":"plantes"
 	},
 	{
@@ -12,15 +12,15 @@
 		"reigne":"animaux"
 	},
 	{
-		"nom":"insecte",
+		"nom":"insectes",
 		"reigne":"animaux"
 	},
 	{
-		"nom":"Amphibien",
+		"nom":"Amphibiens",
 		"reigne":"animaux"
 	},
 	{
-		"nom":"reptile",
+		"nom":"reptiles",
 		"reigne":"animaux"
 	}
 ]

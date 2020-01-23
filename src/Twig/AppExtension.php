@@ -3,9 +3,11 @@
 
 namespace App\Twig;
 
+use App\Service\SlugGenerator;
 use IntlDateFormatter;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\TwigFilter;
 
 /**
  * Class AppExtension.
@@ -23,9 +25,23 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * @return string
+     * @return array|TwigFilter[]
      */
-    public function displayEventDates(\DateTimeInterface $startDate, \DateTimeInterface $endDate, string $separator = '-')
+    public function getFilters()
+    {
+        return [
+            new TwigFilter('slugify', [$this, 'slugify']),
+        ];
+    }
+
+    public function slugify(string $string): string
+    {
+        $slugGenerator = new SlugGenerator();
+
+        return $slugGenerator->slugify($string);
+    }
+
+    public function displayEventDates(\DateTimeInterface $startDate, \DateTimeInterface $endDate, string $separator = '-'): string
     {
         $startDateSplit = explode('-', $startDate->format('Y-m-d'));
         $endDateSplit = explode('-', $endDate->format('Y-m-d'));
@@ -50,10 +66,7 @@ class AppExtension extends AbstractExtension
         return datefmt_format($fmt, $startDate).' '.$separator.' '.$displayedEndDate;
     }
 
-    /**
-     * @return IntlDateFormatter
-     */
-    private function fmtCreate(string $pattern)
+    private function fmtCreate(string $pattern): IntlDateFormatter
     {
         return datefmt_create(
             'fr_FR',
