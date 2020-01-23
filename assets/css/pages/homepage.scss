@@ -456,8 +456,6 @@
 	@include media(md) {
 		& .banner-number .mosaic img {
 			@include grid-justify-self(stretch);
-			min-height: 100px;
-			max-height: 50%;
 		}
 	}
 }
