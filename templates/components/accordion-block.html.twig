@@ -23,9 +23,9 @@
 
     <div class="accordion-content" style="display: none">
         {% for content in accordion.contents %}
-            {% if content.type|default == 'include' %}
+            {% if content.type|default('include') == 'include' %}
                 {% include content.include_uri with {(content.include_object_name): content.data}%}
-            {% else %}
+            {% elseif content.type == 'html' %}
                 {{ content.html|raw }}
             {% endif %}
         {% endfor %}

@@ -4,6 +4,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Observation;
 use App\Entity\Post;
 use App\Service\BreadcrumbsGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,12 +36,16 @@ class PagesController extends AbstractController
      */
     public function index()
     {
-        $lastArticles = $this->getDoctrine()->getRepository(Post::class)->setPosts('article')->findLastFeaturedPosts();
-        $lastEvents = $this->getDoctrine()->getRepository(Post::class)->setPosts('event')->findLastFeaturedPosts();
+        $manager = $this->getDoctrine();
+        $postRepository = $manager->getRepository(Post::class);
+        $observationRepository = $manager->getRepository(Observation::class);
 
         return $this->render('pages/homepage.html.twig', [
-            'lastArticles' => $lastArticles,
-            'lastEvents' => $lastEvents,
+            'lastArticles' => $postRepository->setPosts('article')->findLastFeaturedPosts(),
+            'lastEvents' => $postRepository->setPosts('event')->findLastFeaturedPosts(),
+            'lastObservations' => $observationRepository->findLastObsWithImages(5),
+            'obsCount' => $observationRepository->findObsCountThisYear(),
+            'randomObservations' => $observationRepository->findRandomObs(4),
         ]);
     }
 
@@ -50,17 +55,6 @@ class PagesController extends AbstractController
     public function apropos(Request $request)
     {
         return $this->render('pages/apropos.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
-        ]);
-    }
-
-    /**
-     * @Route("/especes", name="especes")
-     */
-    public function especes(Request $request)
-    {
-        return $this->render('pages/especes.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
         ]);
