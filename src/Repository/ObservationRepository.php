@@ -50,10 +50,9 @@ class ObservationRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findRandomObs(int $limit): array
+    public function findRandomObsWithImages(int $limit): array
     {
         return $this->createQueryBuilder('o')
-            ->select('o.photo')
             ->where('o.photo IS NOT NULL')
             ->orderBy('RAND()')
             ->setMaxResults($limit)

@@ -110,7 +110,7 @@
 			</div>
 			<div class="mosaic">
 				{% for randObs in randomObservations %}
-					<img src="{{ randObs.photo }}" alt="">
+					<div style="background-image: url('{{ randObs.photo }}');"></div>
 				{% endfor %}
 			</div>
 		</div>

@@ -454,8 +454,9 @@
 	overflow: hidden;
 
 	@include media(md) {
-		& .banner-number .mosaic img {
+		& .banner-number .mosaic div {
 			@include grid-justify-self(stretch);
+			@include background-image("default", (0 0, 0 0, 50% 50%));
 		}
 	}
 }
@@ -483,7 +484,7 @@
 	padding-top: 80px;
 
 	@include media(md) {
-		@include  gap(padding, "v");
+		@include gap(padding, "v", 100px);
 	}
 }
 

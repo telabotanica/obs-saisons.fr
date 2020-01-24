@@ -9,6 +9,7 @@ use App\Entity\Post;
 use App\Service\BreadcrumbsGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -31,10 +32,9 @@ class PagesController extends AbstractController
 
     /**
      * Index action.
-     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/", name="homepage")
      */
-    public function index()
+    public function index(): Response
     {
         $manager = $this->getDoctrine();
         $postRepository = $manager->getRepository(Post::class);
@@ -45,14 +45,14 @@ class PagesController extends AbstractController
             'lastEvents' => $postRepository->setPosts('event')->findLastFeaturedPosts(),
             'lastObservations' => $observationRepository->findLastObsWithImages(5),
             'obsCount' => $observationRepository->findObsCountThisYear(),
-            'randomObservations' => $observationRepository->findRandomObs(4),
+            'randomObservations' => $observationRepository->findRandomObsWithImages(4),
         ]);
     }
 
     /**
      * @Route("/apropos", name="apropos")
      */
-    public function apropos(Request $request)
+    public function apropos(Request $request): Response
     {
         return $this->render('pages/apropos.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
@@ -63,7 +63,7 @@ class PagesController extends AbstractController
     /**
      * @Route("/participer", name="participer")
      */
-    public function participer(Request $request)
+    public function participer(Request $request): Response
     {
         return $this->render('pages/participer.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
@@ -74,7 +74,7 @@ class PagesController extends AbstractController
     /**
      * @Route("/resultats", name="resultats")
      */
-    public function resultats(Request $request)
+    public function resultats(Request $request): Response
     {
         return $this->render('pages/resultats.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
@@ -85,7 +85,7 @@ class PagesController extends AbstractController
     /**
      * @Route("/outils-ressources", name="outils-ressources")
      */
-    public function outilsRessources(Request $request)
+    public function outilsRessources(Request $request): Response
     {
         return $this->render('pages/outils-ressources.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
@@ -96,7 +96,7 @@ class PagesController extends AbstractController
     /**
      * @Route("/relais", name="relais")
      */
-    public function relais(Request $request)
+    public function relais(Request $request): Response
     {
         return $this->render('pages/relais.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
