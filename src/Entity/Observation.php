@@ -17,16 +17,16 @@ class Observation
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Individu")
+     * @ORM\ManyToOne(targetEntity="Individual")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $individu;
+    private $individual;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Evenement")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $evenement;
+    private $event;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -36,7 +36,7 @@ class Observation
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $photo;
+    private $picture;
 
     /**
      * @ORM\Column(type="date")
@@ -48,26 +48,26 @@ class Observation
         return $this->id;
     }
 
-    public function getIndividu(): ?Individu
+    public function getIndividual(): ?Individual
     {
-        return $this->individu;
+        return $this->individual;
     }
 
-    public function setIndividu(?Individu $individu): self
+    public function setIndividual(?Individual $individual): self
     {
-        $this->individu = $individu;
+        $this->individual = $individual;
 
         return $this;
     }
 
-    public function getEvenement(): ?Evenement
+    public function getEvent(): ?Event
     {
-        return $this->evenement;
+        return $this->event;
     }
 
-    public function setEvenement(?Evenement $evenement): self
+    public function setEvent(?Event $event): self
     {
-        $this->evenement = $evenement;
+        $this->event = $event;
 
         return $this;
     }
@@ -84,14 +84,14 @@ class Observation
         return $this;
     }
 
-    public function getPhoto(): ?string
+    public function getPicture(): ?string
     {
-        return $this->photo;
+        return $this->picture;
     }
 
-    public function setPhoto(?string $photo): self
+    public function setPicture(?string $picture): self
     {
-        $this->photo = $photo;
+        $this->picture = $picture;
 
         return $this;
     }

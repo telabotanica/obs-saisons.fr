@@ -14,12 +14,11 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Faker\Factory::create('fr_FR');
         for ($i = 0; $i < 750; ++$i) {
-            $nom = $faker->sentence(6, true);
             $observation = new Observation();
-            $observation->setIndividu($this->getReference('individu-'.$faker->numberBetween(0, 74)));
-            $observation->setEvenement($this->getReference('evenement-'.$faker->numberBetween(1, 7)));
+            $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(0, 74)));
+            $observation->setEvent($this->getReference('event-'.$faker->numberBetween(1, 7)));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
-            $observation->setPhoto($faker->imageUrl(800, 600, 'nature'));
+            $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
             $observation->setDateObs($faker->dateTimeThisDecade('now', 'Europe/Paris'));
 
             $manager->persist($observation);
@@ -28,12 +27,11 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
         }
 
         for ($c = 750; $c < 1000; ++$c) {
-            $nom = $faker->sentence(6, true);
             $observation = new Observation();
-            $observation->setIndividu($this->getReference('individu-'.$faker->numberBetween(75, 99)));
-            $observation->setEvenement($this->getReference('evenement-8'));
+            $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(75, 99)));
+            $observation->setEvent($this->getReference('event-8'));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
-            $observation->setPhoto($faker->imageUrl(800, 600, 'nature'));
+            $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
             $observation->setDateObs($faker->dateTimeThisDecade('now', 'Europe/Paris'));
 
             $manager->persist($observation);
@@ -51,8 +49,8 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
-            EvenementFixtures::class,
-            IndividuFixtures::class,
+            EventFixtures::class,
+            IndividualFixtures::class,
         ];
     }
 }

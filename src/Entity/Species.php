@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\EspeceRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SpeciesRepository")
  */
-class Espece
+class Species
 {
     /**
      * @ORM\Id()
@@ -19,12 +19,12 @@ class Espece
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom_vernaculaire;
+    private $vernacular_name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom_scientifique;
+    private $scientific_name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -32,7 +32,7 @@ class Espece
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TypeEspece")
+     * @ORM\ManyToOne(targetEntity="App\Entity\TypeSpecies")
      * @ORM\JoinColumn(nullable=false)
      */
     private $type;
@@ -40,7 +40,7 @@ class Espece
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $photo;
+    private $picture;
 
     /**
      * @ORM\Column(type="boolean")
@@ -52,26 +52,26 @@ class Espece
         return $this->id;
     }
 
-    public function getNomVernaculaire(): ?string
+    public function getVernacularName(): ?string
     {
-        return $this->nom_vernaculaire;
+        return $this->vernacular_name;
     }
 
-    public function setNomVernaculaire(string $nom_vernaculaire): self
+    public function setVernacularName(string $vernacular_name): self
     {
-        $this->nom_vernaculaire = $nom_vernaculaire;
+        $this->vernacular_name = $vernacular_name;
 
         return $this;
     }
 
-    public function getNomScientifique(): ?string
+    public function getScientificName(): ?string
     {
-        return $this->nom_scientifique;
+        return $this->scientific_name;
     }
 
-    public function setNomScientifique(string $nom_scientifique): self
+    public function setScientificName(string $scientific_name): self
     {
-        $this->nom_scientifique = $nom_scientifique;
+        $this->scientific_name = $scientific_name;
 
         return $this;
     }
@@ -88,12 +88,12 @@ class Espece
         return $this;
     }
 
-    public function getType(): ?TypeEspece
+    public function getType(): ?TypeSpecies
     {
         return $this->type;
     }
 
-    public function setType(?TypeEspece $type): self
+    public function setType(?TypeSpecies $type): self
     {
         $this->type = $type;
 
@@ -112,14 +112,14 @@ class Espece
         return $this;
     }
 
-    public function getPhoto(): ?string
+    public function getPicture(): ?string
     {
-        return $this->photo;
+        return $this->picture;
     }
 
-    public function setPhoto(?string $photo): self
+    public function setPicture(?string $picture): self
     {
-        $this->photo = $photo;
+        $this->picture = $picture;
 
         return $this;
     }

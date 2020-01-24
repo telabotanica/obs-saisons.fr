@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\DisplayData\Station\StationDisplayData;
-use App\Entity\Espece;
+use App\Entity\Species;
 use App\Entity\Station;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,19 +116,19 @@ class StationsController extends PagesController
         ]);
     }
 
-    public function setListCards(array $stationAllSpeciesDisplayData)
+    public function setListCards(array $stationAllSpeciesDisplayData): array
     {
         $list_cards = [];
         foreach ($stationAllSpeciesDisplayData as $stationSpeciesDisplayData) {
             /**
-             * @var Espece $species
+             * @var Species $species
              */
             $species = $stationSpeciesDisplayData->getSpecies();
             $list_card = [
-                'image' => $species->getPhoto(),
+                'image' => $species->getPicture(),
                 'heading' => [
-                    'title' => $species->getNomVernaculaire(),
-                    'text' => $species->getNomScientifique(),
+                    'title' => $species->getVernacularName(),
+                    'text' => $species->getScientificName(),
                 ],
             ];
 

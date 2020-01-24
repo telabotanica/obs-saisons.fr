@@ -2,10 +2,10 @@
 
 namespace App\DisplayData\Station;
 
-use App\Entity\Espece;
-use App\Entity\Evenement;
-use App\Entity\EvenementEspece;
-use App\Entity\Individu;
+use App\Entity\Species;
+use App\Entity\Event;
+use App\Entity\EventSpecies;
+use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -29,7 +29,7 @@ class StationSpeciesDisplayData
 
     public function __construct(
         Station $station,
-        Espece $species,
+        Species $species,
         ManagerRegistry $manager,
         array $thisStationIndividuals = null,
         array $stationSpeciesObservations = null
@@ -52,8 +52,8 @@ class StationSpeciesDisplayData
             $this->stationSpeciesObservations = $stationSpeciesObservations;
         }
 
-        $this->eventsSpecies = $manager->getRepository(EvenementEspece::class)
-            ->findBy(['espece' => $species], ['espece' => 'asc'])
+        $this->eventsSpecies = $manager->getRepository(EventSpecies::class)
+            ->findBy(['species' => $species], ['species' => 'asc'])
         ;
 
         $this->periods = [];
@@ -67,11 +67,11 @@ class StationSpeciesDisplayData
 
     private function setStationSpeciesData(): self
     {
-        $allStationIndividualsData = $this->manager->getRepository(Individu::class)
-            ->findEspecesIndividusForStation($this->station)
+        $allStationIndividualsData = $this->manager->getRepository(Individual::class)
+            ->findSpeciesIndividualsForStation($this->station)
         ;
         foreach ($allStationIndividualsData as $stationIndividuals) {
-            $species = $stationIndividuals->getEspece();
+            $species = $stationIndividuals->getSpecies();
             if ($species === $this->species) {
                 $this->thisStationIndividuals[] = $stationIndividuals;
             }
@@ -91,7 +91,7 @@ class StationSpeciesDisplayData
             ->findAllObsInStation($this->station)
         ;
         foreach ($stationObservations as $stationObservation) {
-            $species = $stationObservation->getEspece();
+            $species = $stationObservation->getSpecies();
             if ($species === $this->species) {
                 $this->stationSpeciesObservations[] = $stationObservation;
             }
@@ -101,7 +101,7 @@ class StationSpeciesDisplayData
         return $this;
     }
 
-    public function getSpecies(): Espece
+    public function getSpecies(): Species
     {
         return $this->species;
     }
@@ -110,26 +110,26 @@ class StationSpeciesDisplayData
     {
         $loopStadeBbch = [];
         foreach ($this->eventsSpecies as $eventSpecies) {
-            $event = $eventSpecies->getEvenement();
-            $eventName = Evenement::DISPLAY_LABELS[$event->getNom()];
+            $event = $eventSpecies->getEvent();
+            $eventName = Event::DISPLAY_LABELS[$event->getName()];
             $StadeBbch = $event->getStadeBbch();
 
             if (!in_array($eventName, array_keys($this->periods))) {
                 $loopStadeBbch[] = $StadeBbch;
                 $this->periods[$eventName] = [
-                    'begin' => $eventSpecies->getDateDebut(),
-                    'end' => $eventSpecies->getDateFin(),
+                    'begin' => $eventSpecies->getStartDate(),
+                    'end' => $eventSpecies->getEndDate(),
                 ];
             }
             if (!in_array($StadeBbch, $loopStadeBbch)) {
                 $loopStadeBbch[] = $StadeBbch;
                 // the earliest begining date
-                if ($eventSpecies->getDateDebut() < $this->periods[$eventName]['begin']) {
-                    $this->periods[$eventName]['begin'] = $eventSpecies->getDateDebut();
+                if ($eventSpecies->getStartDate() < $this->periods[$eventName]['begin']) {
+                    $this->periods[$eventName]['begin'] = $eventSpecies->getStartDate();
                 }
                 // the latest ending date
-                if ($eventSpecies->getDateFin() > $this->periods[$eventName]['end']) {
-                    $this->periods[$eventName]['end'] = $eventSpecies->getDateFin();
+                if ($eventSpecies->getEndDate() > $this->periods[$eventName]['end']) {
+                    $this->periods[$eventName]['end'] = $eventSpecies->getEndDate();
                 }
             }
         }
@@ -142,11 +142,11 @@ class StationSpeciesDisplayData
         return $this->periods;
     }
 
-    private function filterStationSpeciesObservationsByIndividuals(Individu $individual)
+    private function filterStationSpeciesObservationsByIndividuals(Individual $individual)
     {
         $stationSpeciesObservationsByIndividuals = [];
         foreach ($this->stationSpeciesObservations as $observation) {
-            $thisIndividual = $observation->getIndividu();
+            $thisIndividual = $observation->getIndividual();
             if ($thisIndividual === $individual) {
                 $stationSpeciesObservationsByIndividuals[] = $observation;
             }
@@ -216,7 +216,7 @@ class StationSpeciesDisplayData
 
     public function getLastObsStade(): string
     {
-        return Evenement::DISPLAY_LABELS[$this->lastObservation->getEvenement()->getNom()];
+        return Event::DISPLAY_LABELS[$this->lastObservation->getEvent()->getName()];
     }
 
     private function sortObsByDAte(Observation $obsA, Observation $obsB)

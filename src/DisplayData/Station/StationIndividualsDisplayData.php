@@ -2,7 +2,7 @@
 
 namespace App\DisplayData\Station;
 
-use App\Entity\Individu;
+use App\Entity\Individual;
 use App\Entity\Observation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -14,14 +14,14 @@ class StationIndividualsDisplayData
     private $allObsYears;
     private $stationObservationsByYearDisplayData;
 
-    public function __construct(Individu $individual, ManagerRegistry $manager, array $individualObservations = null)
+    public function __construct(Individual $individual, ManagerRegistry $manager, array $individualObservations = null)
     {
         $this->manager = $manager;
         $this->individual = $individual;
 
         if (null === $individualObservations) {
             $this->individualObservations = $this->manager->getRepository(Observation::class)
-                ->findBy(['individu' => $this->individual], ['obs_date' => 'DESC'])
+                ->findBy(['individual' => $this->individual], ['obs_date' => 'DESC'])
             ;
         } else {
             $this->individualObservations = $individualObservations;
@@ -39,7 +39,7 @@ class StationIndividualsDisplayData
         return $this->individualObservations;
     }
 
-    public function getIndividual(): Individu
+    public function getIndividual(): Individual
     {
         return $this->individual;
     }

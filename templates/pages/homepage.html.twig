@@ -65,10 +65,10 @@
 		{% endif %}
 	</div>
 	<div class="content home">
-		<div class="now especes" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
+		<div class="now species" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
 			<div class="content-block-infos horiz">
 				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
-					'target': 'especes',
+					'target': 'species',
 					'after': {},
 					'borders': 'no-border'
 				}} %}
@@ -85,15 +85,15 @@
 			</div>
 			<ul class="ods-list-unstyled">
 				{% for obs in lastObservations %}
-					{% set obsIndividu = obs.getIndividu() %}
-					{% set obsEspece = obsIndividu.getEspece().getNomVernaculaire() %}
-					{% set obsEvenement = obs.getEvenement() %}
+					{% set obsIndividual = obs.getIndividual() %}
+					{% set obsSpecies = obsIndividual.getSpecies().getVernacularName() %}
+					{% set obsEvent = obs.getEvent() %}
 					<li>
-						<a href="{{ path('stations_show', {'slug': obsIndividu.getStation().getSlug()}) }}#{{ obsEspece|slugify }}" class="recent-obs-item">
-							<img src="{{ obs.getPhoto() }}" alt="{{ obsEspece|capitalize }} - {{ obs.getUser().getName()|upper }} - {{ obs.getDateObs()|date('d/m/Y') }}" width="80">
+						<a href="{{ path('stations_show', {'slug': obsIndividual.getStation().getSlug()}) }}#{{ obsSpecies|slugify }}" class="recent-obs-item">
+							<img src="{{ obs.getPicture() }}" alt="{{ obsSpecies|capitalize }} - {{ obs.getUser().getName()|upper }} - {{ obs.getDateObs()|date('d/m/Y') }}" width="80">
 							<div class="recent-obs-item-content first">
-								<div class="recent-obs-title">{{ obsEspece|capitalize }}</div>
-								<div class="recent-obs-item-stade">{{ obsEvenement.getNom()|capitalize }} {{ obsEvenement.getStadeBbch() != null ? "stade #{obsEvenement.getStadeBbch()}" }}</div>
+								<div class="recent-obs-title">{{ obsSpecies|capitalize }}</div>
+								<div class="recent-obs-item-stade">{{ obsEvent.getName()|capitalize }} {{ obsEvent.getStadeBbch() != null ? "stade #{obsEvent.getStadeBbch()}" }}</div>
 							</div>
 						</a>
 					</li>
@@ -110,7 +110,7 @@
 			</div>
 			<div class="mosaic">
 				{% for randObs in randomObservations %}
-					<div style="background-image: url('{{ randObs.photo }}');"></div>
+					<div style="background-image: url('{{ randObs.picture }}');"></div>
 				{% endfor %}
 			</div>
 		</div>

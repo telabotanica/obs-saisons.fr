@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Espece;
+use App\Entity\EventSpecies;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method Espece|null find($id, $lockMode = null, $lockVersion = null)
- * @method Espece|null findOneBy(array $criteria, array $orderBy = null)
- * @method Espece[]    findAll()
- * @method Espece[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method EventSpecies|null find($id, $lockMode = null, $lockVersion = null)
+ * @method EventSpecies|null findOneBy(array $criteria, array $orderBy = null)
+ * @method EventSpecies[]    findAll()
+ * @method EventSpecies[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EspeceRepository extends ServiceEntityRepository
+class EventSpeciesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Espece::class);
+        parent::__construct($registry, EventSpecies::class);
     }
 
     // /**
-    //  * @return Espece[] Returns an array of Espece objects
+    //  * @return EventSpecies[] Returns an array of EventSpecies objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class EspeceRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Espece
+    public function findOneBySomeField($value): ?EventSpecies
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.exampleField = :val')

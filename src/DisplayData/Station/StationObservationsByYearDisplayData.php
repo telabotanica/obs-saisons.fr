@@ -2,7 +2,7 @@
 
 namespace App\DisplayData\Station;
 
-use App\Entity\Individu;
+use App\Entity\Individual;
 use App\Entity\Observation;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -13,7 +13,7 @@ class StationObservationsByYearDisplayData
     private $year;
     private $thisYearObservations;
 
-    public function __construct(Individu $individual, string $year, ManagerRegistry $manager, array $thisYearObservations = null)
+    public function __construct(Individual $individual, string $year, ManagerRegistry $manager, array $thisYearObservations = null)
     {
         $this->manager = $manager;
         $this->individual = $individual;
@@ -51,7 +51,7 @@ class StationObservationsByYearDisplayData
         return $this->year;
     }
 
-    public function getIndividual(): Individu
+    public function getIndividual(): Individual
     {
         return $this->individual;
     }

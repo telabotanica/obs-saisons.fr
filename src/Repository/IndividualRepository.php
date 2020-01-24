@@ -2,32 +2,32 @@
 
 namespace App\Repository;
 
-use App\Entity\Individu;
+use App\Entity\Individual;
 use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method Individu|null find($id, $lockMode = null, $lockVersion = null)
- * @method Individu|null findOneBy(array $criteria, array $orderBy = null)
- * @method Individu[]    findAll()
- * @method Individu[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Individual|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Individual|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Individual[]    findAll()
+ * @method Individual[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class IndividuRepository extends ServiceEntityRepository
+class IndividualRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Individu::class);
+        parent::__construct($registry, Individual::class);
     }
 
-    public function findEspecesIndividusForStation(Station $station): array
+    public function findSpeciesIndividualsForStation(Station $station): array
     {
         return $this->createQueryBuilder('i')
-            ->leftJoin('i.espece', 'espece')
+            ->leftJoin('i.species', 'species')
             ->leftJoin('i.station', 'station')
             ->where('station = :station')
             ->setParameter('station', $station)
-            ->orderBy('i.espece', 'ASC')
+            ->orderBy('i.species', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -35,7 +35,7 @@ class IndividuRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Individu[] Returns an array of Individu objects
+    //  * @return Individual[] Returns an array of Individual objects
     //  */
     /*
     public function findByExampleField($value)
@@ -52,7 +52,7 @@ class IndividuRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Individu
+    public function findOneBySomeField($value): ?Individual
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.exampleField = :val')

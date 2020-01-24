@@ -1,9 +1,9 @@
 <?php
 
-namespace App\DisplayData\Espece;
+namespace App\DisplayData\Species;
 
-use App\Entity\Espece;
-use App\Entity\TypeEspece;
+use App\Entity\Species;
+use App\Entity\TypeSpecies;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 class SpeciesDisplayData
@@ -29,7 +29,7 @@ class SpeciesDisplayData
 
     private function setAllSpecies(): self
     {
-        $this->allSpecies = $this->manager->getRepository(Espece::class)
+        $this->allSpecies = $this->manager->getRepository(Species::class)
             ->findAll()
         ;
 
@@ -54,7 +54,7 @@ class SpeciesDisplayData
         return $this->types;
     }
 
-    public function filterSpeciesByType(TypeEspece $type): array
+    public function filterSpeciesByType(TypeSpecies $type): array
     {
         $speciesByType = [];
         foreach ($this->allSpecies as $species) {

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Individu;
+use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,15 +24,15 @@ class ObservationRepository extends ServiceEntityRepository
 
     public function findAllObsInStation(Station $station): ArrayCollection
     {
-        $individusInStation = $this->getEntityManager()
-            ->getRepository(Individu::class)
+        $individualsInStation = $this->getEntityManager()
+            ->getRepository(Individual::class)
             ->findBy(['station' => $station]);
 
         return new ArrayCollection(
             $this->createQueryBuilder('o')
-                ->where('o.individu IN (:individus)')
-                ->setParameter('individus', $individusInStation)
-                ->addOrderBy('o.individu', 'ASC')
+                ->where('o.individual IN (:individuals)')
+                ->setParameter('individuals', $individualsInStation)
+                ->addOrderBy('o.individual', 'ASC')
                 ->addOrderBy('o.obs_date', 'DESC')
                 ->getQuery()
                 ->getResult()
@@ -42,7 +42,7 @@ class ObservationRepository extends ServiceEntityRepository
     public function findLastObsWithImages(int $limit): array
     {
         return $this->createQueryBuilder('o')
-            ->where('o.photo IS NOT NULL')
+            ->where('o.picture IS NOT NULL')
             ->orderBy('o.obs_date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
@@ -53,7 +53,7 @@ class ObservationRepository extends ServiceEntityRepository
     public function findRandomObsWithImages(int $limit): array
     {
         return $this->createQueryBuilder('o')
-            ->where('o.photo IS NOT NULL')
+            ->where('o.picture IS NOT NULL')
             ->orderBy('RAND()')
             ->setMaxResults($limit)
             ->getQuery()

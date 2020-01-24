@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\IndividuRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\IndividualRepository")
  */
-class Individu
+class Individual
 {
     /**
      * @ORM\Id()
@@ -19,13 +19,13 @@ class Individu
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom;
+    private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Espece")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Species")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $espece;
+    private $species;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Station")
@@ -43,26 +43,26 @@ class Individu
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getEspece(): ?Espece
+    public function getSpecies(): ?Species
     {
-        return $this->espece;
+        return $this->species;
     }
 
-    public function setEspece(?Espece $espece): self
+    public function setSpecies(?Species $species): self
     {
-        $this->espece = $espece;
+        $this->species = $species;
 
         return $this;
     }

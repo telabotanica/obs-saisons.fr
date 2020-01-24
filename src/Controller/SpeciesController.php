@@ -2,23 +2,25 @@
 
 namespace App\Controller;
 
-use App\DisplayData\Espece\SpeciesDisplayData;
+use App\DisplayData\Species\SpeciesDisplayData;
+use App\Entity\Species;
+use App\Entity\TypeSpecies;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class EspeceController extends PagesController
+class SpeciesController extends PagesController
 {
     /* ************************************************ *
-     * Espece
+     * Species
      * ************************************************ */
 
     /**
-     * @Route("/especes", name="especes")
+     * @Route("/especes", name="species")
      */
-    public function especes(Request $request): Response
+    public function species(Request $request): Response
     {
-        return $this->render('pages/especes.html.twig', [
+        return $this->render('pages/species.html.twig', [
             'accordions' => $this->setAccordions(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
@@ -41,19 +43,19 @@ class EspeceController extends PagesController
                     'include_uri' => 'components/list-cards.html.twig',
                     'include_object_name' => 'list_card',
                     'data' => [
-                        'image' => $species->getPhoto(),
+                        'image' => $species->getPicture(),
                         'heading' => [
                             'is_link' => true,
-                            'title' => $species->getNomVernaculaire(),
-                            'text' => $species->getNomScientifique(),
+                            'title' => $species->getVernacularName(),
+                            'text' => $species->getScientificName(),
                         ],
                     ],
                 ];
             }
 
             $accordions[] = [
-                'tab_reference' => $type->getReigne(),
-                'title' => $type->getNom(),
+                'tab_reference' => $type->getReign(),
+                'title' => TypeSpecies::PLURAL_TYPES[$type->getName()],
                 'contents' => $contents,
             ];
         }

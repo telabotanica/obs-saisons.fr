@@ -2,8 +2,8 @@
 
 namespace App\DisplayData\Station;
 
-use App\Entity\Espece;
-use App\Entity\Individu;
+use App\Entity\Species;
+use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -22,8 +22,8 @@ class StationDisplayData
     {
         $this->station = $station;
         $this->manager = $manager;
-        $this->stationAllSpeciesIndividuals = $manager->getRepository(Individu::class)
-            ->findEspecesIndividusForStation($station)
+        $this->stationAllSpeciesIndividuals = $manager->getRepository(Individual::class)
+            ->findSpeciesIndividualsForStation($station)
         ;
         $this->stationAllObservations = $manager->getRepository(Observation::class)
             ->findAllObsInStation($station)
@@ -44,7 +44,7 @@ class StationDisplayData
     private function setStationAllSpecies(): self
     {
         foreach ($this->stationAllSpeciesIndividuals as $individual) {
-            $species = $individual->getEspece();
+            $species = $individual->getSpecies();
             if (!in_array($species, $this->stationAllSpecies)) {
                 $this->stationAllSpecies[] = $species;
             }
@@ -58,11 +58,11 @@ class StationDisplayData
         return $this->stationAllSpecies;
     }
 
-    public function filterStationIndividualDataBySpecies(Espece $species): array
+    public function filterStationIndividualDataBySpecies(Species $species): array
     {
         $stationIndividualsDataBySpecies = [];
         foreach ($this->stationAllSpeciesIndividuals as $individual) {
-            $thisSpecies = $individual->getEspece();
+            $thisSpecies = $individual->getSpecies();
             if ($thisSpecies === $species) {
                 $stationIndividualsDataBySpecies[] = $individual;
             }
@@ -71,11 +71,11 @@ class StationDisplayData
         return $stationIndividualsDataBySpecies;
     }
 
-    public function filterStationObservationsBySpecies(Espece $species): array
+    public function filterStationObservationsBySpecies(Species $species): array
     {
         $stationObservationsBySpecies = [];
         foreach ($this->stationAllObservations as $observation) {
-            $thisSpecies = $observation->getIndividu()->getEspece();
+            $thisSpecies = $observation->getIndividual()->getSpecies();
             if ($thisSpecies === $species) {
                 $stationObservationsBySpecies[] = $observation;
             }
@@ -105,11 +105,11 @@ class StationDisplayData
         return $this->stationAllSpeciesDisplayData;
     }
 
-    private function getStationObsWithPhotos(): array
+    private function getStationObsWithPictures(): array
     {
         $stationObs = [];
         foreach ($this->stationAllObservations as $observation) {
-            if (!empty($observation->getPhoto())) {
+            if (!empty($observation->getPicture())) {
                 $stationObs[] = $observation;
             }
         }
@@ -125,8 +125,8 @@ class StationDisplayData
 
     private function setStationObsImages(): self
     {
-        foreach ($this->getStationObsWithPhotos() as $obs) {
-            $this->stationObsImages[] = $obs->getPhoto();
+        foreach ($this->getStationObsWithPictures() as $obs) {
+            $this->stationObsImages[] = $obs->getPicture();
         }
 
         return $this;

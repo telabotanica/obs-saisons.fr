@@ -1,0 +1,26 @@
+[
+	{
+		"name":"arbres",
+		"reign":"plantes"
+	},
+	{
+		"name":"herbacées",
+		"reign":"plantes"
+	},
+	{
+		"name":"oiseaux",
+		"reign":"animaux"
+	},
+	{
+		"name":"insectes",
+		"reign":"animaux"
+	},
+	{
+		"name":"Amphibiens",
+		"reign":"animaux"
+	},
+	{
+		"name":"reptiles",
+		"reign":"animaux"
+	}
+]

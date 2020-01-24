@@ -8,7 +8,7 @@
 #}
 {% set periods = calendar.getPeriods() %}
 {% set stades = periods|keys %}
-{% set stades_css_classes = constant('App\\Entity\\Evenement::CSS_CLASSES') %}
+{% set stades_css_classes = constant('App\\Entity\\Event::CSS_CLASSES') %}
 {% set individualsData = calendar.getAllIndividualsObservationsDisplayData()  %}
 {% set years = calendar.getAllObsYears() %}
 {% set first_year = max(years|default(["now"|date("Y")])) %}
@@ -45,7 +45,7 @@
         {% for individualData in individualsData %}
 
             <div class="individu-header">
-                <h5 class="individu-name">{{ individualData.getIndividual().getNom() }}</h5>
+                <h5 class="individu-name">{{ individualData.getIndividual().getName() }}</h5>
                 <a href="#" class="table-action open" data-open="indiv">
                     <div>Saisir une observation</div>
                 </a>

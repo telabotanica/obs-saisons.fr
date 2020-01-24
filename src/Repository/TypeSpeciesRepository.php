@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\TypeEspece;
+use App\Entity\TypeSpecies;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method TypeEspece|null find($id, $lockMode = null, $lockVersion = null)
- * @method TypeEspece|null findOneBy(array $criteria, array $orderBy = null)
- * @method TypeEspece[]    findAll()
- * @method TypeEspece[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TypeSpecies|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TypeSpecies|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TypeSpecies[]    findAll()
+ * @method TypeSpecies[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TypeEspeceRepository extends ServiceEntityRepository
+class TypeSpeciesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TypeEspece::class);
+        parent::__construct($registry, TypeSpecies::class);
     }
 
     // /**
-    //  * @return TypeEspece[] Returns an array of TypeEspece objects
+    //  * @return TypeSpecies[] Returns an array of TypeSpecies objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TypeEspeceRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?TypeEspece
+    public function findOneBySomeField($value): ?TypeSpecies
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')
