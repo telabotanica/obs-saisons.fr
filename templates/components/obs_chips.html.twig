@@ -11,7 +11,7 @@
 {% for obs in observations %}
     {% set column_start = (obs.getDateObs()|date("n")) + 2 %}
     {% set row_start = 0 %}
-    {% set obsStade = STADES[obs.getEvent().getNom()] %}
+    {% set obsStade = STADES[obs.getEvent().getName()] %}
     {% for stade_label in stades %}
         {% if stade_label == obsStade  %}
             {% set row_start = loop.index %}
