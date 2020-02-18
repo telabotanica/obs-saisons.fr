@@ -18,7 +18,7 @@ class BreadcrumbsGenerator
         'relais' => 'Relais',
     ];
     const OTHER_BREADCRUMBS = [
-        'stations' => 'Stations d\'observation',
+        'stations' => 'Stations d’observation',
         'station-page' => 'Page de la station',
     ];
 

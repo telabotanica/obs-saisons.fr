@@ -80,7 +80,7 @@ class StationsController extends PagesController
         array_unshift($cards, [
             'add' => [
                 'icon_name' => 'add-pointer',
-                'text' => 'Votre station n\'existe pas encore ?',
+                'text' => 'Votre station n’existe pas encore ?',
                 'button' => 'Créer une station',
             ],
         ]);

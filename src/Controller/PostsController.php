@@ -53,7 +53,7 @@ class PostsController extends PagesController
         $articleRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('article');
         $article = $articleRepository->findBySlug($slug);
         if (null === $article) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas');
+            throw new NotFoundHttpException('La page demandée n’existe pas');
         }
 
         $nextPreviousArticles = $articleRepository->findNextPrevious($article->getId());
@@ -111,7 +111,7 @@ class PostsController extends PagesController
         $eventRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('event');
         $event = $eventRepository->findBySlug($slug);
         if (null === $event) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas');
+            throw new NotFoundHttpException('La page demandée n’existe pas');
         }
 
         $nextPreviousEvents = $eventRepository->findNextPrevious($event->getId());

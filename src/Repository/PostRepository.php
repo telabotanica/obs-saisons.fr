@@ -75,17 +75,17 @@ class PostRepository extends ServiceEntityRepository
     public function findAllPaginatedPosts(int $page = 1, int $limit = 10): array
     {
         if (!is_int($page)) {
-            throw new InvalidArgumentException('La valeur de l\'argument $page est incorrecte (valeur : '.$page.').');
+            throw new InvalidArgumentException('La valeur de l’argument $page est incorrecte (valeur : '.$page.').');
         }
         if (1 > $page) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas');
+            throw new NotFoundHttpException('La page demandée n’existe pas');
         }
         if (!is_int($limit) || 1 > $limit) {
-            throw new InvalidArgumentException('La valeur de l\'argument $limit est incorrecte (valeur : '.$limit.').');
+            throw new InvalidArgumentException('La valeur de l’argument $limit est incorrecte (valeur : '.$limit.').');
         }
         $firstResult = ($page - 1) * $limit;
         if (!isset($this->posts[$firstResult]) && 1 != $page) {
-            throw new NotFoundHttpException('La page demandée n\'existe pas.'); // page 404, sauf pour la première page
+            throw new NotFoundHttpException('La page demandée n’existe pas.'); // page 404, sauf pour la première page
         }
 
         return array_slice($this->posts, $firstResult, $limit);
