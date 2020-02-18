@@ -11,7 +11,7 @@ class BreadcrumbsGenerator
         'apropos' => 'À propos',
         'actualites' => 'Actualités',
         'evenements' => 'Évènements',
-        'species' => 'Espèces à Observer',
+        'especes' => 'Espèces à Observer',
         'participer' => 'Participer',
         'resultats' => 'Résultats',
         'outils-ressources' => 'Outils & ressources',

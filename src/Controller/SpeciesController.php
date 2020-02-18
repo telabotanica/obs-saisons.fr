@@ -16,7 +16,7 @@ class SpeciesController extends PagesController
      * ************************************************ */
 
     /**
-     * @Route("/especes", name="species")
+     * @Route("/especes", name="especes")
      */
     public function species(Request $request): Response
     {
