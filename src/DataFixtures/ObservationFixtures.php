@@ -15,7 +15,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
         $faker = Faker\Factory::create('fr_FR');
         for ($i = 0; $i < 750; ++$i) {
             $observation = new Observation();
-            $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(0, 74)));
+            $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(0, 75)));
             $observation->setEvent($this->getReference('event-'.$faker->numberBetween(1, 7)));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
@@ -28,7 +28,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
 
         for ($c = 750; $c < 1000; ++$c) {
             $observation = new Observation();
-            $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(75, 99)));
+            $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(76, 99)));
             $observation->setEvent($this->getReference('event-8'));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
