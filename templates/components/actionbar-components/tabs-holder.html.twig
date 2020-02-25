@@ -11,7 +11,7 @@
 #}
 
 {% if route in ['stations', 'observations'] %}
-    {% set tabs_holder = [{'title':"Toutes les #{route}"}, {'title':"Mes #{route}", 'reference': user_id}] %}
+    {% set tabs_holder = [{'title':"Toutes les #{route}"}, {'title':"Mes #{route}", 'reference': app.user.id|default('none')}] %}
 {% endif %}
 
 <div class="tabs-holder{{ route == 'stations' ? ' list' }}" data-active="{{ tabs_holder[0]['reference']|default('all') }}">

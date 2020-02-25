@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use App\DisplayData\Station\StationDisplayData;
+use App\Entity\Species;
+use App\Entity\Station;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,12 +21,71 @@ class StationsController extends PagesController
     /**
      * @Route("/participer/stations", name="stations")
      */
-    public function stations(Request $request)
+    public function stations(Request $request): Response
     {
+        $stationRepository = $this->getDoctrine()->getRepository(Station::class);
+        $stations = $stationRepository->findAll();
+        // setting cards data
+        $cards = $this->setStationCards($stations);
+
         return $this->render('pages/stations.html.twig', [
+            'cards' => $cards,
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
         ]);
+    }
+
+    private function setStationCards(array $stations): array
+    {
+        $cards = [];
+        $manager = $this->getDoctrine();
+        foreach ($stations as $station) {
+            $stationDisplayData = new StationDisplayData($station, $manager);
+            $header = ['image' => $station->getHeaderImage()];
+            if (!$station->getIsPublic()) {
+                $header['icon_name'] = 'private';
+            }
+            $body = [
+                'heading' => $station->getName(),
+                'rows' => [
+                    [
+                        'icon_name' => 'pointer',
+                        'text' => $station->getLocality(),
+                    ],
+                    [
+                        'icon_name' => 'leaf',
+                        'text' => $station->getHabitat(),
+                    ],
+                ],
+            ];
+            $footer = [
+                [
+                    'counter' => [
+                        'icon' => 'person-icon',
+                        'count' => $stationDisplayData->getCountStationContributors(),
+                    ],
+                ],
+                [
+                    'avatars' => $stationDisplayData->getStationObsImages(),
+                ],
+            ];
+            $cards[] = [
+                'tab_reference' => $station->getUser()->getId(),
+                'card_link' => $station->getSlug(),
+                'header' => $header,
+                'body' => $body,
+                'footer' => $footer,
+            ];
+        }
+        array_unshift($cards, [
+            'add' => [
+                'icon_name' => 'add-pointer',
+                'text' => 'Votre station n’existe pas encore ?',
+                'button' => 'Créer une station',
+            ],
+        ]);
+
+        return $cards;
     }
 
     /* ************************************************ *
@@ -30,24 +93,70 @@ class StationsController extends PagesController
      * ************************************************ */
 
     /**
-     * @Route("/participer/stations/station-page", name="station-page")
+     * @Route("/participer/stations/{slug}", name="stations_show")
      */
-    public function stationExp(Request $request)
+    public function stationPage(Request $request, string $slug): Response
     {
+        $manager = $this->getDoctrine();
+        $stationRepository = $this->getDoctrine()->getRepository(Station::class);
+        $station = $stationRepository->findOneBy(['slug' => $slug]);
+        $stationDisplayData = (new StationDisplayData($station, $manager))->setStationAllSpeciesDisplayData();
+
+        $activePageBreadCrumb = [
+            'slug' => $slug,
+            'title' => $station->getName(),
+        ];
+
         return $this->render('pages/station-page.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
+            'list_cards' => $this->setListCards($stationDisplayData->getStationAllSpeciesDisplayData()),
+            'station' => $station,
+            'stationData' => $stationDisplayData,
+            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'route' => 'observations',
         ]);
     }
 
-    /**
-     * @Route("/participer/stations/{slug}", name="station-page_{slug}")
-     */
-    public function stationPage(Request $request)
+    public function setListCards(array $stationAllSpeciesDisplayData): array
     {
-        return $this->render('pages/station-page.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
-        ]);
+        $list_cards = [];
+        foreach ($stationAllSpeciesDisplayData as $stationSpeciesDisplayData) {
+            /**
+             * @var Species $species
+             */
+            $species = $stationSpeciesDisplayData->getSpecies();
+            $list_card = [
+                'image' => $species->getPicture(),
+                'heading' => [
+                    'title' => $species->getVernacularName(),
+                    'text' => $species->getScientificName(),
+                ],
+            ];
+
+            if (0 < $stationSpeciesDisplayData->getIndividualsCount()) {
+                $list_card['calendar'] = $stationSpeciesDisplayData;
+
+                $individuals_count = $stationSpeciesDisplayData->getIndividualsCount();
+                $display_s_individuals = 's';
+                $display_s_obs = 's';
+                if (1 === $individuals_count) {
+                    $display_s_individuals = '';
+                }
+                if (1 === $stationSpeciesDisplayData->getObsCount()) {
+                    $display_s_obs = '';
+                }
+                $list_card['details'] = [
+                    'grey_text' => '<span class=indiv-count>'.$individuals_count.'</span> individu'.$display_s_individuals.' • <span class=obs-count>'.$stationSpeciesDisplayData->getObsCount().'</span> observation'.$display_s_obs,
+                ];
+                if (!empty($stationSpeciesDisplayData->getLastObsDate()) && !empty($stationSpeciesDisplayData->getLastObsStade())) {
+                    $list_card['details']['infos'] = [
+                        'bolder' => $stationSpeciesDisplayData->getLastObsStade(),
+                        'lighter' => 'le '.date_format($stationSpeciesDisplayData->getLastObsDate(), 'j/m/Y'),
+                    ];
+                }
+            }
+            $list_cards[] = $list_card;
+        }
+
+        return $list_cards;
     }
 }

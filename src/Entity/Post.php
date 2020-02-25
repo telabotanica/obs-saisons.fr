@@ -47,7 +47,7 @@ class Post
     private $cover;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      */
     private $author;
 
@@ -210,7 +210,7 @@ class Post
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
@@ -218,7 +218,7 @@ class Post
     /**
      * @return $this
      */
-    public function setAuthor(string $author): self
+    public function setAuthor(User $author): self
     {
         $this->author = $author;
 

@@ -1,115 +1,8 @@
-{# exemple stations #}
-{% set stations = [
-	{
-		'status': 'public',
-		'creator_id': 356,
-		'slug': 'station-page',
-		'header_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d65881a4d28e05d5d20_lecoq.jpg',
-		'station_name': 'Jardin Lecoq',
-		'locality': 'Clermont-Ferrand (63)',
-		'location_type': 'Ville',
-		'members_count': 12,
-		'species_images': [
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg'
-		]
-	},
-	{
-		'status': 'private',
-		'creator_id': 987,
-		'slug': 'station-page',
-		'header_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6418ef415f23c8a071_lys.jpg',
-		'station_name': 'Près du parc de l\'étang, long de la Lys',
-		'locality': 'Armentières (59)',
-		'location_type': 'Ville',
-		'members_count': 2,
-		'species_images': [
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg'
-		]
-	},
-	{
-		'status': 'private',
-		'creator_id': 356,
-		'slug': 'station-page',
-		'header_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6449753670304b79fa_montjuzet.jpg',
-		'station_name': 'Parc Montjuzet',
-		'locality': 'Clermont-Ferrand (63)',
-		'location_type': 'Ville',
-		'members_count': 4,
-		'species_images': [
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg'
-		]
-	},
-	{
-		'status': 'public',
-		'creator_id': 356,
-		'slug': 'station-page',
-		'header_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6439b40365bea3de53_gergo.jpg',
-		'station_name': 'Plateau de Gergovie',
-		'locality': 'Clermont-Ferrand (63)',
-		'location_type': 'Campagne',
-		'members_count': 8,
-		'species_images': [
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg'
-		]
-	},
-	{
-		'status': 'public',
-		'creator_id': 45,
-		'slug': 'station-page',
-		'header_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d6418ef419fc9c8a074_chanturgue.jpg',
-		'station_name': 'Plateau de Chanturgue',
-		'locality': 'Clermont-Ferrand (63)',
-		'location_type': 'Campagne',
-		'members_count': 1,
-	},
-	{
-		'status': 'public',
-		'creator_id': 875,
-		'slug': 'station-page',
-		'header_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44e0439b403141ba3e01a_etang.jpg',
-		'station_name': 'Parc de l\'étang',
-		'locality': 'Armentières (59)',
-		'location_type': 'Ville',
-		'members_count': 1,
-		'species_images': [
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-			'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg'
-		]
-	}
-] %}
-{# end exemple stations #}
-{# exemple user_id #}
- {% set user_id = 356 %}
-{# end exemple user_id #}
-
-{#********************************************************************************************************************#}
 {% extends 'base.html.twig' %}
 
 {% set headers = {
 	'stations': {
-		'title': 'Stations d\'observation',
+		'title': 'Stations d’observation',
 		'subtitle': 'Les <strong>stations d’observation</strong> sont les zones où se trouvent les plantes ou animaux que vous souhaitez observer. <br>Vous pouvez rejoindre une station existante ou en créer une nouvelle.'
 	}
 } %}
@@ -132,41 +25,6 @@
 		}
 	} %}
 
-	{# adds default card as add, first card, with the default values #}
-	{% set cards = [{
-		'add': {
-			'icon_name': 'add-pointer',
-			'text': 'Votre station n\'existe pas encore ?',
-			'button': 'Créer une station'
-		}
-	}] %}
-	{# sets cards #}
-	{% for station in stations %}
-		{% set header = {'image': station.header_image} %}
-		{% if station.status == 'private' %}
-			{% set header = header|merge({'icon_name': 'private'}) %}
-		{% endif %}
-
-		{% set body = {
-			'heading': station.station_name,
-			'rows': [
-				{'icon_name': 'pointer', 'text': station.locality},
-				{'icon_name': 'leaf', 'text': station.location_type}
-			]
-		} %}
-
-		{% set footer = [{
-			'counter' : {'icon': 'person-icon', 'count': station.members_count|default(1)}
-		}] %}
-		{% if station.species_images is defined %}
-			{% set footer = footer|merge([{
-				'avatars' : station.species_images
-			}]) %}
-		{% endif %}
-
-		{% set cards = cards|merge([{'tab_reference': station.creator_id, 'card_link': station.slug,'header': header, 'body': body, 'footer': footer}]) %}
-	{% endfor %}
-	{# displays cards #}
 	{% include 'components/cards.html.twig' %}
 
 	{% include 'components/help-block.html.twig' with {

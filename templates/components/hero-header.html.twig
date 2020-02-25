@@ -1,28 +1,17 @@
 {#
-    #: optionnal,
-    *: required,
-    |: default
+    *: required
 
-    header*: object
-        station_status*: string,
-		last_obs_image#: string
-		obs_count#: int
-		station_name*: string
-		station_description#: string
-		coordinates#: object
-			latitude*: int
-			longitude*: int
-		creator_avatar#: string
-		creator_name#: string
+    App\Entity\Station station*
+    App\DisplayData\Station\StationDisplayData stationData*
 #}
-{% set is_public = (header.station_status == 'publique') %}
+{% set isPublic = station.getIsPublic() %}
+{% set images = stationData.getStationObsImages() %}
 <div class="hero-header">
     <div class="hero-header-media-part map">
-
-        {% if is_public and header.last_obs_image is defined %}
-            <div class="contributions-mini-block" style="background-image: url({{ header.last_obs_image }});">
-                {% if header.obs_images_count is defined and header.obs_images_count > 1 %}
-                    <div class="contributions-number">+ {{ header.obs_images_count }}</div>
+        {% if isPublic and images|first is not empty %}
+            <div class="contributions-mini-block" style="background-image: url({{ images|first }});">
+                {% if images|length > 1 %}
+                    <div class="contributions-number">+ {{ images|length }}</div>
                 {% endif %}
             </div>
         {% endif %}
@@ -30,24 +19,24 @@
     </div>
 
     <div class="hero-header-content">
-        <h3 class="hero-header-title"><span class="lighter">{{ header.station_name }} &nbsp;•</span> &nbsp;Observations</h3>
-        <p class="hero-header-subtitle">{{ header.station_description|default }}</p>
+        <h3 class="hero-header-title"><span class="lighter">{{ station.getName() }} &nbsp;•</span> &nbsp;Observations</h3>
+        <p class="hero-header-subtitle">{{ station.getDescription()|default }}</p>
 
-            {% if is_public %}
-                <div class="hero-header-detail map">Lat. : {{ header.coordinates.latitude }} &nbsp;• &nbsp;Long. : {{ header.coordinates.longitude }}</div>
+            {% if isPublic %}
+                <div class="hero-header-detail map">Lat. : {{ station.getLatitude() }} &nbsp;• &nbsp;Long. : {{ station.getLongitude() }}</div>
             {% endif %}
 
     </div>
 
-    {% if is_public %}
+    {% if isPublic %}
         <div class="member-label-block">
-            <div  class="member-avatar" style="background-image: url({{ header.creator_avatar|default(asset('media/layout/icons/member_default.png')) }})"></div>
+            <div  class="member-avatar" style="background-image: url({{ station.getUser().getAvatar()|default(asset('media/layout/icons/member_default.png')) }})"></div>
             <div class="member-label-block-content">
                 <div class="member-label-block-title">Créée par</div>
-                <a href="#" class="member-label-block-link">{{ header.creator_name }}</a>
+                <a href="#" class="member-label-block-link">{{ station.getUser().getDisplayName() }}</a>
             </div>
         </div>
     {% endif %}
 
-    <div class="privacy-status">Station {{ header.station_status }}</div>
+    <div class="privacy-status">Station {{ isPublic ? 'publique' : 'privée' }}</div>
 </div>

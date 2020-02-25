@@ -1,295 +1,59 @@
-{# exemple station_species #}
-{% set station = {
-	'infos': {
-		'station_status': 'publique',
-		'last_obs_image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce44d65881a4d28e05d5d20_lecoq.jpg',
-		'obs_images_count': 12,
-		'station_name': 'Jardin Lecoq',
-		'station_description': 'Le jardin emblématique de Clermont-Ferrand, des espèces intéressantes à y observer. Bienvenue aux contributeurs !',
-		'coordinates': {
-			'latitude': 45.7712,
-			'longitude': 3.0874
-		},
-		'creator_avatar': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4536c881a4d14015d740b_Capture%20d%E2%80%99e%CC%81cran%202019-05-21%20a%CC%80%2021.37.04.png',
-		'creator_name': 'Olivier Rodriguez',
-		'creator_id': 732
-	},
-	'species': [
-		{
-			'name': 'Abricotier',
-			'scientific_name': 'Prunus armeniaca',
-			'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4551b881a4d39495d7ebc_abricotier-1024x678.jpg',
-			'periods': {
-				'feuillaison' : ["0000-03-16","0000-05-26"],
-				'floraison' : ["0000-02-06","0000-06-25"],
-				'fructification' : ["0000-06-30","0000-09-01"]
-			},
-			'individuals': [
-				{
-					'name': 'Abricotiers de la sortie Est',
-					'observations':{
-						'2019': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b1baf268acc_small04.jpg',
-								'stade': 'Feuillaison - stade 15',
-								'date': '2019-03-26',
-								'author': 825
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254060b5f0b7dc6261cf5_ine-carriquiry-120230-unsplash.jpg',
-								'stade': 'Feuillaison - stade 11',
-								'date': '2019-05-22',
-								'author': 356
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-								'stade': 'Floraison - stade 65',
-								'date': '2019-04-14',
-								'author': 732
-							}
-						]
-					}
-				},
-				{
-					'name': 'Abricotiers de la sortie Nord',
-					'observations': {
-						'2019': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4551b881a4d39495d7ebc_abricotier-1024x678.jpg',
-								'stade': 'Feuillaison - stade 15',
-								'date': '2019-02-28',
-								'author': 356
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce45563497536c0094bb9ed_amandier.jpg',
-								'stade': 'Floraison - stade 61',
-								'date': '2019-04-16',
-								'author': 45
-							}
-						]
-					}
-				}
-			]
-		},
-		{
-			'name': 'Amandier',
-			'scientific_name': 'Prunus dulcis',
-			'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce45563497536c0094bb9ed_amandier.jpg',
-			'periods': {
-				'feuillaison' : ["0000-03-16","0000-04-26"],
-				'floraison' : ["0000-05-06","0000-07-25"],
-				'fructification' : ["0000-08-30","0000-10-01"],
-				'scenescence' : ["0000-10-07","0000-11-22"]
-			},
-			'individuals': [
-				{
-					'name': 'Amandier de la mère Michel',
-					'observations': {
-						'2019': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254060b5f0b7dc6261cf5_ine-carriquiry-120230-unsplash.jpg',
-								'stade': 'Feuillaison - stade 11',
-								'date': '2019-03-22',
-								'author': 356
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-								'stade': 'Floraison - stade 61',
-								'date': '2019-07-26',
-								'author': 952
-							}
-						],
-						'2018': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-								'stade': 'Scénescence - stade 95',
-								'date': '2018-09-18',
-								'author': 356
-							}
-						]
-					}
-				},
-				{
-					'name': 'Amandier de Mr Seguin',
-					'observations':{
-						'2018': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b1baf268acc_small04.jpg',
-								'stade': 'Feuillaison - stade 11',
-								'date': '2018-03-26',
-								'author': 356
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce254060b5f0b7dc6261cf5_ine-carriquiry-120230-unsplash.jpg',
-								'stade': 'Feuillaison - stade 11',
-								'date': '2018-05-22',
-								'author': 952
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-								'stade': 'Floraison - stade 65',
-								'date': '2018-04-14',
-								'author': 356
-							}
-						]
-					}
-				}
-			]
-		},
-		{
-			'name': 'Bouleau',
-			'scientific_name': 'Betula pendula',
-			'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce4559818ef412a0ac8dc66_bouleau.jpg',
-			'periods': {
-				'feuillaison' : ["0000-03-16","0000-04-26"],
-				'floraison' : ["0000-05-06","0000-07-25"],
-				'fructification' : ["0000-08-30","0000-10-01"],
-				'scenescence' : ["0000-10-07","0000-11-22"]
-			},
-			'individuals': [
-				{
-					'name': 'Bouleau de la CGT',
-					'observations': {
-						'2019': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg',
-								'stade': 'Floraison - stade 11',
-								'date': '2019-07-26',
-								'author': 65
-							},
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-								'stade': 'Scénescence - stade 95',
-								'date': '2019-10-09',
-								'author': 45
-							}
-						],
-						'2018': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-								'stade': 'Scénescence - stade 92',
-								'date': '2018-10-09',
-								'author': 356
-							}
-						],
-						'2016': [
-							{
-								'image': 'https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg',
-								'stade': 'Floraison - stade 56',
-								'date': '2016-7-09',
-								'author': 356
-							}
-						]
-					}
-				}
-			]
-		}
-	]
-} %}
-{# end exemple station_species #}
-{# exemple user_id #}
- {% set user_id = 356 %}
-{# end exemple user_id #}
-
-{#********************************************************************************************************************#}
 {% extends 'base.html.twig' %}
 
-{% set route = 'observations' %}
+{% set headers = {'header': {}} %}
 
 {% block top_content %}
-	{% include 'components/hero-header.html.twig' with {header: station.infos} %}
+	{% include 'components/hero-header.html.twig' %}
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
 
 {% block header_content %}{% endblock %}
-
 {% block main_content %}
+	{% if station.getIsPublic() %}
 
-	{# sets list-cards and calendar #}
-	{# (speculation about the form the data will take) #}
-	{% set list_cards = [] %}
-	{% for species in station.species %}
-		{% set list_card = {
-			'image': species.image,
-			'heading': {
-				'title': species.name,
-				'text': species.scientific_name
-			},
+		{# displays top actionbar with species count #}
+		{% set species = stationData.getStationAllSpecies() %}
+		{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
+		{% include 'components/actionbar.html.twig' with {
+			actionbar: {
+				'components': [
+					{
+						'name': 'side-block',
+						'data': {
+							'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
+						}
+					},
+					{'name': 'tabs-holder'},
+					{'name': 'squared-button'}
+				]
+			}
+		} %}
+		{# displays list-cards and calendar #}
+		{% for id, list_card in list_cards %}
+			{% include 'components/list-cards.html.twig' with { buttons: [] } %}
+
+			{% if list_card.calendar is defined %}
+				{% include 'components/calendar-tab.html.twig' with {calendar: list_card.calendar} %}
+			{% endif %}
+		{% endfor %}
+
+		{% include 'components/actionbar.html.twig' %}
+
+		{% include 'components/help-block.html.twig' with {
+			help: {
+				'text': "Cliquez sur l’icône <strong><img src=#{asset('media/layout/icons/help-circle.svg')} style=background-color\:#e4dfda;padding:5px ></strong> à droite de chaque espèce observée pour en afficher les indications d’observation.<br>‍<br>"
+			}
 		} %}
 
-		{% if species.individuals is defined %}
-			{% set individuals_count = species.individuals|length %}
-
-			{% set observations = species.individuals|column('observations')|first %}
-
-			{% set observations_count = 0 %}
-			{% for obs_year in observations %}
-				{% set observations_count = observations_count + obs_year|length %}
-			{% endfor %}
-
-			{% set last_obs_year = max(observations|keys) %}
-
-			{% set last_obs =  max(observations[last_obs_year]|column('date')) %}
-
-			{% set last_stade = '' %}
-			{% for obs in observations[last_obs_year] %}
-				{% if obs.date == last_obs %}
-					{% set last_stade = obs.stade|split(' - ')|first %}
-				{% endif %}
-			{% endfor %}
-
-			{% set list_card = list_card|merge({
-				'details': {
-					'grey_text': "<span class=indiv-count>#{individuals_count}</span> individus • <span class=obs-count>#{observations_count}</span> observations",
-					'infos': {
-						'bolder': last_stade,
-						'lighter': "le #{last_obs|date('d/m/Y')}"
-					}
-				},
-				'calendar': {'periods': species.periods, 'individuals': species.individuals}
-			}) %}
-		{% endif %}
-
-		{% set list_cards = list_cards|merge([list_card]) %}
-	{% endfor %}
-	{# displays top actionbar with species count #}
-	{% include 'components/actionbar.html.twig' with {
-		actionbar: {
-			'components': [
-				{
-					'name': 'side-block',
-					'data': {
-						'text': "#{list_cards|length} espèce#{list_cards|length !=1 ? 's'} observées"
-					}
-				},
-				{'name': 'tabs-holder'},
-				{'name': 'squared-button'}
-			]
-		}
-	} %}
-	{# displays list-cards and calendar #}
-	{% for id, list_card in list_cards %}
-		{% include 'components/list-cards.html.twig' with { buttons: [] } %}
-
-		{% if list_card.calendar is defined %}
-			{% include 'components/calendar-tab.html.twig' with {calendar: list_card.calendar} %}
-		{% endif %}
-	{% endfor %}
-
-	{% include 'components/actionbar.html.twig' %}
-
-	{% include 'components/help-block.html.twig' with {
-		help: {
-			'text': "Cliquez sur l’icône <strong><img src=#{asset('media/layout/icons/help-circle.svg')} style=background-color\:#e4dfda;padding:5px ></strong> à droite de chaque espèce observée pour en afficher les indications d’observation.<br>‍<br>"
-		}
-	} %}
-
+	{% endif %}
 {% endblock %}
 
 {% block bottom_content %}
-	{% include 'layout/overlay.html.twig' with {id: 'indiv'} %}
+	{% if station.getIsPublic() %}
+		{% include 'layout/overlay.html.twig' with {id: 'indiv'} %}
 
-	<a href="#" class="button bt-open-form">Saisir une observation</a>
+		<a href="#" class="button bt-open-form">Saisir une observation</a>
+	{% endif %}
 {% endblock %}
 

@@ -33,17 +33,15 @@
 					<div class="content page">
 						<div class="pages-container {{ page_container_classes|default }}">
 
-							{% if headers is not defined %}
-								{% set headers = {'header':{}} %}
+							{% if headers is defined %}
+								{% for header in headers %}
+									{% block header_content %}
+										{% include 'layout/header.html.twig' %}
+									{% endblock %}
+
+									{% block main_content %}{% endblock %}
+								{% endfor %}
 							{% endif %}
-							{% for header in headers %}
-								{% block header_content %}
-									{% include 'layout/header.html.twig' %}
-								{% endblock %}
-
-								{% block main_content %}{% endblock %}
-
-							{% endfor %}
 
 						</div>
 					</div>

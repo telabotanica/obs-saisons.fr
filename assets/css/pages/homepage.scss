@@ -403,13 +403,23 @@
 	@include align-items-center;
 	width: 100%;
 	max-width: 100%;
-	margin-bottom: 10px;
+	max-height: 80px;
+	min-height: 80px;
+	margin-bottom: 8px;
 	@include  gap(padding, "v");
 	border-top: 1px none #dbcec3;
 	background-color: $grey306092;
 	font-size: 14px;
 	font-weight: 700;
 	text-decoration: none;
+	overflow: hidden;
+
+	img {
+		color: $grey281146;
+		font-size: 11px;
+		font-weight: 300;
+		line-height: 10px;
+	}
 }
 
 .recent-obs-item-content {
@@ -444,8 +454,9 @@
 	overflow: hidden;
 
 	@include media(md) {
-		& .banner-number .mosaic img {
+		& .banner-number .mosaic div {
 			@include grid-justify-self(stretch);
+			@include background-image("default", (0 0, 0 0, 50% 50%));
 		}
 	}
 }
@@ -473,7 +484,7 @@
 	padding-top: 80px;
 
 	@include media(md) {
-		@include  gap(padding, "v");
+		@include gap(padding, "v", 100px);
 	}
 }
 

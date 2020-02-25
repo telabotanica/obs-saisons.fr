@@ -8,11 +8,12 @@
 			<div class="actus-une-content">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title">Actualités</h4>
+					{% set after = lastArticles[1] is defined ? {'path' : ''} : {} %}
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 						'target': 'actu-une-container',
 						'before': {},
-						'after': {'path': ''}
-					}}%}
+						'after': after
+					}} %}
 				</div>
 				{% for lastArticle in lastArticles %}
 					<a href="{{ path("actualites_show", {'slug': lastArticle.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
@@ -41,10 +42,11 @@
 			<div class="next-event">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title orange">Évènements</h4>
-					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
+					{% set after = lastEvents[1] is defined ? {'path' : ''} : {} %}
+					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows: {
 						'target': 'next-event-container',
 						'before': {},
-						'after': {'path':''},
+						'after': after,
 						'arrow_color': 'orange',
 						'borders': 'light'
 					}} %}
@@ -63,10 +65,10 @@
 		{% endif %}
 	</div>
 	<div class="content home">
-		<div class="now especes" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
+		<div class="now species" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
 			<div class="content-block-infos horiz">
 				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
-					'target': 'especes',
+					'target': 'species',
 					'after': {},
 					'borders': 'no-border'
 				}} %}
@@ -82,51 +84,20 @@
 				<h4 class="content-narrow-title dark">Observations récentes</h4>
 			</div>
 			<ul class="ods-list-unstyled">
-				<li>
-					<a href="#" class="recent-obs-item">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" alt="" width="80">
-						<div class="recent-obs-item-content first">
-							<div class="recent-obs-title">Chêne blanc</div>
-							<div class="recent-obs-item-stade">Sénescence stade 91</div>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="#" class="recent-obs-item">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" alt="" width="80">
-						<div class="recent-obs-item-content">
-							<div class="recent-obs-title">Chêne blanc</div>
-							<div class="recent-obs-item-stade">Sénescence stade 91</div>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="#" class="recent-obs-item">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b1baf268acc_small04.jpg" alt="" width="80">
-						<div class="recent-obs-item-content">
-							<div class="recent-obs-title">Chêne blanc</div>
-							<div class="recent-obs-item-stade">Sénescence stade 91</div>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="#" class="recent-obs-item">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" alt="" width="80">
-						<div class="recent-obs-item-content">
-							<div class="recent-obs-title">Chêne blanc</div>
-							<div class="recent-obs-item-stade">Sénescence stade 91</div>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a href="#" class="recent-obs-item">
-						<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a8eff8b09290b7bd7_small03.jpg" alt="" width="80">
-						<div class="recent-obs-item-content">
-							<div class="recent-obs-title">Chêne blanc</div>
-							<div class="recent-obs-item-stade">Sénescence stade 91</div>
-						</div>
-					</a>
-				</li>
+				{% for obs in lastObservations %}
+					{% set obsIndividual = obs.getIndividual() %}
+					{% set obsSpecies = obsIndividual.getSpecies().getVernacularName() %}
+					{% set obsEvent = obs.getEvent() %}
+					<li>
+						<a href="{{ path('stations_show', {'slug': obsIndividual.getStation().getSlug()}) }}#{{ obsSpecies|slugify }}" class="recent-obs-item">
+							<img src="{{ obs.getPicture() }}" alt="{{ obsSpecies|capitalize }} - {{ obs.getUser().getName()|upper }} - {{ obs.getDateObs()|date('d/m/Y') }}" width="80">
+							<div class="recent-obs-item-content first">
+								<div class="recent-obs-title">{{ obsSpecies|capitalize }}</div>
+								<div class="recent-obs-item-stade">{{ obsEvent.getName()|capitalize }} {{ obsEvent.getStadeBbch() != null ? "stade #{obsEvent.getStadeBbch()}" }}</div>
+							</div>
+						</a>
+					</li>
+				{% endfor %}
 			</ul>
 			{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'stations', button_label: 'ajoutez une observation'} %}
 		</div>
@@ -134,14 +105,13 @@
 	<div class="number-obs-container">
 		<div class="banner-number">
 			<div class="number-obs-infos">
-				<div class="number-obs">2138</div>
-				<div class="number-obs-period">Observations en {{ "now"|date("Y") }}</div>
+				<div class="number-obs">{{ obsCount }}</div>
+				<div class="number-obs-period">Observation{{ obsCount > 1 ? 's' }} en {{ "now"|date("Y") }}</div>
 			</div>
 			<div class="mosaic">
-				<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b1baf268acc_small04.jpg" id="w-node-2fd297a8c71e-1ac511a1" alt="">
-				<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720a0b5f0b267a268acb_small05.jpg" id="w-node-9131b95af2c3-1ac511a1" alt="">
-				<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720b24b02e7d145510f5_small01.jpg" id="w-node-acc6c76e6265-1ac511a1" alt="">
-				<img src="https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2720ad0cadbb55830878c_small02.jpg" id="w-node-324c6d4a3741-1ac511a1" alt="">
+				{% for randObs in randomObservations %}
+					<div style="background-image: url('{{ randObs.picture }}');"></div>
+				{% endfor %}
 			</div>
 		</div>
 	</div>

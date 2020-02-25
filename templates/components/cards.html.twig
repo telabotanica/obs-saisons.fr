@@ -8,7 +8,7 @@
         [...]card object
             add#: object (if the card is add with button add)
                 image#: string (uri) | 'media/layout/icons/add-pointer.svg'
-                text#: string (description) | 'Votre station n\'existe pas encore ?'
+                text#: string (description) | 'Votre station n’existe pas encore ?'
                 button#: string (button label) | 'Créer une station'
             header#: object
                 image*: string
@@ -39,8 +39,7 @@
             </div>
 
         {% else %}
-            <a href="{{ path(card.card_link) }}" class="card" {{ card.tab_reference is defined ? "data-tab=#{card.tab_reference}" }}>
-
+            <a href="{{ route == 'stations' ? path("#{route}_show", {'slug': card.card_link}) : path(card.card_link|default(route)) }}" class="card" {{ card.tab_reference is defined ? "data-tab=#{card.tab_reference}" }}>
                 {% for card_item_name in ['header', 'body', 'footer'] %}
                     {% if card[card_item_name] is defined %}
                         {% set card_item = card[card_item_name] %}
@@ -51,7 +50,6 @@
 
                     {% endif %}
                 {% endfor %}
-
             </a>
         {% endif %}
     {% endfor %}

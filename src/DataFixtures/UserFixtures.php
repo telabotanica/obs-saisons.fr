@@ -43,6 +43,8 @@ class UserFixtures extends Fixture
             $user->setCreatedAt(new \DateTime());
 
             $manager->persist($user);
+
+            $this->addReference(sprintf('user-%d', $i), $user);
         }
 
         $manager->flush();

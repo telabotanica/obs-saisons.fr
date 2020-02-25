@@ -19,13 +19,13 @@
 
 #}
 <div class="accordion-block" {{ id is defined ? "data-id=#{id}"}} {{ accordion.tab_reference is defined ? "data-tab=#{accordion.tab_reference}"}}>
-    <h4><a href="#" class="accordion-title-dropdown right-arrow-orange-icon">{{ accordion.title }}</a></h4>
+    <h4><a href="#" class="accordion-title-dropdown right-arrow-orange-icon">{{ accordion.title|capitalize }}</a></h4>
 
     <div class="accordion-content" style="display: none">
         {% for content in accordion.contents %}
-            {% if content.type|default == 'include' %}
+            {% if content.type|default('include') == 'include' %}
                 {% include content.include_uri with {(content.include_object_name): content.data}%}
-            {% else %}
+            {% elseif content.type == 'html' %}
                 {{ content.html|raw }}
             {% endif %}
         {% endfor %}

@@ -11,7 +11,7 @@
         text#: string (item-name)
 #}
 {% if heading.is_link|default(false) %}
-    <a href="{{ route in ['actualites','evenements'] ? path("#{route}_show", {'slug': slug}) : path(slug|default(route)) }}" class="item-name-block">
+    <a href="{{ route in ['actualites', 'evenements'] ? path("#{route}_show", {'slug': slug}) : path(slug|default(route)) }}" class="item-name-block">
 {% else %}
     <div class="item-name-block">
 {% endif %}

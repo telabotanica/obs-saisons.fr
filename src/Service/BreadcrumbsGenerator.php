@@ -18,7 +18,7 @@ class BreadcrumbsGenerator
         'relais' => 'Relais',
     ];
     const OTHER_BREADCRUMBS = [
-        'stations' => 'Stations d\'observation',
+        'stations' => 'Stations d’observation',
         'station-page' => 'Page de la station',
     ];
 
@@ -33,7 +33,7 @@ class BreadcrumbsGenerator
     {
         $this->trails[] = [
             'label' => $label,
-            'route' => $route
+            'route' => $route,
         ];
     }
 

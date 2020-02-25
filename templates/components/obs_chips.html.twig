@@ -2,28 +2,25 @@
     *: required
     [int..int]: array indexes ([...] if no precise length defined)
 
-    actual_stades_labels* array
+    stades* array
         [...](stade_label*) string
-    observations*: object
-        obs* object
-            image*: string (url)
-            stade*: string
-            date*: string
-            author*: int
-#}
+    App\Entity\Observation[]|array observations*
 
+#}
+{% set STADES = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 {% for obs in observations %}
-    {% set column_start = (obs.date|date("n")) + 2 %}
+    {% set column_start = (obs.getDateObs()|date("n")) + 2 %}
     {% set row_start = 0 %}
-    {% for stade_label in actual_stades_labels %}
-        {% if stade_label == obs.stade|split(' - ')|first  %}
+    {% set obsStade = STADES[obs.getEvent().getName()] %}
+    {% for stade_label in stades %}
+        {% if stade_label == obsStade  %}
             {% set row_start = loop.index %}
         {% endif %}
     {% endfor %}
-    <div class="stade-marker" data-year="{{ obs.date|date("Y") }}" data-tab="{{ obs.author }}" style="{{ "background-image: url(#{obs.image}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}{{ hide ? 'display:none;' }}">
+    <div class="stade-marker" data-year="{{ obs.getDateObs()|date("Y") }}" data-tab="{{ obs.getUser().getId() }}" style="{{ "background-image: url(#{obs.getPicture}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}{{ hide ? 'display:none;' }}">
         <div class="stade-marker-text {{ loop.last ? 'last' }}">
-            <div class="stade-text">{{ obs.stade }}</div>
-            <div class="stade-date">Le {{ obs.date|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
+            <div class="stade-text">{{ obsStade }} - stade {{ obs.getEvent().getStadeBbch() }}</div>
+            <div class="stade-date">Le {{ obs.getDateObs()|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
         </div>
     </div>
 {% endfor %}
