@@ -21,15 +21,17 @@ Create the tables:
 php bin/console doctrine:migrations:migrate
 ```
 
-## Run css/js compilation
+## Build css/js
 
-If you have npm installed run :
+Install [_NPM_](https://www.npmjs.com/get-npm) and run:
 ```bash
 npm install
 npm run dev
 ```
 
-## Run php-cs-fixer
+## Normalize code
+
+Run [_PHP-CS-Fixer_](https://github.com/FriendsOfPhp/PHP-CS-Fixer):
 
 ```
 cp .php_cs.dist .php_cs
