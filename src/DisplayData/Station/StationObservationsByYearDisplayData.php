@@ -32,7 +32,7 @@ class StationObservationsByYearDisplayData
             ->findBy(['individu' => $this->individual], ['obs_date' => 'DESC'])
         ;
         foreach ($allObservations as $obs) {
-            $obsYear = date_format($obs->getDateObs(), 'Y');
+            $obsYear = date_format($obs->getObsDate(), 'Y');
             if ($obsYear === $this->year) {
                 $this->thisYearObservations[] = $obs;
             }

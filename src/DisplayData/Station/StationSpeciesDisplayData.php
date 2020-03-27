@@ -2,11 +2,11 @@
 
 namespace App\DisplayData\Station;
 
-use App\Entity\Species;
 use App\Entity\Event;
 use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
+use App\Entity\Species;
 use App\Entity\Station;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -188,7 +188,7 @@ class StationSpeciesDisplayData
     {
         $this->allObsYears = [];
         foreach ($this->stationSpeciesObservations as $obs) {
-            $year = date_format($obs->getDateObs(), 'Y');
+            $year = date_format($obs->getObsDate(), 'Y');
             if (!in_array($year, $this->allObsYears)) {
                 $this->allObsYears[] = $year;
             }
@@ -211,7 +211,7 @@ class StationSpeciesDisplayData
 
     public function getLastObsDate(): \DateTimeInterface
     {
-        return $this->lastObservation->getDateObs();
+        return $this->lastObservation->getObsDate();
     }
 
     public function getLastObsStade(): string
@@ -221,6 +221,6 @@ class StationSpeciesDisplayData
 
     private function sortObsByDAte(Observation $obsA, Observation $obsB)
     {
-        return $obsB->getDateObs() <=> $obsA->getDateObs();
+        return $obsB->getObsDate() <=> $obsA->getObsDate();
     }
 }
