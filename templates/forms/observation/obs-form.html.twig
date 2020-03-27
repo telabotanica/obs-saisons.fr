@@ -1,0 +1,75 @@
+{% set individuals = stationData.stationAllSpeciesIndividuals %}
+{% set firstIndividualsFirstEventSpecies = stationData.getEventsSpeciesForSpecies(individuals[0].species)[0] %}
+{% extends 'forms/forms.html.twig' %}
+{% block form_title%}
+    <span class="saisie-title" data-station-name="{{ station.name|capitalize }}">{{ station.name|capitalize }}</span>
+    <span class="saisie-title-action">•&nbsp;Saisir une observation</span>
+{% endblock %}
+{% block form %}
+    <div class="_2-col-form">
+        {{ form_row(observationForm.individual, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Individu *',
+            'attr': {'data-name': 'individual'}
+        }) }}
+        {{ form_row(observationForm.obs_date, {
+            'row_attr': {'class': 'form-col small ml'},
+            'label': 'Date *',
+            'attr': {
+                'class': 'text-field ods-input date',
+                'max': "now"|date('Y-m-d'),
+                'data-name': 'obs_date'
+            }
+        }) }}
+    </div>
+    <div class="_2-col-form">
+        <div class="form-col">
+            {{ form_row(observationForm.event, {
+                'label': 'Stade observé *',
+                'attr': {'data-name': 'event'}
+            }) }}
+            <div class="saisie-aide event">
+                <img src="{{ firstIndividualsFirstEventSpecies.picture }}" alt="{{ firstIndividualsFirstEventSpecies.event.name|capitalize }}{{ firstIndividualsFirstEventSpecies.event.stadeBbch is not null ? " - Stade #{firstIndividualsFirstEventSpecies.event.stadeBbch}" }}" width="80" height="80">
+                <div class="saisie-aide-txt event">
+                    <div class="text-aide-1 event">{{ firstIndividualsFirstEventSpecies.event.name|capitalize }} {{ firstIndividualsFirstEventSpecies.event.stadeBbch is not null ? "- Stade #{firstIndividualsFirstEventSpecies.event.stadeBbch}" }}</div>
+                    <div class="text-aide-2 event">{{ firstIndividualsFirstEventSpecies.event.description }}</div>
+                    <a href="" class="green-link small">Plus de détails</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-col small ml check">
+            {{ form_row(observationForm.is_missing, {
+                'row_attr': {'class': 'ods-checkbox'},
+                'label': 'Absence',
+                'label_attr': {'class': 'checkbox-label ods-form-label'},
+                'attr': {
+                    'class': 'ods-checkbox-input',
+                    'data-name': 'is_missing'
+                },
+                'help': 'Si vous souhaitez signaler que ce stade n’a pas eu lieu cette année,
+                vous pouvez cocher cette case.',
+                'help_attr': {'class': 'field-help-text'}
+            }) }}
+        </div>
+    </div>
+    <div class="_2-col-form">
+        {{ form_row(observationForm.details, {
+            'row_attr': {'class': 'form-col details-container hidden'},
+            'label': 'Ajouter une précision',
+            'attr': {
+                'class': 'textarea-field text-field ods-input',
+                'maxlength': '255',
+                'rows': 3,
+                'data-name': 'details',
+                'placeholder': 'Quelques exemples de précisions ici'
+            }
+        }) }}
+        <div class="form-col button-form-container">
+            <a href="" class="button bt-add open-details-button">Ajouter une précision</a>
+        </div>
+    </div>
+    {% include 'forms/components/upload-block.html.twig' with { uploadZone:{
+        'label':'Vos photos',
+        'name':'picture'
+    } } %}
+{% endblock %}

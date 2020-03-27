@@ -1,0 +1,49 @@
+<div class="saisie-container">
+	<h3 class="saisie-header">
+		{% block form_title%}{% endblock %}
+	</h3>
+
+	<div class="saisie ods-form">
+		{{ form_start(form, {
+			'attr' : {
+				'action' : app.request.getPathInfo(),
+				'id' : "#{action}_form",
+				'data-name' : action
+			}
+		}) }}
+			{% block form_container %}
+				{# Form here #}
+				{% block form %}
+
+				{% endblock %}
+				{# End Form #}
+
+				{% block form_submission %}
+					{{ form_errors(form) }}
+					{{ form_widget(form._token) }}
+					<div class="ods-form-done">
+						<div>Merci! votre formulaire a bien été envoyé!</div>
+					</div>
+					<div class="ods-form-fail">
+						<div>Désolé quelque chose s'est mal passé lors de l'envoi de votre formulaire</div>
+					</div>
+
+					<div class="saisie-footer">
+						<a href="" class="button bt-form bt-annuler">
+							<div>Annuler</div>
+						</a>
+						<input type="hidden" name="action" value="{{ action }}">
+						<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
+							Valider
+						</button>
+					</div>
+				{% endblock %}
+			{% endblock %}
+		{{ form_end(form, {'render_rest': false}) }}
+	</div>
+</div>
+
+{# JS #}
+{% block form_javascript %}
+	{# upload pictures #}
+{% endblock %}

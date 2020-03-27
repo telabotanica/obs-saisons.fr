@@ -1,0 +1,32 @@
+{% extends 'forms/forms.html.twig' %}
+{% set stationAllSpecies = stationData.stationAllSpecies %}
+{% block form_title%}
+    {{ station.name|capitalize }} &nbsp;<span class="saisie-title-action">• &nbsp;Saisir un individu</span>
+{% endblock %}
+{% block form %}
+    <div class="_2-col-form">
+        {{ form_row(individualForm.name, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Nom *',
+            'attr': {
+                'class': 'text-field ods-input',
+                'max': '255',
+                'data-name': 'name'
+            }
+        }) }}
+        {{ form_row(individualForm.species, {
+            'row_attr': {'class': 'form-col ml'},
+            'label': 'Espèce *',
+            'attr': {
+                'class': 'select-field',
+                'data-name': 'species'
+            },
+            'help': '(+) espèces dont des individus sont déjà enregistrés sur la station.',
+            'help_attr': {'class': 'field-help-text'}
+        }) }}
+    </div>
+{% endblock %}
+
+{% block form_javascript %}{% endblock %}
+
+

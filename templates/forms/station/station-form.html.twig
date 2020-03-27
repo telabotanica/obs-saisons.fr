@@ -1,0 +1,114 @@
+{% extends 'forms/forms.html.twig' %}
+{% block form_title%}
+    Saisir une nouvelle station
+{% endblock %}
+
+{% block form %}
+    <div class="_2-col-form">
+        {{ form_row(stationForm.name, {
+            'row_attr': {'class': 'form-col small'},
+            'label': 'Nom *',
+            'attr': {
+                'class': 'text-field ods-input',
+                'max': '100',
+                'data-name': 'name'
+            }
+        }) }}
+        {{ form_row(stationForm.description, {
+            'row_attr': {'class': 'form-col ml'},
+            'label': 'Description',
+            'attr': {
+                'class': 'textarea-field text-field ods-input',
+                'maxlength': '255',
+                'rows': 3,
+                'data-name': 'description'
+            }
+        }) }}
+    </div>
+    <div class="_2-col-form field-group">
+        <div class="form-col">
+            <label for="search" class="">Localisez votre station</label>
+            <input id="search" type="search" class="" placeholder="Entrez une adresse ici">
+        </div>
+        {#<div class="form-col small button-form-container">
+            <label for=""></label>
+            <a href="" class="button bt-add open-map-button">
+                <span id="open-map" class="">Utiliser la carte</span>
+                <span id="close-map" class="hidden ">Fermer la carte</span>
+            </a>
+        </div>#}
+    </div>
+    <div class="form-col map-container">
+        <div id="map" class=""></div>
+    </div>
+    <div class="_2-col-form field-group">
+        {{ form_row(stationForm.latitude, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Latitude *',
+            'label_attr': {'class': 'light-label'},
+            'attr': {
+                'class': 'text-field ods-input',
+                'data-name': 'latitude'
+            }
+        }) }}
+        {{ form_row(stationForm.longitude, {
+            'row_attr': {'class': 'form-col ml'},
+            'label': 'Longitude *',
+            'label_attr': {'class': 'light-label'},
+            'attr': {
+                'class': 'text-field ods-input',
+                'data-name': 'longitude'
+            }
+        }) }}
+    </div>
+    <div class="_2-col-form">
+        {{ form_row(stationForm.locality, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Commune *',
+            'label_attr': {'class': 'light-label'},
+            'attr': {
+                'class': 'text-field ods-input',
+                'data-name': 'locality'
+            }
+        }) }}
+        {{ form_row(stationForm.insee_code, {
+            'row_attr': {'class': 'form-col small ml'},
+            'label': 'Code INSEE *',
+            'label_attr': {'class': 'light-label'},
+            'attr': {
+                'class': 'text-field ods-input',
+                'data-name': 'insee_code'
+            }
+        }) }}
+    </div>
+    {{ form_row(stationForm.altitude) }}
+    <div class="_2-col-form">
+        {{ form_row(stationForm.habitat, {
+            'row_attr': {'class': 'form-col small'},
+            'label': 'Habitat *',
+            'attr': {
+                'class': 'select-field',
+                'data-name': 'habitat'
+            },
+            'placeholder': 'Choisir'
+        }) }}
+        <div class="form-col check ml">
+            {{ form_row(stationForm.is_private, {
+                'row_attr': {'class': 'ods-checkbox'},
+                'label': 'Station privée',
+                'label_attr': {'class': 'checkbox-label ods-form-label'},
+                'attr': {
+                    'class': 'ods-checkbox-input',
+                    'data-name': 'is_private'
+                },
+                'help': 'Si vous souhaitez signaler que cette station est privée,
+            vous pouvez cocher cette case.',
+                'help_attr': {'class': 'field-help-text'}
+            }) }}
+        </div>
+    </div>
+    {% include 'forms/components/upload-block.html.twig' with { uploadZone:{
+        'label':'Image de la station',
+        'name':'header-image'
+    } } %}
+{% endblock %}
