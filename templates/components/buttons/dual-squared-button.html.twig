@@ -13,25 +13,20 @@
                 target*: string (e.g. "indiv" to record new individual of a given species)
             label*: string
 #}
-{% if dual_squared_buttons is not defined or dual_squared_buttons is empty %}
-    {% set dual_squared_buttons = [
-        {
-            'icon': 'help-circle',
-            'label': 'fiche'
-        },
-        {
-            'icon': 'edit-calendar',
-            'data_attr': {
-                'action': 'open',
-                'target': 'indiv'
-            },
-            'label': 'saisir'
-        }
-    ] %}
-{% endif %}
 <div class="dual-blocks-container">
-    {% for button in dual_squared_buttons %}
-        <a href="{{ button.url|default }}" class="dual-squared-button {{ button.icon }}-icon {{ button.data_attr.action|default }}" {{ button.data_attr is defined ? "data-#{button.data_attr.action}\=#{button.data_attr.target}" }}>
+    {% for button in buttons %}
+        {% set dataAttributesString = '' %}
+        {% set disable = false %}
+        {% if button.data_attr is defined and button.data_attr is not empty %}
+            {% for dataAttr in button.data_attr %}
+                {% if dataAttr.name == 'req-login' and dataAttr.value == 'true' %}
+                    {% set disable = (app.user.id is not defined) %}
+                {% else %}
+                    {% set dataAttributesString = "#{dataAttributesString} data-#{dataAttr.name}\=#{dataAttr.value|replace({' ':'&nbsp;'})} " %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <a href="{{ button.url|default }}" class="dual-squared-button {{ button.icon }}-icon {{ button.action|default }}{{ disable ? ' disabled' }}" {{ dataAttributesString }} {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
             <div class="squared-button-label">{{ button.label }}</div>
         </a>
     {% endfor %}

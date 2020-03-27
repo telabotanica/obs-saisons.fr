@@ -8,8 +8,24 @@
         icon#: string ($icons in _icons.scss) | 'add-circle'
         green#: boolean | true
         label#: string | 'ajouter'
+        classes: array
+             [...](class) string
+        dataAttributes: array
+            [...](dataAttribute) object
+                name#: string
+                value#: string
 #}
-
-<a href="#" class="squared-button {{ squared_button.xs_hide|default(false) ? 'hide-on-xs' }} {{ squared_button.icon|default('add-circle') }}-icon">
+{% set dataAttributesString = '' %}
+{% set disable = false %}
+{% if squared_button.dataAttributes is defined and squared_button.dataAttributes is not empty %}
+    {% for dataAttribute in squared_button.dataAttributes %}
+        {% if dataAttribute.name == 'req-login' and dataAttribute.value == 'true' %}
+            {% set disable = (app.user.id is not defined) %}
+        {% elseif dataAttribute.value is defined and dataAttribute.value is not empty %}
+            {% set dataAttributesString = "#{dataAttributesString} data-#{dataAttribute.name}\=#{dataAttribute.value|replace({' ':'&nbsp;'})} " %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+<a href="" class="squared-button {{ squared_button.xs_hide|default(false) ? 'hide-on-xs' }} {{ squared_button.icon|default('add-circle') }}-icon {{ squared_button.classes is defined and squared_button.classes is not empty ? squared_button.classes|join(' ') }}" {{ dataAttributesString }} {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
     <div class="squared-button-label {{ squared_button.green|default(true) ? 'green' }}">{{ squared_button.label|default('ajouter') }}</div>
 </a>
