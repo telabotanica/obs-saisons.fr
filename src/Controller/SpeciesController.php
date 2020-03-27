@@ -55,7 +55,7 @@ class SpeciesController extends PagesController
 
             $accordions[] = [
                 'tab_reference' => $type->getReign(),
-                'title' => TypeSpecies::PLURAL_TYPES[$type->getName()],
+                'title' => $type->getName(),
                 'contents' => $contents,
             ];
         }
