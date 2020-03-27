@@ -4,11 +4,10 @@
     App\Entity\Station station*
     App\DisplayData\Station\StationDisplayData stationData*
 #}
-{% set isPublic = station.getIsPublic() %}
 {% set images = stationData.getStationObsImages() %}
 <div class="hero-header">
     <div class="hero-header-media-part map">
-        {% if isPublic and images|first is not empty %}
+        {% if show and images|first is not empty %}
             <div class="contributions-mini-block" style="background-image: url({{ images|first }});">
                 {% if images|length > 1 %}
                     <div class="contributions-number">+ {{ images|length }}</div>
@@ -22,21 +21,21 @@
         <h3 class="hero-header-title"><span class="lighter">{{ station.getName() }} &nbsp;•</span> &nbsp;Observations</h3>
         <p class="hero-header-subtitle">{{ station.getDescription()|default }}</p>
 
-            {% if isPublic %}
+            {% if show %}
                 <div class="hero-header-detail map">Lat. : {{ station.getLatitude() }} &nbsp;• &nbsp;Long. : {{ station.getLongitude() }}</div>
             {% endif %}
 
     </div>
 
-    {% if isPublic %}
+    {% if show %}
         <div class="member-label-block">
             <div  class="member-avatar" style="background-image: url({{ station.getUser().getAvatar()|default(asset('media/layout/icons/member_default.png')) }})"></div>
             <div class="member-label-block-content">
                 <div class="member-label-block-title">Créée par</div>
-                <a href="#" class="member-label-block-link">{{ station.getUser().getDisplayName() }}</a>
+                <a href="" class="member-label-block-link">{{ station.getUser().getDisplayName() }}</a>
             </div>
         </div>
     {% endif %}
 
-    <div class="privacy-status">Station {{ isPublic ? 'publique' : 'privée' }}</div>
+    <div class="privacy-status">Station {{ station.getIsPrivate() ? 'privée' : 'publique' }}</div>
 </div>
