@@ -9,8 +9,18 @@
 	@extend %display-flex-column;
 	margin-bottom: 20px;
 
+	&.field-group {
+		margin-bottom: 5px;
+	}
+
 	@include media(md) {
 		@include flex-direction-row;
+	}
+}
+
+.ml {
+	@include media(md) {
+		margin-left: 20px;
 	}
 }
 
@@ -28,7 +38,12 @@
 
 		@include media(md) {
 			width: 180px;
-			margin-left: 20px;
+		}
+
+		&.button-form-container {
+			@include media(sm) {
+				width: auto;
+			}
 		}
 
 		&.check {
@@ -61,7 +76,9 @@
 .text-field {
 	@extend %input;
 	border-radius: 4px;
-	@include background-image(image-url('calendrier'), 94% 50%, 18px);
+	&.date {
+		@include background-image(image-url('calendrier'), 94% 50%, 18px);
+	}
 }
 
 .select-field {
@@ -70,11 +87,23 @@
 	&.and-help {
 		margin-bottom: 5px;
 	}
+	&[disabled="disabled"],&.disabled {
+		background-color:#e9ecef;
+		pointer-events: none;
+	}
+}
+
+.textarea-field {
+	height: 80px;
 }
 
 .checkbox-label {
 	margin-left: 5px;
 	color: $grey131117;
+}
+
+.light-label {
+	font-weight: normal;
 }
 
 .upload-zone {
@@ -163,22 +192,8 @@
 }
 
 /******************************************/
-/*          div-blocks                    */
-/******************************************/
-.div-block-9 {
-	@extend %display-flex;
-	@extend %justify-content-space-between;
-	margin-top: 25px;
-}
-
-/******************************************/
 /*          text-blocks                   */
 /******************************************/
-.text-block-16 {
-	color: grey(60);
-	font-size: 14px;
-	font-style: italic;
-}
 
 .upload-zone-placeholder {
 	margin-left: 10px;
@@ -192,7 +207,7 @@
 }
 
 .field-help-text {
-	margin-left: 25px;
+	margin-left: 5px;
 	color: $grey281146;
 	font-size: 15px;
 	line-height: 23px;
