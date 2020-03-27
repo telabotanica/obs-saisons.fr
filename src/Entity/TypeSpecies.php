@@ -29,12 +29,12 @@ class TypeSpecies
     private $reign;
 
     const PLURAL_TYPES = [
-        'arbre' => 'arbres',
-        'herbacée' => 'herbacées',
-        'oiseau' => 'oiseaux',
-        'insecte' => 'insectes',
-        'amphibien' => 'amphibiens',
-        'reptile' => 'reptiles',
+        'arbres' => 'arbre',
+        'herbacées' => 'herbacée',
+        'oiseaux' => 'oiseau',
+        'insectes' => 'insecte',
+        'amphibiens' => 'amphibien',
+        'reptiles' => 'reptile',
     ];
 
     public function getId(): ?int

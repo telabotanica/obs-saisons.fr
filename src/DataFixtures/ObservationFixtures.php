@@ -19,7 +19,9 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
             $observation->setEvent($this->getReference('event-'.$faker->numberBetween(1, 7)));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
-            $observation->setDateObs($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $observation->setObsDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $observation->setDetails($faker->text(200));
+            $observation->setIsMissing($faker->boolean);
 
             $manager->persist($observation);
 
@@ -32,8 +34,9 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
             $observation->setEvent($this->getReference('event-8'));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
-            $observation->setDateObs($faker->dateTimeThisDecade('now', 'Europe/Paris'));
-
+            $observation->setObsDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $observation->setDetails($faker->text(200));
+            $observation->setIsMissing($faker->boolean);
             $manager->persist($observation);
 
             $this->addReference(sprintf('observation-%d', $c), $observation);
