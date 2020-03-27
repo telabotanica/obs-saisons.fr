@@ -14,7 +14,6 @@
 {% set first_year = max(years|default(["now"|date("Y")])) %}
 
 <div class="periods-calendar" data-id="{{ id }}" style="display:none;">
-
     <div class="table-container">
         <div class="grid top">
 
@@ -26,7 +25,7 @@
                 {% if years|length > 1 %}
                     <nav class="dropdown-list hidden" style="{{ "height: #{(years|length) - 1 * 45}px;" }}{{ years|length > 5 ? "overflow: scroll;" }}">
                         {% for year in years %}
-                            <a href="#" class="dropdown-link {{ year == first_year ? 'hidden' }}">{{ year }}</a>
+                            <a href="" class="dropdown-link {{ year == first_year ? 'hidden' }}">{{ year }}</a>
                         {% endfor %}
                     </nav>
                 {% endif %}
@@ -42,11 +41,13 @@
             {% endfor %}
         </div>
 
+        {% set disable = (app.user.id is not defined) %}
         {% for individualData in individualsData %}
 
             <div class="individu-header">
-                <h5 class="individu-name">{{ individualData.getIndividual().getName() }}</h5>
-                <a href="#" class="table-action open" data-open="indiv">
+                {% set individual = individualData.getIndividual() %}
+                <h5 class="individu-name">{{ individual.name }}</h5>
+                <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-indiv="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
                     <div>Saisir une observation</div>
                 </a>
             </div>
@@ -76,7 +77,7 @@
         {% endfor %}
 
         <div class="individu-footer">
-            <a href="" class="table-action add open" data-open="obs">
+            <a href="" class="table-action add open{{ disable ? ' disabled' }}" data-open="individual" data-species="{{ calendar.species.id }}" data-all-species="false" data-station="{{ station.id }}" data-req-login="true" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
                 <div>Ajouter un nouvel individu</div>
                 <div class="add-button-like add-circle-icon"></div>
             </a>
@@ -93,6 +94,6 @@
             {% endfor %}
         </div>
         <div class="helper-legend-text">Périodes à laquelle est observée ce stade en moyenne les années précédentes</div>
-        <a href="#" class="hide-button eye-crossed-icon" title="Ne plus afficher ce message"></a>
+        <a href="" class="hide-button eye-crossed-icon" title="Ne plus afficher ce message"></a>
     </div>
 </div>
