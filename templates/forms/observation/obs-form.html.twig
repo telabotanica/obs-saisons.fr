@@ -68,8 +68,5 @@
             <a href="" class="button bt-add open-details-button">Ajouter une précision</a>
         </div>
     </div>
-    {% include 'forms/components/upload-block.html.twig' with { uploadZone:{
-        'label':'Vos photos',
-        'name':'picture'
-    } } %}
+    {% include 'forms/components/upload-block.html.twig' with { formField: observationForm.picture } %}
 {% endblock %}

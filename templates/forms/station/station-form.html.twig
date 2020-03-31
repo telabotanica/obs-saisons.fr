@@ -107,8 +107,5 @@
             }) }}
         </div>
     </div>
-    {% include 'forms/components/upload-block.html.twig' with { uploadZone:{
-        'label':'Image de la station',
-        'name':'header-image'
-    } } %}
+    {% include 'forms/components/upload-block.html.twig' with { formField: stationForm.header_image } %}
 {% endblock %}

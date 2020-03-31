@@ -94,7 +94,14 @@ class ObservationType extends AbstractType
             ])
             ->add('is_missing', CheckboxType::class, ['required' => false])
             ->add('details', TextareaType::class, ['required' => false])
-            //->add('picture', FileType::class)
+            ->add('picture', FileType::class, [
+                'required' => false,
+                'label' => 'Vos Photos',
+                'attr' => [
+                    'class' => 'upload-input',
+                    'accept' => 'image/jpeg',
+                ],
+            ])
             ->add('submit', SubmitType::class)
         ;
     }

@@ -13,7 +13,8 @@ use App\Form\Type\ObservationType;
 use App\Form\Type\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\SlugGenerator;
-use Faker;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,7 +49,6 @@ class StationsController extends PagesController
             $stationForm->handleRequest($request);
             if ($stationForm->isSubmitted() && $stationForm->isValid()) {
                 $slugGenerator = new SlugGenerator();
-                $faker = Faker\Factory::create('fr_FR');
                 $station = new Station();
                 $stationFormValues = $request->request->get('station');
 
@@ -58,8 +58,7 @@ class StationsController extends PagesController
                 $station->setHabitat($stationFormValues['habitat']);
                 $station->setDescription($stationFormValues['description']);
                 $station->setIsPrivate(!empty($stationFormValues['is_private']));
-
-                $station->setHeaderImage($faker->imageUrl(800, 600, 'nature'));
+                $station->setHeaderImage($this->uploadImage($request->files->get('station')['header_image']));
                 $station->setLocality($stationFormValues['locality']);
                 $station->setLatitude($stationFormValues['latitude']);
                 $station->setLongitude($stationFormValues['longitude']);
@@ -195,7 +194,6 @@ class StationsController extends PagesController
                 case 'observation':
                     $observationForm->handleRequest($request);
                     if ($observationForm->isSubmitted() && $observationForm->isValid()) {
-                        $faker = Faker\Factory::create('fr_FR');
                         $observationFormValues = $request->request->get('observation');
 
                         $observation->setUser($this->getUser());
@@ -208,7 +206,7 @@ class StationsController extends PagesController
                                 ->find($observationFormValues['event'])
                         );
                         $observation->setObsDate(date_create($observationFormValues['obs_date']));
-                        $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
+                        $observation->setPicture($this->uploadImage($request->files->get('observation')['picture']));
                         $observation->setIsMissing(!empty($observationFormValues['is_missing']));
                         $observation->setDetails($observationFormValues['details']);
 
@@ -354,5 +352,33 @@ class StationsController extends PagesController
                 ],
             ],
         ];
+    }
+
+    private function uploadImage(UploadedFile $formValue)
+    {
+        $fileName = null;
+        if ($formValue) {
+            $slugGenerator = new SlugGenerator();
+            $imagesDirectoryPath = $this->getParameter('upload_destination');
+            if (!is_dir($imagesDirectoryPath)) {
+                mkdir($imagesDirectoryPath, 0777, true);
+            }
+
+            $file = $formValue;
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugGenerator->slugify($originalFilename);
+            $fileName = $this->getParameter('images_uri_prefix').'/'.$safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+
+            try {
+                $file->move(
+                    $imagesDirectoryPath, // Le dossier dans le quel le fichier va etre charger
+                    $fileName
+                );
+            } catch (FileException $e) {
+                return new Response($e->getMessage());
+            }
+        }
+
+        return $fileName;
     }
 }
