@@ -58,7 +58,7 @@ class ObservationType extends AbstractType
                         'selected' => 1 === count($this->individuals),
                         'data-species' => $species->getId(),
                         'data-available-events' => implode(',', $this->stationDisplayData->getEventIdsForSpecies($species)),
-                        'data-event-pictures' => json_encode($this->stationDisplayData->getEventSpeciesPictures($species)),
+                        'data-picture' => $species->getPicture(),
                     ];
                 },
                 'placeholder' => 'Choisir un individu',
@@ -79,9 +79,15 @@ class ObservationType extends AbstractType
                     return $choiceLabel;
                 },
                 'choice_attr' => function (Event $event, $key, $eventId) {
+                    $pictureSuffix = '';
+                    if (!empty($event->getStadeBbch())) {
+                        $pictureSuffix = '_'.substr($event->getStadeBbch(), 0, 1);
+                    }
+
                     return [
                         'class' => 'event-option event-'.$eventId,
                         'selected' => 1 === count($this->events),
+                        'data-picture-suffix' => $pictureSuffix,
                         'data-description' => $event->getDescription(),
                         'hidden' => !in_array($event, $this->stationDisplayData->getEventsForSpecies($this->individuals[0]->getSpecies())),
                     ];

@@ -193,23 +193,31 @@ function onChangeSetIndividual() {
         ;
 
         if (valOk($selectedIndividual)) {
-            let eventPicturesConnections = $selectedIndividual.data('eventPictures');
+            let speciesPicture = $selectedIndividual.data('picture'),
+                availableEvents = getDataAttrValuesArray($selectedIndividual.data('availableEvents').toString());
+                console.log($selectedIndividual.data('availableEvents'));
 
             $event.removeAttr('disabled').prop('disabled', false);
-            if (1 === eventPicturesConnections.length) {
+            if (1 === availableEvents.length) {
                 $event
                     .addClass('disabled')
-                    .find('.event-option.event-' + eventPicturesConnections[0].eventId)
+                    .find('.event-option.event-' + availableEvents[0])
                     .prop('selected', true).attr('selected','selected')
                     .prop('hidden', false).removeAttr('hidden')
-                    .data('picture', eventPicturesConnections[0].picture)
+                    .data('picture', '/media/species/' + speciesPicture + '.jpg')
                 ;
             } else {
+                let $eventOption = null;
+
                 $event.removeClass('disabled');
-                for (let i = 0; i < eventPicturesConnections.length; i++) {
-                    $('.event-option.event-' + eventPicturesConnections[i].eventId, $event)
+                for (let i = 0; i < availableEvents.length; i++) {
+                    $eventOption = $('.event-option.event-' + availableEvents[i], $event);
+
+                    let eventPictureSuffix = $eventOption.data('pictureSuffix');
+
+                    $eventOption
                         .prop('hidden', false).removeAttr('hidden')
-                        .data('picture', eventPicturesConnections[i].picture)
+                        .data('picture','/media/species/' + speciesPicture + eventPictureSuffix + '.jpg')
                     ;
                 }
             }
@@ -231,7 +239,7 @@ function onChangeObsEventUpdateHelpInfos() {
                 eventStade = $selectedEvent.text();
 
             $saisieAide.removeClass('hidden').prepend(
-                '<img src="'+$selectedEvent.data('picture')+'" alt="'+eventStade+'" width="80" height="80">'
+                '<img src="'+ $selectedEvent.data('picture') + '" alt="' + eventStade + '" width="80" height="80">'
             );
             $('.text-aide-1.event').text(eventStade);
             $('.text-aide-2.event').text($selectedEvent.data('description'));

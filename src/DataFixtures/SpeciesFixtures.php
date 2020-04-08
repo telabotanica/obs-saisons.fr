@@ -21,7 +21,7 @@ class SpeciesFixtures extends Fixture implements DependentFixtureInterface
             $species->setDescription($speciesData->description);
             $species->setType($this->getReference(sprintf('typesSpecies-%d', $speciesData->type_id)));
             $species->setIsActive($speciesData->is_active);
-            $species->setPicture($faker->imageUrl(800, 600, 'nature'));
+            $species->setPicture($speciesData->picture);
 
 
             $manager->persist($species);

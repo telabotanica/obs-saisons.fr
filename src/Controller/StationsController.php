@@ -243,7 +243,7 @@ class StationsController extends PagesController
              */
             $species = $stationSpeciesDisplayData->getSpecies();
             $list_card = [
-                'image' => $species->getPicture(),
+                'image' => '/media/species/'.$species->getPicture().'.jpg',
                 'heading' => [
                     'title' => ucfirst($species->getVernacularName()),
                     'text' => $species->getScientificName(),
