@@ -16,14 +16,29 @@ class EventSpeciesFixtures extends Fixture implements DependentFixtureInterface
         $eventsSpeciesReferences = [];
         // combining plant-events with plants
         $eventsReferences = range(1, 7); // currently only event with reference 8 is for animals
-        $speciesReferences = range(1, 55); // currently 18 animal spiecies (the 6 last)
+        $speciesReferences = range(1, 40); // type_species 1
+        $coniferous = [13, 24, 37];
+        $onlyFloweringNFruiting = [16, 40];
+
         foreach ($eventsReferences as $eventsReference) {
             foreach ($speciesReferences as $speciesReference) {
-                $eventsSpeciesReferences[] = [
-                    'event' => $eventsReference,
-                    'species' => $speciesReference,
-                ];
+                if (
+                    !(in_array($speciesReference, $coniferous) && $eventsReference > 5) &&
+                    !(in_array($speciesReference, $onlyFloweringNFruiting) && !in_array($eventsReference, [3, 4, 5]))
+                ) {
+                    $eventsSpeciesReferences[] = [
+                        'event' => $eventsReference,
+                        'species' => $speciesReference,
+                    ];
+                }
             }
+        }
+        $speciesReferences = range(41, 55);
+        foreach ($speciesReferences as $speciesReference) {
+            array_push($eventsSpeciesReferences, [
+                'event' => 3,
+                'species' => $speciesReference,
+            ]);
         }
         // combining animal-events with animals
         $speciesReferences = range(56, 73);
@@ -42,7 +57,6 @@ class EventSpeciesFixtures extends Fixture implements DependentFixtureInterface
 
             $eventsSpecies = new EventSpecies($event, $species);
             $eventsSpecies->setDescription($faker->paragraph(3, true));
-            $eventsSpecies->setPicture($faker->imageUrl(800, 600, 'nature'));
             $eventsSpecies->setStartDate($startDate);
             $eventsSpecies->setEndDate($endDate);
 
