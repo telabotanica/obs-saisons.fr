@@ -123,19 +123,6 @@ class StationDisplayData
         ;
     }
 
-    public function getEventSpeciesPictures(Species $species)
-    {
-        $eventSpeciesPictures = [];
-        foreach ($this->getEventsSpeciesForSpecies($species) as $eventSpecies) {
-            $eventSpeciesPictures[] = [
-                'eventId' => $eventSpecies->getEvent()->getId(),
-                'picture' => $eventSpecies->getPicture(),
-            ];
-        }
-
-        return $eventSpeciesPictures;
-    }
-
     public function getEventIdsForSpecies(Species $species): array
     {
         $eventsForSpeciesIds = [];
@@ -170,16 +157,6 @@ class StationDisplayData
         }
 
         return $allEvents;
-    }
-
-    public function getStationAllEventsIds(): array
-    {
-        $stationAllEventsIdsArray = [];
-        foreach ($this->getStationAllEvents() as $event) {
-            $stationAllEventsIdsArray[] = $event->getId();
-        }
-
-        return $stationAllEventsIdsArray;
     }
 
     private function getStationObsWithPictures(): array
