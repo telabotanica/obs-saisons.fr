@@ -374,6 +374,8 @@
 
 
 /**************************************************/
+$stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification: $orange, senescence: $red, apparition: $red);
+
 .stade-period {
     position: relative;
     @include grid-align-self(center);
@@ -388,31 +390,26 @@
 
     @include hide_on_small;
 
+    @each $stade, $stade-color in $stade-colors-map {
+        &.#{$stade} {
+            background-color: #{$stade-color};
+        }
+    }
+
     &.apparition,
     &.feuillaison {
         grid-row-start: 1;
         grid-row-end: 2;
     }
 
-    &.feuillaison {
-        background-color: $green725760;
-    }
-
     &.floraison {
-        background-color: $orange;
         grid-row-start: 2;
         grid-row-end: 3;
     }
 
     &.fructification {
-        background-color: $blue;
         grid-row-start: 3;
         grid-row-end: 4;
-    }
-
-    &.apparition,
-    &.senescence {
-        background-color: $red;
     }
 
     &.senescence {
@@ -437,6 +434,11 @@
         @include grid-justify-self(center);
         @include background-image(null, 50% 50%);
         border: 2px solid #fff;
+        @each $stade, $stade-color in $stade-colors-map {
+            &.#{$stade} {
+                border-color: #{$stade-color};
+            }
+        }
         border-radius: 50px;
         background-color: grey(59);
         box-shadow: 0 5px 8px 0 rgba($grey281146, 0.25);

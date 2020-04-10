@@ -43,6 +43,16 @@ class Observation
      */
     private $obs_date;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_missing;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $details;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,14 +107,38 @@ class Observation
     }
 
 
-    public function getDateObs(): ?\DateTimeInterface
+    public function getObsDate(): ?\DateTimeInterface
     {
         return $this->obs_date;
     }
 
-    public function setDateObs(?\DateTimeInterface $obs_date): self
+    public function setObsDate(?\DateTimeInterface $obs_date): self
     {
         $this->obs_date = $obs_date;
+
+        return $this;
+    }
+
+    public function getIsMissing(): ?bool
+    {
+        return $this->is_missing;
+    }
+
+    public function setIsMissing(?bool $is_missing): self
+    {
+        $this->is_missing = $is_missing;
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(?string $details): self
+    {
+        $this->details = $details;
 
         return $this;
     }

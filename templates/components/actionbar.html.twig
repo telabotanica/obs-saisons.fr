@@ -13,23 +13,6 @@
                 data||@component_name# (e.g. side_block): object
                     @component_data (any)
 #}
-
-{% if actionbar is not defined %}
-    {% set actionbar = {
-        'classes': 'bottom',
-        'components': [
-            {
-                'name': 'squared-button',
-                'data': {
-                    'icon': 'export',
-                    'label': 'exporter'
-                }
-            },
-            {'name': 'squared-button'}
-        ]
-    } %}
-{% endif %}
-
 <div class="actionbar {{ actionbar.classes|default }}">
     {% for component in actionbar.components %}
         {% set path = component.name == 'squared-button' ? 'buttons' : 'actionbar-components' %}

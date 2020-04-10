@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
+    images_uri_prefix: '/images'
+    upload_destination: '../public/images'
 services:
     # default configuration for services in *this* file
     _defaults:

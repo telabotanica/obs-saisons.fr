@@ -7,13 +7,14 @@
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
+{% set show = (not station.getIsPrivate() or app.user.id|default('none') == station.getUser().getId()) %}
 
 {% block header_content %}{% endblock %}
 {% block main_content %}
-	{% if station.getIsPublic() %}
+	{% if show %}
 
 		{# displays top actionbar with species count #}
-		{% set species = stationData.getStationAllSpecies() %}
+		{% set species = stationData.stationAllSpecies %}
 		{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
 		{% include 'components/actionbar.html.twig' with {
 			actionbar: {
@@ -25,20 +26,40 @@
 						}
 					},
 					{'name': 'tabs-holder'},
-					{'name': 'squared-button'}
+					{
+						'name': 'squared-button',
+						'data': squaredButtonData
+					}
 				]
 			}
 		} %}
 		{# displays list-cards and calendar #}
 		{% for id, list_card in list_cards %}
-			{% include 'components/list-cards.html.twig' with { buttons: [] } %}
+			{% include 'components/list-cards.html.twig' with { buttons: list_card.buttons } %}
 
 			{% if list_card.calendar is defined %}
 				{% include 'components/calendar-tab.html.twig' with {calendar: list_card.calendar} %}
 			{% endif %}
 		{% endfor %}
 
-		{% include 'components/actionbar.html.twig' %}
+		{% include 'components/actionbar.html.twig' with {
+			actionbar:{
+				'classes': 'bottom',
+				'components': [
+					{
+						'name': 'squared-button',
+						'data': {
+							'icon': 'export',
+							'label': 'exporter'
+						}
+					},
+					{
+						'name': 'squared-button',
+						'data': squaredButtonData
+					}
+				]
+			}
+		} %}
 
 		{% include 'components/help-block.html.twig' with {
 			help: {
@@ -50,10 +71,26 @@
 {% endblock %}
 
 {% block bottom_content %}
-	{% if station.getIsPublic() %}
-		{% include 'layout/overlay.html.twig' with {id: 'indiv'} %}
-
-		<a href="#" class="button bt-open-form">Saisir une observation</a>
+	{% if show %}
+		{% set disable = (app.user.id is not defined) %}
+		{% if not disable %}
+			<div class="overlay hidden individual">
+				{% include 'forms/individual/indiv-form.html.twig' with {action:'individual', form: individualForm} %}
+			</div>
+			<div class="overlay hidden observation">
+				{% if stationData.stationAllSpeciesIndividuals is not empty %}
+					{% include 'forms/observation/obs-form.html.twig' with {action:'observation', form: observationForm} %}
+				{% endif %}
+			</div>
+		{% endif %}
+		{% set stationAllIndividuals = stationData.getStationAllIndividualsIds() %}
+		{% if stationAllIndividuals is not empty %}
+			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-indiv="{{ stationAllIndividuals }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+				Saisir une observation
+			</a>
+		{% endif %}
 	{% endif %}
 {% endblock %}
+
+
 

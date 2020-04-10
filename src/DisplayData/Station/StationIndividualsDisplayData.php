@@ -47,7 +47,7 @@ class StationIndividualsDisplayData
     private function setAllObsYears(): self
     {
         foreach ($this->individualObservations as $obs) {
-            $year = date_format($obs->getDateObs(), 'Y');
+            $year = date_format($obs->getObsDate(), 'Y');
             if (!in_array($year, $this->allObsYears)) {
                 $this->allObsYears[] = $year;
             }
@@ -65,7 +65,7 @@ class StationIndividualsDisplayData
     {
         $yearObservations = [];
         foreach ($this->individualObservations as $obs) {
-            $obsYear = date_format($obs->getDateObs(), 'Y');
+            $obsYear = date_format($obs->getObsDate(), 'Y');
             if ($year === $obsYear) {
                 $yearObservations[] = $obs;
             }

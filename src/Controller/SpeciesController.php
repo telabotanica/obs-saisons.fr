@@ -43,7 +43,7 @@ class SpeciesController extends PagesController
                     'include_uri' => 'components/list-cards.html.twig',
                     'include_object_name' => 'list_card',
                     'data' => [
-                        'image' => $species->getPicture(),
+                        'image' => '/media/species/'.$species->getPicture().'.jpg',
                         'heading' => [
                             'is_link' => true,
                             'title' => $species->getVernacularName(),
@@ -55,7 +55,7 @@ class SpeciesController extends PagesController
 
             $accordions[] = [
                 'tab_reference' => $type->getReign(),
-                'title' => TypeSpecies::PLURAL_TYPES[$type->getName()],
+                'title' => $type->getName(),
                 'contents' => $contents,
             ];
         }

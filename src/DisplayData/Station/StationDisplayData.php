@@ -2,21 +2,22 @@
 
 namespace App\DisplayData\Station;
 
-use App\Entity\Species;
+use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
+use App\Entity\Species;
 use App\Entity\Station;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 class StationDisplayData
 {
     private $manager;
-    private $station;
-    private $stationAllSpecies;
-    private $stationAllSpeciesIndividuals;
-    private $stationAllObservations;
-    private $stationAllSpeciesDisplayData;
-    private $stationObsImages;
+    public $station;
+    public $stationAllSpecies;
+    public $stationAllSpeciesIndividuals;
+    public $stationAllObservations;
+    public $stationAllSpeciesDisplayData;
+    public $stationObsImages;
 
     public function __construct(Station $station, ManagerRegistry $manager)
     {
@@ -100,9 +101,62 @@ class StationDisplayData
         return $this;
     }
 
+    public function getStationAllIndividualsIds()
+    {
+        $stationAllIndividualsIdsArrays = [];
+        foreach ($this->stationAllSpeciesIndividuals as $indiv) {
+            $stationAllIndividualsIdsArrays[] = $indiv->getId();
+        }
+
+        return implode(',', $stationAllIndividualsIdsArrays);
+    }
+
     public function getStationAllSpeciesDisplayData(): array
     {
         return $this->stationAllSpeciesDisplayData;
+    }
+
+    public function getEventsSpeciesForSpecies(Species $species): array
+    {
+        return $this->manager->getRepository(EventSpecies::class)
+            ->findBy(['species' => $species])
+        ;
+    }
+
+    public function getEventIdsForSpecies(Species $species): array
+    {
+        $eventsForSpeciesIds = [];
+        foreach ($this->getEventsSpeciesForSpecies($species) as $eventSpecies) {
+            $eventsForSpeciesIds[] = $eventSpecies->getEvent()->getId();
+        }
+
+        return $eventsForSpeciesIds;
+    }
+
+    public function getEventsForSpecies(Species $species): array
+    {
+        $eventsForSpecies = [];
+        foreach ($this->getEventsSpeciesForSpecies($species) as $eventSpecies) {
+            $eventsForSpecies[] = $eventSpecies->getEvent();
+        }
+
+        return $eventsForSpecies;
+    }
+
+    public function getStationAllEvents(): array
+    {
+        $allEvents = [];
+        foreach ($this->stationAllSpecies as $species) {
+            $eventSpeciesForSpecies = $this->getEventsSpeciesForSpecies($species);
+            foreach ($eventSpeciesForSpecies as $eventSpecies) {
+                $event = $eventSpecies->getEvent();
+                if (!in_array($event, $allEvents)) {
+                    $allEvents[] = $event;
+                }
+            }
+        }
+
+        return $allEvents;
     }
 
     private function getStationObsWithPictures(): array
@@ -120,7 +174,7 @@ class StationDisplayData
 
     private function sortObsByDAte(Observation $obsA, Observation $obsB)
     {
-        return $obsB->getDateObs() <=> $obsA->getDateObs();
+        return $obsB->getObsDate() <=> $obsA->getObsDate();
     }
 
     private function setStationObsImages(): self

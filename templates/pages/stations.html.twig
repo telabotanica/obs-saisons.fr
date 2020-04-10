@@ -8,7 +8,6 @@
 } %}
 
 {% block main_content %}
-
 	{% include 'components/actionbar.html.twig' with {
 		actionbar: {
 			'classes': 'search',
@@ -24,9 +23,7 @@
 			]
 		}
 	} %}
-
 	{% include 'components/cards.html.twig' %}
-
 	{% include 'components/help-block.html.twig' with {
 		help: {
 			'text':
@@ -35,5 +32,12 @@
 				<br>'
 		}
 	} %}
+{% endblock %}
 
+{% block bottom_content %}
+	{% if app.user.id is defined %}
+		<div class="overlay hidden station">
+			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
+		</div>
+	{% endif %}
 {% endblock %}

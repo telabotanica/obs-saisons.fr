@@ -9,7 +9,14 @@
             add#: object (if the card is add with button add)
                 image#: string (uri) | 'media/layout/icons/add-pointer.svg'
                 text#: string (description) | 'Votre station n’existe pas encore ?'
-                button#: string (button label) | 'Créer une station'
+                button#: object
+                    label#: string (button label)
+                    classes: array
+                        [...](class) string
+                    dataAttributes: array
+                        [...](dataAttribute) object
+                            name#: string
+                            value#: string
             header#: object
                 image*: string
                 icon_name#: string | 'private'
@@ -29,12 +36,24 @@
 <div class="cards-grid-container">
     {%  for card in cards %}
         {% if card.add is defined %}
-
+            {% set dataAttributesString = '' %}
+            {% set disable = false %}
+            {% if card.add.button.dataAttributes is defined and card.add.button.dataAttributes is not empty %}
+                {% for dataAttr in card.add.button.dataAttributes %}
+                    {% if dataAttr.name == 'req-login' and dataAttr.value == 'true' %}
+                        {% set disable = (app.user.id is not defined) %}
+                    {% else %}
+                        {% set dataAttributesString = "#{dataAttributesString} data-#{dataAttr.name}\=#{dataAttr.value|replace({' ':'&nbsp;'})} " %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             <div class="card add">
                 <div class="add-card-content">
                     <div class="{{ card.add.icon_name}}-icon add-card-marker"></div>
                     <div class="add-card-text">{{ card.add.text }}</div>
-                    <a href="#" class="button bt-add">{{ card.add.button }}</a>
+                    <a href="" class="button bt-add{{ disable ? ' disabled' }} {{ card.add.button.classes|join(' ') }}" {{ dataAttributesString }} {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+                        {{ card.add.button.label }}
+                    </a>
                 </div>
             </div>
 

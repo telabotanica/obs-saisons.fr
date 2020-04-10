@@ -13,7 +13,10 @@
 	padding: 20px;
 	padding-bottom: 200px;
 	max-width: 680px;
-	overflow: auto;
+	max-height: 100%;
+	overflow-y: scroll;
+	-ms-overflow-y: scroll;
+
 	background-color: #fff;
 
 	@include media(sm) {
@@ -44,7 +47,7 @@
 	}
 }
 
-.text-span-2 {
+.saisie-title-action {
 	@extend %hide;
 
 	@include media(md) {
@@ -67,6 +70,11 @@
 	@include media(sm) {
 		@include flex-direction-row;
 	}
+
+	img {
+		font-size: 10px;
+		color: transparent;
+	}
 }
 
 .saisie-aide-txt {
@@ -79,25 +87,88 @@
 	}
 }
 
-.text-block-14 {
+.text-aide-1 {
+	font-weight: 600;
+}
+
+.text-aide-2 {
 	color: $grey281146;
 	font-size: 14px;
 }
 
-.text-block-15 {
-	font-weight: 600;
-}
-
-.div-block-9 {
+.upload-label-block {
 	@include display-flex;
 	@include justify-content-space-between;
 	margin-top: 25px;
 }
 
-.text-block-16 {
+.optional-italic {
 	color: grey(60);
 	font-size: 14px;
 	font-style: italic;
+}
+
+.upload-zone {
+	position: relative;
+
+	.upload-input {
+		width: 100%;
+		opacity: 0;
+		@include position(absolute, 0, 0, 0, 0, 1000);
+		cursor: pointer;
+	}
+
+	img.obj {
+		height: 84px;
+		width: auto;
+	}
+}
+
+#map {
+	margin-bottom: 25px;
+	cursor: crosshair;
+	height: 300px;
+	width: 100%;
+	&.out {
+		height:0;
+	}
+}
+
+.algolia-places {
+	padding-right: 50px;
+	margin-bottom: 5px;
+}
+
+.ap-dropdown-menu {
+	z-index: 1001 !important;
+}
+
+#search {
+	padding-right: 31px;
+}
+
+.loading::after {
+	content: '';
+	display: inline-block;
+	background-image: image-url('chargement-image','gif');
+	background-size: 1rem;
+	height: 1rem;
+	width: 1rem;
+}
+
+.field-group .button {
+	width: 100%;
+	margin: 0;
+
+	@include media(md) {
+		width: 180px;
+		margin-top: 25px;
+		margin-left: 14px;
+	}
+}
+
+.button.bt-add.open-details-button {
+	margin: 0;
 }
 
 .saisie-footer {
@@ -107,5 +178,6 @@
 
 	@include media(sm) {
 		position: static;
+		margin-bottom: 20px;
 	}
 }

@@ -19,7 +19,7 @@ class Station
     /**
      * @ORM\Column(type="boolean")
      */
-    private $is_public;
+    private $is_private;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -66,19 +66,30 @@ class Station
      */
     private $longitude;
 
+    /**
+     * @ORM\Column(type="decimal")
+     */
+    private $altitude;
+
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $insee_code;
+
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getIsPublic(): ?bool
+    public function getIsPrivate(): ?bool
     {
-        return $this->is_public;
+        return $this->is_private;
     }
 
-    public function setIsPublic(bool $is_public): self
+    public function setIsPrivate(bool $is_private): self
     {
-        $this->is_public = $is_public;
+        $this->is_private = $is_private;
 
         return $this;
     }
@@ -189,5 +200,30 @@ class Station
         $this->longitude = $longitude;
 
         return $this;
+    }
+
+    public function setAltitude(string $altitude): self
+    {
+        $this->altitude = $altitude;
+
+        return $this;
+    }
+
+    public function getAltitude(): ?string
+    {
+        return $this->altitude;
+    }
+
+
+    public function setInseeCode(string $insee_code): self
+    {
+        $this->insee_code = $insee_code;
+
+        return $this;
+    }
+
+    public function getInseeCode(): ?string
+    {
+        return $this->insee_code;
     }
 }

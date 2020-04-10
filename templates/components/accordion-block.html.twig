@@ -19,7 +19,7 @@
 
 #}
 <div class="accordion-block" {{ id is defined ? "data-id=#{id}"}} {{ accordion.tab_reference is defined ? "data-tab=#{accordion.tab_reference}"}}>
-    <h4><a href="#" class="accordion-title-dropdown right-arrow-orange-icon">{{ accordion.title|capitalize }}</a></h4>
+    <h4><a href="" class="accordion-title-dropdown right-arrow-orange-icon">{{ accordion.title|capitalize }}</a></h4>
 
     <div class="accordion-content" style="display: none">
         {% for content in accordion.contents %}

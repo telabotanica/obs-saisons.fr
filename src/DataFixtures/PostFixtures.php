@@ -34,8 +34,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                     <figcaption>'.$faker->sentence(4, true).'</figcaption>
                 </figure>
                 <h3>'.substr($faker->sentence(3, true),0,-1).'</h3>
-                <p>'.$faker->paragraph(3, true).' <strong>'.substr($faker->sentence(2, false),0,-1).'</strong> '.$faker->sentence(5, true).' <a href="#">'.substr($faker->sentence(3, false),0,-1).'</a> '.$faker->paragraph(3, true).'</p>
-                <p>'.$faker->paragraph(5, true).' <a href="#">'.substr($faker->sentence(3, false),0,-1).'</a>, '.$faker->paragraph(3, true).'</p>
+                <p>'.$faker->paragraph(3, true).' <strong>'.substr($faker->sentence(2, false),0,-1).'</strong> '.$faker->sentence(5, true).' <a href="">'.substr($faker->sentence(3, false),0,-1).'</a> '.$faker->paragraph(3, true).'</p>
+                <p>'.$faker->paragraph(5, true).' <a href="">'.substr($faker->sentence(3, false),0,-1).'</a>, '.$faker->paragraph(3, true).'</p>
             ';
 
             $article = new Post();
@@ -60,8 +60,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             $content = '
                 <blockquote>'.$faker->sentence(6, true).'</blockquote>
                 <h3>'.substr($faker->sentence(3, true),0,-1).'</h3>
-                <p>'.$faker->paragraph(3, true).' <strong>'.substr($faker->sentence(2, false),0,-1).'</strong> '.$faker->sentence(5, true).' <a href="#">'.substr($faker->sentence(3, false),0,-1).'</a>, '.$faker->paragraph(3, true).'</p>
-                <p>'.$faker->paragraph(5, true).' <a href="#">'.substr($faker->sentence(3, false),0,-1).'</a> '.$faker->paragraph(3, true).'</p>
+                <p>'.$faker->paragraph(3, true).' <strong>'.substr($faker->sentence(2, false),0,-1).'</strong> '.$faker->sentence(5, true).' <a href="">'.substr($faker->sentence(3, false),0,-1).'</a>, '.$faker->paragraph(3, true).'</p>
+                <p>'.$faker->paragraph(5, true).' <a href="">'.substr($faker->sentence(3, false),0,-1).'</a> '.$faker->paragraph(3, true).'</p>
             ';
 
             $event = new Post();

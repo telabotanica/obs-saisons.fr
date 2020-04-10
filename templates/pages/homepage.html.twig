@@ -90,7 +90,7 @@
 					{% set obsEvent = obs.getEvent() %}
 					<li>
 						<a href="{{ path('stations_show', {'slug': obsIndividual.getStation().getSlug()}) }}#{{ obsSpecies|slugify }}" class="recent-obs-item">
-							<img src="{{ obs.getPicture() }}" alt="{{ obsSpecies|capitalize }} - {{ obs.getUser().getName()|upper }} - {{ obs.getDateObs()|date('d/m/Y') }}" width="80">
+							<img src="{{ obs.getPicture() }}" alt="{{ obsSpecies|capitalize }} - {{ obs.getUser().getName()|upper }} - {{ obs.getObsDate()|date('d/m/Y') }}" width="80">
 							<div class="recent-obs-item-content first">
 								<div class="recent-obs-title">{{ obsSpecies|capitalize }}</div>
 								<div class="recent-obs-item-stade">{{ obsEvent.getName()|capitalize }} {{ obsEvent.getStadeBbch() != null ? "stade #{obsEvent.getStadeBbch()}" }}</div>

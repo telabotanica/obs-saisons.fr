@@ -23,12 +23,14 @@ class StationFixtures extends Fixture implements DependentFixtureInterface
             $station->setSlug($slugGenerator->slugify($name));
             $station->setDescription($faker->text(200));
             $station->setUser($this->getReference('user-'.$faker->randomDigit));
-            $station->setIsPublic($faker->boolean);
+            $station->setIsPrivate($faker->boolean);
             $station->setHeaderImage($faker->imageUrl(800, 600, 'nature'));
-            $station->setLocality($faker->city.' ('.$faker->departmentNumber.')');
-            $station->setHabitat($faker->randomElement($array = ['Ville', 'Campagne']));
+            $station->setLocality($faker->city);
+            $station->setHabitat($faker->randomElement(['Ville', 'Campagne']));
             $station->setLatitude($faker->randomFloat(8.5, -90, 90));
             $station->setLongitude($faker->randomFloat(8.5, -180, 180));
+            $station->setAltitude($faker->numberBetween(200, 1500));
+            $station->setInseeCode(strval($faker->departmentNumber.$faker->randomNumber(3, true)));
 
             $manager->persist($station);
 
