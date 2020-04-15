@@ -39,7 +39,7 @@ class StationType extends AbstractType
                 'label' => 'Image de la station',
                 'attr' => [
                     'class' => 'upload-input',
-                    'accept' => 'image/jpeg',
+                    'accept' => 'image/png, image/jpeg',
                 ],
             ])
             ->add('submit', SubmitType::class)
