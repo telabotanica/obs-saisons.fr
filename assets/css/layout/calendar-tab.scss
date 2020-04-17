@@ -237,7 +237,6 @@
     @include media(md) {
         @include font-title-bold;
         font-size: 18px;
-        text-transform: capitalize;
     }
 }
 
