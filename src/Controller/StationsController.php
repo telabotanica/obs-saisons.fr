@@ -354,7 +354,7 @@ class StationsController extends PagesController
         ];
     }
 
-    private function uploadImage(UploadedFile $formValue)
+    private function uploadImage(?UploadedFile $formValue)
     {
         $fileName = null;
         if ($formValue) {
