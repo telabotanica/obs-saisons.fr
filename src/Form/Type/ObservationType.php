@@ -102,7 +102,7 @@ class ObservationType extends AbstractType
             ->add('details', TextareaType::class, ['required' => false])
             ->add('picture', FileType::class, [
                 'required' => false,
-                'label' => 'Vos Photos',
+                'label' => 'Votre photo',
                 'attr' => [
                     'class' => 'upload-input',
                     'accept' => 'image/png, image/jpeg',
