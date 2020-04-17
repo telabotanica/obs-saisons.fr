@@ -27,7 +27,7 @@ class IndividualType extends AbstractType
                     if (in_array($species, $this->stationDisplayData->getStationAllSpecies())) {
                         $vernacularName .= ' (+)';
                     }
-                    return $vernacularName;
+                    return ucfirst($vernacularName);
                 },
                 /*'group_by' => function ($species) {
                     return ucfirst($species->getType()->getName());
