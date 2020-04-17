@@ -29,7 +29,10 @@ class StationType extends AbstractType
             ->add('habitat', ChoiceType::class, [
                 'choices' => [
                     'Ville' => 'Ville',
-                    'Campagne' => 'Campagne',
+                    'Jardin/parc' => 'Jardin/parc',
+                    'Forêt' => 'Forêt',
+                    'Champ/prairie' => 'Champ/prairie',
+                    'Village' => 'Village',
                 ],
                 'required' => true,
             ])
