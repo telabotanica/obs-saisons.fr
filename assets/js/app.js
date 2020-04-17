@@ -544,12 +544,13 @@ function calendarSwitchDate() {
 }
 
 function observationsToggleCombinedConditions ($element, activeDate, matchsTab = null) {
+    let showObs = $element.data('year').toString() === activeDate;
     if(null !== matchsTab) {// if matchsTab is defined it is boolean
         let activeTab = $('.tabs-holder').data('active');
 
-        matchsTab = ('all' === activeTab || $element.data('tab') === activeTab);
+        showObs &= ('all' === activeTab || $element.data('tab') === activeTab);
     }
-    return ($element.data('year').toString() === activeDate && matchsTab );
+    return showObs;
 }
 
 function hideCalendarLegend () {

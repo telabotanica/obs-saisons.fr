@@ -228,7 +228,6 @@
     @include font_default_semi_bold;
     font-size: 12px;
     letter-spacing: 1px;
-    text-transform: uppercase;
 
     @include media(sm) {
         font-size: 14px;
@@ -394,27 +393,6 @@ $stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
         &.#{$stade} {
             background-color: #{$stade-color};
         }
-    }
-
-    &.apparition,
-    &.feuillaison {
-        grid-row-start: 1;
-        grid-row-end: 2;
-    }
-
-    &.floraison {
-        grid-row-start: 2;
-        grid-row-end: 3;
-    }
-
-    &.fructification {
-        grid-row-start: 3;
-        grid-row-end: 4;
-    }
-
-    &.senescence {
-        grid-row-start: 4;
-        grid-row-end: 5;
     }
 }
 

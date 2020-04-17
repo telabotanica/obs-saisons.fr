@@ -18,10 +18,12 @@
             {% set row_start = loop.index %}
         {% endif %}
     {% endfor %}
-    <div class="stade-marker {{ stades_css_classes[obsStade] }}" data-year="{{ obs.getObsDate()|date("Y") }}" data-tab="{{ obs.getUser().getId() }}" style="{{ "background-image: url(#{obs.getPicture}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}{{ hide ? 'display:none;' }}">
-        <div class="stade-marker-text {{ loop.last ? 'last' }}">
-            <div class="stade-text">{{ obsStade }} - stade {{ obs.getEvent().getStadeBbch() }}</div>
-            <div class="stade-date">Le {{ obs.getObsDate()|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
+    {% if row_start > 0 and column_start > 2 %}
+        <div class="stade-marker {{ stades_css_classes[obsStade] }}" data-year="{{ obs.getObsDate()|date("Y") }}" data-tab="{{ obs.getUser().getId() }}" style="{{ "background-image: url(#{obs.getPicture}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}{{ hide ? 'display:none;' }}">
+            <div class="stade-marker-text {{ loop.last ? 'last' }}">
+                <div class="stade-text">{{ obsStade }} - stade {{ obs.getEvent().getStadeBbch() }}</div>
+                <div class="stade-date">Le {{ obs.getObsDate()|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endfor %}
