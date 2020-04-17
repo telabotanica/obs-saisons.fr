@@ -46,7 +46,7 @@
 
             <div class="individu-header">
                 {% set individual = individualData.getIndividual() %}
-                <h5 class="individu-name">{{ individual.name }}</h5>
+                <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
                 <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-indiv="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
                     <div>Saisir une observation</div>
                 </a>
@@ -61,7 +61,7 @@
 
                     <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stade {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ stades[i-1] }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
-                    <div class="stade-period {{ stades_css_classes[stade] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};" }}"></div>
+                    <div class="stade-period {{ stades_css_classes[stade] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
                 {% endfor %}
 
 
