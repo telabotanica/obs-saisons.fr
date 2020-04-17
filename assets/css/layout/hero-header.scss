@@ -135,11 +135,11 @@
     color: $brown;
     font-size: 14px;
 
-    &.map {
+    /*&.map {
         padding-right: 20px;
 
         @include background-image(image-url('right-arrow-orange'), 98% 51%, 6px);
-    }
+    }*/
 }
 
 .privacy-status {
