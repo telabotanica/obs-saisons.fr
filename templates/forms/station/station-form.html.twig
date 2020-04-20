@@ -48,7 +48,8 @@
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
-                'data-name': 'latitude'
+                'data-name': 'latitude',
+                'placeholder': 'Décimal, ex: 48.76638'
             }
         }) }}
         {{ form_row(stationForm.longitude, {
@@ -57,7 +58,8 @@
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
-                'data-name': 'longitude'
+                'data-name': 'longitude',
+                'placeholder': 'Décimal, ex: 6.045905'
             }
         }) }}
     </div>
@@ -78,7 +80,7 @@
             'attr': {
                 'class': 'text-field ods-input',
                 'data-name': 'insee_code'
-            }
+            },
         }) }}
     </div>
     {{ form_row(stationForm.altitude) }}
