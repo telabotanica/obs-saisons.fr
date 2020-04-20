@@ -26,7 +26,7 @@ class StationFixtures extends Fixture implements DependentFixtureInterface
             $station->setIsPrivate($faker->boolean);
             $station->setHeaderImage($faker->imageUrl(800, 600, 'nature'));
             $station->setLocality($faker->city);
-            $station->setHabitat($faker->randomElement(['Ville', 'Campagne']));
+            $station->setHabitat($faker->randomElement(['Ville', 'Jardin/parc', 'Forêt', 'Champ/prairie', 'Village']));
             $station->setLatitude($faker->randomFloat(8.5, -90, 90));
             $station->setLongitude($faker->randomFloat(8.5, -180, 180));
             $station->setAltitude($faker->numberBetween(200, 1500));
