@@ -43,9 +43,9 @@ class PagesController extends AbstractController
         return $this->render('pages/homepage.html.twig', [
             'lastArticles' => $postRepository->setPosts('article')->findLastFeaturedPosts(),
             'lastEvents' => $postRepository->setPosts('event')->findLastFeaturedPosts(),
-            'lastObservations' => $observationRepository->findLastObsWithImages(5),
+            'lastObservations' => $observationRepository->findLastObs(5),
+            'lastObservationsWithImages' => $observationRepository->findLastObsWithImages(4),
             'obsCount' => $observationRepository->findObsCountThisYear(),
-            'randomObservations' => $observationRepository->findRandomObsWithImages(4),
         ]);
     }
 
