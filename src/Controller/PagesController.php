@@ -72,6 +72,17 @@ class PagesController extends AbstractController
     }
 
     /**
+     * @Route("/participer/protocole", name="protocole")
+     */
+    public function protocole(Request $request): Response
+    {
+        return $this->render('pages/protocole.html.twig', [
+            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'route' => $request->get('_route'),
+        ]);
+    }
+
+    /**
      * @Route("/resultats", name="resultats")
      */
     public function resultats(Request $request): Response
