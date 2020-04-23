@@ -32,7 +32,7 @@
             }) }}
             <div class="saisie-aide event">
                 {% set hasStadeBbch = firstIndividualsFirstEventSpecies.event.stadeBbch is not null %}
-                <img src="/media/species/{{ firstSpecies.picture }}{{ hasStadeBbch and firstIndividualsEventSpecies|length != 1 ? "_#{firstIndividualsFirstEventSpecies.event.stadeBbch|first}" }}.jpg" alt="{{ firstIndividualsFirstEventSpecies.event.name|capitalize }}{{ hasStadeBbch ? " - Stade #{firstIndividualsFirstEventSpecies.event.stadeBbch}" }}" width="80" height="80">
+                <img src="/media/species/{{ firstSpecies.picture }}{{ firstSpecies.type.id == 1 ? "_#{firstIndividualsFirstEventSpecies.event.stadeBbch|first}" }}.jpg" alt="{{ firstIndividualsFirstEventSpecies.event.name|capitalize }}{{ hasStadeBbch ? " - Stade #{firstIndividualsFirstEventSpecies.event.stadeBbch}" }}" width="80" height="80">
                 <div class="saisie-aide-txt event">
                     <div class="text-aide-1 event">{{ firstIndividualsFirstEventSpecies.event.name|capitalize }} {{ hasStadeBbch ? "- Stade #{firstIndividualsFirstEventSpecies.event.stadeBbch}" }}</div>
                     <div class="text-aide-2 event">{{ firstIndividualsFirstEventSpecies.event.description }}</div>

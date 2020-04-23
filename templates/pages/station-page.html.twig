@@ -16,23 +16,30 @@
 		{# displays top actionbar with species count #}
 		{% set species = stationData.stationAllSpecies %}
 		{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
+
+		{# sets top actionbar components #}
+		{% set topActionbarComponents = [
+			{
+				'name': 'side-block',
+				'data': {
+					'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
+				}
+			}
+		] %}
+		{% if species|length > 0 %}
+			{% set topActionbarComponents = topActionbarComponents|merge([{'name': 'tabs-holder'}]) %}
+		{% endif %}
+		{% set topActionbarComponents = topActionbarComponents|merge([{
+			'name': 'squared-button',
+			'data': squaredButtonData
+		}]) %}
+		{# displays top actionbar #}
 		{% include 'components/actionbar.html.twig' with {
 			actionbar: {
-				'components': [
-					{
-						'name': 'side-block',
-						'data': {
-							'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
-						}
-					},
-					{'name': 'tabs-holder'},
-					{
-						'name': 'squared-button',
-						'data': squaredButtonData
-					}
-				]
+				'components': topActionbarComponents
 			}
 		} %}
+
 		{# displays list-cards and calendar #}
 		{% for id, list_card in list_cards %}
 			{% include 'components/list-cards.html.twig' with { buttons: list_card.buttons } %}
@@ -42,24 +49,26 @@
 			{% endif %}
 		{% endfor %}
 
-		{% include 'components/actionbar.html.twig' with {
-			actionbar:{
-				'classes': 'bottom',
-				'components': [
-					{
-						'name': 'squared-button',
-						'data': {
-							'icon': 'export',
-							'label': 'exporter'
+		{% if species|length > 0 %}
+			{% include 'components/actionbar.html.twig' with {
+				actionbar:{
+					'classes': 'bottom',
+					'components': [
+						{
+							'name': 'squared-button',
+							'data': {
+								'icon': 'export',
+								'label': 'exporter'
+							}
+						},
+						{
+							'name': 'squared-button',
+							'data': squaredButtonData
 						}
-					},
-					{
-						'name': 'squared-button',
-						'data': squaredButtonData
-					}
-				]
-			}
-		} %}
+					]
+				}
+			} %}
+		{% endif %}
 
 		{% include 'components/help-block.html.twig' with {
 			help: {

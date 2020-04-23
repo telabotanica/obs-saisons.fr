@@ -39,10 +39,22 @@ class ObservationRepository extends ServiceEntityRepository
         );
     }
 
+    public function findLastObs(int $limit): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.is_missing = 0')
+            ->orderBy('o.obs_date', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findLastObsWithImages(int $limit): array
     {
         return $this->createQueryBuilder('o')
             ->where('o.picture IS NOT NULL')
+            ->andWhere('o.is_missing = 0')
             ->orderBy('o.obs_date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()

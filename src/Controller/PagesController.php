@@ -43,9 +43,9 @@ class PagesController extends AbstractController
         return $this->render('pages/homepage.html.twig', [
             'lastArticles' => $postRepository->setPosts('article')->findLastFeaturedPosts(),
             'lastEvents' => $postRepository->setPosts('event')->findLastFeaturedPosts(),
-            'lastObservations' => $observationRepository->findLastObsWithImages(5),
+            'lastObservations' => $observationRepository->findLastObs(5),
+            'lastObservationsWithImages' => $observationRepository->findLastObsWithImages(4),
             'obsCount' => $observationRepository->findObsCountThisYear(),
-            'randomObservations' => $observationRepository->findRandomObsWithImages(4),
         ]);
     }
 
@@ -66,6 +66,17 @@ class PagesController extends AbstractController
     public function participer(Request $request): Response
     {
         return $this->render('pages/participer.html.twig', [
+            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'route' => $request->get('_route'),
+        ]);
+    }
+
+    /**
+     * @Route("/participer/protocole", name="protocole")
+     */
+    public function protocole(Request $request): Response
+    {
+        return $this->render('pages/protocole.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
         ]);

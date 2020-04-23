@@ -85,15 +85,15 @@
 			</div>
 			<ul class="ods-list-unstyled">
 				{% for obs in lastObservations %}
-					{% set obsIndividual = obs.getIndividual() %}
-					{% set obsSpecies = obsIndividual.getSpecies() %}
-					{% set obsEvent = obs.getEvent() %}
+					{% set obsIndividual = obs.individual %}
+					{% set obsSpecies = obsIndividual.species %}
+					{% set obsEvent = obs.event %}
 					<li>
-						<a href="{{ path('stations_show', {'slug': obsIndividual.getStation().getSlug()}) }}#{{ obsSpecies.getVernacularName()|slugify }}" class="recent-obs-item">
-							<img src="{{ obs.getPicture() }}" alt="{{ obsSpecies.getVernacularName()|capitalize }} - {{ obs.getUser().getName()|upper }} - {{ obs.getObsDate()|date('d/m/Y') }}" width="80">
+						<a href="{{ path('stations_show', {'slug': obsIndividual.station.slug }) }}#{{ obsSpecies.vernacularName|slugify }}" class="recent-obs-item">
+							<img src="/media/species/{{ obsSpecies.picture }}{{ obsSpecies.type.id == 1 ? "_#{obsEvent.stadeBbch|first}" }}.jpg" alt="{{ obsSpecies.vernacularName|capitalize }} - {{ obs.user.name|upper }} - {{ obs.obsDate|date('d/m/Y') }}" width="80">
 							<div class="recent-obs-item-content first">
-								<div class="recent-obs-title">{{ obsSpecies.getVernacularName()|capitalize }}</div>
-								<div class="recent-obs-item-stade">{{ obsEvent.getName()|capitalize }} {{ obsEvent.getStadeBbch() != null ? "stade #{obsEvent.getStadeBbch()}" }}</div>
+								<div class="recent-obs-title">{{ obsSpecies.vernacularName|capitalize }}</div>
+								<div class="recent-obs-item-stade">{{ obsEvent.name|capitalize }} {{ obsEvent.stadeBbch != null ? "stade #{obsEvent.stadeBbch}" }}</div>
 							</div>
 						</a>
 					</li>
@@ -109,8 +109,8 @@
 				<div class="number-obs-period">Observation{{ obsCount > 1 ? 's' }} en {{ "now"|date("Y") }}</div>
 			</div>
 			<div class="mosaic">
-				{% for randObs in randomObservations %}
-					<div style="background-image: url('{{ randObs.picture }}');"></div>
+				{% for i in 0..3 %}
+					<div style="background-image: url('{{ lastObservationsWithImages[i].picture }}');"></div>
 				{% endfor %}
 			</div>
 		</div>

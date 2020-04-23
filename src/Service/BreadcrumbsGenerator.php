@@ -20,6 +20,7 @@ class BreadcrumbsGenerator
     const OTHER_BREADCRUMBS = [
         'stations' => 'Stations d’observation',
         'station-page' => 'Page de la station',
+        'protocole' => 'Protocole',
     ];
 
     private $trails;
