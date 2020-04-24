@@ -18,12 +18,20 @@
             {% set row_start = loop.index %}
         {% endif %}
     {% endfor %}
+    {% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
+    {% if obs.isMissing == 0 %}
+        {% set pictureName = obs.individual.species.picture %}
+        {% if obs.individual.species.type.id == 1 %}
+            {% set pictureName = "#{pictureName}_#{obs.event.stadeBbch|first}" %}
+        {% endif %}
+        {% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
+    {% endif %}
     {% if row_start > 0 and column_start > 2 %}
-        <div class="stade-marker {{ stades_css_classes[obsStade] }}" data-year="{{ obs.getObsDate()|date("Y") }}" data-tab="{{ obs.getUser().getId() }}" style="{{ "background-image: url(#{obs.getPicture}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}{{ hide ? 'display:none;' }}">
+        <a href="" class="stade-marker {{ stades_css_classes[obsStade] }} open" data-year="{{ obs.obsDate|date("Y") }}" data-tab="{{ obs.user.id }}" data-open="obs-infos" data-author="{{ obs.user.displayName }}" data-stade="{{ obsStade }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}" data-date="Le {{ obs.obsDate|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}" style="{{ "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};" }}{{ hide ? 'display:none;' }}">
             <div class="stade-marker-text {{ loop.last ? 'last' }}">
-                <div class="stade-text">{{ obsStade }} - stade {{ obs.getEvent().getStadeBbch() }}</div>
-                <div class="stade-date">Le {{ obs.getObsDate()|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
+                <div class="stade-text">{{ obsStade }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
+                <div class="stade-date">Le {{ obs.obsDate|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
             </div>
-        </div>
+        </a>
     {% endif %}
 {% endfor %}

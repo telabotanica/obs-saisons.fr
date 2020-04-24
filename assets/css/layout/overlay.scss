@@ -6,10 +6,10 @@
 	background-color: rgba($grey131117, 0.9);
 }
 
+.obs-info-container,
 .saisie-container {
 	@include position(fixed, 0, 0, 0, 0, 1);
 	@extend %display-flex-column;
-	@include flex-1;
 	padding: 20px;
 	padding-bottom: 200px;
 	max-width: 680px;
@@ -28,6 +28,18 @@
 		border-radius: 2px;
 		position: static;
 	}
+}
+
+.obs-info {
+	margin: 10px auto;
+
+	@include media(sm, md) {
+		margin: 10px;
+	}
+}
+
+.saisie-container {
+	@include flex-1;
 }
 
 .saisie-header {

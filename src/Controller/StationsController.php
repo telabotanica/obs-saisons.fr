@@ -86,7 +86,11 @@ class StationsController extends PagesController
         $cards = [];
         foreach ($stations as $station) {
             $stationDisplayData = new StationDisplayData($station, $this->getDoctrine());
-            $header = ['image' => $station->getHeaderImage()];
+            $stationImage = '/media/layout/image-placeholder.svg';
+            if (null !== $station->getHeaderImage()) {
+                $stationImage = $station->getHeaderImage();
+            }
+            $header = ['image' => $stationImage];
             if ($station->getIsPrivate()) {
                 $header['icon_name'] = 'private';
             }

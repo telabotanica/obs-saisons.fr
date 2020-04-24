@@ -402,6 +402,8 @@ $stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
     height: 100px;
     @include background-image(null, 0 50%, 100px 100px);
     background-color: #fff;
+    text-decoration: none;
+    color: #000000;
 
     @include media(md) {
         position: relative;

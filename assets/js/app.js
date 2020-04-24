@@ -49,14 +49,18 @@ function onOpenOverlay() {
         if ($(this).hasClass('disabled')) {
             window.location.href = window.location.origin+'/user/login';
         } else {
-            let dataAttrs = $(this).data();
-
-            $('.overlay.'+dataAttrs.open)
-                .removeClass('hidden')
-                .find('form').get(0).reset()
-            ;
+            let dataAttrs = $(this).data(),
+                $overlay = $('.overlay.'+dataAttrs.open);
+            $overlay.removeClass('hidden');
+            if(valOk($('form', $overlay))) {
+                $('form', $overlay).get(0).reset();
+            }
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
+                case 'obs-infos':
+                    $.each(['author','stade','date'], function (i, infoType) {
+                        $('.obs-info.obs-'+infoType).text(dataAttrs[infoType]);
+                    })
                 case 'station':
                     onLocation();
                     onFileEvent();
@@ -95,15 +99,17 @@ function onCloseOverlay() {
 
 function closeOverlay($overlay) {
     $('body').css('overflow', 'auto');
-    $overlay
-        .addClass('hidden')
-        .find('form').get(0).reset()
-    ;
-    $overlay.find('option').removeAttr('hidden');
+    $overlay.addClass('hidden');
+    if(valOk($('form',$overlay))) {
+        $('form',$overlay).get(0).reset();
+        $overlay.find('option').removeAttr('hidden');
+    }
     if ($overlay.hasClass('observation')) {
         observationOvelayManageIndividualAndEvents($('.open-observation-form-all-station').data());
     } else if ($overlay.hasClass('individual')) {
         individualOvelayManageSpecies($('.open-individual-form-all-station').data().species.toString(), true);
+    } else if ($overlay.hasClass('obs-infos')) {
+        $('.saisie-container').find('.obs-info').text('');
     }
 }
 
