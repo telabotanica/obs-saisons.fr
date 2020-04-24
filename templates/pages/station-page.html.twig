@@ -86,10 +86,24 @@
 			<div class="overlay hidden individual">
 				{% include 'forms/individual/indiv-form.html.twig' with {action:'individual', form: individualForm} %}
 			</div>
+
 			<div class="overlay hidden observation">
 				{% if stationData.stationAllSpeciesIndividuals is not empty %}
 					{% include 'forms/observation/obs-form.html.twig' with {action:'observation', form: observationForm} %}
 				{% endif %}
+			</div>
+
+			<div class="overlay hidden obs-infos">
+				<div class="obs-info-container">
+					<div class="obs-info obs-author"></div>
+					<div class="obs-info obs-stade"></div>
+					<div class="obs-info obs-date"></div>
+					<div class="saisie-footer">
+						<a href="" class="button bt-form bt-annuler">
+							<div>Fermer</div>
+						</a>
+					</div>
+				</div>
 			</div>
 		{% endif %}
 		{% set stationAllIndividuals = stationData.getStationAllIndividualsIds() %}
