@@ -4,13 +4,17 @@
     App\Entity\Station station*
     App\DisplayData\Station\StationDisplayData stationData*
 #}
+{% set headerImage = '' %}
+{% if not show or station.latitude == null or station.longitude == null %}
+    {% set headerImage = station.headerImage != null ? station.headerImage : asset('media/layout/image-placeholder.svg')%}
+{% endif %}
 {% set images = stationData.getStationObsImages() %}
 <div class="hero-header">
-    <div class="hero-header-media-part map">
+    <div id="headerMap" class="hero-header-media-part map{{ show ? ' show-map'}}" data-latitude="{{ station.latitude }}" data-longitude="{{ station.longitude }}" style="background-image:linear-gradient(180deg,rgba(131,117,105,0.3),rgba(131,117,105,0.3)),url({{ headerImage }});">
         {% if show and images|first is not empty %}
-            <div class="contributions-mini-block" style="background-image: url({{ images|first }});">
+            <div class="contributions-mini-block" style="background-image: url({{ images|last }});">
                 {% if images|length > 1 %}
-                    <div class="contributions-number">+ {{ images|length }}</div>
+                    <div class="contributions-number">+ {{ images|length - 1 }}</div>
                 {% endif %}
             </div>
         {% endif %}
@@ -18,11 +22,11 @@
     </div>
 
     <div class="hero-header-content">
-        <h3 class="hero-header-title"><span class="lighter">{{ station.getName() }} &nbsp;•</span> &nbsp;Observations</h3>
-        <p class="hero-header-subtitle">{{ station.getDescription()|default }}</p>
+        <h3 class="hero-header-title"><span class="lighter">{{ station.name }} &nbsp;•</span> &nbsp;Observations</h3>
+        <p class="hero-header-subtitle">{{ station.description|default }}</p>
 
             {% if show %}
-                <div class="hero-header-detail map">Lat. : {{ station.getLatitude() }} &nbsp;• &nbsp;Long. : {{ station.getLongitude() }}</div>
+                <div class="hero-header-detail map">Lat. : {{ station.latitude }} &nbsp;• &nbsp;Long. : {{ station.longitude }}</div>
             {% endif %}
 
     </div>
@@ -32,10 +36,10 @@
             <div  class="member-avatar" style="background-image: url({{ station.getUser().getAvatar()|default(asset('media/layout/icons/member_default.png')) }})"></div>
             <div class="member-label-block-content">
                 <div class="member-label-block-title">Créée par</div>
-                <a href="" class="member-label-block-link">{{ station.getUser().getDisplayName() }}</a>
+                <a href="" class="member-label-block-link">{{ station.user.displayName }}</a>
             </div>
         </div>
     {% endif %}
 
-    <div class="privacy-status">Station {{ station.getIsPrivate() ? 'privée' : 'publique' }}</div>
+    <div class="privacy-status">Station {{ station.isPrivate ? 'privée' : 'publique' }}</div>
 </div>
