@@ -26,6 +26,17 @@ const $longitude = $('#station_longitude');
 const $locality = $('#station_locality');
 
 
+//map configuration
+const MARKER_ICON = L.Icon.extend({
+    options: {
+        shadowUrl: '/media/map/marker-shadow.png',
+        iconUrl: '/media/map/marker-icon.png',
+        iconSize: [24,40],
+        iconAnchor: [12,40]//correctly replaces the dot of the pointer
+    }
+});
+
+
 $( document ).ready( function() {
     addModsTouchClass();
     toggleMenuSmallDevices();
@@ -38,6 +49,7 @@ $( document ).ready( function() {
     calendarSwitchDate();
     hideCalendarLegend();
     toggleAccodionBlock();
+    stationMapDisplay();
 });
 
 // open overlay
@@ -264,15 +276,6 @@ function onLocation() {
         container: '#search',
         language: 'fr',
         countries: ['fr']
-    });
-    //map configuration
-    const MARKER_ICON = L.Icon.extend({
-        options: {
-            shadowUrl: '/media/map/marker-shadow.png',
-            iconUrl: '/media/map/marker-icon.png',
-            iconSize: [24,40],
-            iconAnchor: [12,40]//correctly replaces the dot of the pointer
-        }
     });
     //toggleMap();
     // Create the map
@@ -615,6 +618,35 @@ function findNextTarget($element, targetClass, direction) {
     let $ret = (direction === 'prev') ? $element.prev(targetClass) : $element.next(targetClass);
     let valid = valOk($ret);
     return valid ? $ret : valid;
+}
+
+function stationMapDisplay() {
+    if (valOk($('.hero-header-media-part.map')) && $('.hero-header-media-part.map').hasClass('show-map')) {
+        let $headerMapDisplay = $('.hero-header-media-part.map'),
+            latitude = $headerMapDisplay.data('latitude'),
+            longitude = $headerMapDisplay.data('longitude'),
+            // Create the map
+            headerMap = L.map('headerMap', {zoomControl: false}).setView([latitude, longitude], 18);
+        // Set up the OSM layer
+        L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
+                maxZoom: 18
+            }).addTo(headerMap)
+        ;
+        // Initialise the FeatureGroup to store editable layers
+        headerMap.addLayer(new L.FeatureGroup());
+        let position =
+                {'lat':latitude,'lng':longitude},
+            headerMarker = new L.Marker(
+                position, {
+                    draggable: false,
+                    icon: new MARKER_ICON()
+                }
+            )
+        ;
+        headerMap.addLayer(headerMarker);
+    }
 }
 
 function valOk(value, comparisonDirection = true, compareTo = null) {

@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
-{% set show = (not station.getIsPrivate() or app.user.id|default('none') == station.getUser().getId()) %}
+{% set show = not station.isPrivate or app.user.id|default('none') == station.user.id %}
 
 {% block header_content %}{% endblock %}
 {% block main_content %}
