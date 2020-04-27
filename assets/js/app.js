@@ -278,27 +278,12 @@ function onLocation() {
         countries: ['fr']
     });
     //toggleMap();
+
     // Create the map
-    map = L.map('map').setView([46.7111, 1.7191], 6);
-    // Set up the OSM layer
-    L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
-            maxZoom: 18
-        }).addTo(map)
-    ;
-    // Initialise the FeatureGroup to store editable layers
-    map.addLayer(new L.FeatureGroup());
-    let position =
-        {'lat':46.7111,'lng':1.7191},
-        marker = new L.Marker(
-            position, {
-                draggable: true,
-                icon: new MARKER_ICON()
-            }
-        )
-    ;
-    map.addLayer(marker);
+    let mapInfo = mapDisplay('map', 46.7111, 1.7191, 6),
+        marker = mapInfo.marker;
+    map = mapInfo.map;
+
 
     // interactions with map
     map.on('click', function (e) {
@@ -621,32 +606,40 @@ function findNextTarget($element, targetClass, direction) {
 }
 
 function stationMapDisplay() {
-    if (valOk($('.hero-header-media-part.map')) && $('.hero-header-media-part.map').hasClass('show-map')) {
-        let $headerMapDisplay = $('.hero-header-media-part.map'),
-            latitude = $headerMapDisplay.data('latitude'),
-            longitude = $headerMapDisplay.data('longitude'),
-            // Create the map
-            headerMap = L.map('headerMap', {zoomControl: false}).setView([latitude, longitude], 18);
-        // Set up the OSM layer
-        L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
-                maxZoom: 18
-            }).addTo(headerMap)
-        ;
-        // Initialise the FeatureGroup to store editable layers
-        headerMap.addLayer(new L.FeatureGroup());
-        let position =
-                {'lat':latitude,'lng':longitude},
-            headerMarker = new L.Marker(
-                position, {
-                    draggable: false,
-                    icon: new MARKER_ICON()
-                }
-            )
-        ;
-        headerMap.addLayer(headerMarker);
+    let $headerMapDisplay = $('#headerMap');
+    if (valOk($headerMapDisplay) && $headerMapDisplay.hasClass('show-map')) {
+        let lat = $headerMapDisplay.data('latitude'),
+            lng = $headerMapDisplay.data('longitude');
+        mapDisplay('headerMap', lat, lng, 18, false, false);
+
     }
+}
+
+function mapDisplay(elementIdAttr, lat, lng, zoom, hasZoomcontrol = true, isDraggable = true) {
+// Create the map
+    let map = L.map(elementIdAttr, {zoomControl: hasZoomcontrol}).setView([lat, lng], zoom);
+    // Set up the OSM layer
+    L.tileLayer(
+        'https://osm.tela-botanica.org/tuiles/osmfr/{z}/{x}/{y}.png', {
+            attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
+            maxZoom: 18
+        }).addTo(map)
+    ;
+    // Initialise the FeatureGroup to store editable layers
+    map.addLayer(new L.FeatureGroup());
+    let marker = new L.Marker(
+        {
+            'lat':lat,
+            'lng':lng
+        },
+        {
+            draggable: isDraggable,
+            icon: new MARKER_ICON()
+        }
+    );
+    map.addLayer(marker);
+
+    return {map:map,marker:marker};
 }
 
 function valOk(value, comparisonDirection = true, compareTo = null) {
