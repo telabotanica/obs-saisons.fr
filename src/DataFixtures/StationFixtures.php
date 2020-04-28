@@ -30,7 +30,7 @@ class StationFixtures extends Fixture implements DependentFixtureInterface
             $station->setLatitude($faker->randomFloat(8.5, -90, 90));
             $station->setLongitude($faker->randomFloat(8.5, -180, 180));
             $station->setAltitude($faker->numberBetween(200, 1500));
-            $station->setInseeCode(strval($faker->departmentNumber.$faker->randomNumber(3, true)));
+            $station->setInseeCode(strval(substr($faker->departmentNumber.$faker->randomNumber(3, true), 0, 5)));
 
             $manager->persist($station);
 
