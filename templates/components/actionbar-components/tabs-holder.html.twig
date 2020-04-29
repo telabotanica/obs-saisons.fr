@@ -10,8 +10,10 @@
             reference#: string
 #}
 
-{% if route in ['stations', 'observations'] %}
+{% if route in ['stations', 'observations'] and (show is not defined or show) %}
     {% set tabs_holder = [{'title':"Toutes les #{route}"}, {'title':"Mes #{route}", 'reference': app.user.id|default('none')}] %}
+{% elseif route == 'observations' and show is defined and not show %}
+    {% set tabs_holder = [{'title':''}] %}
 {% endif %}
 
 <div class="tabs-holder{{ route == 'stations' ? ' list' }}" data-active="{{ tabs_holder[0]['reference']|default('all') }}">

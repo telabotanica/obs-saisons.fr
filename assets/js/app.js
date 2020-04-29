@@ -57,11 +57,12 @@ function onOpenOverlay() {
     $('a.open').off('click').on('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
+        const $thisLink = $(this);
 
-        if ($(this).hasClass('disabled')) {
+        if ($thisLink.hasClass('disabled')) {
             window.location.href = window.location.origin+'/user/login';
         } else {
-            let dataAttrs = $(this).data(),
+            let dataAttrs = $thisLink.data(),
                 $overlay = $('.overlay.'+dataAttrs.open);
             $overlay.removeClass('hidden');
             if(valOk($('form', $overlay))) {
@@ -70,9 +71,16 @@ function onOpenOverlay() {
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
                 case 'obs-infos':
+                    console.log(dataAttrs);
+                   if ($thisLink.hasClass('absence')) {
+                       $('.obs-info.title').text('Signalement d’absence de ce stade');
+                   } else {
+                       $('.obs-info.title').text('Détails de l’observation');
+                   }
                     $.each(['author','stade','date'], function (i, infoType) {
                         $('.obs-info.obs-'+infoType).text(dataAttrs[infoType]);
-                    })
+                    });
+                    break;
                 case 'station':
                     onLocation();
                     onFileEvent();
@@ -611,7 +619,6 @@ function stationMapDisplay() {
         let lat = $headerMapDisplay.data('latitude'),
             lng = $headerMapDisplay.data('longitude');
         mapDisplay('headerMap', lat, lng, 18, false, false);
-
     }
 }
 

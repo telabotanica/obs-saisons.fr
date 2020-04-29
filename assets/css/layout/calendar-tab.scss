@@ -217,7 +217,7 @@
 
     @include media(md) {
         @include individu-block;
-        @include flex-direction-row-reverse;
+        @include flex-direction-row;
         @include align-self-stretch;
         padding: 0;
     }

@@ -47,9 +47,11 @@
             <div class="individu-header">
                 {% set individual = individualData.getIndividual() %}
                 <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
-                <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-indiv="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
-                    <div>Saisir une observation</div>
-                </a>
+                {% if show %}
+                    <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-indiv="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+                        <div>Saisir une observation</div>
+                    </a>
+                {% endif %}
             </div>
 
             <div class="grid content-{{ stades|length }}">
@@ -77,13 +79,15 @@
         {% endfor %}
 
         <div class="individu-footer">
-            <a href="" class="table-action add open{{ disable ? ' disabled' }}" data-open="individual" data-species="{{ calendar.species.id }}" data-all-species="false" data-station="{{ station.id }}" data-req-login="true" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
-                <div>Ajouter un nouvel individu</div>
-                <div class="add-button-like add-circle-icon"></div>
-            </a>
             <div class="table-mask-button">
                 <div class="up-arrow-green-icon">Masquer le détail</div>
             </div>
+            {% if show %}
+                <a href="" class="table-action add open{{ disable ? ' disabled' }}" data-open="individual" data-species="{{ calendar.species.id }}" data-all-species="false" data-station="{{ station.id }}" data-req-login="true" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+                    <div>Ajouter un nouvel individu</div>
+                    <div class="add-button-like add-circle-icon"></div>
+                </a>
+            {% endif %}
         </div>
     </div>
 
