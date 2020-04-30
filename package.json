@@ -16,7 +16,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "leaflet": "^1.6.0",
         "leaflet-draw": "^1.0.4",
         "places.js": "^1.18.1"
