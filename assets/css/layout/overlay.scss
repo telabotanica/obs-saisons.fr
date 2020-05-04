@@ -30,11 +30,14 @@
 	}
 }
 
-.obs-info {
-	margin: 10px auto;
+.obs-info-container {
+	.obs-info,
+	h3 {
+		margin: 10px auto;
 
-	@include media(sm, md) {
-		margin: 10px;
+		@include media(sm, md) {
+			margin: 10px;
+		}
 	}
 }
 

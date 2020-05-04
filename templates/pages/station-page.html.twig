@@ -11,72 +11,78 @@
 
 {% block header_content %}{% endblock %}
 {% block main_content %}
-	{% if show %}
 
-		{# displays top actionbar with species count #}
-		{% set species = stationData.stationAllSpecies %}
-		{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
 
-		{# sets top actionbar components #}
-		{% set topActionbarComponents = [
-			{
-				'name': 'side-block',
-				'data': {
-					'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
-				}
+	{# displays top actionbar with species count #}
+	{% set species = stationData.stationAllSpecies %}
+	{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
+
+	{# sets top actionbar components #}
+	{% set topActionbarComponents = [
+		{
+			'name': 'side-block',
+			'data': {
+				'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
 			}
-		] %}
-		{% if species|length > 0 %}
-			{% set topActionbarComponents = topActionbarComponents|merge([{'name': 'tabs-holder'}]) %}
-		{% endif %}
+		}
+	] %}
+
+	{% if species|length > 0 %}
+		{% set topActionbarComponents = topActionbarComponents|merge([{'name': 'tabs-holder'}]) %}
+	{% endif %}
+	{% if show %}
 		{% set topActionbarComponents = topActionbarComponents|merge([{
 			'name': 'squared-button',
 			'data': squaredButtonData
 		}]) %}
-		{# displays top actionbar #}
-		{% include 'components/actionbar.html.twig' with {
-			actionbar: {
-				'components': topActionbarComponents
-			}
-		} %}
-
-		{# displays list-cards and calendar #}
-		{% for id, list_card in list_cards %}
-			{% include 'components/list-cards.html.twig' with { buttons: list_card.buttons } %}
-
-			{% if list_card.calendar is defined %}
-				{% include 'components/calendar-tab.html.twig' with {calendar: list_card.calendar} %}
-			{% endif %}
-		{% endfor %}
-
-		{% if species|length > 0 %}
-			{% include 'components/actionbar.html.twig' with {
-				actionbar:{
-					'classes': 'bottom',
-					'components': [
-						{
-							'name': 'squared-button',
-							'data': {
-								'icon': 'export',
-								'label': 'exporter'
-							}
-						},
-						{
-							'name': 'squared-button',
-							'data': squaredButtonData
-						}
-					]
-				}
-			} %}
-		{% endif %}
-
-		{% include 'components/help-block.html.twig' with {
-			help: {
-				'text': "Cliquez sur l’icône <strong><img src=#{asset('media/layout/icons/help-circle.svg')} style=background-color\:#e4dfda;padding:5px ></strong> à droite de chaque espèce observée pour en afficher les indications d’observation.<br>‍<br>"
-			}
-		} %}
-
 	{% endif %}
+	{# displays top actionbar #}
+	{% include 'components/actionbar.html.twig' with {
+		actionbar: {
+			'components': topActionbarComponents
+		}
+	} %}
+
+	{# displays list-cards and calendar #}
+	{% for id, list_card in list_cards %}
+		{% set listCardButtons = list_card.buttons %}
+		{% if not show %}
+			{% set listCardButtons = listCardButtons|slice(0,-1) %}
+		{% endif %}
+		{% include 'components/list-cards.html.twig' with { buttons: listCardButtons } %}
+
+		{% if list_card.calendar is defined %}
+			{% include 'components/calendar-tab.html.twig' with {calendar: list_card.calendar} %}
+		{% endif %}
+	{% endfor %}
+
+	{% if show and species|length > 0 %}
+		{% include 'components/actionbar.html.twig' with {
+			actionbar:{
+				'classes': 'bottom',
+				'components': [
+					{
+						'name': 'squared-button',
+						'data': {
+							'icon': 'export',
+							'label': 'exporter'
+						}
+					},
+					{
+						'name': 'squared-button',
+						'data': squaredButtonData
+					}
+				]
+			}
+		} %}
+	{% endif %}
+
+	{% include 'components/help-block.html.twig' with {
+		help: {
+			'text': "Cliquez sur l’icône <strong><img src=#{asset('media/layout/icons/help-circle.svg')} style=background-color\:#e4dfda;padding:5px ></strong> à droite de chaque espèce observée pour en afficher les indications d’observation.<br>‍<br>"
+		}
+	} %}
+
 {% endblock %}
 
 {% block bottom_content %}
@@ -92,19 +98,6 @@
 					{% include 'forms/observation/obs-form.html.twig' with {action:'observation', form: observationForm} %}
 				{% endif %}
 			</div>
-
-			<div class="overlay hidden obs-infos">
-				<div class="obs-info-container">
-					<div class="obs-info obs-author"></div>
-					<div class="obs-info obs-stade"></div>
-					<div class="obs-info obs-date"></div>
-					<div class="saisie-footer">
-						<a href="" class="button bt-form bt-annuler">
-							<div>Fermer</div>
-						</a>
-					</div>
-				</div>
-			</div>
 		{% endif %}
 		{% set stationAllIndividuals = stationData.getStationAllIndividualsIds() %}
 		{% if stationAllIndividuals is not empty %}
@@ -113,6 +106,19 @@
 			</a>
 		{% endif %}
 	{% endif %}
+	<div class="overlay hidden obs-infos">
+		<div class="obs-info-container">
+			<h3 class="obs-info title">Détails de l’observation</h3>
+			<div class="obs-info obs-author"></div>
+			<div class="obs-info obs-stade"></div>
+			<div class="obs-info obs-date"></div>
+			<div class="saisie-footer">
+				<a href="" class="button bt-form bt-annuler">
+					<div>Fermer</div>
+				</a>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 
