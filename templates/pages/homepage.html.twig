@@ -93,7 +93,7 @@
 							<img src="/media/species/{{ obsSpecies.picture }}{{ obsSpecies.type.id == 1 ? "_#{obsEvent.stadeBbch|first}" }}.jpg" alt="{{ obsSpecies.vernacularName|capitalize }} - {{ obs.user.name|upper }} - {{ obs.obsDate|date('d/m/Y') }}" width="80">
 							<div class="recent-obs-item-content first">
 								<div class="recent-obs-title">{{ obsSpecies.vernacularName|capitalize }}</div>
-								<div class="recent-obs-item-stade">{{ obsEvent.name|capitalize }} {{ obsEvent.stadeBbch != null ? "stade #{obsEvent.stadeBbch}" }}</div>
+								<div class="recent-obs-item-stage">{{ obsEvent.name|capitalize }} {{ obsEvent.stadeBbch != null ? "stade #{obsEvent.stadeBbch}" }}</div>
 							</div>
 						</a>
 					</li>
