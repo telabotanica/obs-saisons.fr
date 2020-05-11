@@ -71,15 +71,7 @@ function onOpenOverlay() {
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
                 case 'obs-infos':
-                    console.log(dataAttrs);
-                   if ($thisLink.hasClass('absence')) {
-                       $('.obs-info.title').text('Signalement d’absence de ce stade');
-                   } else {
-                       $('.obs-info.title').text('Détails de l’observation');
-                   }
-                    $.each(['author','stade','date'], function (i, infoType) {
-                        $('.obs-info.obs-'+infoType).text(dataAttrs[infoType]);
-                    });
+                    onObsInfo($thisLink, dataAttrs);
                     break;
                 case 'station':
                     onLocation();
@@ -100,6 +92,38 @@ function onOpenOverlay() {
             }
         }
     });
+}
+
+function onObsInfo($thisLink, dataAttrs) {
+    let $thisCalendar = $thisLink.closest('.periods-calendar'),
+        theseObservations = $('.stage-marker[data-year="'+dataAttrs.year+'"][data-month="'+dataAttrs.month+'"]:visible', $thisCalendar),
+        obsInfoTitle = 'Détails de l’observation';
+
+    $('.obs-informations').empty();
+    if(1 === theseObservations.length) {
+        if ($thisLink.hasClass('absence')) {
+            obsInfoTitle = 'Signalement d’absence de ce stade';
+        }
+        $.each(['date', 'author', 'stage'], function (i, infoType) {
+            $('.obs-informations').append('<div class="obs-info obs-' + infoType + '">' + dataAttrs[infoType] + '</div>');
+        });
+    } else if (1 < theseObservations.length)  {
+        obsInfoTitle = 'Détails des observations';
+        for(let index=0;index < theseObservations.length;index++) {
+            dataAttrs = theseObservations[index].dataset;
+            $('.obs-informations').append(
+                '<div class="accordion-block">'+
+                    '<a href="" class="accordion-title-dropdown right-arrow-orange-icon">'+dataAttrs.date+'</a>'+
+                    '<div class="accordion-content" style="display:none;">' +
+                        '<div class="obs-info obs-author">'+dataAttrs.author+'</div>'+
+                        '<div class="obs-info obs-stage">'+dataAttrs.stage+'</div>'+
+                    '</div>'+
+                '</div>'
+            );
+            toggleAccodionBlock();
+        }
+    }
+    $('.obs-info.title').text(obsInfoTitle);
 }
 
 // close overlay
@@ -221,7 +245,6 @@ function onChangeSetIndividual() {
         if (valOk($selectedIndividual)) {
             let speciesPicture = $selectedIndividual.data('picture'),
                 availableEvents = getDataAttrValuesArray($selectedIndividual.data('availableEvents').toString());
-                console.log($selectedIndividual.data('availableEvents'));
 
             $event.removeAttr('disabled').prop('disabled', false);
             if (1 === availableEvents.length) {
@@ -262,12 +285,12 @@ function onChangeObsEventUpdateHelpInfos() {
 
         if (valOk($(this).val())) {
             let $selectedEvent = $('.event-option:selected', this),
-                eventStade = $selectedEvent.text();
+                eventStage = $selectedEvent.text();
 
             $saisieAide.removeClass('hidden').prepend(
-                '<img src="'+ $selectedEvent.data('picture') + '" alt="' + eventStade + '" width="80" height="80">'
+                '<img src="'+ $selectedEvent.data('picture') + '" alt="' + eventStage + '" width="80" height="80">'
             );
-            $('.text-aide-1.event').text(eventStade);
+            $('.text-aide-1.event').text(eventStage);
             $('.text-aide-2.event').text($selectedEvent.data('description'));
         } else {
             $saisieAide.addClass('hidden');
@@ -453,21 +476,13 @@ function toggleMenuSmallDevices(){
 
 // switch between tabs
 function switchTabs() {
-    let $tabsHolder = $('.tabs-holder'),
-        activeTab = $tabsHolder.data('active');
-
-    if(activeTab !== 'all') {
-        $('[data-tab]:not(.tab)').each(function () {
-            if(activeTab !== $(this).data('tab')) {
-                $(this).hide();
-            }
-        });
-    }
+    let $tabsHolder = $('.tabs-holder');
+    resetTabMatchingElements($tabsHolder);
 
     $('.tab').off('click').on('click', function (event) {
         event.preventDefault();
 
-        activeTab = $(this).data('tab');
+        let activeTab = $(this).data('tab');
         $tabsHolder.data('active', activeTab).attr('data-active', activeTab);
         $('[data-tab]').each(function (i, element) {
             let $element = $(element);
@@ -490,6 +505,18 @@ function switchTabs() {
             }
         });
     });
+}
+
+function resetTabMatchingElements($tabsHolder) {
+    let activeTab = $tabsHolder.data('active');
+
+    if(activeTab !== 'all') {
+        $('[data-tab]:not(.tab)').each(function () {
+            if(activeTab !== $(this).data('tab')) {
+                $(this).hide();
+            }
+        });
+    }
 }
 
 // Open/close calendar
@@ -534,23 +561,24 @@ function calendarSwitchDate() {
         $(this).addClass('hidden');
         $('.dropdown-list', $thisCalendar).addClass('hidden');
         // show/hide observations
-        $('.stade-marker', $thisCalendar).each( function () {
+        $('.stage-marker', $thisCalendar).each( function () {
             let $element = $(this);
+
             if(observationsToggleCombinedConditions($element, activeDate)) {
                 $element.show(200);
             } else {
                 $element.hide(200);
             }
+            resetTabMatchingElements($('.tabs-holder'));
         });
     });
 }
 
 function observationsToggleCombinedConditions ($element, activeDate, matchsTab = null) {
     let showObs = $element.data('year').toString() === activeDate;
-    if(null !== matchsTab) {// if matchsTab is defined it is boolean
-        let activeTab = $('.tabs-holder').data('active');
 
-        showObs &= ('all' === activeTab || $element.data('tab') === activeTab);
+    if (null !== matchsTab) {// if matchsTab is defined it is boolean
+        showObs &= matchsTab;
     }
     return showObs;
 }
@@ -618,7 +646,7 @@ function stationMapDisplay() {
     if (valOk($headerMapDisplay) && $headerMapDisplay.hasClass('show-map')) {
         let lat = $headerMapDisplay.data('latitude'),
             lng = $headerMapDisplay.data('longitude');
-        mapDisplay('headerMap', lat, lng, 18, false, false);
+        mapDisplay('headerMap', lat, lng, 12, false, false);
     }
 }
 

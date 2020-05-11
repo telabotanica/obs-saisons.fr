@@ -72,12 +72,24 @@ class StationDisplayData
         return $stationIndividualsDataBySpecies;
     }
 
+    public function getValidEventsForSpecies(Species $species): array
+    {
+        $validEvents = [];
+        $eventsForSpecies = $this->getEventsSpeciesForSpecies($species);
+        foreach ($eventsForSpecies as $eventSpecies) {
+            $validEvents[] = $eventSpecies->getEvent();
+        }
+
+        return $validEvents;
+    }
+
     public function filterStationObservationsBySpecies(Species $species): array
     {
+        $validEvents = $this->getValidEventsForSpecies($species);
         $stationObservationsBySpecies = [];
         foreach ($this->stationAllObservations as $observation) {
             $thisSpecies = $observation->getIndividual()->getSpecies();
-            if ($thisSpecies === $species) {
+            if ($thisSpecies === $species && in_array($observation->getEvent(), $validEvents)) {
                 $stationObservationsBySpecies[] = $observation;
             }
         }

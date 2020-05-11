@@ -2,6 +2,7 @@
 
 namespace App\DisplayData\Station;
 
+use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -10,6 +11,7 @@ class StationIndividualsDisplayData
 {
     private $manager;
     private $individual;
+    private $validEvents;
     private $individualObservations;
     private $allObsYears;
     private $stationObservationsByYearDisplayData;
@@ -27,16 +29,13 @@ class StationIndividualsDisplayData
             $this->individualObservations = $individualObservations;
         }
 
+        $this->validEvents = [];
         $this->allObsYears = [];
         $this->stationObservationsByYearDisplayData = [];
 
+        self::setValidEvents();
         self::setAllObsYears();
         self::setStationObservationsByYearDisplayData();
-    }
-
-    public function getIndividualObservations(): array
-    {
-        return $this->individualObservations;
     }
 
     public function getIndividual(): Individual
@@ -44,11 +43,21 @@ class StationIndividualsDisplayData
         return $this->individual;
     }
 
+    public function setValidEvents(): self
+    {
+        $eventsForSpecies = $this->manager->getRepository(EventSpecies::class)->findBy(['species' => $this->individual->getSpecies()]);
+        foreach ($eventsForSpecies as $eventSpecies) {
+            $this->validEvents[] = $eventSpecies->getEvent();
+        }
+
+        return $this;
+    }
+
     private function setAllObsYears(): self
     {
         foreach ($this->individualObservations as $obs) {
             $year = date_format($obs->getObsDate(), 'Y');
-            if (!in_array($year, $this->allObsYears)) {
+            if (!in_array($year, $this->allObsYears) && in_array($obs->getEvent(), $this->validEvents)) {
                 $this->allObsYears[] = $year;
             }
         }
@@ -66,7 +75,7 @@ class StationIndividualsDisplayData
         $yearObservations = [];
         foreach ($this->individualObservations as $obs) {
             $obsYear = date_format($obs->getObsDate(), 'Y');
-            if ($year === $obsYear) {
+            if ($year === $obsYear && in_array($obs->getEvent(), $this->validEvents)) {
                 $yearObservations[] = $obs;
             }
         }
