@@ -1,7 +1,12 @@
 @mixin simple-calendar-grid-blocks($column-start, $column-end, $row-start, $row-end) {
     .grid_#{$column-start}-#{$column-end}_#{$row-start}-#{$row-end} {
-        grid-column-start: $column-start;
-        grid-column-end: $column-end;
+        @if($column-start != 1) {
+            grid-column-start: $column-start*10;
+        }
+        @else {
+            grid-column-start: $column-start;
+        }
+        grid-column-end: $column-end*10;
         grid-row-start: $row-start;
         grid-row-end: $row-end;
     }
@@ -62,7 +67,7 @@
     @include media(md) {
         @include display-grid;
         grid-auto-columns: 1fr;
-        @include grid-template-columns(grid-repeat(14, 1fr));
+        @include grid-template-columns(grid-repeat(140, 1fr));
     }
 
     &.top {

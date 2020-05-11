@@ -24,7 +24,7 @@
 {% for obs in observations if not break %}
 
     {# set observation grid position #}
-    {% set column_start = (obs.obsDate|date("n")) + 2 %}
+    {% set column_start = ((obs.obsDate|date("n")) + 2) * 10 %}
     {% set row_start = 0 %}
     {% set obsStage = STAGES[obs.event.name] %}
     {% for stage_label in stages %}
@@ -63,7 +63,7 @@
 
     {# observation html #}
 
-    {% if row_start > 0 and column_start > 2 and displayObservation %}
+    {% if row_start > 0 and column_start > 20 and displayObservation %}
         <a
             href=""
             class="stage-marker {{ stages_css_classes[obsStage] }}{{ obs.isMissing ? ' absence' }} open"
@@ -76,7 +76,7 @@
             data-date="{{ obs.obsDate|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
             style="
                 {{
-                    "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 1};
+                    "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};
                     grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};"
                 }}
                 {{ hide ? 'display:none;' }}

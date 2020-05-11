@@ -58,8 +58,8 @@
                 {% for i in 1..stages|length %}
                     {% set stage = stages[i-1] %}
 
-                    {% set column_start = (periods[stage]['begin']|date("n")) + 2 %}
-                    {% set column_end = (periods[stage]['end']|date("n")) + 3 %}
+                    {% set column_start = ((periods[stage]['begin']|date("n")) + 2) * 10 %}
+                    {% set column_end = ((periods[stage]['end']|date("n")) + 3) * 10 %}
 
                     <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ stages[i-1] }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
