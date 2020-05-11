@@ -208,7 +208,7 @@ class StationSpeciesDisplayData
     {
         $this->allObsYears = [];
         foreach ($this->stationSpeciesObservations as $obs) {
-            $year = date_format($obs->getObsDate(), 'Y');
+            $year = date_format($obs->getDate(), 'Y');
             if (!in_array($year, $this->allObsYears)) {
                 $this->allObsYears[] = $year;
             }
@@ -231,7 +231,7 @@ class StationSpeciesDisplayData
 
     public function getLastObsDate(): \DateTimeInterface
     {
-        return $this->lastObservation->getObsDate();
+        return $this->lastObservation->getDate();
     }
 
     public function getLastObsStade(): string
@@ -241,6 +241,6 @@ class StationSpeciesDisplayData
 
     private function sortObsByDAte(Observation $obsA, Observation $obsB)
     {
-        return $obsB->getObsDate() <=> $obsA->getObsDate();
+        return $obsB->getDate() <=> $obsA->getDate();
     }
 }

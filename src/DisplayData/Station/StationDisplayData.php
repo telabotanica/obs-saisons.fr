@@ -186,7 +186,7 @@ class StationDisplayData
 
     private function sortObsByDAte(Observation $obsA, Observation $obsB)
     {
-        return $obsB->getObsDate() <=> $obsA->getObsDate();
+        return $obsB->getDate() <=> $obsA->getDate();
     }
 
     private function setStationObsImages(): self

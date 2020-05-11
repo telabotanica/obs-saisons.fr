@@ -23,7 +23,7 @@ class StationIndividualsDisplayData
 
         if (null === $individualObservations) {
             $this->individualObservations = $this->manager->getRepository(Observation::class)
-                ->findBy(['individual' => $this->individual], ['obs_date' => 'DESC'])
+                ->findBy(['individual' => $this->individual], ['date' => 'DESC'])
             ;
         } else {
             $this->individualObservations = $individualObservations;
@@ -56,7 +56,7 @@ class StationIndividualsDisplayData
     private function setAllObsYears(): self
     {
         foreach ($this->individualObservations as $obs) {
-            $year = date_format($obs->getObsDate(), 'Y');
+            $year = date_format($obs->getDate(), 'Y');
             if (!in_array($year, $this->allObsYears) && in_array($obs->getEvent(), $this->validEvents)) {
                 $this->allObsYears[] = $year;
             }
@@ -74,7 +74,7 @@ class StationIndividualsDisplayData
     {
         $yearObservations = [];
         foreach ($this->individualObservations as $obs) {
-            $obsYear = date_format($obs->getObsDate(), 'Y');
+            $obsYear = date_format($obs->getDate(), 'Y');
             if ($year === $obsYear && in_array($obs->getEvent(), $this->validEvents)) {
                 $yearObservations[] = $obs;
             }

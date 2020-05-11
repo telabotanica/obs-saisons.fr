@@ -41,7 +41,7 @@ class Observation
     /**
      * @ORM\Column(type="date")
      */
-    private $obs_date;
+    private $date;
 
     /**
      * @ORM\Column(type="boolean")
@@ -107,14 +107,14 @@ class Observation
     }
 
 
-    public function getObsDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->obs_date;
+        return $this->date;
     }
 
-    public function setObsDate(?\DateTimeInterface $obs_date): self
+    public function setDate(?\DateTimeInterface $date): self
     {
-        $this->obs_date = $obs_date;
+        $this->date = $date;
 
         return $this;
     }

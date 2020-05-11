@@ -24,7 +24,7 @@
 {% for obs in observations if not break %}
 
     {# set observation grid position #}
-    {% set column_start = ((obs.obsDate|date("n")) + 2) * 10 %}
+    {% set column_start = ((obs.date|date("n")) + 2) * 10 %}
     {% set row_start = 0 %}
     {% set obsStage = STAGES[obs.event.name] %}
     {% for stage_label in stages %}
@@ -67,13 +67,13 @@
         <a
             href=""
             class="stage-marker {{ stages_css_classes[obsStage] }}{{ obs.isMissing ? ' absence' }} open"
-            data-year="{{ obs.obsDate|date("Y") }}"
-            data-month="{{ obs.obsDate|date("n") }}"
+            data-year="{{ obs.date|date("Y") }}"
+            data-month="{{ obs.date|date("n") }}"
             data-tab="{{ obs.user.id }}"
             data-open="obs-infos"
             data-author="{{ obs.user.displayName }}"
             data-stage="{{ obsStage }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
-            data-date="{{ obs.obsDate|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
+            data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
             style="
                 {{
                     "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};
@@ -84,7 +84,7 @@
         >
             <div class="stage-marker-text {{ loop.index == observations|length or break? 'last' }}">
                 <div class="stage-text">{{ obsStage }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
-                <div class="stage-date">Le {{ obs.obsDate|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
+                <div class="stage-date">Le {{ obs.date|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
             </div>
         </a>
     {% endif %}

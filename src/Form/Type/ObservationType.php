@@ -94,7 +94,7 @@ class ObservationType extends AbstractType
                 },
                 'placeholder' => 'Choisir un stade',
             ])
-            ->add('obs_date', DateType::class, [
+            ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'required' => true,
             ])
