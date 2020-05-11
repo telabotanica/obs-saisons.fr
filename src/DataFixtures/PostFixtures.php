@@ -26,7 +26,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 27; ++$i) {
             $title = substr($faker->sentence(6, true),0,-1);
             $dateCreatedAt = $faker->dateTimeBetween('-10 years', 'now', 'Europe/Paris');
-            $cover = $faker->imageUrl(800, 600, 'nature');
+            $cover = '/media/layout/image_station.png';
             $content = '
                 <blockquote>'.$faker->sentence(6, true).'</blockquote>
                 <figure>

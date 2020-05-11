@@ -18,7 +18,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
             $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(0, 75)));
             $observation->setEvent($this->getReference('event-'.$faker->numberBetween(1, 7)));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
-            $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
+            $observation->setPicture('/media/layout/image_station.png');
             $observation->setObsDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
             $observation->setDetails($faker->text(200));
             $observation->setIsMissing($faker->boolean);
@@ -33,7 +33,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
             $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(76, 99)));
             $observation->setEvent($this->getReference('event-8'));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
-            $observation->setPicture($faker->imageUrl(800, 600, 'nature'));
+            $observation->setPicture('/media/layout/image_station.png');
             $observation->setObsDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
             $observation->setDetails($faker->text(200));
             $observation->setIsMissing($faker->boolean);
