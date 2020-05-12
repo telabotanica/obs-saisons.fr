@@ -21,9 +21,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class UserController extends AbstractController
 {
+    use TargetPathTrait;
+
     /**
      * Login form can be embed in pages.
      *
@@ -53,12 +56,16 @@ class UserController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function loginPage()
+    public function loginPage(SessionInterface $session)
     {
         if ($this->isGranted(UserVoter::LOGGED)) {
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
+            $previousPageUrl = $this->getTargetPath($session, 'main');
+            if (null === $previousPageUrl) {
+                return $this->redirectToRoute('homepage');
+            }
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirect($previousPageUrl);
         }
 
         return $this->render('pages/user/login.html.twig');

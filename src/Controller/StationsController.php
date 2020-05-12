@@ -69,7 +69,7 @@ class StationsController extends PagesController
                 $entityManager->persist($station);
                 $entityManager->flush();
 
-                //return $this->redirect($request->getUri());
+                return $this->redirect($request->getUri());
             }
         }
 
@@ -330,9 +330,13 @@ class StationsController extends PagesController
             }
             $stationAllSpeciesIds = implode(',', $stationAllSpeciesIdsArray);
         }
+        $actionBarButtonClassAttributes = ['open', 'open-individual-form-all-station'];
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            $actionBarButtonClassAttributes[] = 'disabled';
+        }
 
         return [
-            'classes' => ['open', 'open-individual-form-all-station'],
+            'classes' => $actionBarButtonClassAttributes,
             'dataAttributes' => [
                 [
                     'name' => 'open',
