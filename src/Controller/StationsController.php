@@ -209,7 +209,7 @@ class StationsController extends PagesController
                             $doctrine->getRepository(Event::class)
                                 ->find($observationFormValues['event'])
                         );
-                        $observation->setObsDate(date_create($observationFormValues['obs_date']));
+                        $observation->setDate(date_create($observationFormValues['date']));
                         $observation->setPicture($this->uploadImage($request->files->get('observation')['picture']));
                         $observation->setIsMissing(!empty($observationFormValues['is_missing']));
                         $observation->setDetails($observationFormValues['details']);

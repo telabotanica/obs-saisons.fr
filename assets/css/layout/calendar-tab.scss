@@ -1,7 +1,12 @@
 @mixin simple-calendar-grid-blocks($column-start, $column-end, $row-start, $row-end) {
     .grid_#{$column-start}-#{$column-end}_#{$row-start}-#{$row-end} {
-        grid-column-start: $column-start;
-        grid-column-end: $column-end;
+        @if($column-start != 1) {
+            grid-column-start: $column-start*10;
+        }
+        @else {
+            grid-column-start: $column-start;
+        }
+        grid-column-end: $column-end*10;
         grid-row-start: $row-start;
         grid-row-end: $row-end;
     }
@@ -26,7 +31,7 @@
 /* month */
 @include calendar-grid-blocks('row', (1,2), 3, 15);
 
-/* table-intitule-stade */
+/* table-intitule-stage */
 @include calendar-grid-blocks('colomn', (1,3), 1, 5);
 /* table-row */
 @include calendar-grid-blocks('colomn', (3,15), 1, 5);
@@ -62,7 +67,7 @@
     @include media(md) {
         @include display-grid;
         grid-auto-columns: 1fr;
-        @include grid-template-columns(grid-repeat(14, 1fr));
+        @include grid-template-columns(grid-repeat(140, 1fr));
     }
 
     &.top {
@@ -329,7 +334,7 @@
 }
 
 /**************************************************/
-.table-intitule-stade {
+.table-intitule-stage {
     @include display-flex;
     @include justify-content-flex-start;
     @include align-items-center;
@@ -372,9 +377,9 @@
 
 
 /**************************************************/
-$stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification: $orange, senescence: $red, apparition: $red);
+$stage-colors-map: (floraison: $blue, feuillaison: $green725760, fructification: $orange, senescence: $red, apparition: $red);
 
-.stade-period {
+.stage-period {
     position: relative;
     @include grid-align-self(center);
     @include grid-justify-self(center);
@@ -388,16 +393,16 @@ $stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
 
     @include hide_on_small;
 
-    @each $stade, $stade-color in $stade-colors-map {
-        &.#{$stade} {
-            background-color: #{$stade-color};
+    @each $stage, $stage-color in $stage-colors-map {
+        &.#{$stage} {
+            background-color: #{$stage-color};
         }
     }
 }
 
 
 /**************************************************/
-.stade-marker {
+.stage-marker {
     @include display-flex;
     height: 100px;
     @include background-image(null, 0 50%, 100px 100px);
@@ -413,9 +418,9 @@ $stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
         @include grid-justify-self(center);
         @include background-image(null, 50% 50%);
         border: 2px solid #fff;
-        @each $stade, $stade-color in $stade-colors-map {
-            &.#{$stade} {
-                border-color: #{$stade-color};
+        @each $stage, $stage-color in $stage-colors-map {
+            &.#{$stage} {
+                border-color: #{$stage-color};
             }
         }
         border-radius: 50px;
@@ -452,12 +457,12 @@ $stade-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
     }
 }
 
-.stade-text {
+.stage-text {
     @include font_default_semi_bold;
     font-size: 16px;
 }
 
-.stade-date {
+.stage-date {
     color: $grey281146;
     font-size: 13px;
 }

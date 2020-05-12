@@ -16,6 +16,7 @@ class StationSpeciesDisplayData
     private $station;
     private $species;
     private $thisStationIndividuals;
+    private $validEvents;
     private $stationSpeciesObservations;
     private $eventsSpecies;
     private $periods;
@@ -44,6 +45,9 @@ class StationSpeciesDisplayData
         } else {
             $this->thisStationIndividuals = $thisStationIndividuals;
         }
+
+        $this->validEvents = [];
+        self::setValidEvents();
 
         if (null === $stationSpeciesObservations) {
             $this->stationSpeciesObservations = [];
@@ -85,14 +89,23 @@ class StationSpeciesDisplayData
         return $this->thisStationIndividuals;
     }
 
+    public function setValidEvents(): self
+    {
+        $eventsForSpecies = $this->manager->getRepository(EventSpecies::class)->findBy(['species' => $this->species]);
+        foreach ($eventsForSpecies as $eventSpecies) {
+            $this->validEvents[] = $eventSpecies->getEvent();
+        }
+
+        return $this;
+    }
+
     private function setStationObservations(): self
     {
         $stationObservations = $this->manager->getRepository(Observation::class)
             ->findAllObsInStation($this->station)
         ;
         foreach ($stationObservations as $stationObservation) {
-            $species = $stationObservation->getSpecies();
-            if ($species === $this->species) {
+            if ($stationObservation->getSpecies() === $this->species && in_array($stationObservation->getEvent(), $this->validEvents)) {
                 $this->stationSpeciesObservations[] = $stationObservation;
             }
         }
@@ -181,14 +194,21 @@ class StationSpeciesDisplayData
 
     public function getObsCount(): int
     {
-        return count($this->stationSpeciesObservations);
+        $obsCount = 0;
+        foreach ($this->stationSpeciesObservations as $obs) {
+            if (!$obs->getIsMissing()) {
+                ++$obsCount;
+            }
+        }
+
+        return $obsCount;
     }
 
     private function setAllObsYears(): self
     {
         $this->allObsYears = [];
         foreach ($this->stationSpeciesObservations as $obs) {
-            $year = date_format($obs->getObsDate(), 'Y');
+            $year = date_format($obs->getDate(), 'Y');
             if (!in_array($year, $this->allObsYears)) {
                 $this->allObsYears[] = $year;
             }
@@ -211,7 +231,7 @@ class StationSpeciesDisplayData
 
     public function getLastObsDate(): \DateTimeInterface
     {
-        return $this->lastObservation->getObsDate();
+        return $this->lastObservation->getDate();
     }
 
     public function getLastObsStade(): string
@@ -221,6 +241,6 @@ class StationSpeciesDisplayData
 
     private function sortObsByDAte(Observation $obsA, Observation $obsB)
     {
-        return $obsB->getObsDate() <=> $obsA->getObsDate();
+        return $obsB->getDate() <=> $obsA->getDate();
     }
 }

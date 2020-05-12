@@ -14,13 +14,13 @@
             'label': 'Individu *',
             'attr': {'data-name': 'individual'}
         }) }}
-        {{ form_row(observationForm.obs_date, {
+        {{ form_row(observationForm.date, {
             'row_attr': {'class': 'form-col small ml'},
             'label': 'Date *',
             'attr': {
                 'class': 'text-field ods-input date',
                 'max': "now"|date('Y-m-d'),
-                'data-name': 'obs_date'
+                'data-name': 'date'
             }
         }) }}
     </div>

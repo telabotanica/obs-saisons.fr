@@ -33,7 +33,7 @@ class ObservationRepository extends ServiceEntityRepository
                 ->where('o.individual IN (:individuals)')
                 ->setParameter('individuals', $individualsInStation)
                 ->addOrderBy('o.individual', 'ASC')
-                ->addOrderBy('o.obs_date', 'DESC')
+                ->addOrderBy('o.date', 'DESC')
                 ->getQuery()
                 ->getResult()
         );
@@ -43,7 +43,7 @@ class ObservationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->where('o.is_missing = 0')
-            ->orderBy('o.obs_date', 'DESC')
+            ->orderBy('o.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
@@ -55,7 +55,7 @@ class ObservationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->where('o.picture IS NOT NULL')
             ->andWhere('o.is_missing = 0')
-            ->orderBy('o.obs_date', 'DESC')
+            ->orderBy('o.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
@@ -77,7 +77,7 @@ class ObservationRepository extends ServiceEntityRepository
     {
         $nowYear = date('Y');
         $allObsThisYear = $this->createQueryBuilder('o')
-            ->where('YEAR(o.obs_date) = :nowYear')
+            ->where('YEAR(o.date) = :nowYear')
             ->setParameter('nowYear', $nowYear)
             ->getQuery()
             ->getResult()

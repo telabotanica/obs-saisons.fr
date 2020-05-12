@@ -29,10 +29,10 @@ class StationObservationsByYearDisplayData
     {
         $this->thisYearObservations = [];
         $allObservations = $this->manager->getRepository(Observation::class)
-            ->findBy(['individu' => $this->individual], ['obs_date' => 'DESC'])
+            ->findBy(['individu' => $this->individual], ['date' => 'DESC'])
         ;
         foreach ($allObservations as $obs) {
-            $obsYear = date_format($obs->getObsDate(), 'Y');
+            $obsYear = date_format($obs->getDate(), 'Y');
             if ($obsYear === $this->year) {
                 $this->thisYearObservations[] = $obs;
             }

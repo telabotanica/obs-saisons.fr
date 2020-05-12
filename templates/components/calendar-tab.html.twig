@@ -7,8 +7,8 @@
     App\DisplayData\Station\StationSpeciesDisplayData calendar
 #}
 {% set periods = calendar.getPeriods() %}
-{% set stades = periods|keys %}
-{% set stades_css_classes = constant('App\\Entity\\Event::CSS_CLASSES') %}
+{% set stages = periods|keys %}
+{% set stages_css_classes = constant('App\\Entity\\Event::CSS_CLASSES') %}
 {% set individualsData = calendar.getAllIndividualsObservationsDisplayData()  %}
 {% set years = calendar.getAllObsYears() %}
 {% set first_year = max(years|default(["now"|date("Y")])) %}
@@ -54,26 +54,29 @@
                 {% endif %}
             </div>
 
-            <div class="grid content-{{ stades|length }}">
-                {% for i in 1..stades|length %}
-                    {% set stade = stades[i-1] %}
+            <div class="grid content-{{ stages|length }}">
+                {% for i in 1..stages|length %}
+                    {% set stage = stages[i-1] %}
 
-                    {% set column_start = (periods[stade]['begin']|date("n")) + 2 %}
-                    {% set column_end = (periods[stade]['end']|date("n")) + 3 %}
+                    {% set column_start = ((periods[stage]['begin']|date("n")) + 2) * 10 %}
+                    {% set column_end = ((periods[stage]['end']|date("n")) + 3) * 10 %}
 
-                    <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stade {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ stades[i-1] }}</div>
+                    <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ stages[i-1] }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
-                    <div class="stade-period {{ stades_css_classes[stade] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                    <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
                 {% endfor %}
 
 
                 {% for stationObservationsByYearDisplayData in individualData.getStationObservationsByYearDisplayData() %}
-                    {% set hide = (stationObservationsByYearDisplayData.getYear() != first_year) %}
-                    {% include 'components/obs_chips.html.twig' with {observations: stationObservationsByYearDisplayData.getThisYearObservations() } %}{# will also take stades #}
+                    {% include 'components/obs_chips.html.twig' with {
+                        observations: stationObservationsByYearDisplayData.getThisYearObservations(),
+                        onlyOneEvent: (individualData.getIndividual().species.type.id != 1),
+                        hide: (stationObservationsByYearDisplayData.getYear() != first_year)
+                    } %}{# will also take stages #}
                 {% endfor %}
 
                 {% for i in 3..14 %}
-                    <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ stades|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }} {{ loop.last ? 'last-column' }}"></div>
+                    <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ stages|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }} {{ loop.last ? 'last-column' }}"></div>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -93,8 +96,8 @@
 
     <div class="helper-legend">
         <div class="legends">
-            {% for stade in stades %}
-                <div class="stade-period {{ stades_css_classes[stade] }} legend"></div>
+            {% for stage in stages %}
+                <div class="stage-period {{ stages_css_classes[stage] }} legend"></div>
             {% endfor %}
         </div>
         <div class="helper-legend-text">Périodes à laquelle est observée ce stade en moyenne les années précédentes</div>
