@@ -15,9 +15,15 @@
 			</a>
 		{% endfor %}
 
-		<a href="" class="nav-item resp-connect">
-			<div>Connexion</div>
-		</a>
+		{% if not is_granted(constant('App\\Security\\Voter\\UserVoter::LOGGED')) %}
+			<a href="{{ path('user_login') }}" class="nav-item resp-connect">
+				<div>Connexion</div>
+			</a>
+		{% else %}
+			<a href="{{ path('user_logout') }}" class="nav-item resp-connect">
+				<div>Déconnexion</div>
+			</a>
+		{% endif %}
 	</div>
 	<div class="social-links">
 		<a href="http://www.facebook.com/pages/Observatoire-des-Saisons/167300616656493" class="social-icon-link first">
