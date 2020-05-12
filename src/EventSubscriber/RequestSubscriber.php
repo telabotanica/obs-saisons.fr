@@ -6,6 +6,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class RequestSubscriber implements EventSubscriberInterface
@@ -13,22 +15,23 @@ class RequestSubscriber implements EventSubscriberInterface
     use TargetPathTrait;
 
     private $session;
+    private $router;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, RouterInterface $router)
     {
         $this->session = $session;
+        $this->router = $router;
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if ('user_login' !== $request->attributes->get('_route')) {
+        $referer = $request->headers->get('referer') ?? $request->getUri();
+        if (
+            'user_login' !== $request->attributes->get('_route')
+            || $referer === $this->router->generate('user_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        ) {
             return;
-        }
-        if (null !== $request->headers->get('referer')) {
-            $referer = $request->headers->get('referer');
-        } else {
-            $referer = $request->getUri();
         }
 
         $this->saveTargetPath($this->session, 'main', $referer);

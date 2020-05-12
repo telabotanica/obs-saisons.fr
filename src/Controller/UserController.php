@@ -26,6 +26,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class UserController extends AbstractController
 {
     use TargetPathTrait;
+
     /**
      * Login form can be embed in pages.
      *
@@ -59,8 +60,12 @@ class UserController extends AbstractController
     {
         if ($this->isGranted(UserVoter::LOGGED)) {
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
+            $previousPageUrl = $this->getTargetPath($session, 'main');
+            if (null === $previousPageUrl) {
+                return $this->redirectToRoute('homepage');
+            }
 
-            return $this->redirect($this->getTargetPath($session, 'main'));
+            return $this->redirect($previousPageUrl);
         }
 
         return $this->render('pages/user/login.html.twig');
