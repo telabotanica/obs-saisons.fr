@@ -72,6 +72,7 @@
             data-tab="{{ obs.user.id }}"
             data-open="obs-infos"
             data-author="{{ obs.user.displayName }}"
+            data-stage-name="{{ obsStage }}"
             data-stage="{{ obsStage }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
             data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
             style="
