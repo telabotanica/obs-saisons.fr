@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouvel article{% endblock %}
+
+{% block content %}
+            {% include 'components/app-flashes.html.twig' %}
+
+            <section class="group-form">
+                {% include 'forms/post/post-form.html.twig' with ({
+                    'form':form,
+                    'form_submit':'Enregistrer l’article'
+                }) %}
+            </section>
+{% endblock %}

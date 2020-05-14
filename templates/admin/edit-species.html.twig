@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une nouvelle fiche espèce {{ specy.scientificName }} ({{ specy.vernacularName }}){% endblock %}
+
+{% block content %}
+    {% include 'components/app-flashes.html.twig' %}
+
+    <a href="{{ path('admin_species_list') }}">Retour à la liste des espèces</a>
+
+    <dl>
+        <dt>Nom scientifique</dt>
+        <dd>{{ specy.scientificName }}</dd>
+        <dt>Nom vernaculaire</dt>
+        <dd>{{ specy.vernacularName }}</dd>
+        <dt>Description</dt>
+        <dd>{{ specy.description }}</dd>
+    </dl>
+
+    <section class="group-form">
+        {% include 'forms/post/specy-post-form.html.twig' with ({
+            'specy':specy,
+            'form':form,
+            'form_submit':'Enregistrer la fiche'
+        }) %}
+    </section>
+{% endblock %}

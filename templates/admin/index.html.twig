@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block content %}
+<div class="example-wrapper">
+    <h1>Coucou, tu veux faire quoi ?</h1>
+
+    <ul>
+        <li><a href="{{ path('admin_species_list') }}">Modifier une fiche espèce ?</a></li>
+        <li><a href="{#{ path('admin_species_list') }#}">Modifier un profil utilisateur ?</a></li>
+    </ul>
+</div>
+{% endblock %}

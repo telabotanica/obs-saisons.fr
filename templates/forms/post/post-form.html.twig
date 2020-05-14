@@ -1,0 +1,22 @@
+{{ form_start(form) }}
+<div class="form-row__mandatory">Champs obligatoires *</div>
+    <div class="form-row form-row__field">
+        {{ form_label(form.category, 'Catégorie') }}
+        {{ form_widget(form.category) }}
+    </div>
+    <div class="form-row form-row__field">
+        {{ form_label(form.title, 'Article') }}
+        {{ form_widget(form.title, {'attr': {'placeholder': 'Entrez le titre de votre article ici…'}}) }}
+    </div>
+    <div class="form-row form-row__field wysiwyg-editor">
+        {{ form_label(form.content, 'Article') }}
+        {{ form_widget(form.content, {'attr': {'placeholder': 'Saississez votre contenu ici…'}}) }}
+    </div>
+
+<div class="form-row form-row__submit">
+    {{ form_widget(form.submit, {'label': form_submit}) }}
+    {% if (delete is defined) and (delete) and is_granted(constant('App\\Security\\GroupArticleVoter::DELETE'), article) %}
+        <a class="cta__inverted" href="{{ path('post_delete', {'groupSlug':group.slug, 'articleSlug':article.slug}) }}">Supprimer</a>
+    {% endif %}
+</div>
+{{ form_end(form) }}

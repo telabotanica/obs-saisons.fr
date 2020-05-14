@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <ul>
+    {% for specy in species %}
+        <li><a href="{{ path('admin_edit_specy_page', {specyId: specy.id}) }}">{{ specy.scientificName }}</a> {{ specy.post ? '✅' }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% block title %}Liste des fiches espèces{% endblock %}
+

@@ -3,12 +3,25 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  */
 class Post
 {
+    const CATEGORY_NEWS = 'news';
+    const CATEGORY_SPECY = 'specy';
+    const CATEGORY_EVENT = 'event';
+    const CATEGORY_PAGE = 'page';
+
+    const CATEGORY_CHOICES = [
+        'Actualité' => self::CATEGORY_NEWS,
+        'Fiche espèce' => self::CATEGORY_SPECY,
+        'Évènement' => self::CATEGORY_EVENT,
+        'Page' => self::CATEGORY_PAGE,
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -37,9 +50,19 @@ class Post
     private $content;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -142,6 +165,36 @@ class Post
     public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

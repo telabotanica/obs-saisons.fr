@@ -19,6 +19,16 @@ class SpeciesRepository extends ServiceEntityRepository
         parent::__construct($registry, Species::class);
     }
 
+    public function findAllOrderedByScientificName()
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->orderBy('s.scientific_name', 'ASC');
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
+
     // /**
     //  * @return Species[] Returns an array of Species objects
     //  */

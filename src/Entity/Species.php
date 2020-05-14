@@ -47,6 +47,12 @@ class Species
      */
     private $is_active;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Post")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $post;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +126,18 @@ class Species
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): self
+    {
+        $this->post = $post;
 
         return $this;
     }

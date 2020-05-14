@@ -113,6 +113,11 @@ class User implements UserInterface
         return $this;
     }
 
+    public function isAdmin(): ?bool
+    {
+        return in_array(User::ROLE_ADMIN, $this->getRoles());
+    }
+
     /**
      * @see UserInterface
      */
@@ -173,7 +178,15 @@ class User implements UserInterface
 
     public function getDisplayName(): ?string
     {
-        return $this->displayName;
+        if (!empty($this->displayName)) {
+            return $this->displayName;
+        }
+
+        if (!empty($this->getName())) {
+            return $this->getName();
+        }
+
+        return mb_convert_case(explode('@', $this->getEmail())[0], MB_CASE_TITLE);
     }
 
     public function setDisplayName(?string $displayName): self
