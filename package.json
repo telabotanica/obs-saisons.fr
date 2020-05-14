@@ -1,9 +1,9 @@
 {
     "devDependencies": {
         "@symfony/webpack-encore": "^0.27.0",
-        "core-js": "^3.6.4",
+        "core-js": "^3.6.5",
         "file-loader": "^4.3.0",
-        "node-sass": "^4.13.1",
+        "node-sass": "^4.14.1",
         "sass-loader": "^7.3.1",
         "webpack-notifier": "^1.6.0"
     },
@@ -16,9 +16,9 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.1",
         "leaflet": "^1.6.0",
         "leaflet-draw": "^1.0.4",
-        "places.js": "^1.18.1"
+        "places.js": "^1.18.2"
     }
 }
