@@ -10,14 +10,14 @@
         title*: string (with dropdown)
         text#: string (item-name)
 #}
-{% set linkUrl = path(slug|default(route)) %}
-{% if route in ['actualites', 'evenements'] %}
-    {% set linkUrl = path("#{route}_show", {'slug': slug}) %}
-{% elseif heading.href is defined and heading.href is not empty %}
-    {% set linkUrl = heading.href %}
-{% endif %}
 {% if heading.is_link|default(false) %}
-    <a href="{{ linkUrl }}" class="item-name-block">
+    {% set linkUrl = path(slug|default(route)) %}
+    {% if route in ['actualites', 'evenements'] %}
+        {% set linkUrl = path("#{route}_show", {'slug': slug}) %}
+    {% elseif heading.href is defined and heading.href is not empty %}
+        {% set linkUrl = heading.href %}
+    {% endif %}
+<a href="{{ linkUrl }}" class="item-name-block">
 {% else %}
     <div class="item-name-block">
 {% endif %}
