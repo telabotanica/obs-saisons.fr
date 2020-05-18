@@ -46,6 +46,7 @@ class SpeciesController extends PagesController
                         'image' => '/media/species/'.$species->getPicture().'.jpg',
                         'heading' => [
                             'is_link' => true,
+                            'href' => '', // add your link here
                             'title' => $species->getVernacularName(),
                             'text' => $species->getScientificName(),
                         ],
