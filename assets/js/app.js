@@ -97,7 +97,7 @@ function onOpenOverlay() {
 
 function onObsInfo($thisLink, dataAttrs) {
     let $thisCalendar = $thisLink.closest('.periods-calendar'),
-        theseObservations = $('.stage-marker[data-year="'+dataAttrs.year+'"][data-month="'+dataAttrs.month+'"]:visible', $thisCalendar),
+        theseObservations = $('.stage-marker[data-year="'+dataAttrs.year+'"][data-stage-name="'+dataAttrs.stageName+'"][data-month="'+dataAttrs.month+'"]:visible', $thisCalendar),
         obsInfoTitle = 'Détails de l’observation';
 
     $('.obs-informations').empty();
