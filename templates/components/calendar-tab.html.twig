@@ -58,12 +58,17 @@
                 {% for i in 1..stages|length %}
                     {% set stage = stages[i-1] %}
 
-                    {% set column_start = ((periods[stage]['begin']|date("n")) + 2) * 10 %}
-                    {% set column_end = ((periods[stage]['end']|date("n")) + 3) * 10 %}
+                    {% set column_start = 30 + (periods[stage]['begin']|date("z") * 120 / 365)|round %}
+                    {% set column_end = 30 + (periods[stage]['end']|date("z") * 120 / 365)|round %}
 
                     <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ stages[i-1] }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
+                    {% if column_start <= column_end%}
                     <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                    {% else %}
+                        <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:150;grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                        <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:30;grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                    {% endif %}
                 {% endfor %}
 
 
