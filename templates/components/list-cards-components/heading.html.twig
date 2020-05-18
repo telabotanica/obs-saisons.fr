@@ -13,7 +13,7 @@
 {% set linkUrl = path(slug|default(route)) %}
 {% if route in ['actualites', 'evenements'] %}
     {% set linkUrl = path("#{route}_show", {'slug': slug}) %}
-{% elseif %}
+{% elseif heading.href is defined and heading.href is not empty %}
     {% set linkUrl = heading.href %}
 {% endif %}
 {% if heading.is_link|default(false) %}
