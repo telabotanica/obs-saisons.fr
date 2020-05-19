@@ -1,46 +1,49 @@
 {#
     *: required
-    [int..int]: array indexes ([...] if no precise length defined)
 
-    stages* array
-        [...](stage_label*) string
+    eventsSpecies* array
     App\Entity\Observation[]|array observations*
-    stages_css_classes defined in templates/components/calendar-tab.html.twig
-
+    stagesCssClasses defined in templates/components/calendar-tab.html.twig
 #}
-{% set STAGES = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 {% set break = false %}
-{# spot when to display missing event observation when more than one event is displayed #}
+{# Spot when to display missing event observation when more than one event is displayed #}
 {% if not onlyOneEvent  %}
     {% set stagesHavingObservations = [] %}
     {% for obs in observations %}
-        {% set obsStage = STAGES[obs.event.name] %}
-        {% if not obs.isMissing and obsStage not in stagesHavingObservations %}
-            {% set stagesHavingObservations = stagesHavingObservations|merge([obsStage]) %}
+        {% set obsEvent = obs.event.id %}
+        {% if not obs.isMissing and obsEvent not in stagesHavingObservations %}
+            {% set stagesHavingObservations = stagesHavingObservations|merge([obsEvent]) %}
         {% endif %}
     {% endfor %}
 {% endif %}
+
 
 {% for obs in observations if not break %}
 
     {# set observation grid position #}
     {% set column_start = ((obs.date|date("n")) + 2) * 10 %}
     {% set row_start = 0 %}
-    {% set obsStage = STAGES[obs.event.name] %}
-    {% for stage_label in stages %}
-        {% if stage_label == obsStage  %}
+    {% set obsEvent = obs.event.id %}
+    {% for singleEventSpecies in eventsSpecies %}
+        {% if singleEventSpecies.event.id == obsEvent  %}
             {% set row_start = loop.index %}
         {% endif %}
     {% endfor %}
 
     {# set displayed picture#}
-    {% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
+    {% set pictureUrl = '' %}
     {% if obs.isMissing == 0 %}
-        {% set pictureName = obs.individual.species.picture %}
-        {% if obs.individual.species.type.id == 1 %}
-            {% set pictureName = "#{pictureName}_#{obs.event.stadeBbch|first}" %}
+        {% if obs.picture is not null %}
+            {% set pictureUrl = obs.picture %}
+        {% else %}
+            {% set pictureName = obs.individual.species.picture %}
+            {% if obs.individual.species.type.id == 1 %}
+                {% set pictureName = "#{pictureName}_#{obs.event.stadeBbch|first}" %}
+            {% endif %}
+            {% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
         {% endif %}
-        {% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
+    {% else %}
+        {% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
     {% endif %}
 
     {% set displayObservation = true %}
@@ -53,27 +56,26 @@
         {% endif %}
     {% else %}{# toggle display observation when observation is for missing event and not only one event #}
         {% if obs.isMissing %}
-            {% if obsStage not in stagesHavingObservations %}
-                {% set stagesHavingObservations = stagesHavingObservations|merge([obsStage]) %}
-            {% elseif obsStage in stagesHavingObservations %}
+            {% if obsEvent not in stagesHavingObservations %}
+                {% set stagesHavingObservations = stagesHavingObservations|merge([obsEvent]) %}
+            {% elseif obsEvent in stagesHavingObservations %}
                 {% set displayObservation = false %}
             {% endif %}
         {% endif %}
     {% endif %}
 
     {# observation html #}
-
     {% if row_start > 0 and column_start > 20 and displayObservation %}
         <a
             href=""
-            class="stage-marker {{ stages_css_classes[obsStage] }}{{ obs.isMissing ? ' absence' }} open"
+            class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open"
             data-year="{{ obs.date|date("Y") }}"
             data-month="{{ obs.date|date("n") }}"
             data-tab="{{ obs.user.id }}"
             data-open="obs-infos"
             data-author="{{ obs.user.displayName }}"
-            data-stage-name="{{ obsStage }}"
-            data-stage="{{ obsStage }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
+            data-stage-name="{{ periodsNames[obs.event.name] }}"
+            data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
             data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
             style="
                 {{
@@ -84,7 +86,7 @@
             "
         >
             <div class="stage-marker-text {{ loop.index == observations|length or break? 'last' }}">
-                <div class="stage-text">{{ obsStage }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
+                <div class="stage-text">{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
                 <div class="stage-date">Le {{ obs.date|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
             </div>
         </a>
