@@ -24,7 +24,7 @@ class IndividualType extends AbstractType
                 'class' => Species::class,
                 'choice_label' => function ($species) {
                     $vernacularName = $species->getVernacularName();
-                    if (in_array($species, $this->stationDisplayData->getStationAllSpecies())) {
+                    if (in_array($species, $this->stationDisplayData->stationAllSpecies)) {
                         $vernacularName .= ' (+)';
                     }
                     return ucfirst($vernacularName);
@@ -34,7 +34,7 @@ class IndividualType extends AbstractType
                 },*/
                 'choice_attr' => function ($species, $key, $speciesId) {
                     $choiceClassAttr = 'species-option species-'.$speciesId;
-                    if (in_array($species, $this->stationDisplayData->getStationAllSpecies())) {
+                    if (in_array($species, $this->stationDisplayData->stationAllSpecies)) {
                         $choiceClassAttr .= ' exists-in-station';
                     }
                     return ['class' => $choiceClassAttr];

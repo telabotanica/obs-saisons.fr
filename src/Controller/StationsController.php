@@ -86,10 +86,7 @@ class StationsController extends PagesController
         $cards = [];
         foreach ($stations as $station) {
             $stationDisplayData = new StationDisplayData($station, $this->getDoctrine());
-            $stationImage = '/media/layout/image-placeholder.svg';
-            if (null !== $station->getHeaderImage()) {
-                $stationImage = $station->getHeaderImage();
-            }
+            $stationImage = $station->getHeaderImage() ?? '/media/layout/image-placeholder.svg';
             $header = ['image' => $stationImage];
             if ($station->getIsPrivate()) {
                 $header['icon_name'] = 'private';
@@ -242,10 +239,7 @@ class StationsController extends PagesController
     {
         $list_cards = [];
         foreach ($stationAllSpeciesDisplayData as $stationSpeciesDisplayData) {
-            /**
-             * @var Species
-             */
-            $species = $stationSpeciesDisplayData->getSpecies();
+            $species = $stationSpeciesDisplayData->species;
             $list_card = [
                 'image' => '/media/species/'.$species->getPicture().'.jpg',
                 'heading' => [
@@ -253,31 +247,29 @@ class StationsController extends PagesController
                     'text' => $species->getScientificName(),
                 ],
             ];
-
-            if (0 < $stationSpeciesDisplayData->getIndividualsCount()) {
+            $individuals = $stationSpeciesDisplayData->stationIndividuals;
+            if (!empty($individuals)) {
                 $list_card['calendar'] = $stationSpeciesDisplayData;
+                $observations = $stationSpeciesDisplayData->stationSpeciesObservations;
+                $lastObservation = reset($observations);
 
-                $individuals = [];
-                foreach ($stationSpeciesDisplayData->getAllIndividualsObservationsDisplayData() as $individualDisplayData) {
-                    $individuals[] = $individualDisplayData->getIndividual()->getId();
-                }
+                $individualsCount = count($individuals);
+                $obsCount = count(array_filter($observations, function (Observation $obs) {
+                    return !$obs->getIsMissing();
+                }));
 
-                $individuals_count = $stationSpeciesDisplayData->getIndividualsCount();
-                $display_s_individuals = 's';
-                $display_s_obs = 's';
-                if (1 === $individuals_count) {
-                    $display_s_individuals = '';
-                }
-                if (1 === $stationSpeciesDisplayData->getObsCount()) {
-                    $display_s_obs = '';
-                }
+                $display_s_individuals = 1 !== $individualsCount ? 's' : '';
+                $display_s_obs = 1 !== $obsCount ? 's' : '';
+
                 $list_card['details'] = [
-                    'grey_text' => '<span class=indiv-count>'.$individuals_count.'</span> individu'.$display_s_individuals.' • <span class=obs-count>'.$stationSpeciesDisplayData->getObsCount().'</span> observation'.$display_s_obs,
+                    'grey_text' => '<span class=indiv-count>'.$individualsCount.'</span> individu'.$display_s_individuals.' • <span class=obs-count>'.$obsCount.'</span> observation'.$display_s_obs,
                 ];
-                if (0 < $stationSpeciesDisplayData->getObsCount() && !empty($stationSpeciesDisplayData->getLastObsDate()) && !empty($stationSpeciesDisplayData->getLastObsStade())) {
+                if (0 < $obsCount && !empty($lastObservation) && $lastObservation instanceof Observation) {
+                    $lastObsDate = $lastObservation->getDate();
+                    $lastObsStade = Event::DISPLAY_LABELS[$lastObservation->getEvent()->getName()];
                     $list_card['details']['infos'] = [
-                        'bolder' => $stationSpeciesDisplayData->getLastObsStade(),
-                        'lighter' => 'le '.date_format($stationSpeciesDisplayData->getLastObsDate(), 'j/m/Y'),
+                        'bolder' => $lastObsStade,
+                        'lighter' => 'le '.date_format($lastObsDate, 'j/m/Y'),
                     ];
                 }
                 $list_card['buttons'] = [
@@ -303,7 +295,7 @@ class StationsController extends PagesController
                             ],
                             [
                                 'name' => 'indiv',
-                                'value' => implode(',', $individuals),
+                                'value' => implode(',', array_column($individuals, 'id')),
                             ],
                             [
                                 'name' => 'req-login',
@@ -322,14 +314,7 @@ class StationsController extends PagesController
 
     public function setActionBarSquaredButtonData(StationDisplayData $stationDisplayData): array
     {
-        $stationAllSpeciesIdsArray = [];
-        $stationAllSpeciesIds = '';
-        if (!empty($stationDisplayData->stationAllSpecies)) {
-            foreach ($stationDisplayData->stationAllSpecies as $species) {
-                $stationAllSpeciesIdsArray[] = $species->getId();
-            }
-            $stationAllSpeciesIds = implode(',', $stationAllSpeciesIdsArray);
-        }
+        $stationAllSpeciesIds = !empty($stationDisplayData->stationAllSpecies) ? implode(',', array_column($stationDisplayData->stationAllSpecies, 'id')) : '';
         $actionBarButtonClassAttributes = ['open', 'open-individual-form-all-station'];
         if (!$this->isGranted(UserVoter::LOGGED)) {
             $actionBarButtonClassAttributes[] = 'disabled';
