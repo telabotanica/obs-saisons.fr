@@ -6,6 +6,8 @@
     {% include 'components/app-flashes.html.twig' %}
 
     <a href="{{ path('admin_species_list') }}">Retour à la liste des espèces</a>
+    <br>
+    <a href="{{ path('specy_show', {vernacularName: specy.vernacularName}) }}">Voir la fiche</a>
 
     <dl>
         <dt>Nom scientifique</dt>

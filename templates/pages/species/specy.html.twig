@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <h1>{{ specy.vernacularName }}</h1>
+    <h2 class="scientific-name">{{ specy.scientificName }}</h2>
+
+    <p>{{ specy.description|raw }}</p>
+
+    <p>{{ post.content|default('')|raw }}</p>
+
+{% endblock %}

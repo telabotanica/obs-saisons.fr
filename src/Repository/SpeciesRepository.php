@@ -29,6 +29,17 @@ class SpeciesRepository extends ServiceEntityRepository
         return $query->execute();
     }
 
+    public function findAllOrderedByTypeAndVernacularName()
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->addOrderBy('s.type', 'ASC')
+            ->addOrderBy('s.vernacular_name', 'ASC');
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
+
     // /**
     //  * @return Species[] Returns an array of Species objects
     //  */

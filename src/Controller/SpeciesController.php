@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\DisplayData\Species\SpeciesDisplayData;
+use App\Entity\Post;
 use App\Entity\Species;
-use App\Entity\TypeSpecies;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +21,7 @@ class SpeciesController extends PagesController
      */
     public function species(Request $request): Response
     {
-        return $this->render('pages/species.html.twig', [
+        return $this->render('pages/species/species.html.twig', [
             'accordions' => $this->setAccordions(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
@@ -46,7 +47,7 @@ class SpeciesController extends PagesController
                         'image' => '/media/species/'.$species->getPicture().'.jpg',
                         'heading' => [
                             'is_link' => true,
-                            'href' => '', // add your link here
+                            'href' => $this->generateUrl('specy_show', ['vernacularName' => $species->getVernacularName()]),
                             'title' => $species->getVernacularName(),
                             'text' => $species->getScientificName(),
                         ],
@@ -62,5 +63,26 @@ class SpeciesController extends PagesController
         }
 
         return $accordions;
+    }
+
+    /**
+     * @Route("/espece/{vernacularName}", name="specy_show")
+     */
+    public function showSpecy(string $vernacularName, EntityManagerInterface $manager): Response
+    {
+        $specy = $manager->getRepository(Species::class)->findOneBy(['vernacular_name' => $vernacularName]);
+        if (!$specy) {
+            $this->createNotFoundException('L’espèce n’a pas été trouvée');
+        }
+
+        $post = $specy->getPost();
+        if (!$post) {
+            $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
+        }
+
+        return $this->render('pages/species/specy.html.twig', [
+            'specy' => $specy,
+            'post' => $post,
+        ]);
     }
 }

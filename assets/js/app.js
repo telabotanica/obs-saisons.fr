@@ -12,6 +12,7 @@ import 'leaflet-draw';
 const places = require('places.js');
 const algoliasearch = require('algoliasearch');
 import './ui/wysiwyg';
+import './ui/scientific-name';
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');

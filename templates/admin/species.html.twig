@@ -2,11 +2,16 @@
 
 {% block content %}
 
-    <ul>
+    <dl>
+    {% set type = '' %}
     {% for specy in species %}
-        <li><a href="{{ path('admin_edit_specy_page', {specyId: specy.id}) }}">{{ specy.scientificName }}</a> {{ specy.post ? '✅' }}</li>
+        {% if (type) is not same as (specy.type.name) %}
+            {% set type = specy.type.name %}
+            <dt>{{ type }}</dt>
+        {% endif %}
+        <dd><a href="{{ path('admin_edit_specy_page', {specyId: specy.id}) }}">{{ specy.vernacularName }} ({{ specy.scientificName }})</a> {{ specy.post ? '✅' }}</dd>
     {% endfor %}
-    </ul>
+    </dl>
 
 {% endblock %}
 

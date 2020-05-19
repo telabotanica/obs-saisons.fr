@@ -31,7 +31,7 @@ class AdminController extends AbstractController
     public function speciesList(EntityManagerInterface $manager)
     {
         $species = $manager->getRepository(Species::class)
-            ->findAllOrderedByScientificName();
+            ->findAllOrderedByTypeAndVernacularName();
 
         return $this->render('admin/species.html.twig', [
             'species' => $species,
