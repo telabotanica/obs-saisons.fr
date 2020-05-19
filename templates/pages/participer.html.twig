@@ -1,12 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% set headers = {
-    'participer': {
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
         'title': 'Participer',
         'subtitle':
-            "Participez au programme de l’<strong>Observatoire des saisons</strong>.<br>
+        "Participez au programme de l’<strong>Observatoire des saisons</strong>.<br>
             Accéder aux <a href=#{path('stations')}>stations d’observation</a>.<br>
             Accéder au <a href=#{path('protocole')}>Protocole</a>."
-    }
-} %}
+    }) %}
 
+{% endblock %}

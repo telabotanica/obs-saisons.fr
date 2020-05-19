@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
-{% set headers = {
-    'resultats': {
+
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
         'title': 'Les résultats',
         'subtitle': 'Tous les résultats du programme <strong>Observatoire des saisons</strong>.'
-    }
-} %}
+    }) %}
+
+{% endblock %}

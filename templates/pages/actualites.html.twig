@@ -1,13 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% set headers = {
-	'actualites': {
+{% block main_content %}
+
+	{% include 'layout/header.html.twig' with ({
 		'title': 'Actualités',
 		'subtitle': 'Vos <strong>actualités</strong> de l’Observatoire des saisons.'
-	}
-} %}
-
-{% block main_content %}
+	}) %}
 
 	{# add posts list-card #}
 	{% set list_cards = [] %}

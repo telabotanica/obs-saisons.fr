@@ -1,20 +1,16 @@
 {% extends 'base.html.twig' %}
-{% set headers = {
-    'outils': {
+
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
         'title': 'Outils',
         'subtitle': 'Tous les outils du programme <strong>Observatoire des saisons</strong>.'
-    },
-    'ressources': {
+    }) %}
+
+    {% include 'layout/header.html.twig' with ({
         'title': 'Ressources',
         'subtitle': 'Toutes les ressources du programme <strong>Observatoire des saisons</strong>.'
-    }
-} %}
+    }) %}
 
-{% for header in headers %}
-    {% block header_content %}
-        {% include 'layout/header.html.twig' %}
-    {% endblock %}
+{% endblock %}
 
-    {% block main_content %}{% endblock %}
-
-{% endfor %}

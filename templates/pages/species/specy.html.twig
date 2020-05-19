@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block content %}
+{% block main_content %}
 
-    <h1>{{ specy.vernacularName }}</h1>
-    <h2 class="scientific-name">{{ specy.scientificName }}</h2>
+    {% include 'layout/header.html.twig' with ({
+        'title': specy.vernacularName,
+        'subtitle': '<span class="scientific-name">' ~ specy.scientificName ~ '</span>'
+    }) %}
 
     <p>{{ specy.description|raw }}</p>
 

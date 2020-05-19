@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
-{% set headers = {
-    'apropos': {
+
+{% block main_content %}
+
+	{% include 'layout/header.html.twig' with ({
         'title': 'À propos de l’Observatoire des saisons',
         'subtitle': 'Participez au programme de <strong>l’ODS</strong>.'
-    }
-} %}
+    }) %}
+
+{% endblock %}

@@ -1,13 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% set headers = {
-	'evenements': {
+{% block main_content %}
+
+	{% include 'layout/header.html.twig' with ({
 		'title': 'Évènements',
 		'subtitle': 'Vos <strong>évènements</strong> de l’Observatoire des saisons.'
-	}
-} %}
-
-{% block main_content %}
+	}) %}
 
 	{# add evenements list-card #}
 	{% set list_cards = [] %}
