@@ -1,26 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une nouvelle fiche espèce {{ specy.scientificName }} ({{ specy.vernacularName }}){% endblock %}
+{% block title %}Créer une nouvelle fiche espèce {{ species.scientificName }} ({{ species.vernacularName }}){% endblock %}
 
-{% block content %}
+{% block main_content %}
     {% include 'components/app-flashes.html.twig' %}
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Édition de la fiche espèce : ' ~ species.vernacularName,
+        'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
+    }) %}
 
     <a href="{{ path('admin_species_list') }}">Retour à la liste des espèces</a>
     <br>
-    <a href="{{ path('specy_show', {vernacularName: specy.vernacularName}) }}">Voir la fiche</a>
+    <a href="{{ path('species_single_show', {vernacularName: species.vernacularName}) }}">Voir la fiche</a>
 
     <dl>
         <dt>Nom scientifique</dt>
-        <dd>{{ specy.scientificName }}</dd>
+        <dd class="scientific-name">{{ species.scientificName }}</dd>
         <dt>Nom vernaculaire</dt>
-        <dd>{{ specy.vernacularName }}</dd>
+        <dd>{{ species.vernacularName }}</dd>
         <dt>Description</dt>
-        <dd>{{ specy.description }}</dd>
+        <dd>{{ species.description }}</dd>
     </dl>
 
     <section class="group-form">
-        {% include 'forms/post/specy-post-form.html.twig' with ({
-            'specy':specy,
+        {% include 'forms/post/species-post-form.html.twig' with ({
+            'species':species,
             'form':form,
             'form_submit':'Enregistrer la fiche'
         }) %}

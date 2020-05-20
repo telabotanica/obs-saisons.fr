@@ -34,35 +34,35 @@ class AdminController extends AbstractController
             ->findAllOrderedByTypeAndVernacularName();
 
         return $this->render('admin/species.html.twig', [
-            'species' => $species,
+            'speciesList' => $species,
         ]);
     }
 
     /**
-     * @Route("/admin/espece/{specyId}/edit", name="admin_edit_specy_page")
+     * @Route("/admin/espece/{speciesId}/edit", name="admin_species_page_edit")
      */
     public function editSpeciesPage(
-        $specyId,
+        $speciesId,
         Request $request,
         EntityManagerInterface $manager,
         SlugGenerator $slugGenerator
     ) {
-        $specy = $manager->getRepository(Species::class)->find($specyId);
+        $species = $manager->getRepository(Species::class)->find($speciesId);
 
-        $specyPost = $specy->getPost();
-        if (!$specyPost) {
-            $specyPost = new Post();
-            $specyPost->setContent('');
-            $specyPost->setAuthor($this->getUser());
-            $specyPost->setCategory(Post::CATEGORY_SPECY);
-            $specyPost->setTitle('Fiche espèce '.$specy->getScientificName());
-            $specyPost->setCreatedAt(new \DateTime());
-            $specyPost->setSlug($slugGenerator->generateSlug($specyPost->getTitle(), $specyPost->getCreatedAt()));
+        $speciesPost = $species->getPost();
+        if (!$speciesPost) {
+            $speciesPost = new Post();
+            $speciesPost->setContent('');
+            $speciesPost->setAuthor($this->getUser());
+            $speciesPost->setCategory(Post::CATEGORY_SPECIES);
+            $speciesPost->setTitle('Fiche espèce '.$species->getScientificName());
+            $speciesPost->setCreatedAt(new \DateTime());
+            $speciesPost->setSlug($slugGenerator->generateSlug($speciesPost->getTitle(), $speciesPost->getCreatedAt()));
 
-            $manager->persist($specyPost);
+            $manager->persist($speciesPost);
         }
 
-        $form = $this->createForm(SpeciesPostType::class, $specyPost);
+        $form = $this->createForm(SpeciesPostType::class, $speciesPost);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,14 +71,14 @@ class AdminController extends AbstractController
             $this->addFlash('notice', 'Fiche modifiée');
         }
 
-        if (!$specy->getPost()) {
-            $specy->setPost($specyPost);
+        if (!$species->getPost()) {
+            $species->setPost($speciesPost);
 
             $manager->flush();
         }
 
         return $this->render('admin/edit-species.html.twig', [
-            'specy' => $specy,
+            'species' => $species,
             'form' => $form->createView(),
         ]);
     }

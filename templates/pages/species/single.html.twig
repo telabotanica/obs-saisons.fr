@@ -3,11 +3,11 @@
 {% block main_content %}
 
     {% include 'layout/header.html.twig' with ({
-        'title': specy.vernacularName,
-        'subtitle': '<span class="scientific-name">' ~ specy.scientificName ~ '</span>'
+        'title': species.vernacularName,
+        'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
     }) %}
 
-    <p>{{ specy.description|raw }}</p>
+    <p>{{ species.description|raw }}</p>
 
     <p>{{ post.content|default('')|raw }}</p>
 

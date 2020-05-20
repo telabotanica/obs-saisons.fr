@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block content %}
+{% block main_content %}
 
     <dl>
     {% set type = '' %}
-    {% for specy in species %}
-        {% if (type) is not same as (specy.type.name) %}
-            {% set type = specy.type.name %}
+    {% for species in speciesList %}
+        {% if (type) is not same as (species.type.name) %}
+            {% set type = species.type.name %}
             <dt>{{ type }}</dt>
         {% endif %}
-        <dd><a href="{{ path('admin_edit_specy_page', {specyId: specy.id}) }}">{{ specy.vernacularName }} ({{ specy.scientificName }})</a> {{ specy.post ? '✅' }}</dd>
+        <dd><a href="{{ path('admin_species_page_edit', {speciesId: species.id}) }}">{{ species.vernacularName }} ({{ species.scientificName }})</a> {{ species.post ? '✅' }}</dd>
     {% endfor %}
     </dl>
 

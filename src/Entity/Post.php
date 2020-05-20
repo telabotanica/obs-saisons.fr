@@ -11,13 +11,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Post
 {
     const CATEGORY_NEWS = 'news';
-    const CATEGORY_SPECY = 'specy';
+    const CATEGORY_SPECIES = 'species';
     const CATEGORY_EVENT = 'event';
     const CATEGORY_PAGE = 'page';
 
     const CATEGORY_CHOICES = [
         'Actualité' => self::CATEGORY_NEWS,
-        'Fiche espèce' => self::CATEGORY_SPECY,
+        'Fiche espèce' => self::CATEGORY_SPECIES,
         'Évènement' => self::CATEGORY_EVENT,
         'Page' => self::CATEGORY_PAGE,
     ];
