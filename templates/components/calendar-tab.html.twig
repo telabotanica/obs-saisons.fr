@@ -1,23 +1,20 @@
 {#
-    #: optionnal,
-    *: required,
-    |: default
+    *: required
 
     id*: int
     App\DisplayData\Station\StationSpeciesDisplayData calendar
 #}
-{% set periods = calendar.getPeriods() %}
-{% set stages = periods|keys %}
-{% set stages_css_classes = constant('App\\Entity\\Event::CSS_CLASSES') %}
-{% set individualsData = calendar.getAllIndividualsObservationsDisplayData()  %}
-{% set years = calendar.getAllObsYears() %}
+{% set eventsSpecies = calendar.eventsSpecies %}
+{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
+{% set stagesCssClasses = constant('App\\Entity\\Event::CSS_CLASSES') %}
+
+{% set years = calendar.allObsYears %}
 {% set first_year = max(years|default(["now"|date("Y")])) %}
 
 <div class="periods-calendar" data-id="{{ id }}" style="display:none;">
     <div class="table-container">
         <div class="grid top">
-
-            {# Display years dropdown #}
+            {# Display years dropdown menu #}
             <div class="grid_1-3_1-2 dropdown">
                 <div class="dropdown-toggle" style="{{ years|length > 1 ? 'cursor: pointer;' }}">
                     <div class="active-year {{ years|length > 1 ? 'down-arrow-icon' }}">{{ first_year }}</div>
@@ -42,8 +39,8 @@
         </div>
 
         {% set disable = (app.user.id is not defined) %}
-        {% for individualData in individualsData %}
-
+        {% for individualData in calendar.allIndividualsObservationsData %}
+            {# Displays individual's name #}
             <div class="individu-header">
                 {% set individual = individualData.getIndividual() %}
                 <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
@@ -54,34 +51,38 @@
                 {% endif %}
             </div>
 
-            <div class="grid content-{{ stages|length }}">
-                {% for i in 1..stages|length %}
-                    {% set stage = stages[i-1] %}
+            <div class="grid content-{{ eventsSpecies|length }}">
+                {% for i in 1..eventsSpecies|length %}
+                    {% set stage = eventsSpecies[i-1] %}
 
-                    {% set column_start = 30 + (periods[stage]['begin']|date("z") * 120 / 365)|round %}
-                    {% set column_end = 30 + (periods[stage]['end']|date("z") * 120 / 365)|round %}
+                    {% set column_start = 30 + (stage.startDate|date("z") * 120 / 365)|round %}
+                    {% set column_end = 30 + (stage.endDate|date("z") * 120 / 365)|round %}
 
-                    <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ stages[i-1] }}</div>
+                    {# Displays the calendar grid and lines titles #}
+                    <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ periodsNames[stage.event.name] }}{{ stage.species.type.id == 1 ? " - stade #{stage.event.stadeBbch}" }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
-                    {% if column_start <= column_end%}
-                    <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+
+                    {# Displays periods colored lines #}
+                    {% if column_start <= column_end %}
+                        <div class="stage-period {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
                     {% else %}
-                        <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:150;grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
-                        <div class="stage-period {{ stages_css_classes[stage] }}" style="{{ "grid-column-start:30;grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                        <div class="stage-period {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:150;grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                        <div class="stage-period {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:30;grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
                     {% endif %}
                 {% endfor %}
 
-
-                {% for stationObservationsByYearDisplayData in individualData.getStationObservationsByYearDisplayData() %}
+                {# Displays observations #}
+                {% for stationObservationsByYearDisplayData in individualData.stationObservationsByYearDisplayData %}
                     {% include 'components/obs_chips.html.twig' with {
                         observations: stationObservationsByYearDisplayData.getThisYearObservations(),
                         onlyOneEvent: (individualData.getIndividual().species.type.id != 1),
                         hide: (stationObservationsByYearDisplayData.getYear() != first_year)
-                    } %}{# will also take stages #}
+                    } %}
                 {% endfor %}
 
+                {# Highlights current month #}
                 {% for i in 3..14 %}
-                    <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ stages|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }} {{ loop.last ? 'last-column' }}"></div>
+                    <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ eventsSpecies|length + 1 }} table-colomn {{ (i - 2) == ("now"|date('n')) ? 'active-month' }} {{ loop.last ? 'last-column' }}"></div>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -101,8 +102,13 @@
 
     <div class="helper-legend">
         <div class="legends">
-            {% for stage in stages %}
-                <div class="stage-period {{ stages_css_classes[stage] }} legend"></div>
+            {# Sets an array of non duplicated values of stages class attibutes for this species #}
+            {% set stagesClassAttrs = [] %}
+            {% set stagesClassAttrs = stagesClassAttrs|merge(eventsSpecies|map(p => stagesCssClasses[p.event.name]))|arrayUnique %}
+
+            {# Displays periods colored lines legends #}
+            {% for stageClassAttr in stagesClassAttrs %}
+                <div class="stage-period {{stageClassAttr }} legend"></div>
             {% endfor %}
         </div>
         <div class="helper-legend-text">Périodes à laquelle est observée ce stade en moyenne les années précédentes</div>

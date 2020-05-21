@@ -44,10 +44,10 @@ class Event
     ];
 
     const CSS_CLASSES = [
-        'Feuillaison' => 'feuillaison',
-        'Floraison' => 'floraison',
-        'Fructification' => 'fructification',
-        'Sénescence' => 'senescence',
+        'feuillaison' => 'feuillaison',
+        'floraison' => 'floraison',
+        'fructification' => 'fructification',
+        'sénescence' => 'senescence',
         '1ere apparition' => 'apparition',
     ];
 

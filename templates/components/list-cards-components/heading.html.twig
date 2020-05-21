@@ -11,11 +11,13 @@
         text#: string (item-name)
 #}
 {% if heading.is_link|default(false) %}
-    {% set linkUrl = path(slug|default(route)) %}
+    {% set linkUrl = '' %}
     {% if route in ['actualites', 'evenements'] %}
         {% set linkUrl = path("#{route}_show", {'slug': slug}) %}
     {% elseif heading.href is defined and heading.href is not empty %}
         {% set linkUrl = heading.href %}
+    {% else %}
+        {% set linkUrl = path(slug|default(route)) %}
     {% endif %}
 <a href="{{ linkUrl }}" class="item-name-block">
 {% else %}

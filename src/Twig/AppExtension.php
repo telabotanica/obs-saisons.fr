@@ -1,4 +1,5 @@
 <?php
+
 // src/Twig/AppExtension.php
 
 namespace App\Twig;
@@ -31,6 +32,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('slugify', [$this, 'slugify']),
+            new TwigFilter('arrayUnique', [$this, 'arrayUnique']),
         ];
     }
 
@@ -39,6 +41,18 @@ class AppExtension extends AbstractExtension
         $slugGenerator = new SlugGenerator();
 
         return $slugGenerator->slugify($string);
+    }
+
+    public function arrayUnique(array $array): array
+    {
+        $arrayUnique = [];
+        foreach ($array as $value) {
+            if (!in_array($value, $arrayUnique)) {
+                $arrayUnique[] = $value;
+            }
+        }
+
+        return $arrayUnique;
     }
 
     public function displayEventDates(\DateTimeInterface $startDate, \DateTimeInterface $endDate, string $separator = '-'): string

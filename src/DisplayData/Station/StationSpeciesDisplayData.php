@@ -14,36 +14,35 @@ class StationSpeciesDisplayData
 {
     private $manager;
     private $station;
-    private $species;
-    private $thisStationIndividuals;
     private $validEvents;
-    private $stationSpeciesObservations;
-    private $eventsSpecies;
-    private $periods;
-    private $allObsYears;
+    public $stationSpeciesObservations;
+    public $species;
+    public $stationIndividuals;
+    public $eventsSpecies;
+    public $allObsYears;
 
     /**
      * @var Observation
      */
     private $lastObservation;
-    private $allIndividualsObservationsData;
+    public $allIndividualsObservationsData;
 
     public function __construct(
         Station $station,
         Species $species,
         ManagerRegistry $manager,
-        array $thisStationIndividuals = null,
+        array $stationIndividuals = null,
         array $stationSpeciesObservations = null
     ) {
         $this->manager = $manager;
         $this->station = $station;
         $this->species = $species;
 
-        if (null === $thisStationIndividuals) {
-            $this->thisStationIndividuals = [];
+        if (null === $stationIndividuals) {
+            $this->stationIndividuals = [];
             self::setStationSpeciesData();
         } else {
-            $this->thisStationIndividuals = $thisStationIndividuals;
+            $this->stationIndividuals = $stationIndividuals;
         }
 
         $this->validEvents = [];
@@ -51,7 +50,7 @@ class StationSpeciesDisplayData
 
         if (null === $stationSpeciesObservations) {
             $this->stationSpeciesObservations = [];
-            self::setStationObservations();
+            self::setStationSpeciesObservations();
         } else {
             $this->stationSpeciesObservations = $stationSpeciesObservations;
         }
@@ -60,13 +59,10 @@ class StationSpeciesDisplayData
             ->findBy(['species' => $species], ['species' => 'asc'])
         ;
 
-        $this->periods = [];
         $this->allIndividualsObservationsData = [];
 
         self::setAllObsYears();
-        self::setPeriods();
         self::setAllIndividualsObservationsDisplayData();
-        self::setLastObservation();
     }
 
     private function setStationSpeciesData(): self
@@ -77,16 +73,11 @@ class StationSpeciesDisplayData
         foreach ($allStationIndividualsData as $stationIndividuals) {
             $species = $stationIndividuals->getSpecies();
             if ($species === $this->species) {
-                $this->thisStationIndividuals[] = $stationIndividuals;
+                $this->stationIndividuals[] = $stationIndividuals;
             }
         }
 
         return $this;
-    }
-
-    public function getStationSpeciesData(): array
-    {
-        return $this->thisStationIndividuals;
     }
 
     public function setValidEvents(): self
@@ -99,60 +90,17 @@ class StationSpeciesDisplayData
         return $this;
     }
 
-    private function setStationObservations(): self
+    private function setStationSpeciesObservations(): self
     {
         $stationObservations = $this->manager->getRepository(Observation::class)
             ->findAllObsInStation($this->station)
         ;
-        foreach ($stationObservations as $stationObservation) {
-            if ($stationObservation->getSpecies() === $this->species && in_array($stationObservation->getEvent(), $this->validEvents)) {
-                $this->stationSpeciesObservations[] = $stationObservation;
-            }
-        }
-        uasort($this->stationSpeciesObservations, 'self::sortObsByDAte');
+
+        $stationObservations->filter('self::filterObsForSpeciesAndValidEvents');
+        uasort($stationObservations, 'self::sortObsByDAte');
+        $this->stationSpeciesObservations = $stationObservations;
 
         return $this;
-    }
-
-    public function getSpecies(): Species
-    {
-        return $this->species;
-    }
-
-    private function setPeriods(): self
-    {
-        $loopStadeBbch = [];
-        foreach ($this->eventsSpecies as $eventSpecies) {
-            $event = $eventSpecies->getEvent();
-            $eventName = Event::DISPLAY_LABELS[$event->getName()];
-            $StadeBbch = $event->getStadeBbch();
-
-            if (!in_array($eventName, array_keys($this->periods))) {
-                $loopStadeBbch[] = $StadeBbch;
-                $this->periods[$eventName] = [
-                    'begin' => $eventSpecies->getStartDate(),
-                    'end' => $eventSpecies->getEndDate(),
-                ];
-            }
-            if (!in_array($StadeBbch, $loopStadeBbch)) {
-                $loopStadeBbch[] = $StadeBbch;
-                // the earliest begining date
-                if ($eventSpecies->getStartDate() < $this->periods[$eventName]['begin']) {
-                    $this->periods[$eventName]['begin'] = $eventSpecies->getStartDate();
-                }
-                // the latest ending date
-                if ($eventSpecies->getEndDate() > $this->periods[$eventName]['end']) {
-                    $this->periods[$eventName]['end'] = $eventSpecies->getEndDate();
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    public function getPeriods(): array
-    {
-        return $this->periods;
     }
 
     private function filterStationSpeciesObservationsByIndividuals(Individual $individual)
@@ -170,7 +118,7 @@ class StationSpeciesDisplayData
 
     private function setAllIndividualsObservationsDisplayData(): self
     {
-        foreach ($this->thisStationIndividuals as $individual) {
+        foreach ($this->stationIndividuals as $individual) {
             $stationIndividualsDisplayData = new StationIndividualsDisplayData(
                 $individual,
                 $this->manager,
@@ -180,28 +128,6 @@ class StationSpeciesDisplayData
         }
 
         return $this;
-    }
-
-    public function getAllIndividualsObservationsDisplayData(): array
-    {
-        return $this->allIndividualsObservationsData;
-    }
-
-    public function getIndividualsCount(): int
-    {
-        return count($this->thisStationIndividuals);
-    }
-
-    public function getObsCount(): int
-    {
-        $obsCount = 0;
-        foreach ($this->stationSpeciesObservations as $obs) {
-            if (!$obs->getIsMissing()) {
-                ++$obsCount;
-            }
-        }
-
-        return $obsCount;
     }
 
     private function setAllObsYears(): self
@@ -217,30 +143,13 @@ class StationSpeciesDisplayData
         return $this;
     }
 
-    public function getAllObsYears(): array
-    {
-        return $this->allObsYears;
-    }
-
-    private function setLastObservation(): self
-    {
-        $this->lastObservation = reset($this->stationSpeciesObservations);
-
-        return $this;
-    }
-
-    public function getLastObsDate(): \DateTimeInterface
-    {
-        return $this->lastObservation->getDate();
-    }
-
-    public function getLastObsStade(): string
-    {
-        return Event::DISPLAY_LABELS[$this->lastObservation->getEvent()->getName()];
-    }
-
-    private function sortObsByDAte(Observation $obsA, Observation $obsB)
+    private function sortObsByDAte(Observation $obsA, Observation $obsB): int
     {
         return $obsB->getDate() <=> $obsA->getDate();
+    }
+
+    private function filterObsForSpeciesAndValidEvents(Observation $observation): bool
+    {
+        return $observation->getSpecies() === $this->species && in_array($observation->getEvent(), $this->validEvents);
     }
 }

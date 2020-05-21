@@ -32,15 +32,14 @@
 @include calendar-grid-blocks('row', (1,2), 3, 15);
 
 /* table-intitule-stage */
-@include calendar-grid-blocks('colomn', (1,3), 1, 5);
+@include calendar-grid-blocks('colomn', (1,3), 1, 8);
 /* table-row */
-@include calendar-grid-blocks('colomn', (3,15), 1, 5);
+@include calendar-grid-blocks('colomn', (3,15), 1, 8);
 
 /* table-colomn */
-@include calendar-grid-blocks('row', (1,2), 3, 15);
-@include calendar-grid-blocks('row', (1,3), 3, 15);
-@include calendar-grid-blocks('row', (1,4), 3, 15);
-@include calendar-grid-blocks('row', (1,5), 3, 15);
+@for $i from 2 through 8 {
+    @include calendar-grid-blocks('row', (1, $i), 3, 15);
+}
 
 /**************************************************/
 .periods-calendar {
@@ -80,7 +79,7 @@
 
     &.content {
         @include media(md) {
-            @for $i from 1 through 4 {
+            @for $i from 1 through 7 {
                 &-#{$i} {
                     @include grid-template-rows(grid-repeat($i, 50px));
                 }
