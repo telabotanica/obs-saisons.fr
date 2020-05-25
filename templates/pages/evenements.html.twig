@@ -10,14 +10,14 @@
 {% block main_content %}
 
 	{# add evenements list-card #}
-	{% set list_cards = [] %}
+	{% set listCards = [] %}
 	{% for event in events %}
 		{% set event_dates = [event.startDate] %}
 		{% if event.endDate != event.startDate %}
 			{% set event_dates = event_dates|merge([event.endDate]) %}
 		{% endif %}
 
-		{% set list_cards = list_cards|merge([{
+		{% set listCards = listCards|merge([{
 			'slug': event.slug,
 			'events_dates': event_dates,
 			'heading': {
@@ -33,7 +33,7 @@
 			}
 		}]) %}
 	{% endfor %}
-	{% set list_cards = list_cards|merge(
+	{% set listCards = listCards|merge(
 		[{
 			'add': {
 				'text': 'Vous souhaitez proposer un évènement ?',
@@ -42,7 +42,7 @@
 		}]
 	) %}
 
-	{% for id, list_card in list_cards %}
+	{% for id, listCard in listCards %}
 		{% include 'components/list-cards.html.twig' %}
 	{% endfor %}
 

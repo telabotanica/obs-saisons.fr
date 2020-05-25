@@ -23,7 +23,8 @@
 			]
 		}
 	} %}
-	{% include 'components/cards.html.twig' %}
+
+	{% include 'components/cards.html.twig' with {cards : setStationCards(stations)} %}
 	{% include 'components/help-block.html.twig' with {
 		help: {
 			'text':

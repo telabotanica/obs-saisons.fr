@@ -33,7 +33,7 @@
 	{% if show %}
 		{% set topActionbarComponents = topActionbarComponents|merge([{
 			'name': 'squared-button',
-			'data': squaredButtonData
+			'data': setStationActionBarSquaredButton(stationData)
 		}]) %}
 	{% endif %}
 	{# displays top actionbar #}
@@ -44,15 +44,16 @@
 	} %}
 
 	{# displays list-cards and calendar #}
-	{% for id, list_card in list_cards %}
-		{% set listCardButtons = list_card.buttons %}
+	{% set listCards = setStationListCards(stationData.stationAllSpeciesDisplayData) %}
+	{% for id, listCard in listCards %}
+		{% set listCardButtons = listCard.buttons %}
 		{% if not show %}
 			{% set listCardButtons = listCardButtons|slice(0,-1) %}
 		{% endif %}
 		{% include 'components/list-cards.html.twig' with { buttons: listCardButtons } %}
 
-		{% if list_card.calendar is defined %}
-			{% include 'components/calendar-tab.html.twig' with {calendar: list_card.calendar} %}
+		{% if listCard.calendar is defined %}
+			{% include 'components/calendar-tab.html.twig' with {calendar: listCard.calendar} %}
 		{% endif %}
 	{% endfor %}
 
@@ -70,7 +71,7 @@
 					},
 					{
 						'name': 'squared-button',
-						'data': squaredButtonData
+						'data': setStationActionBarSquaredButton(stationData)
 					}
 				]
 			}

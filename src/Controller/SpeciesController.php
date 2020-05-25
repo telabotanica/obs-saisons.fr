@@ -21,46 +21,8 @@ class SpeciesController extends PagesController
     public function species(Request $request): Response
     {
         return $this->render('pages/species.html.twig', [
-            'accordions' => $this->setAccordions(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
         ]);
-    }
-
-    private function setAccordions(): array
-    {
-        $accordions = [];
-        $manager = $this->getDoctrine();
-        $speciesDisplayData = new SpeciesDisplayData($manager);
-        $types = $speciesDisplayData->getTypes();
-
-        foreach ($types as $type) {
-            $allSpecies = $speciesDisplayData->filterSpeciesByType($type);
-            $contents = [];
-            foreach ($allSpecies as $species) {
-                $contents[] = [
-                    'type' => 'include',
-                    'include_uri' => 'components/list-cards.html.twig',
-                    'include_object_name' => 'list_card',
-                    'data' => [
-                        'image' => '/media/species/'.$species->getPicture().'.jpg',
-                        'heading' => [
-                            'is_link' => true,
-                            'href' => '', // add your link here
-                            'title' => $species->getVernacularName(),
-                            'text' => $species->getScientificName(),
-                        ],
-                    ],
-                ];
-            }
-
-            $accordions[] = [
-                'tab_reference' => $type->getReign(),
-                'title' => $type->getName(),
-                'contents' => $contents,
-            ];
-        }
-
-        return $accordions;
     }
 }

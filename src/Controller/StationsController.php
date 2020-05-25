@@ -13,11 +13,10 @@ use App\Form\Type\ObservationType;
 use App\Form\Type\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\SlugGenerator;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\UploadService;
 
 /**
  * Class StationsController.
@@ -34,12 +33,11 @@ class StationsController extends PagesController
     public function stations(Request $request): Response
     {
         $doctrine = $this->getDoctrine();
+        $uploadImageService = new UploadService();
         $stationForm = $this->createForm(StationType::class);
         if ($request->isMethod('POST') && !$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
         }
-        // setting cards data
-        $cards = $this->setStationCards($doctrine->getRepository(Station::class)->findAll());
 
         if ($request->isMethod('POST') && 'station' === $request->request->get('action')) {
             if (!$this->isGranted(UserVoter::LOGGED)) {
@@ -58,7 +56,7 @@ class StationsController extends PagesController
                 $station->setHabitat($stationFormValues['habitat']);
                 $station->setDescription($stationFormValues['description']);
                 $station->setIsPrivate(!empty($stationFormValues['is_private']));
-                $station->setHeaderImage($this->uploadImage($request->files->get('station')['header_image']));
+                $station->setHeaderImage($uploadImageService->uploadImage($request->files->get('station')['header_image']));
                 $station->setLocality($stationFormValues['locality']);
                 $station->setLatitude($stationFormValues['latitude']);
                 $station->setLongitude($stationFormValues['longitude']);
@@ -74,77 +72,11 @@ class StationsController extends PagesController
         }
 
         return $this->render('pages/stations.html.twig', [
-            'cards' => $cards,
+            'stations' => $doctrine->getRepository(Station::class)->findAll(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'route' => $request->get('_route'),
             'stationForm' => $stationForm->createView(),
         ]);
-    }
-
-    private function setStationCards(array $stations): array
-    {
-        $cards = [];
-        foreach ($stations as $station) {
-            $stationDisplayData = new StationDisplayData($station, $this->getDoctrine());
-            $stationImage = $station->getHeaderImage() ?? '/media/layout/image-placeholder.svg';
-            $header = ['image' => $stationImage];
-            if ($station->getIsPrivate()) {
-                $header['icon_name'] = 'private';
-            }
-            $body = [
-                'heading' => $station->getName(),
-                'rows' => [
-                    [
-                        'icon_name' => 'pointer',
-                        'text' => $station->getLocality(),
-                    ],
-                    [
-                        'icon_name' => 'leaf',
-                        'text' => $station->getHabitat(),
-                    ],
-                ],
-            ];
-            $footer = [
-                [
-                    'counter' => [
-                        'icon' => 'person-icon',
-                        'count' => $stationDisplayData->getCountStationContributors(),
-                    ],
-                ],
-                [
-                    'avatars' => $stationDisplayData->getStationObsImages(),
-                ],
-            ];
-            $cards[] = [
-                'tab_reference' => $station->getUser()->getId(),
-                'card_link' => $station->getSlug(),
-                'header' => $header,
-                'body' => $body,
-                'footer' => $footer,
-            ];
-        }
-        array_unshift($cards, [
-            'add' => [
-                'icon_name' => 'add-pointer',
-                'text' => 'Votre station n’existe pas encore ?',
-                'button' => [
-                    'label' => 'Créer une station',
-                    'classes' => ['open'],
-                    'dataAttributes' => [
-                        [
-                            'name' => 'open',
-                            'value' => 'station',
-                        ],
-                        [
-                            'name' => 'req-login',
-                            'value' => true,
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-
-        return $cards;
     }
 
     /* ************************************************ *
@@ -157,6 +89,7 @@ class StationsController extends PagesController
     public function stationPage(Request $request, string $slug): Response
     {
         $doctrine = $this->getDoctrine();
+        $uploadImageService = new UploadService();
         $individual = new Individual();
         $observation = new Observation();
 
@@ -207,7 +140,7 @@ class StationsController extends PagesController
                                 ->find($observationFormValues['event'])
                         );
                         $observation->setDate(date_create($observationFormValues['date']));
-                        $observation->setPicture($this->uploadImage($request->files->get('observation')['picture']));
+                        $observation->setPicture($uploadImageService->uploadImage($request->files->get('observation')['picture']));
                         $observation->setIsMissing(!empty($observationFormValues['is_missing']));
                         $observation->setDetails($observationFormValues['details']);
 
@@ -224,10 +157,8 @@ class StationsController extends PagesController
         }
 
         return $this->render('pages/station-page.html.twig', [
-            'list_cards' => $this->setListCards($stationDisplayData->stationAllSpeciesDisplayData),
             'station' => $station,
             'stationData' => $stationDisplayData,
-            'squaredButtonData' => $this->setActionBarSquaredButtonData($stationDisplayData),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
             'route' => 'observations',
             'individualForm' => $individualForm->createView(),
@@ -235,143 +166,5 @@ class StationsController extends PagesController
         ]);
     }
 
-    public function setListCards(array $stationAllSpeciesDisplayData): array
-    {
-        $list_cards = [];
-        foreach ($stationAllSpeciesDisplayData as $stationSpeciesDisplayData) {
-            $species = $stationSpeciesDisplayData->species;
-            $list_card = [
-                'image' => '/media/species/'.$species->getPicture().'.jpg',
-                'heading' => [
-                    'title' => ucfirst($species->getVernacularName()),
-                    'text' => $species->getScientificName(),
-                ],
-            ];
-            $individuals = $stationSpeciesDisplayData->stationIndividuals;
-            if (!empty($individuals)) {
-                $list_card['calendar'] = $stationSpeciesDisplayData;
-                $observations = $stationSpeciesDisplayData->stationSpeciesObservations;
-                $lastObservation = reset($observations);
 
-                $individualsCount = count($individuals);
-                $obsCount = count(array_filter($observations, function (Observation $obs) {
-                    return !$obs->getIsMissing();
-                }));
-
-                $display_s_individuals = 1 !== $individualsCount ? 's' : '';
-                $display_s_obs = 1 !== $obsCount ? 's' : '';
-
-                $list_card['details'] = [
-                    'grey_text' => '<span class=indiv-count>'.$individualsCount.'</span> individu'.$display_s_individuals.' • <span class=obs-count>'.$obsCount.'</span> observation'.$display_s_obs,
-                ];
-                if (0 < $obsCount && !empty($lastObservation) && $lastObservation instanceof Observation) {
-                    $lastObsDate = $lastObservation->getDate();
-                    $lastObsStade = Event::DISPLAY_LABELS[$lastObservation->getEvent()->getName()];
-                    $list_card['details']['infos'] = [
-                        'bolder' => $lastObsStade,
-                        'lighter' => 'le '.date_format($lastObsDate, 'j/m/Y'),
-                    ];
-                }
-                $list_card['buttons'] = [
-                    [
-                        'icon' => 'help-circle',
-                        'label' => 'fiche',
-                    ],
-                    [
-                        'icon' => 'edit-calendar',
-                        'action' => 'open',
-                        'data_attr' => [
-                            [
-                                'name' => 'open',
-                                'value' => 'observation',
-                            ],
-                            [
-                                'name' => 'species',
-                                'value' => $species->getId(),
-                            ],
-                            [
-                                'name' => 'species-name',
-                                'value' => $species->getVernacularName(),
-                            ],
-                            [
-                                'name' => 'indiv',
-                                'value' => implode(',', array_column($individuals, 'id')),
-                            ],
-                            [
-                                'name' => 'req-login',
-                                'value' => 'true',
-                            ],
-                        ],
-                        'label' => 'saisir',
-                    ],
-                ];
-            }
-            $list_cards[] = $list_card;
-        }
-
-        return $list_cards;
-    }
-
-    public function setActionBarSquaredButtonData(StationDisplayData $stationDisplayData): array
-    {
-        $stationAllSpeciesIds = !empty($stationDisplayData->stationAllSpecies) ? implode(',', array_column($stationDisplayData->stationAllSpecies, 'id')) : '';
-        $actionBarButtonClassAttributes = ['open', 'open-individual-form-all-station'];
-        if (!$this->isGranted(UserVoter::LOGGED)) {
-            $actionBarButtonClassAttributes[] = 'disabled';
-        }
-
-        return [
-            'classes' => $actionBarButtonClassAttributes,
-            'dataAttributes' => [
-                [
-                    'name' => 'open',
-                    'value' => 'individual',
-                ],
-                [
-                    'name' => 'species',
-                    'value' => $stationAllSpeciesIds,
-                ],
-                [
-                    'name' => 'all-species',
-                    'value' => true,
-                ],
-                [
-                    'name' => 'station',
-                    'value' => $stationDisplayData->station->getId(),
-                ],
-                [
-                    'name' => 'req-login',
-                    'value' => 'true',
-                ],
-            ],
-        ];
-    }
-
-    private function uploadImage(?UploadedFile $formValue)
-    {
-        $fileName = null;
-        if ($formValue) {
-            $slugGenerator = new SlugGenerator();
-            $imagesDirectoryPath = $this->getParameter('upload_destination');
-            if (!is_dir($imagesDirectoryPath)) {
-                mkdir($imagesDirectoryPath, 0777, true);
-            }
-
-            $file = $formValue;
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugGenerator->slugify($originalFilename);
-            $fileName = $this->getParameter('images_uri_prefix').'/'.$safeFilename.'-'.uniqid().'.'.$file->guessExtension();
-
-            try {
-                $file->move(
-                    $imagesDirectoryPath, // Le dossier dans le quel le fichier va etre charger
-                    $fileName
-                );
-            } catch (FileException $e) {
-                return new Response($e->getMessage());
-            }
-        }
-
-        return $fileName;
-    }
 }

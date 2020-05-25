@@ -6,7 +6,7 @@
 
     id*: int
     route#: string | 'observations'
-    list_card*: object
+    listCard*: object
         add#: object
             text*: string (description)
             button*: string (button label)
@@ -39,29 +39,29 @@
         ]
     )
 #}
-{% set slug = list_card.slug|default(route) %}
-<div {{ list_card.heading is defined and list_card.heading.title is defined? "id=#{list_card.heading.title|slugify}" }} class="list-cards-item{{ list_card.add is defined ? '-add' }}" data-id="{{ id }}">
-    {% if list_card.add is defined %}
+{% set slug = listCard.slug|default(route) %}
+<div {{ listCard.heading is defined and listCard.heading.title is defined? "id=#{listCard.heading.title|slugify}" }} class="list-cards-item{{ listCard.add is defined ? '-add' }}" data-id="{{ id }}">
+    {% if listCard.add is defined %}
         <div class="add-list-card">
             <div class="icon-add-list-card add-square{{ route == 'evenements' ? '-orange' }}-icon"></div>
-            <div class="add-card-text">{{ list_card.add.text }}</div>
-            <a href="" class="button bt-add {{ route == 'evenements' ? 'orange' }}">{{ list_card.add.button }}</a>
+            <div class="add-card-text">{{ listCard.add.text }}</div>
+            <a href="" class="button bt-add {{ route == 'evenements' ? 'orange' }}">{{ listCard.add.button }}</a>
         </div>
 
     {% else %}
-        {% if list_card.events_dates is defined %}
-            {% include "components/list-cards-components/event-dates.html.twig" with {events_dates: list_card.events_dates}%}
+        {% if listCard.events_dates is defined %}
+            {% include "components/list-cards-components/event-dates.html.twig" with {events_dates: listCard.events_dates}%}
         {% endif %}
 
-        {% if list_card.image is defined %}
-            <div class="list-card-img {{ list_card.image == 'default' ? 'bg-default' }}" style="{{ list_card.image is defined and list_card.image != 'default' ? "background-image: url(#{list_card.image})" }}"></div>
+        {% if listCard.image is defined %}
+            <div class="list-card-img {{ listCard.image == 'default' ? 'bg-default' }}" style="{{ listCard.image is defined and listCard.image != 'default' ? "background-image: url(#{listCard.image})" }}"></div>
         {% endif %}
 
-        {% include "components/list-cards-components/heading.html.twig" with {heading: list_card.heading} %}
+        {% include "components/list-cards-components/heading.html.twig" with {heading: listCard.heading} %}
 
-        {% if list_card.details is defined %}
+        {% if listCard.details is defined %}
             <div class="item-details">
-                {% include "components/list-cards-components/details.html.twig" with {details: list_card.details} %}
+                {% include "components/list-cards-components/details.html.twig" with {details: listCard.details} %}
             </div>
         {% endif %}
 

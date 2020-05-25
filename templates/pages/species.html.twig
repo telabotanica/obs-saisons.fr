@@ -35,6 +35,7 @@
         }
     } %}
 
+    {% set accordions = setSpeciesPageAccordions() %}
     {% for id, accordion in accordions %}
         {% include 'components/accordion-block.html.twig' %}
     {% endfor %}

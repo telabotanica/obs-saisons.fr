@@ -4,7 +4,7 @@ namespace App\DisplayData\Species;
 
 use App\Entity\Species;
 use App\Entity\TypeSpecies;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class SpeciesDisplayData
 {

@@ -7,7 +7,7 @@ use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Species;
 use App\Entity\Station;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class StationDisplayData
 {

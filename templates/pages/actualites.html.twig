@@ -10,9 +10,9 @@
 {% block main_content %}
 
 	{# add posts list-card #}
-	{% set list_cards = [] %}
+	{% set listCards = [] %}
 	{% for article in articles %}
-		{% set list_cards = list_cards|merge([{
+		{% set listCards = listCards|merge([{
 			'slug': article.slug,
 			'image': article.cover,
 			'heading': {
@@ -27,7 +27,7 @@
 			}
 		}]) %}
 	{% endfor %}
-	{% set list_cards = list_cards|merge(
+	{% set listCards = listCards|merge(
 		[{
 			'add': {
 				'text': 'Vous souhaitez nous faire partager une actualité ?',
@@ -36,7 +36,7 @@
 		}]
 	) %}
 
-	{% for id, list_card in list_cards %}
+	{% for id, listCard in listCards %}
 		{% include 'components/list-cards.html.twig' %}
 	{% endfor %}
 
