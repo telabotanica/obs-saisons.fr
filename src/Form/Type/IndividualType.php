@@ -4,6 +4,8 @@ namespace App\Form\Type;
 
 use App\Entity\Individual;
 use App\Entity\Species;
+use App\Entity\Station;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -13,30 +15,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IndividualType extends AbstractType
 {
-    private $stationDisplayData;
+    private $manager;
+    private $stationAllSpecies;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->stationDisplayData = $options['station_display_data'];
+        $this->stationAllSpecies = $options['stationAllSpecies'];
+
         $builder
             ->add('name', TextType::class, ['required' => true])
             ->add('species', EntityType::class, [
                 'class' => Species::class,
                 'choice_label' => function ($species) {
                     $vernacularName = $species->getVernacularName();
-                    if (in_array($species, $this->stationDisplayData->stationAllSpecies)) {
+                    if (in_array($species, $this->stationAllSpecies)) {
                         $vernacularName .= ' (+)';
                     }
+
                     return ucfirst($vernacularName);
                 },
-                /*'group_by' => function ($species) {
-                    return ucfirst($species->getType()->getName());
-                },*/
                 'choice_attr' => function ($species, $key, $speciesId) {
                     $choiceClassAttr = 'species-option species-'.$speciesId;
-                    if (in_array($species, $this->stationDisplayData->stationAllSpecies)) {
+                    if (in_array($species, $this->stationAllSpecies)) {
                         $choiceClassAttr .= ' exists-in-station';
                     }
+
                     return ['class' => $choiceClassAttr];
                 },
                 'attr' => [
@@ -54,7 +57,7 @@ class IndividualType extends AbstractType
             'data_class' => Individual::class,
         ]);
 
-        $resolver->setRequired('station_display_data'); // Requires that currentOrg be set by the caller.
-        $resolver->setAllowedTypes('station_display_data', 'App\DisplayData\Station\StationDisplayData'); // Validates the type(s) of option(s) passed.
+        $resolver->setRequired('stationAllSpecies'); // Requires that currentOrg be set by the caller.
+        $resolver->setAllowedTypes('stationAllSpecies', 'array'); // Validates the type(s) of option(s) passed.
     }
 }

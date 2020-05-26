@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% set headers = {'header': {}} %}
-
 {% block top_content %}
 	{% include 'components/hero-header.html.twig' %}
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
 {% set show = not station.isPrivate or app.user.id|default('none') == station.user.id %}
+{% set disable = (app.user.id is not defined) %}
+{% set hasSpecies = species|length > 0 %}
 
 {% block header_content %}{% endblock %}
+
 {% block main_content %}
 
-
-	{# displays top actionbar with species count #}
-	{% set species = stationData.stationAllSpecies %}
+	{# displays "s" to species label if species count is not 1 #}
 	{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
 
 	{# sets top actionbar components #}
@@ -27,15 +27,62 @@
 		}
 	] %}
 
-	{% if species|length > 0 %}
+	{% if hasSpecies %}
 		{% set topActionbarComponents = topActionbarComponents|merge([{'name': 'tabs-holder'}]) %}
 	{% endif %}
+
 	{% if show %}
+
+		{# sets class attributes for squared button #}
+		{% set actionBarClassAttributes = ['open','open-individual-form-all-station'] %}
+		{% if disable %}
+			{% set actionBarClassAttributes = actionBarClassAttributes|merge(['disabled']) %}
+		{% endif %}
+
+		{# sets species ids list string in data attribute for squared button #}
+		{% set speciesIds = '' %}
+		{% set speciesIdsArray = [] %}
+		{% if hasSpecies %}
+			{% for singleSpecies in species %}
+				{% set speciesIdsArray = speciesIdsArray|merge([singleSpecies.id]) %}
+			{% endfor %}
+			{% set speciesIds = speciesIdsArray|join(',') %}
+		{% endif %}
+
+		{# sets squared button display data #}
+		{% set actionBarSquaredButton = {
+			'classes':actionBarClassAttributes,
+			'dataAttributes': [
+				{
+					'name' : 'open',
+					'value' : 'individual'
+				},
+				{
+					'name' : 'species',
+					'value' : speciesIds
+				},
+				{
+					'name' : 'all-species',
+					'value' : true
+				},
+				{
+					'name' : 'station',
+					'value' : station.id
+				},
+				{
+					'name' : 'req-login',
+					'value' : 'true'
+				}
+			]
+		} %}
+
+		{# adds squared button to action bar #}
 		{% set topActionbarComponents = topActionbarComponents|merge([{
 			'name': 'squared-button',
-			'data': setStationActionBarSquaredButton(stationData)
+			'data': actionBarSquaredButton
 		}]) %}
 	{% endif %}
+
 	{# displays top actionbar #}
 	{% include 'components/actionbar.html.twig' with {
 		actionbar: {
@@ -44,20 +91,14 @@
 	} %}
 
 	{# displays list-cards and calendar #}
-	{% set listCards = setStationListCards(stationData.stationAllSpeciesDisplayData) %}
+	{% set listCards = setStationListCards(species,individuals,observations) %}
 	{% for id, listCard in listCards %}
-		{% set listCardButtons = listCard.buttons %}
-		{% if not show %}
-			{% set listCardButtons = listCardButtons|slice(0,-1) %}
-		{% endif %}
-		{% include 'components/list-cards.html.twig' with { buttons: listCardButtons } %}
+		{% include 'components/list-cards/station-list-cards.html.twig' %}
 
-		{% if listCard.calendar is defined %}
-			{% include 'components/calendar-tab.html.twig' with {calendar: listCard.calendar} %}
-		{% endif %}
+		{% include 'components/calendar-tab.html.twig' %}
 	{% endfor %}
 
-	{% if show and species|length > 0 %}
+	{% if show and hasSpecies %}
 		{% include 'components/actionbar.html.twig' with {
 			actionbar:{
 				'classes': 'bottom',
@@ -71,7 +112,7 @@
 					},
 					{
 						'name': 'squared-button',
-						'data': setStationActionBarSquaredButton(stationData)
+						'data': actionBarSquaredButton
 					}
 				]
 			}
@@ -88,25 +129,34 @@
 
 {% block bottom_content %}
 	{% if show %}
-		{% set disable = (app.user.id is not defined) %}
+
 		{% if not disable %}
 			<div class="overlay hidden individual">
 				{% include 'forms/individual/indiv-form.html.twig' with {action:'individual', form: individualForm} %}
 			</div>
 
 			<div class="overlay hidden observation">
-				{% if stationData.stationAllSpeciesIndividuals is not empty %}
+				{% if individuals is not empty %}
 					{% include 'forms/observation/obs-form.html.twig' with {action:'observation', form: observationForm} %}
 				{% endif %}
 			</div>
 		{% endif %}
-		{% set stationAllIndividuals = stationData.getStationAllIndividualsIds() %}
-		{% if stationAllIndividuals is not empty %}
-			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-indiv="{{ stationAllIndividuals }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+
+		{# sets individuals ids list string in data attribute for squared button #}
+		{% set individualsIds = '' %}
+		{% set individualsIdsArray = [] %}
+		{% if individuals is not empty %}
+			{% for individual in individuals %}
+				{% set individualsIdsArray = individualsIdsArray|merge([individual.id]) %}
+			{% endfor %}
+			{% set individualsIds = individualsIdsArray|join(',') %}
+			{# displays open observation form button #}
+			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-indiv="{{ individualsIds }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
 				Saisir une observation
 			</a>
 		{% endif %}
 	{% endif %}
+	{# displays observation informations overlay #}
 	<div class="overlay hidden obs-infos">
 		<div class="obs-info-container">
 			<h3 class="obs-info title">Détails de l’observation</h3>
@@ -118,6 +168,8 @@
 			</div>
 		</div>
 	</div>
+
+
 {% endblock %}
 
 

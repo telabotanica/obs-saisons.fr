@@ -35,9 +35,8 @@
         }
     } %}
 
-    {% set accordions = setSpeciesPageAccordions() %}
-    {% for id, accordion in accordions %}
-        {% include 'components/accordion-block.html.twig' %}
+    {% for id, accordion in setSpeciesDisplayData(allSpecies) %}
+        {% include 'components/accordion-block.html.twig' with {type: accordion.type, typeSpecies: accordion.typeSpecies} %}
     {% endfor %}
 
 {% endblock %}

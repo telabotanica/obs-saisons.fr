@@ -1,9 +1,14 @@
 {#
     *: required
+    [int..int]: array indexes ([...] if no precise length defined)
 
-    eventsSpecies* array
-    App\Entity\Observation[]|array observations*
-    stagesCssClasses defined in templates/components/calendar-tab.html.twig
+    onlyOneEvent*: bool
+    eventsSpecies*: array
+        [...] EventSpecies
+    observations*: array
+        [...] Observation
+    stagesCssClasses*: const object (defined in templates/components/calendar-tab.html.twig)
+    periodsNames*: const object array (defined in templates/components/calendar-tab.html.twig)
 #}
 {% set break = false %}
 {# Spot when to display missing event observation when more than one event is displayed #}

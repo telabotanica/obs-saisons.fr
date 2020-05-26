@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\DisplayData\Station\StationDisplayData;
 use App\Entity\Event;
 use App\Entity\Individual;
 use App\Entity\Observation;
@@ -13,6 +12,7 @@ use App\Form\Type\ObservationType;
 use App\Form\Type\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\SlugGenerator;
+use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,6 +48,7 @@ class StationsController extends PagesController
             if ($stationForm->isSubmitted() && $stationForm->isValid()) {
                 $slugGenerator = new SlugGenerator();
                 $station = new Station();
+                $createdAt = new DateTime('NOW');
                 $stationFormValues = $request->request->get('station');
 
                 $station->setUser($this->getUser());
@@ -62,6 +63,7 @@ class StationsController extends PagesController
                 $station->setLongitude($stationFormValues['longitude']);
                 $station->setAltitude($stationFormValues['altitude']);
                 $station->setInseeCode($stationFormValues['insee_code']);
+                $station->setCreatedAt($createdAt);
 
                 $entityManager = $doctrine->getManager();
                 $entityManager->persist($station);
@@ -94,11 +96,15 @@ class StationsController extends PagesController
         $observation = new Observation();
 
         $stationRepository = $doctrine->getRepository(Station::class);
+        $individualRepository = $doctrine->getRepository(Individual::class);
         $station = $stationRepository->findOneBy(['slug' => $slug]);
-        $stationDisplayData = (new StationDisplayData($station, $doctrine))->setStationAllSpeciesDisplayData();
-
-        $individualForm = $this->createForm(IndividualType::class, $individual, ['station_display_data' => $stationDisplayData]);
-        $observationForm = $this->createForm(ObservationType::class, $observation, ['station_display_data' => $stationDisplayData]);
+        $stationAllIndividuals = $individualRepository->findSpeciesIndividualsForStation($station);
+        $stationAllSpecies = $individualRepository->findAllSpeciesForIndividuals($stationAllIndividuals);
+        $individualForm = $this->createForm(IndividualType::class, $individual, ['stationAllSpecies' => $stationAllSpecies]);
+        $observationForm = $this->createForm(ObservationType::class, $observation, [
+            'individuals' => $stationAllIndividuals,
+            'allSpecies' => $stationAllSpecies,
+        ]);
 
         $activePageBreadCrumb = [
             'slug' => $slug,
@@ -132,8 +138,7 @@ class StationsController extends PagesController
 
                         $observation->setUser($this->getUser());
                         $observation->setIndividual(
-                            $doctrine->getRepository(Individual::class)
-                                ->find($observationFormValues['individual'])
+                            $individualRepository->find($observationFormValues['individual'])
                         );
                         $observation->setEvent(
                             $doctrine->getRepository(Event::class)
@@ -158,13 +163,14 @@ class StationsController extends PagesController
 
         return $this->render('pages/station-page.html.twig', [
             'station' => $station,
-            'stationData' => $stationDisplayData,
+            'species' => $stationAllSpecies,
+            'individuals' => $stationAllIndividuals,
+            'observations' => $doctrine->getRepository(Observation::class)
+                ->findAllObsInStation($station)->toArray(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
             'route' => 'observations',
             'individualForm' => $individualForm->createView(),
             'observationForm' => $observationForm->createView(),
         ]);
     }
-
-
 }

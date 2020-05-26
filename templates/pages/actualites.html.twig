@@ -9,36 +9,19 @@
 
 {% block main_content %}
 
-	{# add posts list-card #}
-	{% set listCards = [] %}
-	{% for article in articles %}
-		{% set listCards = listCards|merge([{
-			'slug': article.slug,
-			'image': article.cover,
-			'heading': {
-				'is_link': true,
-				'title': article.title
-			},
-			'details': {
-				'infos': {
-					'bolder': article.author.getDisplayName(),
-					'lighter': article.createdAt|date("j/m/Y")
-				}
-			}
-		}]) %}
+	{% set addListCardId = 0 %}
+	{% for id, article in articles %}
+		{% include 'components/list-cards/news-list-cards.html.twig' %}
+		{% set addListCardId = loop.last ? id + 1 %}
 	{% endfor %}
-	{% set listCards = listCards|merge(
-		[{
-			'add': {
-				'text': 'Vous souhaitez nous faire partager une actualité ?',
-				'button': 'Saisir une actualité'
-			}
-		}]
-	) %}
 
-	{% for id, listCard in listCards %}
-		{% include 'components/list-cards.html.twig' %}
-	{% endfor %}
+	<div class="list-cards-item-add" data-id="{{ addListCardId }}">
+		<div class="add-list-card">
+			<div class="icon-add-list-card add-square-icon"></div>
+			<div class="add-card-text">Vous souhaitez nous faire partager une actualité ?</div>
+			<a href="" class="button bt-add ">Saisir une actualité</a>
+		</div>
+	</div>
 
 	{% include 'components/pagination.html.twig' %}
 

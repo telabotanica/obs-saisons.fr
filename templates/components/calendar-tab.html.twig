@@ -1,14 +1,26 @@
 {#
     *: required
+    #: optionnal
+    [int..int]: array indexes ([...] if no precise length defined)
 
     id*: int
-    App\DisplayData\Station\StationSpeciesDisplayData calendar
+    listCard*: Object
+        species*: Species
+        individuals#: array
+            [...] Individual
+        eventsSpecies#: array
+            [...] EventSpecies
+        observations#: array
+            [...] Observation
+        allObsYears#: array
+            [...] date(Y)
+
 #}
-{% set eventsSpecies = calendar.eventsSpecies %}
+{% set eventsSpecies = listCard.eventsSpecies %}
 {% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 {% set stagesCssClasses = constant('App\\Entity\\Event::CSS_CLASSES') %}
 
-{% set years = calendar.allObsYears %}
+{% set years = listCard.allObsYears %}
 {% set first_year = max(years|default(["now"|date("Y")])) %}
 
 <div class="periods-calendar" data-id="{{ id }}" style="display:none;">
@@ -38,11 +50,9 @@
             {% endfor %}
         </div>
 
-        {% set disable = (app.user.id is not defined) %}
-        {% for individualData in calendar.allIndividualsObservationsData %}
+        {% for individual in listCard.individuals %}
             {# Displays individual's name #}
             <div class="individu-header">
-                {% set individual = individualData.getIndividual() %}
                 <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
                 {% if show %}
                     <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-indiv="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
@@ -72,11 +82,11 @@
                 {% endfor %}
 
                 {# Displays observations #}
-                {% for stationObservationsByYearDisplayData in individualData.stationObservationsByYearDisplayData %}
+                {% for obsChip in setObsChips(individual) %}
                     {% include 'components/obs_chips.html.twig' with {
-                        observations: stationObservationsByYearDisplayData.getThisYearObservations(),
-                        onlyOneEvent: (individualData.getIndividual().species.type.id != 1),
-                        hide: (stationObservationsByYearDisplayData.getYear() != first_year)
+                        observations: obsChip.observations,
+                        onlyOneEvent: (individual.species.type.id != 1),
+                        hide: (obsChip.year != first_year)
                     } %}
                 {% endfor %}
 
@@ -92,7 +102,7 @@
                 <div class="up-arrow-green-icon">Masquer le détail</div>
             </div>
             {% if show %}
-                <a href="" class="table-action add open{{ disable ? ' disabled' }}" data-open="individual" data-species="{{ calendar.species.id }}" data-all-species="false" data-station="{{ station.id }}" data-req-login="true" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+                <a href="" class="table-action add open{{ disable ? ' disabled' }}" data-open="individual" data-species="{{ listCard.species.id }}" data-all-species="false" data-station="{{ station.id }}" data-req-login="true" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
                     <div>Ajouter un nouvel individu</div>
                     <div class="add-button-like add-circle-icon"></div>
                 </a>

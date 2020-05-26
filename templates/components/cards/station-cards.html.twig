@@ -1,0 +1,50 @@
+{#
+    #: optionnal,
+    *: required
+    [int..int]: array indexes ([...] if no precise length defined)
+
+    station*: Station
+    observations#: array
+        [...] Observation
+#}
+<a href="{{ path("#{route}_show", {'slug': station.slug}) }}" class="card" data-tab="{{ station.user.id }}">
+
+    <div class="card-header" style="background-image:url({{ station.headerImage ?? '/media/layout/image-placeholder.svg' }})">
+        {% if station.isPrivate %}
+            <div class="private-icon"></div>
+        {% endif %}
+    </div>
+
+    <div class="card-body">
+        <h4 class="card-heading">{{ station.name }}</h4>
+        <div class="card-detail pointer-icon">{{ station.locality|raw }}</div>
+        <div class="card-detail leaf-icon">{{ station.habitat|raw }}</div>
+    </div>
+
+    <div class="card-footer">
+        <div class="card-footer-item">
+            <div class="members-number person-icon">{{ station.contributorsCount|default(1) }}</div>
+        </div>
+
+        <div class="card-footer-item">
+
+            {% for observation in observations|slice(0,4) %}
+                {% set image = '' %}
+                {% if observation.isMissing %}
+                    {% set image = '/media/layout/icons/eye-crossed.svg' %}
+                {% elseif observation.picture is not empty%}
+                    {% set image = observation.picture %}
+                {% else %}
+                    {% set image = "/media/species/#{observation.individual.species.picture}.jpg" %}
+                {% endif %}
+                <div class="species-sm" style="background-image: url({{ image }})"></div>
+            {% endfor %}
+
+            {% if observations|length > 4 %}
+                {% set others = observations|length - 4 %}
+                <div class="species-sm more-species {{ others > 9 ? 'tens' : (others > 99 ? 'hundreds') }}">+{{ others }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+</a>
