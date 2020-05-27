@@ -33,24 +33,14 @@ class IndividualRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllSpeciesForIndividuals(array $individuals): array
+    public function findAllIndividualsInStation(Station $station)
     {
-        $stationAllSpecies = [];
-        foreach ($individuals as $individual) {
-            $species = $individual->getSpecies();
-            if (!in_array($species, $stationAllSpecies)) {
-                $stationAllSpecies[] = $species;
-            }
-        }
-
-        return $stationAllSpecies;
-    }
-
-    public function findStationAllSpecies(Station $station): array
-    {
-        $individuals = $this->findSpeciesIndividualsForStation($station);
-
-        return $this->findAllSpeciesForIndividuals($individuals);
+        return $this->createQueryBuilder('i')
+            ->where('i.station = (:station)')
+            ->setParameter('station', $station)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

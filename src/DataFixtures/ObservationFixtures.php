@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Observation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Faker;
 
 class ObservationFixtures extends Fixture implements DependentFixtureInterface
@@ -20,6 +20,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture('/media/layout/image_station.png');
             $observation->setDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $observation->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
             $observation->setDetails($faker->text(200));
             $observation->setIsMissing($faker->boolean);
 
@@ -35,6 +36,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture('/media/layout/image_station.png');
             $observation->setDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $observation->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
             $observation->setDetails($faker->text(200));
             $observation->setIsMissing($faker->boolean);
             $manager->persist($observation);

@@ -4,7 +4,6 @@
 
 namespace App\Twig;
 
-use App\DisplayData\Station\StationDisplayData;
 use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
@@ -54,7 +53,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('slugify', [$this, 'slugify']),
-            new TwigFilter('arrayUnique', [$this, 'arrayUnique']),
+            new TwigFilter('removeDuplicates', [$this, 'removeDuplicates']),
         ];
     }
 
@@ -65,16 +64,16 @@ class AppExtension extends AbstractExtension
         return $slugGenerator->slugify($string);
     }
 
-    public function arrayUnique(array $array): array
+    public function removeDuplicates(array $array): array
     {
-        $arrayUnique = [];
+        $removeDuplicates = [];
         foreach ($array as $value) {
-            if (!in_array($value, $arrayUnique)) {
-                $arrayUnique[] = $value;
+            if (!in_array($value, $removeDuplicates)) {
+                $removeDuplicates[] = $value;
             }
         }
 
-        return $arrayUnique;
+        return $removeDuplicates;
     }
 
     public function displayEventDates(\DateTimeInterface $startDate, \DateTimeInterface $endDate, string $separator = '-'): string
@@ -93,7 +92,7 @@ class AppExtension extends AbstractExtension
         foreach ($startDateSplit as $key => $date) {
             if ($endDateSplit[$key] != $date) {
                 $pattern = implode(' ', array_reverse(array_slice($patternArray, $key)));
-                //die(dump($pattern));
+
                 break;
             }
         }
@@ -104,19 +103,38 @@ class AppExtension extends AbstractExtension
 
     public function setStationCards(array $stations): array
     {
+        $observationsRepository = $this->manager->getRepository(Observation::class);
+        $individualsRepository = $this->manager->getRepository(Individual::class);
+
         $cards = [];
+
         foreach ($stations as $station) {
-            $observations = $this->manager->getRepository(Observation::class)
-                ->findAllObsInStation($station)
-            ;
+            $individuals = $individualsRepository->findAllIndividualsInStation($station);
+            $observations = $observationsRepository->findAllObservationsInStation($station, $individuals);
+
+            $lastIndivActivity = $this->getLastActivity($individuals);
+            $lastObsActivity = $this->getLastActivity($observations);
+            $lastActivity = max($lastObsActivity, $lastIndivActivity);
 
             $cards[] = [
                 'station' => $station,
                 'observations' => $observations,
+                'lastActivity' => $lastActivity,
             ];
         }
 
         return $cards;
+    }
+
+    public function getLastActivity(array $entityObjectsArray)
+    {
+        $lastActivity = null;
+        foreach ($entityObjectsArray as $entityObject) {
+            $entityObjectActivity = $entityObject->getUpdatedAt() ?? $entityObject->getCreatedAt();
+            $lastActivity = max($lastActivity, $entityObjectActivity);
+        }
+
+        return $lastActivity;
     }
 
     public function setStationListCards(array $stationSpecies, array $stationIndividuals, array $stationObservations): array

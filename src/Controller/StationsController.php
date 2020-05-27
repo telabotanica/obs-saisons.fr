@@ -12,11 +12,11 @@ use App\Form\Type\ObservationType;
 use App\Form\Type\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\SlugGenerator;
+use App\Service\UploadService;
 use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\UploadService;
 
 /**
  * Class StationsController.
@@ -35,6 +35,7 @@ class StationsController extends PagesController
         $doctrine = $this->getDoctrine();
         $uploadImageService = new UploadService();
         $stationForm = $this->createForm(StationType::class);
+
         if ($request->isMethod('POST') && !$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
         }
@@ -49,6 +50,7 @@ class StationsController extends PagesController
                 $slugGenerator = new SlugGenerator();
                 $station = new Station();
                 $createdAt = new DateTime('NOW');
+
                 $stationFormValues = $request->request->get('station');
 
                 $station->setUser($this->getUser());
@@ -76,7 +78,6 @@ class StationsController extends PagesController
         return $this->render('pages/stations.html.twig', [
             'stations' => $doctrine->getRepository(Station::class)->findAll(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
             'stationForm' => $stationForm->createView(),
         ]);
     }
@@ -94,17 +95,15 @@ class StationsController extends PagesController
         $uploadImageService = new UploadService();
         $individual = new Individual();
         $observation = new Observation();
+        $createdAt = new DateTime('NOW');
 
         $stationRepository = $doctrine->getRepository(Station::class);
         $individualRepository = $doctrine->getRepository(Individual::class);
         $station = $stationRepository->findOneBy(['slug' => $slug]);
         $stationAllIndividuals = $individualRepository->findSpeciesIndividualsForStation($station);
-        $stationAllSpecies = $individualRepository->findAllSpeciesForIndividuals($stationAllIndividuals);
-        $individualForm = $this->createForm(IndividualType::class, $individual, ['stationAllSpecies' => $stationAllSpecies]);
-        $observationForm = $this->createForm(ObservationType::class, $observation, [
-            'individuals' => $stationAllIndividuals,
-            'allSpecies' => $stationAllSpecies,
-        ]);
+
+        $individualForm = $this->createForm(IndividualType::class, $individual, ['individuals' => $stationAllIndividuals]);
+        $observationForm = $this->createForm(ObservationType::class, $observation, ['individuals' => $stationAllIndividuals]);
 
         $activePageBreadCrumb = [
             'slug' => $slug,
@@ -126,6 +125,7 @@ class StationsController extends PagesController
                         $individual->setSpecies($doctrine->getRepository(Species::class)
                             ->find($individualFormValues['species'])
                         );
+                        $individual->setCreatedAt($createdAt);
                         $entityManager = $doctrine->getManager();
                         $entityManager->persist($individual);
                         $entityManager->flush();
@@ -148,6 +148,7 @@ class StationsController extends PagesController
                         $observation->setPicture($uploadImageService->uploadImage($request->files->get('observation')['picture']));
                         $observation->setIsMissing(!empty($observationFormValues['is_missing']));
                         $observation->setDetails($observationFormValues['details']);
+                        $observation->setCreatedAt($createdAt);
 
                         $entityManager = $doctrine->getManager();
                         $entityManager->persist($observation);
@@ -163,12 +164,10 @@ class StationsController extends PagesController
 
         return $this->render('pages/station-page.html.twig', [
             'station' => $station,
-            'species' => $stationAllSpecies,
             'individuals' => $stationAllIndividuals,
             'observations' => $doctrine->getRepository(Observation::class)
-                ->findAllObsInStation($station)->toArray(),
+                ->findAllObservationsInStation($station, $stationAllIndividuals),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
-            'route' => 'observations',
             'individualForm' => $individualForm->createView(),
             'observationForm' => $observationForm->createView(),
         ]);

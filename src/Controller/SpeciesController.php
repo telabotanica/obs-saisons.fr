@@ -21,7 +21,6 @@ class SpeciesController extends PagesController
         return $this->render('pages/species.html.twig', [
             'allSpecies' => $this->getDoctrine()->getRepository(Species::class)->findAll(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 }

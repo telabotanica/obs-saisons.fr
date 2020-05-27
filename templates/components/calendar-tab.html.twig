@@ -113,8 +113,7 @@
     <div class="helper-legend">
         <div class="legends">
             {# Sets an array of non duplicated values of stages class attibutes for this species #}
-            {% set stagesClassAttrs = [] %}
-            {% set stagesClassAttrs = stagesClassAttrs|merge(eventsSpecies|map(p => stagesCssClasses[p.event.name]))|arrayUnique %}
+            {% set stagesClassAttrs = stagesClassAttrs|default([])|merge(eventsSpecies|map(es => stagesCssClasses[es.event.name]))|removeDuplicates %}
 
             {# Displays periods colored lines legends #}
             {% for stageClassAttr in stagesClassAttrs %}

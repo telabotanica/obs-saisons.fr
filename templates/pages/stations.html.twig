@@ -19,7 +19,21 @@
 						'text': 'Ville, code postal...'
 					}
 				},
-				{'name': 'tabs-holder'}
+				{
+					'name': 'tabs-holder',
+					'data': {
+						'classAttr': ' list',
+						'tabs': [
+							{
+								'title':"Toutes les stations"
+							},
+							{
+								'title':"Mes stations",
+								'reference': app.user.id|default('none')
+							}
+						]
+					}
+				}
 			]
 		}
 	} %}
@@ -33,7 +47,7 @@
 				</a>
 			</div>
 		</div>
-		{% set cards = setStationCards(stations)|sort((a, b) => a.station.createdAt <=> b.station.createdAt)|reverse %}
+		{% set cards = setStationCards(stations)|sort((a, b) => a.lastActivity <=> b.lastActivity)|reverse %}
 		{%  for card in cards %}
 			{% include 'components/cards/station-cards.html.twig' with {
 				station: card.station,

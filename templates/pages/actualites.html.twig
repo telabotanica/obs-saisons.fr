@@ -9,13 +9,12 @@
 
 {% block main_content %}
 
-	{% set addListCardId = 0 %}
 	{% for id, article in articles %}
 		{% include 'components/list-cards/news-list-cards.html.twig' %}
 		{% set addListCardId = loop.last ? id + 1 %}
 	{% endfor %}
 
-	<div class="list-cards-item-add" data-id="{{ addListCardId }}">
+	<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
 		<div class="add-list-card">
 			<div class="icon-add-list-card add-square-icon"></div>
 			<div class="add-card-text">Vous souhaitez nous faire partager une actualité ?</div>
@@ -23,7 +22,7 @@
 		</div>
 	</div>
 
-	{% include 'components/pagination.html.twig' %}
+	{% include 'components/pagination.html.twig' with {routePath: path('actualites')} %}
 
 {% endblock %}
 

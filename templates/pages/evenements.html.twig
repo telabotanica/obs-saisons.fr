@@ -8,13 +8,12 @@
 } %}
 
 {% block main_content %}
-	{% set addListCardId = 0 %}
 	{% for id, event in events %}
 		{% include 'components/list-cards/events-list-cards.html.twig' %}
 		{% set addListCardId = loop.last ? id + 1 %}
 	{% endfor %}
 
-	<div class="list-cards-item-add" data-id="{{ addListCardId }}">
+	<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
 		<div class="add-list-card">
             <div class="icon-add-list-card add-square-orange-icon"></div>
             <div class="add-card-text">Vous souhaitez proposer un évènement ?</div>
@@ -22,7 +21,7 @@
         </div>
     </div>
 
-	{% include 'components/pagination.html.twig' %}
+	{% include 'components/pagination.html.twig' with {routePath: path('evenements')} %}
 
 {% endblock %}
 

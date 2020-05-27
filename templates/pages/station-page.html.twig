@@ -8,6 +8,9 @@
 {% set page_container_classes = 'narrow' %}
 {% set show = not station.isPrivate or app.user.id|default('none') == station.user.id %}
 {% set disable = (app.user.id is not defined) %}
+
+{% set species = species|default([])|merge(individuals|map(i => i.species))|removeDuplicates %}
+
 {% set hasSpecies = species|length > 0 %}
 
 {% block header_content %}{% endblock %}
@@ -15,20 +18,39 @@
 {% block main_content %}
 
 	{# displays "s" to species label if species count is not 1 #}
-	{% set speciesCountDisplayS = species|length != 1 ? 's' : '' %}
+	{% set speciesCountDisplayS = species|length != 1 ? 's' %}
 
 	{# sets top actionbar components #}
 	{% set topActionbarComponents = [
 		{
 			'name': 'side-block',
 			'data': {
-				'text': "#{species|length} espèce#{speciesCountDisplayS} observée#{speciesCountDisplayS}"
+				'text': "#{species|length} espèce#{speciesCountDisplayS|default} observée#{speciesCountDisplayS|default}"
 			}
 		}
 	] %}
 
 	{% if hasSpecies %}
-		{% set topActionbarComponents = topActionbarComponents|merge([{'name': 'tabs-holder'}]) %}
+		{#{% set tabsHolderData = {'tabs': [{'title':''}]} %}#}
+		{% if show %}
+			{% set tabsHolderData = {
+				'tabs': [
+					{
+						'title':"Toutes les observations"
+					},
+					{
+						'title':"Mes observations",
+						'reference': app.user.id|default('none')
+					}
+				]
+			} %}
+		{% endif %}
+		{% set topActionbarComponents = topActionbarComponents|merge([
+			{
+				'name': 'tabs-holder',
+				'data': tabsHolderData|default
+			}
+		]) %}
 	{% endif %}
 
 	{% if show %}
@@ -40,13 +62,8 @@
 		{% endif %}
 
 		{# sets species ids list string in data attribute for squared button #}
-		{% set speciesIds = '' %}
-		{% set speciesIdsArray = [] %}
 		{% if hasSpecies %}
-			{% for singleSpecies in species %}
-				{% set speciesIdsArray = speciesIdsArray|merge([singleSpecies.id]) %}
-			{% endfor %}
-			{% set speciesIds = speciesIdsArray|join(',') %}
+			{% set speciesIds = speciesIdsArray|default([])|merge(species|map(s => s.id))|removeDuplicates|join(',') %}
 		{% endif %}
 
 		{# sets squared button display data #}
@@ -59,7 +76,7 @@
 				},
 				{
 					'name' : 'species',
-					'value' : speciesIds
+					'value' : speciesIds|default
 				},
 				{
 					'name' : 'all-species',
@@ -143,15 +160,11 @@
 		{% endif %}
 
 		{# sets individuals ids list string in data attribute for squared button #}
-		{% set individualsIds = '' %}
-		{% set individualsIdsArray = [] %}
 		{% if individuals is not empty %}
-			{% for individual in individuals %}
-				{% set individualsIdsArray = individualsIdsArray|merge([individual.id]) %}
-			{% endfor %}
-			{% set individualsIds = individualsIdsArray|join(',') %}
+			{% set individualsIds = individualsIdsArray|default([])|merge(individuals|map(i => i.id))|removeDuplicates|join(',') %}
+
 			{# displays open observation form button #}
-			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-indiv="{{ individualsIds }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-indiv="{{ individualsIds|default }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
 				Saisir une observation
 			</a>
 		{% endif %}

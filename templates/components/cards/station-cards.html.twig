@@ -7,7 +7,7 @@
     observations#: array
         [...] Observation
 #}
-<a href="{{ path("#{route}_show", {'slug': station.slug}) }}" class="card" data-tab="{{ station.user.id }}">
+<a href="{{ path("stations_show", {'slug': station.slug}) }}" class="card" data-tab="{{ station.user.id }}">
 
     <div class="card-header" style="background-image:url({{ station.headerImage ?? '/media/layout/image-placeholder.svg' }})">
         {% if station.isPrivate %}

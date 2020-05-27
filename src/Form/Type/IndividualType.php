@@ -4,8 +4,6 @@ namespace App\Form\Type;
 
 use App\Entity\Individual;
 use App\Entity\Species;
-use App\Entity\Station;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,12 +13,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IndividualType extends AbstractType
 {
-    private $manager;
     private $stationAllSpecies;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->stationAllSpecies = $options['stationAllSpecies'];
+        $individuals = $options['individuals'];
+        $this->stationAllSpecies = [];
+        foreach ($individuals as $individual) {
+            $species = $individual->getSpecies();
+            if (!in_array($species, $this->stationAllSpecies)) {
+                $this->stationAllSpecies[] = $species;
+            }
+        }
 
         $builder
             ->add('name', TextType::class, ['required' => true])
@@ -57,7 +61,7 @@ class IndividualType extends AbstractType
             'data_class' => Individual::class,
         ]);
 
-        $resolver->setRequired('stationAllSpecies'); // Requires that currentOrg be set by the caller.
-        $resolver->setAllowedTypes('stationAllSpecies', 'array'); // Validates the type(s) of option(s) passed.
+        $resolver->setRequired('individuals'); // Requires that currentOrg be set by the caller.
+        $resolver->setAllowedTypes('individuals', 'array'); // Validates the type(s) of option(s) passed.
     }
 }

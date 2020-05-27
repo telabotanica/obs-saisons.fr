@@ -35,8 +35,15 @@ class ObservationType extends AbstractType
         if (1 === count($this->individuals)) {
             $selectIndividualClassAttr .= ' disabled';
         }
+        $allSpecies = [];
+        foreach ($this->individuals as $individual) {
+            $species = $individual->getSpecies();
+            if (!in_array($species, $allSpecies)) {
+                $allSpecies[] = $species;
+            }
+        }
         $this->events = [];
-        foreach ($options['allSpecies'] as $species) {
+        foreach ($allSpecies as $species) {
             $eventSpeciesForSpecies = $this->manager->getRepository(EventSpecies::class)
                 ->findBy(['species' => $species])
             ;
@@ -138,10 +145,7 @@ class ObservationType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Observation::class,
         ]);
-        $resolver->setRequired('allSpecies');
         $resolver->setRequired('individuals');
-        $resolver->setAllowedTypes('allSpecies', 'array');
         $resolver->setAllowedTypes('individuals', 'array');
-
     }
 }
