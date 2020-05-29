@@ -26,34 +26,20 @@ class ObservationType extends AbstractType
     public function __construct(ManagerRegistry $manager)
     {
         $this->manager = $manager;
+        $this->events = [];
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // set individuals and events ($options is only accessible from formBuilder)
         $this->individuals = $options['individuals'];
+        self::setEvents();
+
         $selectIndividualClassAttr = 'select-field';
         if (1 === count($this->individuals)) {
             $selectIndividualClassAttr .= ' disabled';
         }
-        $allSpecies = [];
-        foreach ($this->individuals as $individual) {
-            $species = $individual->getSpecies();
-            if (!in_array($species, $allSpecies)) {
-                $allSpecies[] = $species;
-            }
-        }
-        $this->events = [];
-        foreach ($allSpecies as $species) {
-            $eventSpeciesForSpecies = $this->manager->getRepository(EventSpecies::class)
-                ->findBy(['species' => $species])
-            ;
-            foreach ($eventSpeciesForSpecies as $eventSpecies) {
-                $event = $eventSpecies->getEvent();
-                if (!in_array($event, $this->events)) {
-                    $this->events[] = $event;
-                }
-            }
-        }
+
 
         $selectEventClassAttr = 'select-field';
         if (1 === count($this->events)) {
@@ -138,6 +124,31 @@ class ObservationType extends AbstractType
             ])
             ->add('submit', SubmitType::class)
         ;
+    }
+
+    private function setEvents(): self
+    {
+        $allSpecies = [];
+        foreach ($this->individuals as $individual) {
+            $species = $individual->getSpecies();
+            if (!in_array($species, $allSpecies)) {
+                $allSpecies[] = $species;
+            }
+        }
+
+        foreach ($allSpecies as $species) {
+            $eventSpeciesForSpecies = $this->manager->getRepository(EventSpecies::class)
+                ->findBy(['species' => $species])
+            ;
+            foreach ($eventSpeciesForSpecies as $eventSpecies) {
+                $event = $eventSpecies->getEvent();
+                if (!in_array($event, $this->events)) {
+                    $this->events[] = $event;
+                }
+            }
+        }
+
+        return $this;
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -75,7 +75,7 @@ class Individual
         return $this->species;
     }
 
-    public function setSpecies(?Species $species): self
+    public function setSpecies(Species $species): self
     {
         $this->species = $species;
 
@@ -87,7 +87,7 @@ class Individual
         return $this->station;
     }
 
-    public function setStation(?Station $station): self
+    public function setStation(Station $station): self
     {
         $this->station = $station;
 
@@ -99,7 +99,7 @@ class Individual
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -111,10 +111,7 @@ class Individual
         return $this->createdAt;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -126,9 +123,6 @@ class Individual
         return $this->updatedAt;
     }
 
-    /**
-     * @return $this
-     */
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
@@ -141,9 +135,6 @@ class Individual
         return $this->deletedAt;
     }
 
-    /**
-     * @return $this
-     */
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;

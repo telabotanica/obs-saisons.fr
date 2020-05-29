@@ -78,7 +78,7 @@ class Observation
         return $this->individual;
     }
 
-    public function setIndividual(?Individual $individual): self
+    public function setIndividual(Individual $individual): self
     {
         $this->individual = $individual;
 
@@ -90,7 +90,7 @@ class Observation
         return $this->event;
     }
 
-    public function setEvent(?Event $event): self
+    public function setEvent(Event $event): self
     {
         $this->event = $event;
 
@@ -102,7 +102,7 @@ class Observation
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -127,7 +127,7 @@ class Observation
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date): self
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
@@ -139,7 +139,7 @@ class Observation
         return $this->is_missing;
     }
 
-    public function setIsMissing(?bool $is_missing): self
+    public function setIsMissing(bool $is_missing): self
     {
         $this->is_missing = $is_missing;
 
@@ -163,10 +163,7 @@ class Observation
         return $this->createdAt;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -178,9 +175,6 @@ class Observation
         return $this->updatedAt;
     }
 
-    /**
-     * @return $this
-     */
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
