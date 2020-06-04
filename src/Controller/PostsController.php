@@ -35,7 +35,6 @@ class PostsController extends PagesController
 
         return $this->render('pages/actualites.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
-            'route' => 'actualites',
             'articles' => $articles,
             'pagination' => [
                 'currentPage' => $page,
@@ -195,7 +194,6 @@ class PostsController extends PagesController
 
         return $this->render('pages/evenements.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
-            'route' => 'evenements',
             'events' => $events,
             'pagination' => [
                 'currentPage' => $page,

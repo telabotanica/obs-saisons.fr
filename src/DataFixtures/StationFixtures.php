@@ -6,7 +6,7 @@ use App\Entity\Station;
 use App\Service\SlugGenerator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Faker;
 
 class StationFixtures extends Fixture implements DependentFixtureInterface
@@ -18,6 +18,7 @@ class StationFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i = 0; $i < 10; ++$i) {
             $name = $faker->sentence(6, true);
+            $dateCreatedAt = $faker->dateTimeBetween('-10 years', 'now', 'Europe/Paris');
             $station = new Station();
             $station->setName($name);
             $station->setSlug($slugGenerator->slugify($name));
@@ -31,7 +32,7 @@ class StationFixtures extends Fixture implements DependentFixtureInterface
             $station->setLongitude($faker->randomFloat(8.5, -180, 180));
             $station->setAltitude($faker->numberBetween(200, 1500));
             $station->setInseeCode(strval(substr($faker->departmentNumber.$faker->randomNumber(3, true), 0, 5)));
-
+            $station->setCreatedAt($dateCreatedAt);
             $manager->persist($station);
 
             $this->addReference(sprintf('station-%d', $i), $station);

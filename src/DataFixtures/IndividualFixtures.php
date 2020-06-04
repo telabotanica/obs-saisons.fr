@@ -20,6 +20,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
             $individual->setSpecies($this->getReference('species-'.$faker->numberBetween(1, 55)));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
+            $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
 
             $manager->persist($individual);
 
@@ -32,6 +33,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
             $individual->setSpecies($this->getReference('species-'.$faker->numberBetween(56, 73)));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
+            $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
 
             $manager->persist($individual);
 

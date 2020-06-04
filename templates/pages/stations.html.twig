@@ -16,11 +16,42 @@
 						'text': 'Ville, code postal...'
 					}
 				},
-				{'name': 'tabs-holder'}
+				{
+					'name': 'tabs-holder',
+					'data': {
+						'classAttr': ' list',
+						'tabs': [
+							{
+								'title':"Toutes les stations"
+							},
+							{
+								'title':"Mes stations",
+								'reference': app.user.id|default('none')
+							}
+						]
+					}
+				}
 			]
 		}
 	} %}
-	{% include 'components/cards.html.twig' %}
+	<div class="cards-grid-container">
+		<div class="card add">
+			<div class="add-card-content">
+				<div class="add-pointer-icon add-card-marker"></div>
+				<div class="add-card-text">Votre station n’existe pas encore ?</div>
+				<a href="" class="button bt-add open" data-open="station">
+					Créer une station
+				</a>
+			</div>
+		</div>
+		{% set cards = setStationCards(stations)|sort((a, b) => a.lastActivity <=> b.lastActivity)|reverse %}
+		{%  for card in cards %}
+			{% include 'components/cards/station-cards.html.twig' with {
+				station: card.station,
+				observations: card.observations
+			} %}
+		{% endfor %}
+	</div>
 	{% include 'components/help-block.html.twig' with {
 		help: {
 			'text':
@@ -29,6 +60,7 @@
 				<br>'
 		}
 	} %}
+
 {% endblock %}
 
 {% block bottom_content %}

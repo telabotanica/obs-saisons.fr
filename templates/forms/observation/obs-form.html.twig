@@ -1,6 +1,5 @@
-{% set individuals = stationData.stationAllSpeciesIndividuals %}
 {% set firstSpecies = individuals[0].species %}
-{% set firstIndividualsEventSpecies = stationData.getEventsSpeciesForSpecies(individuals[0].species) %}
+{% set firstIndividualsEventSpecies = getEventsSpeciesForSpecies(firstSpecies) %}
 {% set firstIndividualsFirstEventSpecies = firstIndividualsEventSpecies[0] %}
 {% extends 'forms/forms.html.twig' %}
 {% block form_title%}

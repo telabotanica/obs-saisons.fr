@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\DisplayData\Species\SpeciesDisplayData;
 use App\Entity\Species;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,48 +19,12 @@ class SpeciesController extends PagesController
      */
     public function species(Request $request): Response
     {
+//        return $this->render('pages/species/list.html.twig', [
+//            'accordions' => $this->setAccordions(),
         return $this->render('pages/species/list.html.twig', [
-            'accordions' => $this->setAccordions(),
+            'allSpecies' => $this->getDoctrine()->getRepository(Species::class)->findAll(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
-    }
-
-    private function setAccordions(): array
-    {
-        $accordions = [];
-        $manager = $this->getDoctrine();
-        $speciesDisplayData = new SpeciesDisplayData($manager);
-        $types = $speciesDisplayData->getTypes();
-
-        foreach ($types as $type) {
-            $allSpecies = $speciesDisplayData->filterSpeciesByType($type);
-            $contents = [];
-            foreach ($allSpecies as $species) {
-                $contents[] = [
-                    'type' => 'include',
-                    'include_uri' => 'components/list-cards.html.twig',
-                    'include_object_name' => 'list_card',
-                    'data' => [
-                        'image' => '/media/species/'.$species->getPicture().'.jpg',
-                        'heading' => [
-                            'is_link' => true,
-                            'href' => $this->generateUrl('species_single_show', ['vernacularName' => $species->getVernacularName()]),
-                            'title' => $species->getVernacularName(),
-                            'text' => $species->getScientificName(),
-                        ],
-                    ],
-                ];
-            }
-
-            $accordions[] = [
-                'tab_reference' => $type->getReign(),
-                'title' => $type->getName(),
-                'contents' => $contents,
-            ];
-        }
-
-        return $accordions;
     }
 
     /**

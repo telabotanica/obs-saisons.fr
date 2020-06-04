@@ -7,38 +7,20 @@
 		'subtitle': 'Vos <strong>actualités</strong> de l’Observatoire des saisons.'
 	}) %}
 
-	{# add posts list-card #}
-	{% set list_cards = [] %}
-	{% for article in articles %}
-		{% set list_cards = list_cards|merge([{
-			'slug': article.slug,
-			'image': article.cover,
-			'heading': {
-				'is_link': true,
-				'title': article.title
-			},
-			'details': {
-				'infos': {
-					'bolder': article.author.getDisplayName(),
-					'lighter': article.createdAt|date("j/m/Y")
-				}
-			}
-		}]) %}
-	{% endfor %}
-	{% set list_cards = list_cards|merge(
-		[{
-			'add': {
-				'text': 'Vous souhaitez nous faire partager une actualité ?',
-				'button': 'Saisir une actualité'
-			}
-		}]
-	) %}
-
-	{% for id, list_card in list_cards %}
-		{% include 'components/list-cards.html.twig' %}
+	{% for id, article in articles %}
+		{% include 'components/list-cards/news-list-cards.html.twig' %}
+		{% set addListCardId = loop.last ? id + 1 %}
 	{% endfor %}
 
-	{% include 'components/pagination.html.twig' %}
+	<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
+		<div class="add-list-card">
+			<div class="icon-add-list-card add-square-icon"></div>
+			<div class="add-card-text">Vous souhaitez nous faire partager une actualité ?</div>
+			<a href="" class="button bt-add ">Saisir une actualité</a>
+		</div>
+	</div>
+
+	{% include 'components/pagination.html.twig' with {routePath: path('actualites')} %}
 
 {% endblock %}
 

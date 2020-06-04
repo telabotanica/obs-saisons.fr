@@ -56,7 +56,6 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/apropos.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 
@@ -67,7 +66,6 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/participer.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 
@@ -78,7 +76,6 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/protocole.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 
@@ -89,7 +86,6 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/resultats.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 
@@ -100,7 +96,6 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/outils-ressources.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 
@@ -111,7 +106,6 @@ class PagesController extends AbstractController
     {
         return $this->render('pages/relais.html.twig', [
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'route' => $request->get('_route'),
         ]);
     }
 }

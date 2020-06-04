@@ -31,7 +31,16 @@ class IndividualRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
 
+    public function findAllIndividualsInStation(Station $station)
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.station = (:station)')
+            ->setParameter('station', $station)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**
