@@ -1,0 +1,22 @@
+{#
+    *: required
+
+    id*: int
+    article*: object (Post article)
+#}
+<div id="{{ article.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
+
+    <div class="list-card-img {{ article.cover is not defined ? 'bg-default' }}" style="{{ article.cover is defined ? "background-image: url(#{article.cover})" }}"></div>
+
+    <a href="{{ path('actualites_show', {'slug': article.slug}) }}" class="item-name-block">
+        <div class="item-heading-dropdown ">{{ article.title|raw }}</div>
+    </a>
+
+    <div class="item-details">
+        <div>
+            <a href="" class="bolder">{{ article.author.getDisplayName() }}</a>
+            - {{ article.createdAt|date("j/m/Y") }}
+        </div>
+    </div>
+
+</div>

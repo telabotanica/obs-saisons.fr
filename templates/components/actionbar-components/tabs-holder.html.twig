@@ -3,21 +3,15 @@
     *: required,
     [int..int]: array indexes ([...] if no precise length defined)
 
-    route#: string
-    tabs_holder# (defined if 'route' not in ['stations', 'observations'] defined below): array
-        [...](tab*) object
-            title*: string
-            reference#: string
+    tabs_holder*: array
+        classAttr#: string
+        tabs*: Array
+            [...](tab*) object
+                title*: string
+                reference#: string
 #}
-
-{% if route in ['stations', 'observations'] and (show is not defined or show) %}
-    {% set tabs_holder = [{'title':"Toutes les #{route}"}, {'title':"Mes #{route}", 'reference': app.user.id|default('none')}] %}
-{% elseif route == 'observations' and show is defined and not show %}
-    {% set tabs_holder = [{'title':''}] %}
-{% endif %}
-
-<div class="tabs-holder{{ route == 'stations' ? ' list' }}" data-active="{{ tabs_holder[0]['reference']|default('all') }}">
-    {% for tab in tabs_holder %}
+<div class="tabs-holder{{ tabs_holder.classAttr|default }}" data-active="{{ tabs_holder.tabs[0]['reference']|default('all') }}">
+    {% for tab in tabs_holder.tabs|default %}
         <div class="tab {{ not loop.first ? 'not' }}" data-tab="{{ tab.reference|default('all') }}">{{ tab.title }}</div>
     {% endfor %}
 </div>

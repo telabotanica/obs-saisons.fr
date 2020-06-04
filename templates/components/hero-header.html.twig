@@ -1,14 +1,17 @@
 {#
     *: required
+    [int..int]: array indexes ([...] if no precise length defined)
 
-    App\Entity\Station station*
-    App\DisplayData\Station\StationDisplayData stationData*
+    station*: Station
+    observations*: array
+        [...] Observations
 #}
 {% set headerImage = '' %}
 {% if not show or station.latitude == null or station.longitude == null %}
     {% set headerImage = station.headerImage != null ? station.headerImage : asset('media/layout/image-placeholder.svg')%}
 {% endif %}
-{% set images = stationData.getStationObsImages() %}
+{% set images = images|default([])|merge(observations|map(o => o.picture is defined and o.picture is not empty  ? o.picture)) %}
+
 <div class="hero-header">
     <div id="headerMap" class="hero-header-media-part map{{ show ? ' show-map'}}" data-latitude="{{ station.latitude }}" data-longitude="{{ station.longitude }}" style="background-image:linear-gradient(180deg,rgba(131,117,105,0.3),rgba(131,117,105,0.3)),url({{ headerImage }});">
         {% if show and images|first is not empty %}

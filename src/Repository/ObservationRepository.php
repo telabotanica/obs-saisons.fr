@@ -22,21 +22,21 @@ class ObservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Observation::class);
     }
 
-    public function findAllObsInStation(Station $station): ArrayCollection
+    public function findAllObservationsInStation(Station $station, array $stationIndividuals = null): array
     {
-        $individualsInStation = $this->getEntityManager()
+        $stationIndividuals = $stationIndividuals ?? $this->getEntityManager()
             ->getRepository(Individual::class)
-            ->findBy(['station' => $station]);
+            ->findBy(['station' => $station])
+        ;
 
-        return new ArrayCollection(
-            $this->createQueryBuilder('o')
-                ->where('o.individual IN (:individuals)')
-                ->setParameter('individuals', $individualsInStation)
-                ->addOrderBy('o.individual', 'ASC')
-                ->addOrderBy('o.date', 'DESC')
-                ->getQuery()
-                ->getResult()
-        );
+        return $this->createQueryBuilder('o')
+            ->where('o.individual IN (:individuals)')
+            ->setParameter('individuals', $stationIndividuals)
+            ->addOrderBy('o.individual', 'ASC')
+            ->addOrderBy('o.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     public function findLastObs(int $limit): array
@@ -56,17 +56,6 @@ class ObservationRepository extends ServiceEntityRepository
             ->where('o.picture IS NOT NULL')
             ->andWhere('o.is_missing = 0')
             ->orderBy('o.date', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function findRandomObsWithImages(int $limit): array
-    {
-        return $this->createQueryBuilder('o')
-            ->where('o.picture IS NOT NULL')
-            ->orderBy('RAND()')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult()

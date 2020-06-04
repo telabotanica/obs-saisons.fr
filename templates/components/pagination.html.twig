@@ -18,25 +18,25 @@
     <div class="pagination-container">
         <ul class="pagination">
             {% if currentPage > 1 %}
-                <li class="page Previous"><a href="{{ path(route) ~ "/#{currentPage - 1}" }}" class="left-arrow-blue-icon"></a></li>
+                <li class="page Previous"><a href="{{ routePath ~ "/#{currentPage - 1}" }}" class="left-arrow-blue-icon"></a></li>
                 {% if currentPage > 2 %}
-                    <li class="page"><a href="{{ path(route) }}" class="">1</a></li>
+                    <li class="page"><a href="{{ routePath }}" class="">1</a></li>
                     {% if currentPage - 2 > 1 %}
                         <li class="page dots">...</li>
                     {% endif %}
                 {% endif %}
-                <li class="page"><a href="{{ path(route) ~ "/#{currentPage - 1}" }}" class="">{{ currentPage - 1 }}</a></li>
+                <li class="page"><a href="{{ routePath ~ "/#{currentPage - 1}" }}" class="">{{ currentPage - 1 }}</a></li>
             {% endif %}
             <li class="page current button">{{ currentPage }}</li>
             {% if currentPage < lastPage %}
-                <li class="page"><a href="{{ path(route) ~ "/#{currentPage + 1}" }}" class="">{{ currentPage + 1 }}</a></li>
+                <li class="page"><a href="{{ routePath ~ "/#{currentPage + 1}" }}" class="">{{ currentPage + 1 }}</a></li>
                 {% if currentPage < lastPage - 1%}
                     {% if lastPage > currentPage + 2 %}
                         <li class="page dots">...</li>
                     {% endif %}
-                    <li class="page"><a href="{{ path(route) ~ "/#{lastPage}" }}" class="">{{ lastPage }}</a></li>
+                    <li class="page"><a href="{{ routePath ~ "/#{lastPage}" }}" class="">{{ lastPage }}</a></li>
                 {% endif %}
-                <li class="page next"><a href="{{ path(route) ~ "/#{currentPage + 1}" }}" class="right-arrow-blue-icon"></a></li>
+                <li class="page next"><a href="{{ routePath ~ "/#{currentPage + 1}" }}" class="right-arrow-blue-icon"></a></li>
             {% endif %}
         </ul>
     </div>

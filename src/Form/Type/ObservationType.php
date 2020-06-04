@@ -2,10 +2,11 @@
 
 namespace App\Form\Type;
 
-use App\DisplayData\Station\StationDisplayData;
 use App\Entity\Event;
+use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,24 +19,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ObservationType extends AbstractType
 {
-    /**
-     * @var StationDisplayData
-     */
-    private $stationDisplayData;
     private $individuals;
     private $events;
+    private $manager;
+
+    public function __construct(ManagerRegistry $manager)
+    {
+        $this->manager = $manager;
+        $this->events = [];
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->stationDisplayData = $options['station_display_data'];
+        // set individuals and events ($options is only accessible from formBuilder)
+        $this->individuals = $options['individuals'];
+        self::setEvents();
 
-        $this->individuals = $this->stationDisplayData->stationAllSpeciesIndividuals;
         $selectIndividualClassAttr = 'select-field';
         if (1 === count($this->individuals)) {
             $selectIndividualClassAttr .= ' disabled';
         }
 
-        $this->events = $this->stationDisplayData->getStationAllEvents();
+
         $selectEventClassAttr = 'select-field';
         if (1 === count($this->events)) {
             $selectEventClassAttr .= ' disabled';
@@ -52,12 +57,18 @@ class ObservationType extends AbstractType
                 'choice_label' => 'name',
                 'choice_attr' => function (Individual $individual, $key, $individualId) {
                     $species = $individual->getSpecies();
+                    $eventsForSpecies = $this->manager->getRepository(EventSpecies::class)
+                        ->findBy(['species' => $species]);
+                    $eventsForSpeciesIds = [];
+                    foreach ($eventsForSpecies as $eventSpecies) {
+                        $eventsForSpeciesIds[] = $eventSpecies->getEvent()->getId();
+                    }
 
                     return [
                         'class' => 'individual-option individual-'.$individualId,
                         'selected' => 1 === count($this->individuals),
                         'data-species' => $species->getId(),
-                        'data-available-events' => implode(',', $this->stationDisplayData->getEventIdsForSpecies($species)),
+                        'data-available-events' => implode(',', $eventsForSpeciesIds),
                         'data-picture' => $species->getPicture(),
                     ];
                 },
@@ -84,12 +95,15 @@ class ObservationType extends AbstractType
                         $pictureSuffix = '_'.substr($event->getStadeBbch(), 0, 1);
                     }
 
+                    $eventsSpeciesForSpecies = $eventsForSpecies = $this->manager->getRepository(EventSpecies::class)
+                        ->findBy(['species' => $this->individuals[0]->getSpecies()]);
+
                     return [
                         'class' => 'event-option event-'.$eventId,
                         'selected' => 1 === count($this->events),
                         'data-picture-suffix' => $pictureSuffix,
                         'data-description' => $event->getDescription(),
-                        'hidden' => !in_array($event, $this->stationDisplayData->getEventsForSpecies($this->individuals[0]->getSpecies())),
+                        'hidden' => !in_array($event, $eventsSpeciesForSpecies),
                     ];
                 },
                 'placeholder' => 'Choisir un stade',
@@ -112,12 +126,37 @@ class ObservationType extends AbstractType
         ;
     }
 
+    private function setEvents(): self
+    {
+        $allSpecies = [];
+        foreach ($this->individuals as $individual) {
+            $species = $individual->getSpecies();
+            if (!in_array($species, $allSpecies)) {
+                $allSpecies[] = $species;
+            }
+        }
+
+        foreach ($allSpecies as $species) {
+            $eventSpeciesForSpecies = $this->manager->getRepository(EventSpecies::class)
+                ->findBy(['species' => $species])
+            ;
+            foreach ($eventSpeciesForSpecies as $eventSpecies) {
+                $event = $eventSpecies->getEvent();
+                if (!in_array($event, $this->events)) {
+                    $this->events[] = $event;
+                }
+            }
+        }
+
+        return $this;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Observation::class,
         ]);
-        $resolver->setRequired('station_display_data');
-        $resolver->setAllowedTypes('station_display_data', 'App\DisplayData\Station\StationDisplayData');
+        $resolver->setRequired('individuals');
+        $resolver->setAllowedTypes('individuals', 'array');
     }
 }

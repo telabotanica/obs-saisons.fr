@@ -1,50 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block main_content %}
-
-	{% include 'layout/header.html.twig' with ({
-		'title': 'Évènements',
-		'subtitle': 'Vos <strong>évènements</strong> de l’Observatoire des saisons.'
-	}) %}
-
-	{# add evenements list-card #}
-	{% set list_cards = [] %}
-	{% for event in events %}
-		{% set event_dates = [event.startDate] %}
-		{% if event.endDate != event.startDate %}
-			{% set event_dates = event_dates|merge([event.endDate]) %}
-		{% endif %}
-
-		{% set list_cards = list_cards|merge([{
-			'slug': event.slug,
-			'events_dates': event_dates,
-			'heading': {
-				'is_link': true,
-				'title': event.title,
-				'text': event.location
-			},
-			'details': {
-				'infos': {
-					'bolder': event.author.getDisplayName(),
-					'lighter': event.createdAt|date("j/m/Y")
-				}
-			}
-		}]) %}
-	{% endfor %}
-	{% set list_cards = list_cards|merge(
-		[{
-			'add': {
-				'text': 'Vous souhaitez proposer un évènement ?',
-				'button': 'Saisir un évènement'
-			}
-		}]
-	) %}
-
-	{% for id, list_card in list_cards %}
-		{% include 'components/list-cards.html.twig' %}
+	{% for id, event in events %}
+		{% include 'components/list-cards/events-list-cards.html.twig' %}
+		{% set addListCardId = loop.last ? id + 1 %}
 	{% endfor %}
 
-	{% include 'components/pagination.html.twig' %}
+	<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
+		<div class="add-list-card">
+            <div class="icon-add-list-card add-square-orange-icon"></div>
+            <div class="add-card-text">Vous souhaitez proposer un évènement ?</div>
+            <a href="" class="button bt-add orange">Saisir un évènement</a>
+        </div>
+    </div>
+
+	{% include 'components/pagination.html.twig' with {routePath: path('evenements')} %}
 
 {% endblock %}
 

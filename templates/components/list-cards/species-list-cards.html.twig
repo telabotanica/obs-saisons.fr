@@ -1,0 +1,17 @@
+{#
+    *: required
+
+    id*: int
+    species*: object
+
+#}
+<div id="{{ species.vernacularName|slugify }}" class="list-cards-item" data-id="{{ id }}">
+
+    <div class="list-card-img" style="background-image:url({{ "/media/species/#{species.picture}.jpg" }})"></div>
+
+    <a href="{{ path('species_single_show', {'vernacularName': species.vernacularName}) }}" class="item-name-block">
+        <div class="item-heading-dropdown">{{ species.vernacularName|capitalize }}</div>
+        <div class="item-name">{{ species.scientificName }}</div>
+    </a>
+
+</div>

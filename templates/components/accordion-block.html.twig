@@ -18,16 +18,12 @@
 
 
 #}
-<div class="accordion-block" {{ id is defined ? "data-id=#{id}"}} {{ accordion.tab_reference is defined ? "data-tab=#{accordion.tab_reference}"}}>
-    <h4><a href="" class="accordion-title-dropdown right-arrow-orange-icon">{{ accordion.title|capitalize }}</a></h4>
+<div class="accordion-block" data-id="{{ id }}" data-tab="{{ type.reign }}">
+    <h4><a href="" class="accordion-title-dropdown right-arrow-orange-icon">{{ type.name|capitalize }}</a></h4>
 
     <div class="accordion-content" style="display: none">
-        {% for content in accordion.contents %}
-            {% if content.type|default('include') == 'include' %}
-                {% include content.include_uri with {(content.include_object_name): content.data}%}
-            {% elseif content.type == 'html' %}
-                {{ content.html|raw }}
-            {% endif %}
+        {% for species in typeSpecies %}
+                {% include 'components/list-cards/species-list-cards.html.twig' %}
         {% endfor %}
     </div>
 </div>

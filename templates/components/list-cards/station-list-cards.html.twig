@@ -1,0 +1,82 @@
+{#
+    #: optionnal,
+    *: required,
+    [int..int]: array indexes ([...] if no precise length defined)
+
+    id*: int
+    listCard*: object
+        species*: Species
+        individuals#: array
+            [...] Individual
+        observations#: array
+            [...] Observation
+#}
+<div id="{{ listCard.species.vernacularName|slugify }}" class="list-cards-item" data-id="{{ id }}">
+    <div class="list-card-img" style="background-image:url({{ "/media/species/#{listCard.species.picture}.jpg" }})"></div>
+
+    <div class="item-name-block">
+        <a href="" class="item-heading-dropdown right-arrow-orange-icon">{{ listCard.species.vernacularName|capitalize }}</a>
+        <div class="item-name">{{ listCard.species.scientificName }}</div>
+    </div>
+
+    {% if listCard.individuals is defined %}
+        <div class="item-details">
+            {% set indivCount = listCard.individuals|length %}
+            {% set indivDisplayS = indivCount != 1 ? 's' : '' %}
+            {% set obsCount = listCard.observations|length %}
+            {% set obsDisplayS = obsCount != 1 ? 's' : '' %}
+            <div class="grey">
+                <span class="indiv-count">{{ indivCount }}</span> individu{{ indivDisplayS }} •
+                <span class="obs-count">{{ obsCount }}</span> observation{{ obsDisplayS }}
+            </div>
+
+            {% if 0 < obsCount and listCard.observations|first is not empty %}
+                {% set lastObs = listCard.observations|first %}
+                <div>
+                    <span class="bolder">{{ constant('App\\Entity\\Event::DISPLAY_LABELS')[lastObs.event.name] }}</span>
+                    - le {{ lastObs.date|date('d/m/Y') }}
+                </div>
+            {% endif %}
+        </div>
+
+        {% set buttons = [{
+            'icon': 'help-circle',
+            'label': 'fiche',
+        }] %}
+        {% if show %}
+            {% set individualsIds = [] %}
+            {% for individual in  listCard.individuals %}
+                {% set individualsIds = individualsIds|merge([individual.id]) %}
+            {% endfor %}
+            {% set buttons = buttons|merge([{
+                'icon': 'edit-calendar',
+                'action': 'open',
+                'data_attr': [
+                    {
+                        'name': 'open',
+                        'value': 'observation'
+                    },
+                    {
+                        'name': 'species',
+                        'value': listCard.species.id
+                    },
+                    {
+                        'name': 'species-name',
+                        'value': listCard.species.vernacularName
+                    },
+                    {
+                        'name': 'indiv',
+                        'value': individualsIds|join(',')
+                    },
+                    {
+                        'name': 'req-login',
+                        'value': 'true'
+                    }
+                ],
+                'label': 'saisir'
+            }]) %}
+        {% endif %}
+        {% include "components/buttons/dual-squared-button.html.twig" %}
+
+    {% endif %}
+</div>
