@@ -17,14 +17,8 @@ class IndividualType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $individuals = $options['individuals'];
         $this->stationAllSpecies = [];
-        foreach ($individuals as $individual) {
-            $species = $individual->getSpecies();
-            if (!in_array($species, $this->stationAllSpecies)) {
-                $this->stationAllSpecies[] = $species;
-            }
-        }
+        self::setAllSpecies($options['individuals']);
 
         $builder
             ->add('name', TextType::class, ['required' => true])
@@ -53,6 +47,18 @@ class IndividualType extends AbstractType
             ])
             ->add('submit', SubmitType::class)
         ;
+    }
+
+    private function setAllSpecies(array $individuals): self
+    {
+        foreach ($individuals as $individual) {
+            $species = $individual->getSpecies();
+            if (!in_array($species, $this->stationAllSpecies)) {
+                $this->stationAllSpecies[] = $species;
+            }
+        }
+
+        return $this;
     }
 
     public function configureOptions(OptionsResolver $resolver)

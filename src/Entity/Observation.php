@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ObservationRepository")
@@ -34,6 +35,13 @@ class Observation
     private $user;
 
     /**
+     * @Assert\File(
+     *     mimeTypes = {"image/png", "image/jpeg"},
+     *     mimeTypesMessage = "Le format de l'image doit être .jpg ou .png",
+     *     maxSize = "5242880",
+     *     maxSizeMessage = "Le fichier est trop lourd ({{ size }} {{ suffix }}). Le maximum autorisé est de {{ limit }} {{ suffix }}."
+     * )
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $picture;
@@ -120,7 +128,6 @@ class Observation
 
         return $this;
     }
-
 
     public function getDate(): ?\DateTimeInterface
     {
