@@ -2,7 +2,7 @@
     *: required
     [int..int]: array indexes ([...] if no precise length defined)
 
-    onlyOneEvent*: bool
+    animal*: bool
     eventsSpecies*: array
         [...] EventSpecies
     observations*: array
@@ -12,7 +12,7 @@
 #}
 {% set break = false %}
 {# Spot when to display missing event observation when more than one event is displayed #}
-{% if not onlyOneEvent  %}
+{% if not animal  %}
     {% set stagesHavingObservations = [] %}
     {% for obs in observations %}
         {% set obsEvent = obs.event.id %}
@@ -42,7 +42,7 @@
             {% set pictureUrl = obs.picture %}
         {% else %}
             {% set pictureName = obs.individual.species.picture %}
-            {% if obs.individual.species.type.id == 1 %}
+            {% if obs.individual.species.type.name == 'arbres' %}
                 {% set pictureName = "#{pictureName}_#{obs.event.stadeBbch|first}" %}
             {% endif %}
             {% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
@@ -52,7 +52,7 @@
     {% endif %}
 
     {% set displayObservation = true %}
-    {% if onlyOneEvent %}{# toggle display observation when only one event #}
+    {% if animal %}{# toggle display observation when only one event #}
         {% if obs.isMissing and loop.index != observations|length %}
             {# missing event observation is only displayed if no valid observation exists for the year #}
             {% set displayObservation = false %}
