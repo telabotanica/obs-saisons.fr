@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,10 +22,18 @@ class StationType extends AbstractType
         $builder
             ->add('name', TextType::class, ['required' => true])
             ->add('description', TextareaType::class, ['required' => false])
-            ->add('latitude', TextType::class, ['required' => true])
-            ->add('longitude', TextType::class, ['required' => true])
+            ->add('latitude', NumberType::class, [
+                'required' => true,
+                'html5' => true,
+            ])
+            ->add('longitude', NumberType::class, [
+                'required' => true,
+                'html5' => true,
+            ])
             ->add('locality', TextType::class, ['required' => true])
-            ->add('insee_code', TextType::class, ['required' => true])
+            ->add('insee_code', TextType::class, [
+                'required' => true,
+            ])
             ->add('altitude', HiddenType::class)
             ->add('habitat', ChoiceType::class, [
                 'choices' => [
@@ -39,6 +48,7 @@ class StationType extends AbstractType
             ->add('is_private', CheckboxType::class, ['required' => false])
             ->add('header_image', FileType::class, [
                 'required' => false,
+                'error_bubbling' => true,
                 'label' => 'Image de la station',
                 'attr' => [
                     'class' => 'upload-input',

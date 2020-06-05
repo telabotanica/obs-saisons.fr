@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Event;
 use App\Entity\Observation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -13,10 +14,12 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('fr_FR');
+        $eventRepository = $manager->getRepository(Event::class);
+
         for ($i = 0; $i < 750; ++$i) {
             $observation = new Observation();
             $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(0, 75)));
-            $observation->setEvent($this->getReference('event-'.$faker->numberBetween(1, 7)));
+            $observation->setEvent($eventRepository->find($faker->numberBetween(1, 7)));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture('/media/layout/image_station.png');
             $observation->setDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
@@ -32,7 +35,7 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
         for ($c = 750; $c < 1000; ++$c) {
             $observation = new Observation();
             $observation->setIndividual($this->getReference('individual-'.$faker->numberBetween(76, 99)));
-            $observation->setEvent($this->getReference('event-8'));
+            $observation->setEvent($eventRepository->find(8));
             $observation->setUser($this->getReference('user-'.$faker->randomDigit));
             $observation->setPicture('/media/layout/image_station.png');
             $observation->setDate($faker->dateTimeThisDecade('now', 'Europe/Paris'));
@@ -54,7 +57,6 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
-            EventFixtures::class,
             IndividualFixtures::class,
         ];
     }

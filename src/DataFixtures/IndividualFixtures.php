@@ -3,9 +3,10 @@
 namespace App\DataFixtures;
 
 use App\Entity\Individual;
+use App\Entity\Species;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Faker;
 
 class IndividualFixtures extends Fixture implements DependentFixtureInterface
@@ -13,11 +14,12 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $faker = Faker\Factory::create('fr_FR');
+        $speciesRepository = $manager->getRepository(Species::class);
 
         for ($i = 0; $i < 76; ++$i) {
             $individual = new Individual();
             $individual->setName($faker->sentence(6, true));
-            $individual->setSpecies($this->getReference('species-'.$faker->numberBetween(1, 55)));
+            $individual->setSpecies($speciesRepository->find($faker->numberBetween(1, 55)));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
@@ -30,7 +32,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
         for ($c = 76; $c < 100; ++$c) {
             $individual = new Individual();
             $individual->setName($faker->sentence(6, true));
-            $individual->setSpecies($this->getReference('species-'.$faker->numberBetween(56, 73)));
+            $individual->setSpecies($speciesRepository->find($faker->numberBetween(56, 73)));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
@@ -50,8 +52,8 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
-            SpeciesFixtures::class,
             StationFixtures::class,
+            OdsStaticDataFixtures::class,
         ];
     }
 }

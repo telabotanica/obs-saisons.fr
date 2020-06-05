@@ -29,14 +29,43 @@ class EventSpecies
     private $description;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\column(type="integer", nullable=true)
      */
-    private $start_date;
+    private $percentile_5;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\column(type="integer", nullable=true)
      */
-    private $end_date;
+    private $percentile_95;
+
+    /**
+     * @ORM\column(type="integer", nullable=true)
+     */
+    private $percentile_25;
+
+    /**
+     * @ORM\column(type="integer", nullable=true)
+     */
+    private $percentile_75;
+
+    /**
+     * @ORM\column(type="integer", nullable=true)
+     */
+    private $aberration_start_day;
+
+    /**
+     * @ORM\column(type="integer", nullable=true)
+     */
+    private $aberration_end_day;
+
+    const CONIFEROUS_ES_IDS = [
+        'species' => [13, 24, 37],
+        'events' => [1, 2, 3, 4, 5],
+    ];
+    const ONLY_FLOWERING_N_FRUITING_ES_IDS = [
+        'species' => [16, 40],
+        'events' => [3, 4, 5],
+    ];
 
     public function __construct(Event $event, Species $species)
     {
@@ -66,26 +95,74 @@ class EventSpecies
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getPercentile5(): ?int
     {
-        return $this->start_date;
+        return $this->percentile_5;
     }
 
-    public function setStartDate(\DateTimeInterface $start_date): self
+    public function setPercentile5(?int $percentile_5): self
     {
-        $this->start_date = $start_date;
+        $this->percentile_5 = $percentile_5;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getPercentile95(): ?int
     {
-        return $this->end_date;
+        return $this->percentile_95;
     }
 
-    public function setEndDate(\DateTimeInterface $end_date): self
+    public function setPercentile95(?int $percentile_95): self
     {
-        $this->end_date = $end_date;
+        $this->percentile_95 = $percentile_95;
+
+        return $this;
+    }
+
+    public function getPercentile25(): ?int
+    {
+        return $this->percentile_25;
+    }
+
+    public function setPercentile25(?int $percentile_25): self
+    {
+        $this->percentile_25 = $percentile_25;
+
+        return $this;
+    }
+
+    public function getPercentile75(): ?int
+    {
+        return $this->percentile_75;
+    }
+
+    public function setPercentile75(?int $percentile_75): self
+    {
+        $this->percentile_75 = $percentile_75;
+
+        return $this;
+    }
+
+    public function getAberrationStartDay(): ?int
+    {
+        return $this->aberration_start_day;
+    }
+
+    public function setAberrationStartDay(?int $aberration_start_day): self
+    {
+        $this->aberration_start_day = $aberration_start_day;
+
+        return $this;
+    }
+
+    public function getAberrationEndDay(): ?int
+    {
+        return $this->aberration_end_day;
+    }
+
+    public function setAberrationEndDay(?int $aberration_end_day): self
+    {
+        $this->aberration_end_day = $aberration_end_day;
 
         return $this;
     }

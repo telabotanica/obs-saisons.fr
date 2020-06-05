@@ -43,21 +43,33 @@
     </div>
     <div class="_2-col-form field-group">
         {{ form_row(stationForm.latitude, {
-            'row_attr': {'class': 'form-col'},
+            'row_attr': {
+                'class': 'form-col',
+                'lang': 'en-US'
+            },
             'label': 'Latitude *',
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
+                'min': 41.3332,
+                'max': 51.0890,
+                'step': 0.00001,
                 'data-name': 'latitude',
                 'placeholder': 'Décimal, ex: 48.76638'
             }
         }) }}
         {{ form_row(stationForm.longitude, {
-            'row_attr': {'class': 'form-col ml'},
+            'row_attr': {
+                'class': 'form-col ml',
+                'lang': 'en-US'
+            },
             'label': 'Longitude *',
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
+                'min': -5.17470,
+                'max': 9.56000,
+                'step': 0.000001,
                 'data-name': 'longitude',
                 'placeholder': 'Décimal, ex: 6.045905'
             }
@@ -79,6 +91,7 @@
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
+                'pattern':'(100[1-9]|10[1-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-8][0-9]{4}|9[0-8][0-9]{3}|990[0-9]{2}|991[0-2][0-9]|9913[0-8])|(2(A001|B36[4-6]|(A|B)(00[2-9]|0[1-8][0-9]|09[0-9]|[12][0-9]{2}|3[0-5][0-9]|36[0-3])))',
                 'data-name': 'insee_code'
             },
         }) }}

@@ -39,7 +39,7 @@
 			<div class="add-card-content">
 				<div class="add-pointer-icon add-card-marker"></div>
 				<div class="add-card-text">Votre station n’existe pas encore ?</div>
-				<a href="" class="button bt-add open" data-open="station">
+				<a href="" class="button bt-add open{{ app.user.id is not defined ? ' disabled' }}" data-open="station" {{ app.user.id is not defined ? 'style="cursor:not-allowed;" aria-disabled="true" title="connexion obligatoire"' }}>
 					Créer une station
 				</a>
 			</div>
