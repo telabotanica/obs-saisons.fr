@@ -38,6 +38,8 @@ class EventsSpeciesGenerateCommand extends Command
         $allSpecies = $this->manager->getRepository(Species::class)->findAll();
 
         if (empty($allSpecies)) {
+            $output->writeln('species not found');
+
             return 1;
         }
 
@@ -49,8 +51,8 @@ class EventsSpeciesGenerateCommand extends Command
 
             $eventsIds = [];
             if (empty($typeId)) {
-
                 $output->writeln('type id not found : '.$typeId);
+
                 return 1;
             }
             if (2 < $typeId) {
@@ -76,6 +78,8 @@ class EventsSpeciesGenerateCommand extends Command
                 $event = $eventRepository->find($eventId);
 
                 if (empty($event)) {
+                    $output->writeln(sprintf('event with id %d not found.', $eventId));
+
                     return 1;
                 }
 
@@ -86,7 +90,6 @@ class EventsSpeciesGenerateCommand extends Command
                     $message .= ' stade '.$event->getStadeBbch();
                 }
                 $output->writeln($message);
-
 
                 $this->manager->persist($eventSpecies);
             }
