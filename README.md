@@ -20,11 +20,57 @@ Create the tables:
 ```bash
 php bin/console doctrine:migrations:migrate
 ```
+Migrate all static data :
+```bash
+php bin/console odsstaticdata:migrate
+```
+
 Or for dev env:
 ```bash
 php bin/console doctrine:schema:create
 php bin/console doctrine:fixtures:load
 ```
+
+## Run Static Data Table Set Commands
+### Set All 
+(See `Migrate all static data` above)
+```bash
+php bin/console odsstaticdata:migrate
+```
+### Set Each
+To set each table apart, make sure previous table is already set :
+
+1 `TypeSpecies`
+```bash
+php bin/console typespecies:import
+```
+
+2 `Species`
+```bash
+php bin/console species:import
+```
+
+3 `Events`
+```bash
+php bin/console events:import
+```
+
+4 `EventSpecies`
+- set event and species
+```bash
+php bin/console eventspecies:generate
+```
+- set events periods and aberration alert periods
+```bash
+php bin/console periods:import
+```
+
+**`periods:import` Choice Question :**\
+`Please select periods types (s : stages periods, a : observations alerts periods, b : both / default to b : both)`\
+_both (default):_ enter `b` or hit `enter`\
+_stages periods :_ enter `s`\
+_aberration alert periods :_ enter `a`
+    
 
 ## Build css/js
 
