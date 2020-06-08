@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Species;
+use App\Entity\TypeSpecies;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -38,6 +39,16 @@ class SpeciesRepository extends ServiceEntityRepository
         $query = $qb->getQuery();
 
         return $query->execute();
+    }
+
+    public function findAllByTypeSpecies(TypeSpecies $typeSpecies)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.type = :val')
+            ->setParameter('val', $typeSpecies)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

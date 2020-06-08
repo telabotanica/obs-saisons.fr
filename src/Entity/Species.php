@@ -96,12 +96,12 @@ class Species
         return $this;
     }
 
-    public function getType(): ?TypeSpecies
+    public function getType(): TypeSpecies
     {
         return $this->type;
     }
 
-    public function setType(?TypeSpecies $type): self
+    public function setType(TypeSpecies $type): self
     {
         $this->type = $type;
 

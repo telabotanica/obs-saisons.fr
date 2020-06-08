@@ -44,7 +44,7 @@ class Event
         'floraison' => 'Floraison',
         'fructification' => 'Fructification',
         'sénescence' => 'Sénescence',
-        '1ere apparition' => '1ere apparition',
+        '1ère apparition' => '1ère apparition',
     ];
 
     const CSS_CLASSES = [
@@ -52,7 +52,7 @@ class Event
         'floraison' => 'floraison',
         'fructification' => 'fructification',
         'sénescence' => 'senescence',
-        '1ere apparition' => 'apparition',
+        '1ère apparition' => 'apparition',
     ];
 
     public function getId(): ?int

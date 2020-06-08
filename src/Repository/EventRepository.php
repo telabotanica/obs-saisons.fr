@@ -19,6 +19,24 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
+    public function findAllWithBbch()
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.stade_bbch IS NOT NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findAllWithoutBbch()
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.stade_bbch IS NULL')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */

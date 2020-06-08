@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Individual;
 use App\Entity\Species;
+use App\Entity\TypeSpecies;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -15,11 +16,14 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Faker\Factory::create('fr_FR');
         $speciesRepository = $manager->getRepository(Species::class);
+        $typeSpeciesRepository = $manager->getRepository(TypeSpecies::class);
+        $plants = $typeSpeciesRepository->findByReign('plantes');
+        $animals = $typeSpeciesRepository->findByReign('animaux');
 
         for ($i = 0; $i < 76; ++$i) {
             $individual = new Individual();
             $individual->setName($faker->sentence(6, true));
-            $individual->setSpecies($speciesRepository->find($faker->numberBetween(1, 55)));
+            $individual->setSpecies($faker->randomElement($speciesRepository->findAllByTypeSpecies($faker->randomElement($plants))));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
@@ -32,7 +36,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
         for ($c = 76; $c < 100; ++$c) {
             $individual = new Individual();
             $individual->setName($faker->sentence(6, true));
-            $individual->setSpecies($speciesRepository->find($faker->numberBetween(56, 73)));
+            $individual->setSpecies($faker->randomElement($speciesRepository->findAllByTypeSpecies($faker->randomElement($animals))));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));

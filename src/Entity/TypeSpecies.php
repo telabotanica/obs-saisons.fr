@@ -11,6 +11,20 @@ class TypeSpecies
 {
     const REIGN = ['animaux', 'plantes'];
 
+    const TYPES_REIGNS = [
+        'plantes' => ['arbres', 'herbacées'],
+        'animaux' => ['oiseaux', 'insectes', 'amphibiens', 'resptiles'],
+    ];
+
+    const PLURAL_TYPES = [
+        'arbres' => 'arbre',
+        'herbacées' => 'herbacée',
+        'oiseaux' => 'oiseau',
+        'insectes' => 'insecte',
+        'amphibiens' => 'amphibien',
+        'reptiles' => 'reptile',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -27,15 +41,6 @@ class TypeSpecies
      * @ORM\Column(type="string", length=7)
      */
     private $reign;
-
-    const PLURAL_TYPES = [
-        'arbres' => 'arbre',
-        'herbacées' => 'herbacée',
-        'oiseaux' => 'oiseau',
-        'insectes' => 'insecte',
-        'amphibiens' => 'amphibien',
-        'reptiles' => 'reptile',
-    ];
 
     public function getId(): ?int
     {
