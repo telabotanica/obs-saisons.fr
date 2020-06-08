@@ -41,10 +41,10 @@ class SpeciesImportCommand extends Command
             /**
              * @var TypeSpecies
              */
-            $typeSpecies = $typeSpeciesRepository->find($singleSpeciesData->type_id);
+            $typeSpecies = $typeSpeciesRepository->findOneByName($singleSpeciesData->type_name);
 
             if (empty($typeSpecies)) {
-                $output->writeln('type not found');
+                $output->writeln('type not found : '.$singleSpeciesData->type_name);
 
                 return 1;
             }
