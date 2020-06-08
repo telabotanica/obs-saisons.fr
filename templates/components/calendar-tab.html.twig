@@ -101,7 +101,7 @@
                 {% for obsChip in setObsChips(individual) %}
                     {% include 'components/obs_chips.html.twig' with {
                         observations: obsChip.observations,
-                        animal: (individual.species.type.reign != 'plantes'),
+                        isAnimal: (individual.species.type.reign != 'plantes'),
                         hide: (obsChip.year != first_year)
                     } %}
                 {% endfor %}
