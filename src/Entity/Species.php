@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SpeciesRepository")
+ *
+ * Species list doesn't vary often, maybe their details should be in code instead of bdd
  */
 class Species
 {

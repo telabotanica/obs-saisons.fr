@@ -58,15 +58,6 @@ class EventSpecies
      */
     private $aberration_end_day;
 
-    const CONIFEROUS_ES_IDS = [
-        'species' => [13, 24, 37],
-        'events' => [1, 2, 3, 4, 5],
-    ];
-    const ONLY_FLOWERING_N_FRUITING_ES_IDS = [
-        'species' => [16, 40],
-        'events' => [3, 4, 5],
-    ];
-
     public function __construct(Event $event, Species $species)
     {
         $this->event = $event;

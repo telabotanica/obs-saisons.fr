@@ -65,22 +65,28 @@ class EventSpeciesPeriodsImportCommand extends Command
             return 1;
         }
 
+        $answerOutput = [
+            's' => 'stages periods',
+            'a' => 'observations alerts periods',
+            'b' => 'stages & observations alerts periods',
+        ];
+
         foreach ($speciesPeriods as $singleSpeciesPeriods) {
-            $singleSpeciesPeriods = array_map(function ($data) {
-                return intval($data);
-            }, $singleSpeciesPeriods);
-
-            $species = $speciesRepository->find($singleSpeciesPeriods['species_id']);
-
-            if (empty($species)) {
-                $output->writeln(sprintf("<error>\n  species with id %d not found\n</error>", $singleSpeciesPeriods['species_id']));
+            $species = $speciesRepository->findOneBy(['scientific_name' => $singleSpeciesPeriods['species_name']]);
+            if (!$species) {
+                $output->writeln(sprintf("<error>\n  species %d not found\n</error>", $singleSpeciesPeriods['species_name']));
 
                 return 1;
             }
 
-            $event = $eventRepository->find($singleSpeciesPeriods['event_id']);
-            if (empty($species)) {
-                $output->writeln(sprintf("<error>\n  event with id %d not found\n</error>", $singleSpeciesPeriods['event_id']));
+            if ('apparition' === $singleSpeciesPeriods['bbch_code']) {
+                // animals doesn't have BBCH code
+                $event = $eventRepository->findOneBy(['name' => '1ère apparition']);
+            } else {
+                $event = $eventRepository->findOneBy(['stade_bbch' => $singleSpeciesPeriods['bbch_code']]);
+            }
+            if (!$event) {
+                $output->writeln(sprintf("<error>\n  event %d not found\n</error>", $singleSpeciesPeriods['bbch_code']));
 
                 return 1;
             }
@@ -117,15 +123,11 @@ class EventSpeciesPeriodsImportCommand extends Command
             }
 
             $this->manager->persist($eventSpecies);
-            $this->manager->flush();
 
-            $answerOutput = [
-                's' => 'stages periods',
-                'a' => 'observations alerts periods',
-                'b' => 'stages & observations alerts periods',
-            ];
-            $output->writeln(sprintf("<info>\n  updated %s for species with id %d and event with id %d\n</info>", $answerOutput[$periodType], $species->getId(), $event->getId()));
+            $output->writeln(sprintf('<info>  updated %s for species with id %d and event with id %d</info>', $answerOutput[$periodType], $species->getId(), $event->getId()));
         }
+
+        $this->manager->flush();
 
         $output->writeln('Done.');
 

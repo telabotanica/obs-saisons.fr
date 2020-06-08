@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
+ *
+ * Events hasn't change since first day, (maybe) their details should be in code instead of bdd
  */
 class Event
 {
@@ -18,6 +20,8 @@ class Event
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @TODO: rename to code_bbch/bbch_code
      */
     private $stade_bbch;
 

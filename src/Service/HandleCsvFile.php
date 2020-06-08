@@ -10,7 +10,7 @@ class HandleCsvFile
         if (file_exists($file) && is_readable($file)) {
             $header = null;
             if (false !== ($handle = fopen($file, 'r'))) {
-                while (false !== ($row = fgetcsv($handle, 1000, "\t"))) {
+                while (false !== ($row = fgetcsv($handle, 1000, ','))) {
                     if (!$header) {
                         $header = $row;
                     } else {

@@ -32,53 +32,36 @@ class EventsSpeciesGenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /**
-         * @var Species[]
-         */
-        $allSpecies = $this->manager->getRepository(Species::class)->findAll();
-
-        if (empty($allSpecies)) {
-            $output->writeln('species not found');
+        $speciesRepository = $this->manager->getRepository(Species::class);
+        $eventRepository = $this->manager->getRepository(Event::class);
+        $speciesData = json_decode(file_get_contents('src/Ressources/ods_species.json'));
+        if (!$speciesData) {
+            $output->writeln("<error>\n  couldn’t read species file\n</error>");
 
             return 1;
         }
 
-        $eventRepository = $this->manager->getRepository(Event::class);
+        foreach ($speciesData as $speciesDatum) {
+            $species = $speciesRepository->findOneBy(['scientific_name' => $speciesDatum->scientific_name]);
 
-        foreach ($allSpecies as $species) {
-            $typeId = $species->getType()->getId();
-            $speciesId = $species->getId();
-
-            $eventsIds = [];
-            if (empty($typeId)) {
-                $output->writeln('type id not found : '.$typeId);
+            if (!$species) {
+                $output->writeln('species not found : '.$speciesDatum->scientific_name);
 
                 return 1;
-            }
-            if (2 < $typeId) {
-                $eventsIds = [8];
-            } elseif (2 == $typeId) {
-                $eventsIds = [3];
-            } else {
-                if (in_array($speciesId, EventSpecies::CONIFEROUS_ES_IDS['species'])) {
-                    $eventsIds = EventSpecies::CONIFEROUS_ES_IDS['events'];
-                } elseif (in_array($speciesId, EventSpecies::ONLY_FLOWERING_N_FRUITING_ES_IDS['species'])) {
-                    $eventsIds = EventSpecies::ONLY_FLOWERING_N_FRUITING_ES_IDS['events'];
-                } else {
-                    $eventsIds = range(1, 7);
-                }
             }
 
             $output->writeln('Creating eventSpecies for species: '.$species->getVernacularName());
 
-            foreach ($eventsIds as $eventId) {
-                /**
-                 * @var Event
-                 */
-                $event = $eventRepository->find($eventId);
+            foreach (explode(',', $speciesDatum->bbch_list) as $stadeBbch) {
+                // animals doesn't have BBCH code
+                if (null == $stadeBbch) {
+                    $event = $eventRepository->findOneBy(['name' => '1ère apparition']);
+                } else {
+                    $event = $eventRepository->findOneBy(['stade_bbch' => $stadeBbch]);
+                }
 
-                if (empty($event)) {
-                    $output->writeln(sprintf('event with id %d not found.', $eventId));
+                if (!$event) {
+                    $output->writeln('Stade BBCH not found : '.$stadeBbch);
 
                     return 1;
                 }
