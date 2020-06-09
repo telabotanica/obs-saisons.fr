@@ -32,6 +32,14 @@ class EventsSpeciesGenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $allEventSpecies = $this->manager->getRepository(EventSpecies::class)->findAll();
+        foreach ($allEventSpecies as $eventSpecies) {
+            $this->manager->remove($eventSpecies);
+        }
+        $cmd = $this->manager->getClassMetadata(EventSpecies::class);
+        $this->manager->getConnection()->exec('ALTER TABLE '.$cmd->getTableName().' AUTO_INCREMENT = 1;');
+        $this->manager->flush();
+
         $speciesRepository = $this->manager->getRepository(Species::class);
         $eventRepository = $this->manager->getRepository(Event::class);
         $speciesData = json_decode(file_get_contents('src/Ressources/ods_species.json'));
