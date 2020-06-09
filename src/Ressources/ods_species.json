@@ -409,7 +409,7 @@
 		"description":"Petit buisson vivace, de 20 \u00e0 40 centim\u00e8tres de hauteur, tr\u00e8s ramifi\u00e9 et qui forme des coussins. L\u2019astragale s\u2019est adapt\u00e9e aux conditions rudes du littoral : port en boule pour optimiser l\u2019ombre et petites feuilles tr\u00e8s poilues et \u00e9pineuses pour limiter l\u2019\u00e9vapotranspiration.\r\nSon rachis (axe qui porte les folioles) cylindrique est persistant et lorsque les feuilles tombent, il devient alors une redoutable \u00e9pine. Les feuilles de l\u2019astragale sont vert-blanch\u00e2tre poilues, dispos\u00e9es de fa\u00e7on alterne et regroup\u00e9es en nombre pair entre 6 et 12 folioles oblongues.\r\nSes inflorescences sont des grappes compos\u00e9es de 7 \u00e0 8 grandes fleurs blanches (1,5 \u00e0 2 centim\u00e8tres).\r\nLes fruits sont des gousses oblongues velues contenant entre 2 et 8 graines.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"astragale"
 	},
@@ -419,7 +419,7 @@
 		"description":"Le C\u00e9phalanth\u00e8re \u00e0 longues feuilles est une plante herbac\u00e9e vivace au port \u00e9lanc\u00e9 (20-60 cm)\r\nSes feuilles sont \u00e9troites, longues et rigides de couleur vert vif. Elles sont dispos\u00e9es sur deux rang\u00e9es oppos\u00e9es le long de la tige et de fa\u00e7on plus ou moins alternes.\r\nSon inflorescence est en \u00e9pi dense, long de 15 \u00e0 30 cm, \u00e0 fleurs nombreuses (6 \u00e0 18)\r\nSes fleurs sont blanches et assez grandes. Leur labelle est tach\u00e9 de jaune \u00e0 la base. Les s\u00e9pales sont allong\u00e9s, obtus, dirig\u00e9s vers l\u2019avant et plus longs que les p\u00e9tales. Pas d\u2019\u00e9peron.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"cephalanthere"
 	},
@@ -429,7 +429,7 @@
 		"description":"Arbrisseau tr\u00e8s ramifi\u00e9 de 40 centim\u00e8tres \u00e0 1 m\u00e8tre de hauteur. Son feuillage est persistant, constitu\u00e9 de feuilles simples, sessiles, oppos\u00e9es et peu odorantes. Elles sont velout\u00e9es-blanch\u00e2tres, sans poils longs mais plut\u00f4t \u00e9toil\u00e9s. Aux heures tr\u00e8s ensoleill\u00e9es de la journ\u00e9e, les feuilles se maintiennent \u00e0 la verticale pour att\u00e9nuer l\u2019angle d\u2019incidence du rayonnement direct. Les tiges sont gr\u00eales et gris\u00e2tres.\r\nL\u2019inflorescence est une cyme unipare h\u00e9lico\u00efde constitu\u00e9e de fleurs rose-lilas \u00e0 5 p\u00e9tales \u00e0 l\u2019aspect \u00ab froiss\u00e9 \u00bb et 3 s\u00e9pales. Le fruit est une capsule globuleuse qui s\u2019ouvre par 5 valves.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"ciste-cotonneux"
 	},
@@ -439,7 +439,7 @@
 		"description":"Le colchique est une plante vivace, haute de 10 \u00e0 30 centim\u00e8tres. Il fleurit dans les prairies \u00e0 la fin de l\u2019\u00e9t\u00e9. La plante dispara\u00eet ensuite jusqu\u2019au printemps suivant, moment o\u00f9 \u00e9mergent les feuilles ainsi que les fruits. \r\nLes feuilles sont semi-dress\u00e9es, tr\u00e8s allong\u00e9es et assez larges, d\u2019un vert profond. \r\nLes fleurs sont hermaphrodites, solitaires, dress\u00e9es, de couleur rose-lilas port\u00e9es par un tube blanc. Les t\u00e9pales sont soud\u00e9s au niveau du tube inf\u00e9rieur puis divis\u00e9es en 6 parties en forme de lance. Les \u00e9tamines sont jaune orang\u00e9 (3 longues et 3 courtes). Le pistil poss\u00e8de des styles blanc ros\u00e9 d\u00e9passant les \u00e9tamines et termin\u00e9es en \u201ccrochet\u201d. \r\nLes fruits sont des capsules vertes en forme d\u2019obus et sont visibles au printemps, \u00e0 la base des feuilles. A maturit\u00e9, ils deviennent marron et 3 loges s\u2019ouvrent pour laisser sortir les petites graines noires.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"colchique-d-automne"
 	},
@@ -449,7 +449,7 @@
 		"description":"- . Plante annuelle, velue-h\u00e9riss\u00e9e \r\n- tige de 20-60 cm, dress\u00e9e, rameuse \r\n- feuilles pennatipartites, \u00e0 segments lanc\u00e9ol\u00e9s-aigus, incis\u00e9s-dent\u00e9s, les caulinaires sessiles, \u00e0 segment terminal tr\u00e8s d\u00e9velopp\u00e9 \r\n- p\u00e9doncules \u00e0 poils tr\u00e8s \u00e9tal\u00e9s \r\n- fleurs d'un rouge vif, grandes \r\n- filets des \u00e9tamines filiformes \r\n- stigmates 7-12, sur un disque lob\u00e9, \u00e0 lobes se recouvrant par les bords \r\n- capsule courtement obovale, glabre. Plante polymorphe.\r\n\r\nPour v\u00e9rifier votre identification vous pouvez visiter notre galerie d'images de cette plante : http:\/\/www.tela-botanica.org\/appli:pictoflora?masque=Papaver+rhoeas&tri=votes&ordre=desc&protocole=1&page=1&pas=100 \r\n",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"coquelicot"
 	},
@@ -459,7 +459,7 @@
 		"description":"Le lavandin est un petit arbrisseau vivace, cultiv\u00e9 et tr\u00e8s odorant.\r\nLe lavandin est issu d\u2019un m\u00e9lange entre Lavandula angustifolia, Mill. (lavande fine, ou lavande vraie) et Lavandula latifolia, Medik. (lavande aspic).\r\nSon feuillage est persistant, les feuilles sont oppos\u00e9es, longues et pointues de couleur bleut\u00e9e et aux reflets argent\u00e9s.\r\nLes inflorescences sont des groupes de fleurs constitu\u00e9es de 5 p\u00e9tales soud\u00e9s, de couleur bleu-violac\u00e9 r\u00e9unies en t\u00eate serr\u00e9e, en forme d\u2019\u00e9pi.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"lavandin"
 	},
@@ -469,7 +469,7 @@
 		"description":"Plante herbac\u00e9e vivace et poilue de 30-60 cm.\r\nLa tige est \u00e9rig\u00e9e parfois \u00e9tal\u00e9e.\r\nLes feuilles ont les bords largement dent\u00e9s, et arrondies (feuilles cr\u00e9nel\u00e9es). La feuille est verte fonc\u00e9e,\r\np\u00e9tiol\u00e9e.\r\nLes fleurs sont mauves avec des nervures plus fonc\u00e9es\r\nsur les 5 p\u00e9tales en forme de coeur.\r\nLes fruits sont des ak\u00e8nes (fruits secs ind\u00e9hiscent) regroup\u00e9s dans une capsule r\u00e9ticul\u00e9e, h\u00e9riss\u00e9e et velue.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"mauve"
 	},
@@ -479,7 +479,7 @@
 		"description":"La tige est verte, sa base est envelopp\u00e9e par des gaines. \r\nLes fleurs sont group\u00e9es par 4 \u00e0 9, parfum\u00e9es, blanches ou l\u00e9g\u00e8rement ros\u00e9es, en forme de clochettes, \u00e0 6 dents recourb\u00e9es. Elles sont group\u00e9es en grappes et orient\u00e9es d\u2019un seul c\u00f4t\u00e9. Chaque fleur poss\u00e8de 6 \u00e9tamines et un pistil \u00e0 style court. \r\nLes feuilles sont par 2, lisses et dress\u00e9es, longues et larges \u00e0 bords entiers, d\u2019un vert profond, \u00e0 nervures convergentes. \r\nLes fruits sont des petites baies rouges, qui sont toxiques.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"muguet"
 	},
@@ -489,7 +489,7 @@
 		"description":"L\u2019Orchis bouc est une plante herbac\u00e9e vivace, tr\u00e8s robuste, avec une tige allant de 20 \u00e0 90 cm de haut.\r\nSes feuilles sont \u00e9galement grandes et de couleur terne. Les rosettes de feuilles sont visibles d\u00e8s octobre et en voie de dess\u00e8chement ou fl\u00e9tries lors de la floraison.\r\nL\u2019inflorescence est en \u00e9pi plus ou moins dense, cylindrique et long de 15 \u00e0 30 cm.\r\nLes fleurs sont grandes, de couleur verd\u00e2tre bord\u00e9e de pourpre et ont une odeur souvent d\u00e9sagr\u00e9able faisant penser \u00e0 l\u2019odeur du bouc. Les s\u00e9pales et les p\u00e9tales forment un casque ovale de couleur vert-blanc vert-gris\u00e2tre et vein\u00e9 de pourpre \u00e0 l\u2019int\u00e9rieur. Petit \u00e9peron blanc.\r\nLe labelle est trilob\u00e9 : le lobe central est tr\u00e8s long (30 \u00e0 60 mm), torsad\u00e9 et fendu \u00e0 son extr\u00e9mit\u00e9; les lobes lat\u00e9raux sont plus court avec des bords ondul\u00e9s. \u00c0 part sa base qui est blanch\u00e2tre garnie de petites houppes papilleuses rouge-pourpre, le labelle est vert-blanc vert-pourpre.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"orchis-bouc"
 	},
@@ -499,7 +499,7 @@
 		"description":"L\u2019Orchis g\u00e9ant (Himantoglossum robertianum) \r\nL\u2019Orchis g\u00e9ant est une plante herbac\u00e9e vivace qui mesure de 20 \u00e0 80 cm. Ses feuilles sont ovales, larges, charnues et luisantes, elles sont dispos\u00e9es en rosettes tandis que les feuilles sup\u00e9rieures sont dress\u00e9es. Ses fleurs sont pourpres ros\u00e9es plus ou moins ponctu\u00e9es. Leur label est allong\u00e9es et dispose de 4 lobes oblongs, l\u2019\u00e9peron est court et \u00e9pais. L\u2019inflorescence est un \u00e9pi dense. \r\nElle fleurit de janvier \u00e0 avril, sur des lieux sec, des pelouses et des bois clairs, mais \u00e9galement de plus en plus souvent au bord des routes. En effet, cette esp\u00e8ces autrefois rare est devenue fr\u00e9quente, elle semble profiter des activit\u00e9s anthropiques. Originaire du pourtour m\u00e9diterran\u00e9en elle remonte peu \u00e0 peu vers le nord, c\u2019est pour cela qu\u2019elle est tr\u00e8s int\u00e9ressante \u00e0 \u00e9tudier dans le cadre de l\u2019ODS.\r\nL\u2019Orchis g\u00e9ant (Himantoglossum robertianum) \r\nL\u2019Orchis g\u00e9ant est une plante herbac\u00e9e vivace qui mesure de 20 \u00e0 80 cm. Ses feuilles sont ovales, larges, charnues et luisantes, elles sont dispos\u00e9es en rosettes tandis que les feuilles sup\u00e9rieures sont dress\u00e9es. Ses fleurs sont pourpres ros\u00e9es plus ou moins ponctu\u00e9es. Leur label est allong\u00e9es et dispose de 4 lobes oblongs, l\u2019\u00e9peron est court et \u00e9pais. L\u2019inflorescence est un \u00e9pi dense. \r\nElle fleurit de janvier \u00e0 avril, sur des lieux sec, des pelouses et des bois clairs, mais \u00e9galement de plus en plus souvent au bord des routes. En effet, cette esp\u00e8ces autrefois rare est devenue fr\u00e9quente, elle semble profiter des activit\u00e9s anthropiques. Originaire du pourtour m\u00e9diterran\u00e9en elle remonte peu \u00e0 peu vers le nord, c\u2019est pour cela qu\u2019elle est tr\u00e8s int\u00e9ressante \u00e0 \u00e9tudier dans le cadre de l\u2019ODS.\r\nL\u2019Orchis g\u00e9ant (Himantoglossum robertianum) \r\nL\u2019Orchis g\u00e9ant est une plante herbac\u00e9e vivace qui mesure de 20 \u00e0 80 cm. Ses feuilles sont ovales, larges, charnues et luisantes, elles sont dispos\u00e9es en rosettes tandis que les feuilles sup\u00e9rieures sont dress\u00e9es. Ses fleurs sont pourpres ros\u00e9es plus ou moins ponctu\u00e9es. Leur label est allong\u00e9es et dispose de 4 lobes oblongs, l\u2019\u00e9peron est court et \u00e9pais. L\u2019inflorescence est un \u00e9pi dense. \r\nElle fleurit de janvier \u00e0 avril, sur des lieux sec, des pelouses et des bois clairs, mais \u00e9galement de plus en plus souvent au bord des routes. En effet, cette esp\u00e8ces autrefois rare est devenue fr\u00e9quente, elle semble profiter des activit\u00e9s anthropiques. Originaire du pourtour m\u00e9diterran\u00e9en elle remonte peu \u00e0 peu vers le nord, c\u2019est pour cela qu\u2019elle est tr\u00e8s int\u00e9ressante \u00e0 \u00e9tudier dans le cadre de l\u2019ODS.\r\n\r\n<p> Source : Guide de la flore des Alpes-Maritime du Mercantour \u00e0 la M\u00e9diterran\u00e9e par Lionel Carles et Ludovic Th\u00e9bault <p>\r\n",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"orchis-geant"
 	},
@@ -509,7 +509,7 @@
 		"description":"L\u2019Orchis sureau est une plante herbac\u00e9e vivace petite et robuste avec une tige de 10 \u00e0 30 cm.\r\nLes feuilles sont ovales assez larges, verniss\u00e9es, de couleur vert p\u00e2le et \u00e0 nervures m\u00e9dianes marqu\u00e9es. Elles sont r\u00e9parties sur toute la tige.\r\nL\u2019inflorescence est en \u00e9pi dense, court, de forme plus ou moins ovo\u00efde et haut de 4 \u00e0 7 cm.\r\nLes fleurs sont de taille moyenne, de couleur jaune ou rouge, rarement rose saumon. Ces diff\u00e9rences de couleurs sont observables sur une m\u00eame station. Le s\u00e9pale dorsal et les p\u00e9tales forment un casque. Les s\u00e9pales lat\u00e9raux sont \u00e9tal\u00e9s.\r\nLe labelle est trilob\u00e9 avec les lobes lat\u00e9raux plus ou moins rabattus vers l\u2019arri\u00e8re. Sa base est plus claire et pr\u00e9sente des ponctuations rouge\u00e2tre. L\u2019\u00e9peron est long, \u00e9pais, \u00e9galant ou d\u00e9passant l\u2019ovaire et incurv\u00e9 vers le bas.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"orchis-sureau"
 	},
@@ -519,7 +519,7 @@
 		"description":"Le perce neige est une plante vivace \u00e0 bulbe, de 15 \u00e0 25 centim\u00e8tres de haut.\r\nLes feuilles, par 2, sont lin\u00e9aires, plantes et car\u00e9n\u00e9es. Elles sont plus courte que la tige cylindrique.\r\nLa fleur solitaire est blanche et pendante. Les p\u00e9tales sont regroup\u00e9s en cloche au centre des 3 grands s\u00e9pales \u00e9tal\u00e9s blancs. Les \u00e9tamines sont jaune-orang\u00e9, \u00e0 filets tr\u00e8s courts et \u00e0 anth\u00e8res dress\u00e9es. Le stigmate est simple.\r\nLe fruit est une capsule charnue.\r\nFloraison : De Janvier \u00e0 mars selon les r\u00e9gions \r\n",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"perce-neige"
 	},
@@ -529,7 +529,7 @@
 		"description":"Taraxacum est un genre de plantes dicotyl\u00e9dones an\u00e9mochores appartenant \u00e0 la vaste famille des Asteraceae (Compos\u00e9es). C'est le genre des \u00ab pissenlits \u00bb v\u00e9ritables.\r\nLes esp\u00e8ces de Taraxacum se caract\u00e9risent par ce qu'on appelle couramment la fleur, qui est en fait un capitule, inflorescence dans laquelle les fleurs individuelles, les fleurons, sont ins\u00e9r\u00e9es les unes \u00e0 c\u00f4t\u00e9 des autres sur un r\u00e9ceptacle floral commun, les fleurons ext\u00e9rieurs portant souvent un ligule, languette qui simule le p\u00e9tale d'une fleur simple.\r\nDans la famille des Ast\u00e9rac\u00e9es, les pissenlits appartiennent \u00e0 la sous-famille des Lactucoideae, \u00e0 cause du latex qu'ils contiennent. On les classe aussi dans la tribu des Liguliflores en raison de leurs fleurs ligul\u00e9es (dont les extr\u00e9mit\u00e9s forment des languettes).\r\nLe nom g\u00e9n\u00e9rique Taraxacum semble venir de l'arabe tharakhchakon, qui d\u00e9signait une plante semblable au pissenlit commun.\r\nLe nom semble provenir, en parall\u00e8le, du grec ancien \u03c4\u03ac\u03c1\u03b1\u03be\u03b9\u03c2 \/ t\u00e1raxis, qui d\u00e9signait une inflammation de l'\u0153il : le latex du pissenlit passait en effet pour calmer les irritations oculaires.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"pissenlit"
 	},
@@ -539,7 +539,7 @@
 		"description":"Plante herbac\u00e9e vivace de 10-30 cm.\r\nLa tige (hampe florale) est couverte de poils cotonneux, elle est droite, ferme et plus longue que les feuilles.\r\nLes feuilles sont en rosette \u00e0 la base, ovales, rid\u00e9es et se r\u00e9tr\u00e9cissent brusquement en un large p\u00e9tiole, la face\r\ninf\u00e9rieure est tr\u00e8s l\u00e9g\u00e8rement poilue.\r\nLes fleurs sont jaune-vif avec 5 taches orang\u00e9es \u00e0 l\u2019int\u00e9rieur. Tr\u00e8s odorantes. Elles sont \u00e0 plusieurs au bout\r\nde la tige et ont tendance \u00e0 toutes se pencher du m\u00eame cot\u00e9. Elles sont entour\u00e9es d\u2019un long tube (le calice) vert p\u00e2le en forme de clochette.\r\nLe fruit est une capsule ovo\u00efde dans le calice.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"primevere"
 	},
@@ -549,7 +549,7 @@
 		"description":"Plante vivace de 1-2 dm. La tige est cotonneuse, et pourvue d'\u00e9cailles. La feuilles se d\u00e9veloppant apr\u00e8s les fleurs sont toutes radicales, souvent tr\u00e8s amples, p\u00e9tiol\u00e9es, vertes en dessus, blanches ou gris\u00e2tres et tomenteuses (avec des poils) en dessous. La fleur est dress\u00e9e solitaire, terminant la tige, souvent pench\u00e9e apr\u00e8s la floraison. \r\n\r\nFloraison : Mars - Avril\r\n\r\n- fleurs jaunes \u00e0 ligules de la circonf\u00e9rence d\u00e9passant les fleurs du centre.",
 		"type_id":2,
 		"type_name":"herbacées",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61",
 		"is_active":1,
 		"picture":"tussilage"
 	},
