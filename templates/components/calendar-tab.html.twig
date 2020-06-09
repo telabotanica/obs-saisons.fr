@@ -66,7 +66,7 @@
                     {% set stage = eventsSpecies[i-1] %}
 
                     {# Displays the calendar grid and lines titles #}
-                    <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ periodsNames[stage.event.name] }}{{ stage.species.type.id == 1 ? " - stade #{stage.event.stadeBbch}" }}</div>
+                    <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stage {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">{{ periodsNames[stage.event.name] }}{{ stage.species.type.name == 'arbres' ? " - stade #{stage.event.stadeBbch}" }}</div>
                     <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-row {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
 
                     {# périods of less frequent observations#}
@@ -94,14 +94,13 @@
                             <div class="stage-period {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:30;grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};opacity:1;" }}"></div>
                         {% endif %}
                     {% endif %}
-
                 {% endfor %}
 
                 {# Displays observations #}
                 {% for obsChip in setObsChips(individual) %}
                     {% include 'components/obs_chips.html.twig' with {
                         observations: obsChip.observations,
-                        animal: (individual.species.type.reign != 'plantes'),
+                        isAnimal: (individual.species.type.reign != 'plantes'),
                         hide: (obsChip.year != first_year)
                     } %}
                 {% endfor %}
