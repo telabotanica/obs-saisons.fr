@@ -26,6 +26,7 @@ const $species = $('#individual_species');
 const $latitude = $('#station_latitude');
 const $longitude = $('#station_longitude');
 const $locality = $('#station_locality');
+const $observationDate = $('#observation_date');
 
 
 //map configuration
@@ -83,7 +84,8 @@ function onOpenOverlay() {
                     openDetailsField();
                     onFileEvent();
                     onChangeSetIndividual();
-                    onChangeObsEventUpdateHelpInfos();
+                    onChangeObsEvent();
+                    onChangeObsDate();
                     observationOvelayManageIndividualAndEvents(dataAttrs);
                     break;
                 case 'individual':
@@ -152,6 +154,7 @@ function closeOverlay($overlay) {
     }
     if ($overlay.hasClass('observation')) {
         observationOvelayManageIndividualAndEvents($('.open-observation-form-all-station').data());
+        $('.ods-form-warning').addClass('hidden').text('');
     } else if ($overlay.hasClass('individual')) {
         individualOvelayManageSpecies($('.open-individual-form-all-station').data().species.toString(), true);
     } else if ($overlay.hasClass('obs-infos')) {
@@ -275,29 +278,72 @@ function onChangeSetIndividual() {
         } else {
             $event.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
         }
-        $event.trigger('change');// triggers onChangeObsEventUpdateHelpInfos()
+        $event.trigger('change');// triggers onChangeObsEvent()
     });
 }
 
-function onChangeObsEventUpdateHelpInfos() {
-    $event.on('change', function () {
-        let $saisieAide = $('.saisie-aide.event');
+function onChangeObsEvent() {
+    $event.off('change').on('change', function () {
+        let isValidEvent = valOk($(this).val());
 
-        $('img', $saisieAide).remove();
-
-        if (valOk($(this).val())) {
-            let $selectedEvent = $('.event-option:selected', this),
-                eventStage = $selectedEvent.text();
-
-            $saisieAide.removeClass('hidden').prepend(
-                '<img src="'+ $selectedEvent.data('picture') + '" alt="' + eventStage + '" width="80" height="80">'
-            );
-            $('.text-aide-1.event').text(eventStage);
-            $('.text-aide-2.event').text($selectedEvent.data('description'));
-        } else {
-            $saisieAide.addClass('hidden');
+        updateHelpInfos(isValidEvent);
+        if (isValidEvent) {
+            if (valOk($observationDate.val())) {
+                checkAberrationsObsDays();
+            }
         }
     });
+}
+
+function updateHelpInfos(isValidEvent) {
+    let $saisieAide = $('.saisie-aide.event');
+
+    $('img', $saisieAide).remove();
+
+    if (isValidEvent) {
+        let $selectedEvent = $('.event-option:selected', $event),
+            eventStage = $selectedEvent.text();
+
+        $saisieAide.removeClass('hidden').prepend(
+            '<img src="'+ $selectedEvent.data('picture') + '" alt="' + eventStage + '" width="80" height="80">'
+        );
+        $('.text-aide-1.event').text(eventStage);
+        $('.text-aide-2.event').text($selectedEvent.data('description'));
+    } else {
+        $saisieAide.addClass('hidden');
+    }
+}
+
+function onChangeObsDate() {
+    $observationDate.off('change').on('change', function () {
+        if(valOk($(this).val()) && valOk($event.val())) {
+            checkAberrationsObsDays();
+        }
+    });
+}
+
+function checkAberrationsObsDays() {
+    let $selectedEvent = $('.event-option:selected', $event),
+        aberrationStartDay = $selectedEvent.data('aberrationStartDay'),
+        aberrationEndDay = $selectedEvent.data('aberrationEndDay'),
+        observationDay = $observationDate.val().slice(5),
+        message = '';
+
+    if(
+        valOk(aberrationStartDay) && valOk(aberrationEndDay) && valOk(observationDay)
+        && (
+            parseInt(aberrationStartDay.replace('-', '')) > parseInt(observationDay.replace('-', ''))
+            || parseInt(aberrationEndDay.replace('-', '')) < parseInt(observationDay.replace('-', ''))
+        )
+    ) {
+        let startDate = new Date('2000-'+aberrationStartDay),
+            endDate = new Date('2000-'+aberrationEndDay),
+            displayedStartDate = startDate.toLocaleDateString('fr-FR', {day: 'numeric', month: 'long'}),
+            displayedEndDate = endDate.toLocaleDateString('fr-FR', {day: 'numeric', month: 'long'});
+
+        message = 'Votre donnée semble anormale, elle ne correspond pas à la moyenne saisonnière (du '+displayedStartDate+' au '+displayedEndDate+'), si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message';
+    }
+    $('.ods-form-warning').toggleClass('hidden', message === '').text(message);
 }
 
 // Location events management
