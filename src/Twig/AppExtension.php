@@ -10,7 +10,7 @@ use App\Entity\Observation;
 use App\Entity\Species;
 use App\Service\SlugGenerator;
 use Doctrine\Persistence\ManagerRegistry;
-use IntlDateFormatter;
+use App\Service\HandleDateTime;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -82,9 +82,8 @@ class AppExtension extends AbstractExtension
         $endDateSplit = explode('-', $endDate->format('Y-m-d'));
         $pattern = 'd MMMM Y';
         $patternArray = array_reverse(explode(' ', $pattern));
-        $fmt = $this->fmtCreate($pattern);
-        $displayedEndDate = datefmt_format($fmt, $endDate);
-
+        $transDateTime = new HandleDateTime();
+        $displayedEndDate = $transDateTime->dateTransFormat($pattern, $endDate);
         if ($startDateSplit === $endDateSplit) {
             return $displayedEndDate;
         }
@@ -96,9 +95,8 @@ class AppExtension extends AbstractExtension
                 break;
             }
         }
-        $fmt = $this->fmtCreate($pattern);
 
-        return datefmt_format($fmt, $startDate).' '.$separator.' '.$displayedEndDate;
+        return $transDateTime->dateTransFormat($pattern, $startDate).' '.$separator.' '.$displayedEndDate;
     }
 
     public function setStationCards(array $stations): array
@@ -245,17 +243,5 @@ class AppExtension extends AbstractExtension
         }
 
         return $speciesDisplayData;
-    }
-
-    private function fmtCreate(string $pattern): IntlDateFormatter
-    {
-        return datefmt_create(
-            'fr_FR',
-            null,
-            null,
-            null,
-            null,
-            $pattern
-        );
     }
 }
