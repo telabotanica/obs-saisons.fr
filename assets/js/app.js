@@ -27,6 +27,7 @@ const $latitude = $('#station_latitude');
 const $longitude = $('#station_longitude');
 const $locality = $('#station_locality');
 const $observationDate = $('#observation_date');
+const imageType = /^image\//;
 
 
 //map configuration
@@ -249,36 +250,56 @@ function onChangeSetIndividual() {
 
         if (valOk($selectedIndividual)) {
             let speciesPicture = $selectedIndividual.data('picture'),
-                availableEvents = getDataAttrValuesArray($selectedIndividual.data('availableEvents').toString());
+                availableEvents = getDataAttrValuesArray($selectedIndividual.data('availableEvents').toString()),
+                aberrationsDays = $selectedIndividual.data('aberrationsDays');
 
             $event.removeAttr('disabled').prop('disabled', false);
             if (1 === availableEvents.length) {
                 $event
                     .addClass('disabled')
-                    .find('.event-option.event-' + availableEvents[0])
-                    .prop('selected', true).attr('selected','selected')
-                    .prop('hidden', false).removeAttr('hidden')
-                    .data('picture', '/media/species/' + speciesPicture + '.jpg')
+                    .find('.event-option.event-'+availableEvents[0])
+                        .prop('selected', true).attr('selected','selected')
+                        .prop('hidden', false).removeAttr('hidden')
+                        .data('picture', '/media/species/' + speciesPicture + '.jpg')
                 ;
+                if(0 < aberrationsDays.length) {
+                    setEventAberrationDaysDataAttr(availableEvents[0], aberrationsDays);
+                }
             } else {
                 let $eventOption = null;
 
                 $event.removeClass('disabled');
                 for (let i = 0; i < availableEvents.length; i++) {
-                    $eventOption = $('.event-option.event-' + availableEvents[i], $event);
+                    $eventOption = $('.event-option.event-'+availableEvents[i], $event);
 
                     let eventPictureSuffix = $eventOption.data('pictureSuffix');
 
                     $eventOption
                         .prop('hidden', false).removeAttr('hidden')
-                        .data('picture','/media/species/' + speciesPicture + eventPictureSuffix + '.jpg')
+                        .data('picture','/media/species/'+speciesPicture+eventPictureSuffix+'.jpg')
                     ;
+                    if(0 < aberrationsDays.length) {
+                        setEventAberrationDaysDataAttr(availableEvents[i], aberrationsDays);
+                    }
                 }
             }
         } else {
             $event.addClass('disabled').attr('disabled', 'disabled').prop('disabled', true);
         }
         $event.trigger('change');// triggers onChangeObsEvent()
+    });
+}
+
+function setEventAberrationDaysDataAttr(eventId, aberrationsDays) {
+    let eventOptionEl = $('.event-option.event-'+eventId, $event)[0],
+        eventAberrationDays = aberrationsDays.filter(function (aberrationDays) {
+            return parseInt(aberrationDays.eventId) === parseInt(eventId);
+        })[0];
+
+    $.each(eventAberrationDays, function (dataAttrName, value) {
+        if('eventId' !== dataAttrName) {
+            eventOptionEl.dataset[dataAttrName] = value;
+        }
     });
 }
 
@@ -315,6 +336,7 @@ function updateHelpInfos(isValidEvent) {
 }
 
 function onChangeObsDate() {
+
     $observationDate.off('change').on('change', function () {
         if(valOk($(this).val()) && valOk($event.val())) {
             checkAberrationsObsDays();
@@ -329,19 +351,18 @@ function checkAberrationsObsDays() {
         observationDay = $observationDate.val().slice(5),
         message = '';
 
+    function comparativeTimeValue(day) {
+        return parseInt(day.replace('-', ''));
+    }
+
     if(
         valOk(aberrationStartDay) && valOk(aberrationEndDay) && valOk(observationDay)
         && (
-            parseInt(aberrationStartDay.replace('-', '')) > parseInt(observationDay.replace('-', ''))
-            || parseInt(aberrationEndDay.replace('-', '')) < parseInt(observationDay.replace('-', ''))
+            comparativeTimeValue(aberrationStartDay) > comparativeTimeValue(observationDay)
+            || comparativeTimeValue(aberrationEndDay) < comparativeTimeValue(observationDay)
         )
     ) {
-        let startDate = new Date('2000-'+aberrationStartDay),
-            endDate = new Date('2000-'+aberrationEndDay),
-            displayedStartDate = startDate.toLocaleDateString('fr-FR', {day: 'numeric', month: 'long'}),
-            displayedEndDate = endDate.toLocaleDateString('fr-FR', {day: 'numeric', month: 'long'});
-
-        message = 'Votre donnée semble anormale, elle ne correspond pas à la moyenne saisonnière (du '+displayedStartDate+' au '+displayedEndDate+'), si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message';
+        message = 'Votre donnée semble anormale, elle ne correspond pas à la moyenne saisonnière (du '+$selectedEvent.data('displayedStartDate')+' au '+$selectedEvent.data('displayedEndDate')+'), si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message';
     }
     $('.ods-form-warning').toggleClass('hidden', message === '').text(message);
 }
@@ -457,6 +478,7 @@ function onFileEvent() {
             .on('drop', function(event) {
                 droppedFiles = event.originalEvent.dataTransfer.files;
                 displayThumbs(droppedFiles);
+                ajaxSendFile($(this), droppedFiles);
             })
         ;
 
@@ -468,15 +490,13 @@ function onFileEvent() {
 }
 
 function displayThumbs(files) {
-    let uploadZonePlaceholder = $('.upload-zone-placeholder'),
-        $picture = $('.upload-zone .upload-input');
+    let uploadZonePlaceholder = $('.upload-zone-placeholder');
 
     if (!files) {
         uploadZonePlaceholder.removeClass('hidden').text('L’image n’a pas pu être téléchargée.');
     }
 
     let file = files[0];
-    const imageType = /^image\//;
 
     if (!imageType.test(file.type)) {
         uploadZonePlaceholder.removeClass('hidden').text('Le format du fichier n’est pas valide.');
@@ -494,6 +514,51 @@ function displayThumbs(files) {
     })($img);
     reader.readAsDataURL(file);
     uploadZonePlaceholder.addClass('hidden');
+}
+
+function ajaxSendFile($picture, files) {
+    let $form = $picture.closest('form');
+
+    $form.on('submit', function(e) {
+        if ($form.hasClass('is-uploading')) {
+            return false;
+        }
+
+        $form.addClass('is-uploading').removeClass('is-error');
+
+        e.preventDefault();
+
+        let ajaxData = new FormData($form.get(0));
+
+        if (files) {
+            let file = files[0];
+
+            if (!imageType.test(file.type)) {
+                return false;
+            }
+            ajaxData.append($picture.attr('name'), file);
+        }
+
+        $.ajax({
+            type: $form.attr('method'),
+            url: $form.attr('action'),
+            data: ajaxData,
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false,
+            complete: function () {
+                $form.removeClass('is-uploading');
+            },
+            success: function (data) {
+                $form.addClass(data.success ? 'is-success' : 'is-error');
+                window.location.href = data.redirect;
+            },
+            error: function () {
+                console.log('Drag’n’drop file upload failed.');
+            }
+        });
+    });
 }
 
 function openDetailsField() {
