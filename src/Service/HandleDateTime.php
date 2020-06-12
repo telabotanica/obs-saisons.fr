@@ -13,7 +13,7 @@ class HandleDateTime
         return datefmt_format($fmt, $dateTime);
     }
 
-    public function fmtCreate(string $pattern): IntlDateFormatter
+    private function fmtCreate(string $pattern): IntlDateFormatter
     {
         return datefmt_create(
             'fr_FR',
