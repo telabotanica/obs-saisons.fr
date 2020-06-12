@@ -14,6 +14,7 @@ use App\Security\Voter\UserVoter;
 use App\Service\SlugGenerator;
 use App\Service\UploadService;
 use DateTime;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -70,6 +71,13 @@ class StationsController extends PagesController
                 $entityManager = $doctrine->getManager();
                 $entityManager->persist($station);
                 $entityManager->flush();
+
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse([
+                        'success' => true,
+                        'redirect' => $request->getUri(),
+                    ]);
+                }
 
                 return $this->redirect($request->getUri());
             }
@@ -157,6 +165,12 @@ class StationsController extends PagesController
                     break;
                 default:
                     break;
+            }
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'success' => true,
+                    'redirect' => $request->getUri(),
+                ]);
             }
 
             return $this->redirect($request->getUri());
