@@ -55,6 +55,8 @@ class Event
         '1ère apparition' => 'apparition',
     ];
 
+    const ANIMALS_EVENT = '1ère apparition';
+
     public function getId(): ?int
     {
         return $this->id;
