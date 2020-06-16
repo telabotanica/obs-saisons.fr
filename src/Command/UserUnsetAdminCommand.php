@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserUnsetAdminCommand extends Command
 {
-    protected static $defaultName = 'user:unset-admin';
+    protected static $defaultName = 'ods:user:unset-admin';
 
     private $manager;
 

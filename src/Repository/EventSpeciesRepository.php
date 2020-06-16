@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\EventSpecies;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * @method EventSpecies|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,26 @@ class EventSpeciesRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, EventSpecies::class);
+    }
+
+    /**
+     * @return EventSpecies[]
+     */
+    public function findFeatured()
+    {
+        $qb = $this->createQueryBuilder('es');
+
+        return $qb
+            ->innerJoin('es.event', 'e')
+            ->innerJoin('es.species', 's')
+            ->addSelect(['e', 's'])
+            ->andWhere($qb->expr()->eq('e.is_observable', $qb->expr()->literal(true)))
+            ->andWhere($qb->expr()->eq('s.is_active', $qb->expr()->literal(true)))
+            ->andWhere($qb->expr()->isNotNull('es.featuredStartDay'))
+            ->andWhere($qb->expr()->isNotNull('es.featuredEndDay'))
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

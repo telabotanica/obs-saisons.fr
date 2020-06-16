@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class EventsSpeciesGenerateCommand extends Command
 {
-    protected static $defaultName = 'eventspecies:generate';
+    protected static $defaultName = 'ods:generate:eventspecies';
 
     private $manager;
 

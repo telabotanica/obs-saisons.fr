@@ -1,0 +1,293 @@
+species,stade,start,end
+Abies alba L.,11,147,162
+Abies alba L.,15,175,190
+Abies alba L.,61,180,195
+Abies alba L.,65,208,223
+Abies alba L.,85,278,293
+Abies alba L.,91,NA,NA
+Abies alba L.,95,NA,NA
+Aesculus hippocastanum,11,55,70
+Aesculus hippocastanum,15,61,76
+Aesculus hippocastanum,61,77,92
+Aesculus hippocastanum,65,87,102
+Aesculus hippocastanum,85,189,204
+Aesculus hippocastanum,91,NA,NA
+Aesculus hippocastanum,95,NA,NA
+Betula pendula,11,39,54
+Betula pendula,15,77,92
+Betula pendula,61,38,53
+Betula pendula,65,54,69
+Betula pendula,85,195,210
+Betula pendula,91,211,226
+Betula pendula,95,244,259
+Celtis australis,11,58,73
+Celtis australis,15,70,85
+Celtis australis,61,59,74
+Celtis australis,65,58,73
+Celtis australis,85,162,177
+Celtis australis,91,283,298
+Celtis australis,95,28,43
+Cercis siliquastrum,11,68,83
+Cercis siliquastrum,15,74,89
+Cercis siliquastrum,61,56,71
+Cercis siliquastrum,65,60,75
+Cercis siliquastrum,85,134,149
+Cercis siliquastrum,91,250,265
+Cercis siliquastrum,95,40,55
+Corylus avellana,11,37,52
+Corylus avellana,15,56,71
+Corylus avellana,61,-14,1
+Corylus avellana,65,-9,6
+Corylus avellana,85,255,270
+Corylus avellana,91,255,270
+Corylus avellana,95,275,290
+Fagus sylvatica L.,11,85,100
+Fagus sylvatica L.,15,95,110
+Fagus sylvatica L.,61,95,110
+Fagus sylvatica L.,65,105,120
+Fagus sylvatica L.,85,245,260
+Fagus sylvatica L.,91,265,280
+Fagus sylvatica L.,95,275,290
+Forsythia intermedia,11,51,66
+Forsythia intermedia,15,50,65
+Forsythia intermedia,61,20,35
+Forsythia intermedia,65,48,63
+Forsythia intermedia,85,NA,NA
+Forsythia intermedia,91,99,114
+Forsythia intermedia,95,88,103
+Fraxinus excelsior,11,57,72
+Fraxinus excelsior,15,69,84
+Fraxinus excelsior,61,5,20
+Fraxinus excelsior,65,9,24
+Fraxinus excelsior,85,117,132
+Fraxinus excelsior,91,225,240
+Fraxinus excelsior,95,245,260
+Juglans regia L.,11,93,108
+Juglans regia L.,15,97,112
+Juglans regia L.,61,100,115
+Juglans regia L.,65,99,114
+Juglans regia L.,85,256,271
+Juglans regia L.,91,279,294
+Juglans regia L.,95,292,307
+Larix decidua,11,71,86
+Larix decidua,15,80,95
+Larix decidua,61,81,96
+Larix decidua,65,84,99
+Larix decidua,85,215,230
+Larix decidua,91,255,270
+Larix decidua,95,285,300
+Malus domestica,11,69,84
+Malus domestica,15,75,90
+Malus domestica,61,86,101
+Malus domestica,65,91,106
+Malus domestica,85,256,271
+Malus domestica,91,268,283
+Malus domestica,95,274,289
+Malus pumila var. cox orange pippin,11,105,120
+Malus pumila var. cox orange pippin,15,110,125
+Malus pumila var. cox orange pippin,61,80,95
+Malus pumila var. cox orange pippin,65,85,100
+Malus pumila var. cox orange pippin,85,237,252
+Malus pumila var. cox orange pippin,91,256,271
+Malus pumila var. cox orange pippin,95,279,294
+Malus pumila var. golden delicious,11,56,71
+Malus pumila var. golden delicious,15,83,98
+Malus pumila var. golden delicious,61,81,96
+Malus pumila var. golden delicious,65,83,98
+Malus pumila var. golden delicious,85,232,247
+Malus pumila var. golden delicious,91,242,257
+Malus pumila var. golden delicious,95,278,293
+Malus pumila var. reine de reinette,11,75,90
+Malus pumila var. reine de reinette,15,80,95
+Malus pumila var. reine de reinette,61,81,96
+Malus pumila var. reine de reinette,65,87,102
+Malus pumila var. reine de reinette,85,225,240
+Malus pumila var. reine de reinette,91,240,255
+Malus pumila var. reine de reinette,95,263,278
+Picea abies,11,95,110
+Picea abies,15,48,63
+Picea abies,61,61,76
+Picea abies,65,98,113
+Picea abies,85,NA,NA
+Picea abies,91,NA,NA
+Picea abies,95,NA,NA
+Platanus acerifolia,11,22,37
+Platanus acerifolia,15,75,90
+Platanus acerifolia,61,79,94
+Platanus acerifolia,65,77,92
+Platanus acerifolia,85,195,210
+Platanus acerifolia,91,205,220
+Platanus acerifolia,95,28,43
+Populus nigra var. italica Münchh,11,94,109
+Populus nigra var. italica Münchh,15,103,118
+Populus nigra var. italica Münchh,61,69,84
+Populus nigra var. italica Münchh,65,69,84
+Populus nigra var. italica Münchh,85,145,160
+Populus nigra var. italica Münchh,91,203,218
+Populus nigra var. italica Münchh,95,260,275
+Prunus armeniaca,11,60,75
+Prunus armeniaca,15,65,80
+Prunus armeniaca,61,45,60
+Prunus armeniaca,65,49,64
+Prunus armeniaca,85,145,160
+Prunus armeniaca,91,250,265
+Prunus armeniaca,95,260,275
+Prunus armeniaca var. bergeron,11,79,94
+Prunus armeniaca var. bergeron,15,85,100
+Prunus armeniaca var. bergeron,61,33,48
+Prunus armeniaca var. bergeron,65,37,52
+Prunus armeniaca var. bergeron,85,194,209
+Prunus armeniaca var. bergeron,91,226,241
+Prunus armeniaca var. bergeron,95,253,268
+Prunus armeniaca var. rouge du Roussillon,11,67,82
+Prunus armeniaca var. rouge du Roussillon,15,98,113
+Prunus armeniaca var. rouge du Roussillon,61,52,67
+Prunus armeniaca var. rouge du Roussillon,65,54,69
+Prunus armeniaca var. rouge du Roussillon,85,195,210
+Prunus armeniaca var. rouge du Roussillon,91,225,240
+Prunus armeniaca var. rouge du Roussillon,95,245,260
+Prunus avium,11,68,83
+Prunus avium,15,73,88
+Prunus avium,61,64,79
+Prunus avium,65,68,83
+Prunus avium,85,100,115
+Prunus avium,91,137,152
+Prunus avium,95,236,251
+Prunus avium var. burlat,11,70,85
+Prunus avium var. burlat,15,82,97
+Prunus avium var. burlat,61,63,78
+Prunus avium var. burlat,65,73,88
+Prunus avium var. burlat,85,134,149
+Prunus avium var. burlat,91,234,249
+Prunus avium var. burlat,95,239,254
+Prunus cerasus var. griotte de Montmorency,11,95,110
+Prunus cerasus var. griotte de Montmorency,15,109,124
+Prunus cerasus var. griotte de Montmorency,61,74,89
+Prunus cerasus var. griotte de Montmorency,65,92,107
+Prunus cerasus var. griotte de Montmorency,85,148,163
+Prunus cerasus var. griotte de Montmorency,91,297,312
+Prunus cerasus var. griotte de Montmorency,95,307,322
+Prunus domestica,11,46,61
+Prunus domestica,15,62,77
+Prunus domestica,61,33,48
+Prunus domestica,65,39,54
+Prunus domestica,85,116,131
+Prunus domestica,91,217,232
+Prunus domestica,95,220,235
+Prunus domestica var. mirabelle de Nancy,11,20,35
+Prunus domestica var. mirabelle de Nancy,15,66,81
+Prunus domestica var. mirabelle de Nancy,61,35,50
+Prunus domestica var. mirabelle de Nancy,65,46,61
+Prunus domestica var. mirabelle de Nancy,85,105,120
+Prunus domestica var. mirabelle de Nancy,91,224,239
+Prunus domestica var. mirabelle de Nancy,95,235,250
+Prunus domestica var. quetsche,11,99,114
+Prunus domestica var. quetsche,15,97,112
+Prunus domestica var. quetsche,61,80,95
+Prunus domestica var. quetsche,65,89,104
+Prunus domestica var. quetsche,85,115,130
+Prunus domestica var. quetsche,91,215,230
+Prunus domestica var. quetsche,95,235,250
+Prunus dulcis,11,9,24
+Prunus dulcis,15,33,48
+Prunus dulcis,61,-2,13
+Prunus dulcis,65,0,15
+Prunus dulcis,85,112,127
+Prunus dulcis,91,206,221
+Prunus dulcis,95,213,228
+Prunus dulcis var. princesse,11,62,77
+Prunus dulcis var. princesse,15,53,68
+Prunus dulcis var. princesse,61,50,65
+Prunus dulcis var. princesse,65,55,70
+Prunus dulcis var. princesse,85,115,130
+Prunus dulcis var. princesse,91,215,230
+Prunus dulcis var. princesse,95,235,250
+Pyrus communis,11,61,76
+Pyrus communis,15,57,72
+Pyrus communis,61,63,78
+Pyrus communis,65,73,88
+Pyrus communis,85,155,170
+Pyrus communis,91,206,221
+Pyrus communis,95,231,246
+Pyrus communis var. Williams,11,68,83
+Pyrus communis var. Williams,15,81,96
+Pyrus communis var. Williams,61,74,#VALEUR!
+Pyrus communis var. Williams,65,79,94
+Pyrus communis var. Williams,85,225,240
+Pyrus communis var. Williams,91,262,277
+Pyrus communis var. Williams,95,233,248
+Quercus pubescens,11,69,84
+Quercus pubescens,15,79,94
+Quercus pubescens,61,88,103
+Quercus pubescens,65,88,103
+Quercus pubescens,85,120,135
+Quercus pubescens,91,244,259
+Quercus pubescens,95,55,70
+Robinia pseudoacacia,11,61,76
+Robinia pseudoacacia,15,84,99
+Robinia pseudoacacia,61,100,115
+Robinia pseudoacacia,65,94,109
+Robinia pseudoacacia,85,215,230
+Robinia pseudoacacia,91,231,246
+Robinia pseudoacacia,95,267,282
+Sambucus nigra L.,11,35,50
+Sambucus nigra L.,15,48,63
+Sambucus nigra L.,61,98,113
+Sambucus nigra L.,65,116,131
+Sambucus nigra L.,85,199,214
+Sambucus nigra L.,91,179,194
+Sambucus nigra L.,95,240,255
+Sorbus aucuparia,11,70,85
+Sorbus aucuparia,15,76,91
+Sorbus aucuparia,61,92,107
+Sorbus aucuparia,65,95,110
+Sorbus aucuparia,85,159,174
+Sorbus aucuparia,91,246,261
+Sorbus aucuparia,95,261,276
+Syringa vulgaris,11,53,68
+Syringa vulgaris,15,63,78
+Syringa vulgaris,61,74,89
+Syringa vulgaris,65,85,100
+Syringa vulgaris,85,195,210
+Syringa vulgaris,91,225,240
+Syringa vulgaris,95,235,250
+Viburnum tinus,11,4,19
+Viburnum tinus,15,12,27
+Viburnum tinus,61,-4,11
+Viburnum tinus,65,-6,9
+Viburnum tinus,85,3,18
+Viburnum tinus,91,NA,NA
+Viburnum tinus,95,NA,NA
+Astragalus tragacantha,61,98,113
+Cephalanthera longifolia,61,100,115
+Cistus albidus,61,84,99
+Colchicum autumnale L.,61,230,245
+Convallaria majalis L.,61,85,100
+Dactylorhiza sambucina,61,99,114
+Galanthus nivalis L.,61,3,18
+Himantoglossum hircinum,61,84,99
+Himantoglossum robertianum,61,37,52
+Himantopus himantopus,apparition,25,40
+Lavandula intermedia,61,152,167
+Malva sylvestris,61,24,39
+Papaver rhoeas L.,61,74,89
+Primula veris,61,37,52
+Spartium junceum,61,70,85
+Taraxacum officinale,61,5,20
+Tussilago farfara,61,14,29
+Apus apus,apparition,74,89
+Bufo bufo,apparition,23,38
+Coccinella sp.,apparition,20,35
+Cuculus canorus,apparition,55,70
+Delichon urbica,apparition,47,62
+Gonepteryx rhamni,apparition,15,30
+Hirundo rustica,apparition,52,67
+Lacerta bilineata,apparition,56,71
+Luscinia megarhynchos,apparition,66,81
+Malpolon monspessulanus,apparition,96,111
+Merops apiaster,apparition,72,87
+Milvus migrans,apparition,41,56
+Natrix natrix,apparition,65,80
+Podarcis muralis,apparition,19,34
+Salamandra salamandra,apparition,15,30
+Tarentola mauretanica,apparition,44,59

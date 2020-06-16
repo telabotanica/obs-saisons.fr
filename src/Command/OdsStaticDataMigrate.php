@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class OdsStaticDataMigrate extends Command
 {
-    protected static $defaultName = 'odsstaticdata:migrate';
+    protected static $defaultName = 'ods:bootstrap:all-static-data';
 
     private $manager;
 
@@ -24,18 +24,19 @@ class OdsStaticDataMigrate extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Migrate static data for ODS')
-            ->setHelp('Migrate static data for ODS');
+            ->setDescription('Bootstrap with all static data')
+            ->setHelp('Bootstrap with all static data');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $odsStaticDataMigrateCommandNames = [
-            'typespecies:import',
-            'species:import',
-            'events:import',
-            'eventspecies:generate',
-            'periods:import',
+            'ods:import:typespecies',
+            'ods:import:species',
+            'ods:import:events',
+            'ods:generate:eventspecies',
+            'ods:import:periods',
+            'ods:import:featured-species-dates',
         ];
 
         foreach ($odsStaticDataMigrateCommandNames as $commandName) {

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserDeactivateCommand extends Command
 {
-    protected static $defaultName = 'user:deactivate';
+    protected static $defaultName = 'ods:user:deactivate';
 
     private $manager;
 

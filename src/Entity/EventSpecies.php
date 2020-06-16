@@ -31,32 +31,42 @@ class EventSpecies
     /**
      * @ORM\column(type="integer", nullable=true)
      */
-    private $percentile_5;
+    private $percentile5;
 
     /**
      * @ORM\column(type="integer", nullable=true)
      */
-    private $percentile_95;
+    private $percentile95;
 
     /**
      * @ORM\column(type="integer", nullable=true)
      */
-    private $percentile_25;
+    private $percentile25;
 
     /**
      * @ORM\column(type="integer", nullable=true)
      */
-    private $percentile_75;
+    private $percentile75;
 
     /**
      * @ORM\column(type="integer", nullable=true)
      */
-    private $aberration_start_day;
+    private $aberrationStartDay;
 
     /**
      * @ORM\column(type="integer", nullable=true)
      */
-    private $aberration_end_day;
+    private $aberrationEndDay;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $featuredStartDay;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $featuredEndDay;
 
     public function __construct(Event $event, Species $species)
     {
@@ -88,72 +98,96 @@ class EventSpecies
 
     public function getPercentile5(): ?int
     {
-        return $this->percentile_5;
+        return $this->percentile5;
     }
 
-    public function setPercentile5(?int $percentile_5): self
+    public function setPercentile5(?int $percentile5): self
     {
-        $this->percentile_5 = $percentile_5;
+        $this->percentile5 = $percentile5;
 
         return $this;
     }
 
     public function getPercentile95(): ?int
     {
-        return $this->percentile_95;
+        return $this->percentile95;
     }
 
-    public function setPercentile95(?int $percentile_95): self
+    public function setPercentile95(?int $percentile95): self
     {
-        $this->percentile_95 = $percentile_95;
+        $this->percentile95 = $percentile95;
 
         return $this;
     }
 
     public function getPercentile25(): ?int
     {
-        return $this->percentile_25;
+        return $this->percentile25;
     }
 
-    public function setPercentile25(?int $percentile_25): self
+    public function setPercentile25(?int $percentile25): self
     {
-        $this->percentile_25 = $percentile_25;
+        $this->percentile25 = $percentile25;
 
         return $this;
     }
 
     public function getPercentile75(): ?int
     {
-        return $this->percentile_75;
+        return $this->percentile75;
     }
 
-    public function setPercentile75(?int $percentile_75): self
+    public function setPercentile75(?int $percentile75): self
     {
-        $this->percentile_75 = $percentile_75;
+        $this->percentile75 = $percentile75;
 
         return $this;
     }
 
     public function getAberrationStartDay(): ?int
     {
-        return $this->aberration_start_day;
+        return $this->aberrationStartDay;
     }
 
-    public function setAberrationStartDay(?int $aberration_start_day): self
+    public function setAberrationStartDay(?int $aberrationStartDay): self
     {
-        $this->aberration_start_day = $aberration_start_day;
+        $this->aberrationStartDay = $aberrationStartDay;
 
         return $this;
     }
 
     public function getAberrationEndDay(): ?int
     {
-        return $this->aberration_end_day;
+        return $this->aberrationEndDay;
     }
 
-    public function setAberrationEndDay(?int $aberration_end_day): self
+    public function setAberrationEndDay(?int $aberrationEndDay): self
     {
-        $this->aberration_end_day = $aberration_end_day;
+        $this->aberrationEndDay = $aberrationEndDay;
+
+        return $this;
+    }
+
+    public function getFeaturedStartDay(): ?int
+    {
+        return $this->featuredStartDay;
+    }
+
+    public function setFeaturedStartDay(?int $featuredStartDay): self
+    {
+        $this->featuredStartDay = $featuredStartDay;
+
+        return $this;
+    }
+
+    public function getFeaturedEndDay(): ?int
+    {
+        return $this->featuredEndDay;
+    }
+
+    public function setFeaturedEndDay(?int $featuredEndDay): self
+    {
+        $this->featuredEndDay = $featuredEndDay;
 
         return $this;
     }

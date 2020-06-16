@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class EventsImportCommand extends Command
 {
-    protected static $defaultName = 'events:import';
+    protected static $defaultName = 'ods:import:events';
 
     private $manager;
 
