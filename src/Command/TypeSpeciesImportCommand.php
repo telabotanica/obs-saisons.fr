@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TypeSpeciesImportCommand extends Command
 {
-    protected static $defaultName = 'typespecies:import';
+    protected static $defaultName = 'ods:import:typespecies';
 
     private $manager;
 

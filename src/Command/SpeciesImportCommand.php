@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SpeciesImportCommand extends Command
 {
-    protected static $defaultName = 'species:import';
+    protected static $defaultName = 'ods:import:events';
 
     private $manager;
 

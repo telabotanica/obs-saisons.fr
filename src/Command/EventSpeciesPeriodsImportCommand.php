@@ -15,7 +15,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class EventSpeciesPeriodsImportCommand extends Command
 {
-    protected static $defaultName = 'periods:import';
+    protected static $defaultName = 'ods:import:periods';
 
     private $manager;
 

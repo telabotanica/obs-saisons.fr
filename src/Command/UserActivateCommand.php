@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserActivateCommand extends Command
 {
-    protected static $defaultName = 'user:activate';
+    protected static $defaultName = 'ods:user:activate';
 
     private $manager;
 

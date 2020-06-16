@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserSetAdminCommand extends Command
 {
-    protected static $defaultName = 'user:set-admin';
+    protected static $defaultName = 'ods:user:set-admin';
 
     private $manager;
 
