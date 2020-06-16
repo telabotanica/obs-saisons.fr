@@ -36,6 +36,7 @@ class OdsStaticDataMigrate extends Command
             'ods:import:events',
             'ods:generate:eventspecies',
             'ods:import:periods',
+            'ods:import:featured-species-dates',
         ];
 
         foreach ($odsStaticDataMigrateCommandNames as $commandName) {
