@@ -211,7 +211,7 @@ Pyrus communis,91,206,221
 Pyrus communis,95,231,246
 Pyrus communis var. Williams,11,68,83
 Pyrus communis var. Williams,15,81,96
-Pyrus communis var. Williams,61,74,#VALEUR!
+Pyrus communis var. Williams,61,74,89
 Pyrus communis var. Williams,65,79,94
 Pyrus communis var. Williams,85,225,240
 Pyrus communis var. Williams,91,262,277
@@ -267,7 +267,6 @@ Dactylorhiza sambucina,61,99,114
 Galanthus nivalis L.,61,3,18
 Himantoglossum hircinum,61,84,99
 Himantoglossum robertianum,61,37,52
-Himantopus himantopus,apparition,25,40
 Lavandula intermedia,61,152,167
 Malva sylvestris,61,24,39
 Papaver rhoeas L.,61,74,89
@@ -281,6 +280,7 @@ Coccinella sp.,apparition,20,35
 Cuculus canorus,apparition,55,70
 Delichon urbica,apparition,47,62
 Gonepteryx rhamni,apparition,15,30
+Himantopus himantopus,apparition,25,40
 Hirundo rustica,apparition,52,67
 Lacerta bilineata,apparition,56,71
 Luscinia megarhynchos,apparition,66,81
