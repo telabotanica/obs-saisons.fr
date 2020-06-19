@@ -108,6 +108,9 @@ class StationsController extends PagesController
         $stationRepository = $doctrine->getRepository(Station::class);
         $individualRepository = $doctrine->getRepository(Individual::class);
         $station = $stationRepository->findOneBy(['slug' => $slug]);
+        if (!$station) {
+            throw new \Exception('Station not found: '.$slug);
+        }
         $stationAllIndividuals = $individualRepository->findSpeciesIndividualsForStation($station);
 
         $individualForm = $this->createForm(IndividualType::class, $individual, ['individuals' => $stationAllIndividuals]);

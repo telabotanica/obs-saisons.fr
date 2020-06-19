@@ -22,7 +22,7 @@ class OdsStaticDataFixtures extends Fixture
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(['command' => 'odsstaticdata:migrate']);
+        $input = new ArrayInput(['command' => 'ods:bootstrap:all-static-data']);
         try {
             $application->run($input);
         } catch (\Exception $e) {
