@@ -26,6 +26,7 @@
     <section class="group-form">
         {% include 'forms/post/species-post-form.html.twig' with ({
             'species':species,
+            'editMode':editMode,
             'form':form,
             'form_submit':'Enregistrer la fiche'
         }) %}
