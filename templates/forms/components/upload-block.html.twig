@@ -1,10 +1,17 @@
+
 <div class="upload-label-block">
     {{ form_label(formField) }}
     <div class="optional-italic">Optionnel</div>
 </div>
-<div class="upload-zone">
-    {{ form_widget(formField) }}
-    <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
-    <img class="placeholder-img" src="{{ asset('media/layout/icons/photo.svg') }}" alt="upload photo" width="32">
-    <div class="upload-zone-placeholder">Ajoutez une photo</div>
+<div class="justify-between">
+    <div class="upload-zone">
+        {{ form_widget(formField) }}
+        <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
+        <img class="placeholder-img" src="{{ asset('media/layout/icons/photo.svg') }}" alt="upload photo" width="32">
+        <div class="upload-zone-placeholder">Ajoutez une photo</div>
+    </div>
+    <a href="" class="squared-button-like delete-icon delete-file">
+        <div class="squared-button-label red">supprimer la photo</div>
+    </a>
 </div>
+

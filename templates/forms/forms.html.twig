@@ -32,10 +32,12 @@
 						<a href="" class="button bt-form bt-annuler">
 							<div>Annuler</div>
 						</a>
+						<input class="action-type" type="hidden" name="action-type" value="new">
 						<input type="hidden" name="action" value="{{ action }}">
 						<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
 							Valider
 						</button>
+						<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer show-on-edit">supprimer</a>
 					</div>
 				{% endblock %}
 			{% endblock %}

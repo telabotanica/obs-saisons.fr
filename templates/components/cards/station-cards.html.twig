@@ -7,16 +7,35 @@
     observations#: array
         [...] Observation
 #}
-<a href="{{ path("stations_show", {'slug': station.slug}) }}" class="card" data-tab="{{ station.user.id }}">
+<div class="card" data-tab="{{ station.user.id }}">
+    <a
+        href=""
+        class="edit-icon edit open"
+        data-open="station"
+        data-action-type="edit"
+        data-station-id="{{ station.id }}"
+        data-name="{{ station.name }}"
+        data-habitat="{{ station.habitat }}"
+        data-description="{{ station.description }}"
+        data-latitude="{{ station.latitude }}"
+        data-longitude="{{ station.longitude }}"
+        data-altitude="{{ station.altitude }}"
+        data-locality="{{ station.locality }}"
+        data-insee-code="{{ station.inseeCode }}"
+        data-is-private="{{ station.isPrivate }}"
+        data-header-image="{{ station.headerImage }}"
+    ></a>
 
-    <div class="card-header" style="background-image:url({{ station.headerImage ?? '/media/layout/image-placeholder.svg' }})">
+    <a href="{{ path("stations_show", {'slug': station.slug}) }}" class="card-header" style="background-image:url({{ station.headerImage ?? '/media/layout/image-placeholder.svg' }})">
         {% if station.isPrivate %}
-            <div class="private-icon"></div>
+            <div class="private-icon cadenas-icon"></div>
         {% endif %}
-    </div>
+    </a>
 
     <div class="card-body">
-        <h4 class="card-heading">{{ station.name }}</h4>
+        <a href="{{ path("stations_show", {'slug': station.slug}) }}">
+            <h4 class="card-heading">{{ station.name }}</h4>
+        </a>
         <div class="card-detail pointer-icon">{{ station.locality|raw }}</div>
         <div class="card-detail leaf-icon">{{ station.habitat|raw }}</div>
     </div>
@@ -46,5 +65,4 @@
             {% endif %}
         </div>
     </div>
-
-</a>
+</div>

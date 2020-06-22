@@ -1,5 +1,5 @@
 @mixin icons {
-    $icons: ('cadenas', 'calendrier', 'leaf', 'pointer', 'pointer-orange', 'right-arrow-green', 'right-arrow-orange', 'down-arrow', 'up-arrow-green', 'left-arrow-green', 'left-arrow-blue','search', 'person', 'add-circle', 'add-square', 'add-square-orange', 'export', 'help-circle', 'edit-calendar', 'eye-crossed', 'add-pointer', 'right-arrow-white', 'right-arrow-blue', 'left-arrow-white');
+    $icons: ('cadenas', 'calendrier', 'leaf', 'pointer', 'pointer-orange', 'right-arrow-green', 'right-arrow-orange', 'down-arrow', 'up-arrow-green', 'left-arrow-green', 'left-arrow-blue','search', 'person', 'add-circle', 'add-square', 'add-square-orange', 'export', 'help-circle', 'delete', 'delete-green', 'edit-calendar', 'edit-list', 'edit', 'edit-green', 'eye-crossed', 'add-pointer', 'right-arrow-white', 'right-arrow-blue', 'left-arrow-white');
     @each $icon in $icons {
         .#{$icon}-icon {
             background-image: image-url($icon);
