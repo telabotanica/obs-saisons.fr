@@ -31,12 +31,39 @@
 }
 
 .obs-info-container {
-	.obs-info,
+	min-width: 80%;
 	h3 {
 		margin: 10px auto;
 
 		@include media(sm, md) {
 			margin: 10px;
+		}
+	}
+
+	.item-name {
+		display: block;
+		text-transform: capitalize;
+		&.stage{
+			font-weight: bold;
+		}
+	}
+
+	.item-name-block {
+		min-width: auto;
+		width: 100/3 * 1%;
+	}
+
+	.list-card-img {
+		min-width: 100/3 * 1%;
+	}
+
+	.dual-blocks-container {
+		@include media(sm) {
+			@include flex-direction-column;
+		}
+
+		&.delete-icon{
+			margin-bottom: 20px;
 		}
 	}
 }
@@ -57,6 +84,7 @@
 		padding-top: 20px;
 		padding-bottom: 30px;
 	}
+
 	@include media(sm, md) {
 		font-size: 32px;
 	}
@@ -115,6 +143,7 @@
 	@include display-flex;
 	@include justify-content-space-between;
 	margin-top: 25px;
+	width: 80%;
 }
 
 .optional-italic {
@@ -144,6 +173,7 @@
 	cursor: crosshair;
 	height: 300px;
 	width: 100%;
+
 	&.out {
 		height:0;
 	}

@@ -73,15 +73,25 @@
     {% if row_start > 0 and column_start > 20 and displayObservation %}
         <a
             href=""
-            class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open"
+            class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}"
             data-year="{{ obs.date|date("Y") }}"
             data-month="{{ obs.date|date("n") }}"
+            data-species-id="{{ obs.individual.species.id }}"
+            data-indiv-id="{{ obs.individual.id }}"
+            data-species-name="{{ obs.individual.species.vernacularName }}"
             data-tab="{{ obs.user.id }}"
             data-open="obs-infos"
+            data-is-missing="{{ obs.isMissing }}"
+            data-obs-id="{{ obs.id }}"
+            data-event-id="{{ obs.event.id }}"
             data-author="{{ obs.user.displayName }}"
             data-stage-name="{{ periodsNames[obs.event.name] }}"
             data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
             data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
+            data-obs-date="{{ obs.date|date("Y-m-d", "Europe/Paris") }}"
+            data-obs-picture="{{ obs.picture }}"
+            data-picture-url="{{ pictureUrl }}"
+            data-details="{{ obs.details }}"
             style="
                 {{
                     "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};

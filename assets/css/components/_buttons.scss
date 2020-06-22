@@ -4,6 +4,7 @@
 .green-link {
   @include green-text-semi-bold;
   font-size: 16px;
+
   &.small {
     font-size: 14px;
   }
@@ -23,6 +24,10 @@ $button-color-map: (
   cancel: (
     background-color: #eee9e4,
     color: $grey131117
+  ),
+  delete: (
+      background-color:$red,
+      color: $grey301486
   )
 );
 
@@ -101,6 +106,17 @@ $button-color-map: (
         margin-left: 10px;
       }
     }
+
+    &.bt-supprimer {
+      /*@include flex-1;*/
+      padding: 12px;
+
+      @include button-colors(delete);
+
+      @include media(sm) {
+        margin-left: 20px;
+      }
+    }
   }
 
   &.bt-open-form {
@@ -161,6 +177,25 @@ $button-color-map: (
     &.hide-on-xs{
       display: none;
     }
+  }
+}
+
+.squared-button-like {
+  position: relative;
+  @include align-self-stretch;
+  @include square-block(84px);
+  max-width: 100%;
+  padding-top: 6px;
+  margin-right: 0;
+  margin-left: 2px;
+  text-decoration: none;
+  outline: none;
+
+  @include button-colors(cancel);
+  @include background-image(null, 50% 50%, 20px 30px);
+
+  @include media(sm) {
+    background-size: 30px;
   }
 }
 
@@ -330,6 +365,7 @@ $button-color-map: (
 
 .inactive {
   pointer-events: none;
+
   img {
     opacity: 0.3;
     -webkit-filter: saturate(20%);
@@ -337,5 +373,12 @@ $button-color-map: (
   }
 }
 
+.overlay .ods-form .show-on-edit {
+  display: none;
+}
+
+.overlay.edit .ods-form  .show-on-edit {
+  display: inline-block;
+}
 
 

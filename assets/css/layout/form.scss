@@ -106,10 +106,16 @@
 	font-weight: normal;
 }
 
+.justify-between {
+	@include display-flex;
+	@include justify-content-space-between;
+}
+
 .upload-zone {
 	@extend %display-flex;
 	@extend %justify-content-center;
 	@extend %align-items-center;
+	width: 80%;
 	margin-bottom: 140px;
 	height: 84px;
 	border: 2px dashed grey(67);
