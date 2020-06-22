@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
-{% set show = not station.isPrivate or app.user.id|default('none') == station.user.id %}
+{% set show = not station.isPrivate or app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
 {% set disable = (app.user.id is not defined) %}
 
 {% set species = species|default([])|merge(individuals|map(i => i.species))|removeDuplicates %}

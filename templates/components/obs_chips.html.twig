@@ -71,6 +71,10 @@
 
     {# observation html #}
     {% if row_start > 0 and column_start > 20 and displayObservation %}
+        {% set individualsIds = [] %}
+        {% for individual in  listCard.individuals %}
+            {% set individualsIds = individualsIds|merge([individual.id]) %}
+        {% endfor %}
         <a
             href=""
             class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}"
@@ -78,9 +82,11 @@
             data-month="{{ obs.date|date("n") }}"
             data-species-id="{{ obs.individual.species.id }}"
             data-indiv-id="{{ obs.individual.id }}"
+            data-indiv="{{ individualsIds|join(',') }}"
             data-species-name="{{ obs.individual.species.vernacularName }}"
             data-tab="{{ obs.user.id }}"
             data-open="obs-infos"
+            data-show-edit="{{ canAdminStation or app.user.id|default == obs.user.id }}"
             data-is-missing="{{ obs.isMissing }}"
             data-obs-id="{{ obs.id }}"
             data-event-id="{{ obs.event.id }}"

@@ -141,10 +141,10 @@ function editStationPreSetFields(dataAttrs) {
             $('#station_description').val(dataAttrs.description);
         }
         if (valOk(dataAttrs.latitude) && '' !== dataAttrs.latitude) {
-            $('#station_latitude').val(dataAttrs.latitude);
+            $latitude.val(dataAttrs.latitude);
         }
         if (valOk(dataAttrs.longitude) && '' !== dataAttrs.longitude) {
-            $('#station_longitude').val(dataAttrs.longitude).trigger('blur');
+            $longitude.val(dataAttrs.longitude).trigger('blur');
         }
         if (valOk(dataAttrs.habitat)) {
             $('#station_habitat')
@@ -177,7 +177,26 @@ function onObsInfo($thisLink, dataAttrs) {
         obsInfoTitle = 'Détails des observations';
     }
     for(let index=0;index < theseObservations.length;index++) {
+        let editButtons = '';
         dataAttrs = theseObservations[index].dataset;
+        if(dataAttrs.showEdit) {
+            editButtons =
+                '<div class="dual-blocks-container">'+
+                    '<a href="/observation/'+dataAttrs.obsId+'/delete" class="dual-squared-button delete-icon">'+
+                        '<div class="squared-button-label">Supprimer</div>'+
+                    '</a>'+
+                    '<a href="" class="dual-squared-button edit-obs edit-list-icon edit open" ' +
+                        'data-action-type="edit" ' +
+                        'data-open="observation" '+
+                        'data-species="'+dataAttrs.speciesId+'" '+
+                        'data-species-name="'+dataAttrs.speciesName+'" '+
+                        'data-indiv="'+dataAttrs.indiv+'" '+
+                        'data-observation-id="'+dataAttrs.obsId+'" '+
+                    '>'+
+                        '<div class="squared-button-label">Éditer</div>'+
+                    '</a>'+
+                '</div>'
+        }
         $obsInfo.append(
         '<div class="list-cards-item obs" data-id="'+dataAttrs.obsId+'">'+
             '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
@@ -186,21 +205,7 @@ function onObsInfo($thisLink, dataAttrs) {
                 '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
                 '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
             '</div>'+
-            '<div class="dual-blocks-container">'+
-                '<a href="/observation/'+dataAttrs.obsId+'/delete" class="dual-squared-button delete-icon">'+
-                    '<div class="squared-button-label">Supprimer</div>'+
-                '</a>'+
-                '<a href="" class="dual-squared-button edit-obs edit-list-icon edit open" ' +
-                    'data-action-type="edit" ' +
-                    'data-open="observation" '+
-                    'data-species="'+dataAttrs.speciesId+'" '+
-                    'data-species-name="'+dataAttrs.speciesName+'" '+
-                    'data-indiv="'+dataAttrs.indivId+'" '+
-                    'data-observation-id="'+dataAttrs.obsId+'" '+
-                '>'+
-                    '<div class="squared-button-label">Éditer</div>'+
-                '</a>'+
-            '</div>'+
+            editButtons +
         '</div>'
         );
         onOpenOverlay();
@@ -273,11 +278,18 @@ function observationOvelayManageIndividualAndEvents(dataAttrs) {
     if ($('.overlay.observation').hasClass('edit')) {
         let obsDataAttrs = $('.stage-marker.observation-'+dataAttrs.observationId).data();
 
+        $individual
+            .removeClass('disabled')
+            .find('.individual-option.individual-'+obsDataAttrs.indivId)
+                .prop('selected', true).attr('selected', 'selected')
+                .prop('hidden', false).removeAttr('hidden')
+        ;
+        $individual.trigger('change');
         if (valOk(obsDataAttrs.eventId)) {
             $event
                 .find('.event-option.event-'+obsDataAttrs.eventId)
-                .prop('selected', true).attr('selected', 'selected')
-                .prop('hidden', false).removeAttr('hidden')
+                    .prop('selected', true).attr('selected', 'selected')
+                    .prop('hidden', false).removeAttr('hidden')
             ;
         }
         if (valOk(obsDataAttrs.obsDate)) {
@@ -322,6 +334,7 @@ function individualOvelayManageSpecies(dataAttrs) {
         if (valOk(dataAttrs.name) && '' !== dataAttrs.name) {
             $('#individual_name').val(dataAttrs.name);
         }
+        $species.removeClass('disabled');
         if (valOk(dataAttrs.speciesId)) {
             $('.species-option.species-'+dataAttrs.speciesId)
                 .prop('selected', true).attr('selected', 'selected')

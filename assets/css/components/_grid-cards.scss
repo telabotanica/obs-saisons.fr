@@ -73,7 +73,6 @@
         @extend %align-items-center;
         @include square-block(40px);
         @include background-image(null, 50% 50%, 16px);
-        border-radius: 4px;
         @include button-colors(cancel);
     }
 }

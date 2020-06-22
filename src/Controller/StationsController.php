@@ -65,6 +65,8 @@ class StationsController extends PagesController
                 if (!$station) {
                     throw $this->createNotFoundException('La station n’existe pas');
                 }
+                $oldName = $station->getName();
+                $oldHeaderImage = $station->getHeaderImage();
                 if (
                     $station->getIsPrivate()
                     && $station->getUser() !== $this->getUser()
@@ -72,7 +74,6 @@ class StationsController extends PagesController
                 ) {
                     throw new AccessDeniedException('Vous n’êtes pas autorisé à contribuer sur cette station');
                 }
-                $oldHeaderImage = $station->getHeaderImage();
                 $stationForm = $this->createForm(StationType::class, $station);
             }
             $stationForm->handleRequest($request);
@@ -82,40 +83,17 @@ class StationsController extends PagesController
 
                 $dateNow = new DateTime('NOW');
                 $name = $stationFormValues['name'];
-                $habitat = $stationFormValues['habitat'];
-                $description = $stationFormValues['description'];
                 $is_private = !empty($stationFormValues['is_private']);
-                $locality = $stationFormValues['locality'];
-                $latitude = $stationFormValues['latitude'];
-                $longitude = $stationFormValues['longitude'];
-                $altitude = $stationFormValues['altitude'];
-                $insee_code = $stationFormValues['insee_code'];
                 $headerImage = $request->files->get('station')['header_image'];
 
                 if ('new' === $request->request->get('action-type')) {
                     $station->setUser($this->getUser());
-                    $station->setName($name);
                     $station->setSlug($slugGenerator->slugify($name));
-                    $station->setHabitat($habitat);
-                    $station->setDescription($description);
-                    $station->setIsPrivate($is_private);
                     $station->setHeaderImage($this->uploadImageService->uploadImage($headerImage));
-                    $station->setLocality($locality);
-                    $station->setLatitude($latitude);
-                    $station->setLongitude($longitude);
-                    $station->setAltitude($altitude);
-                    $station->setInseeCode($insee_code);
                     $station->setCreatedAt($dateNow);
                 } else {
-                    if ($name !== $station->getName()) {
-                        $station->setName($name);
+                    if ($name !== $oldName) {
                         $station->setSlug($slugGenerator->slugify($name));
-                    }
-                    if ($habitat !== $station->getHabitat()) {
-                        $station->setHabitat($habitat);
-                    }
-                    if ($description !== $station->getDescription()) {
-                        $station->setDescription($description);
                     }
                     $isDeletePicture = 'true' === $request->request->get('is-delete-picture');
                     if ($headerImage || $isDeletePicture) {
@@ -129,21 +107,6 @@ class StationsController extends PagesController
                         }
                     } elseif ($oldHeaderImage) {
                         $station->setHeaderImage($oldHeaderImage);
-                    }
-                    if ($locality !== $station->getLocality()) {
-                        $station->setLocality($locality);
-                    }
-                    if ($latitude !== $station->getLatitude()) {
-                        $station->setLatitude($latitude);
-                    }
-                    if ($longitude !== $station->getLongitude()) {
-                        $station->setLongitude($longitude);
-                    }
-                    if ($altitude !== $station->getAltitude()) {
-                        $station->setAltitude($altitude);
-                    }
-                    if ($insee_code !== $station->getInseeCode()) {
-                        $station->setInseeCode($insee_code);
                     }
                     $station->setUpdatedAt($dateNow);
                 }
@@ -207,11 +170,9 @@ class StationsController extends PagesController
             if (!$this->isGranted(UserVoter::LOGGED)) {
                 return $this->redirectToRoute('user_login');
             }
-            if (
-                $station->getIsPrivate()
-                && $station->getUser() !== $this->getUser()
-                && !$this->isGranted(User::ROLE_ADMIN)
-            ) {
+
+            $canModifyStation = $station->getUser() === $this->getUser() || $this->isGranted(User::ROLE_ADMIN);
+            if ($station->getIsPrivate() && !$canModifyStation) {
                 throw new AccessDeniedException('Vous n’êtes pas autorisé à contribuer sur cette station');
             }
 
@@ -223,33 +184,31 @@ class StationsController extends PagesController
                         if (!$individual) {
                             throw $this->createNotFoundException('L’individu n’existe pas');
                         }
-                        $individualForm = $this->createForm(IndividualType::class, $individual, ['individuals' => $stationAllIndividuals]);
+                        if ($individual->getUser() === $this->getUser() || $canModifyStation) {
+                            $oldSpecies = $individual->getSpecies();
+                            $individualForm = $this->createForm(IndividualType::class, $individual, ['individuals' => $stationAllIndividuals]);
+                        }
                     }
                     $individualForm->handleRequest($request);
                     if ($individualForm->isSubmitted() && $individualForm->isValid()) {
                         $individualFormValues = $request->request->get('individual');
                         $species = $speciesRepository->find($individualFormValues['species']);
-                        $name = $individualFormValues['name'];
                         if ('new' === $request->request->get('action-type')) {
                             $individual->setUser($this->getUser());
                             $individual->setStation($station);
-                            $individual->setCreatedAt($dateNow);
-                            $individual->setName($name);
                             $individual->setSpecies($species);
-                        } else {
+                            $individual->setCreatedAt($dateNow);
+                        } elseif ($individual->getUser() === $this->getUser() || $canModifyStation) {
                             $individual->setUpdatedAt($dateNow);
-                            if ($individual->getName() !== $name) {
-                                $individual->setName($name);
-                            }
-                            if ($individual->getSpecies() !== $species) {
+                            if ($oldSpecies !== $species) {
                                 $observations = $this->getDoctrine()->getRepository(Observation::class)
                                     ->findBy(['individual' => $individual], ['date' => 'DESC'])
                                 ;
                                 foreach ($observations as $observation) {
                                     $this->deleteEntityObject(Observation::class, $observation->getId());
                                 }
-                                $individual->setSpecies($species);
                             }
+                            $individual->setSpecies($species);
                         }
                         $entityManager = $doctrine->getManager();
                         $entityManager->persist($individual);
@@ -264,39 +223,21 @@ class StationsController extends PagesController
                         if (!$observation) {
                             throw $this->createNotFoundException('L’observation n’existe pas');
                         }
-                        $oldPicture = $observation->getPicture();
-                        $observationForm = $this->createForm(ObservationType::class, $observation, ['individuals' => $stationAllIndividuals]);
+                        if ($observation->getUser() === $this->getUser() || $canModifyStation) {
+                            $oldPicture = $observation->getPicture();
+                            $observationForm = $this->createForm(ObservationType::class, $observation, ['individuals' => $stationAllIndividuals]);
+                        }
                     }
                     $observationForm->handleRequest($request);
                     if ($observationForm->isSubmitted() && $observationForm->isValid()) {
                         $observationFormValues = $request->request->get('observation');
-                        $event = $eventRepository->find($observationFormValues['event']);
-                        $date = date_create($observationFormValues['date']);
                         $picture = $request->files->get('observation')['picture'];
-                        $details = $observationFormValues['details'];
-                        $isMissing = !empty($observationFormValues['is_missing']);
                         if ('new' === $request->request->get('action-type')) {
                             $observation->setUser($this->getUser());
-                            $observation->setIndividual(
-                                $individualRepository->find($observationFormValues['individual'])
-                            );
-                            $observation->setEvent($event);
-                            $observation->setDate($date);
                             $observation->setPicture($this->uploadImageService->uploadImage($picture));
-                            $observation->setDetails($details);
                             $observation->setCreatedAt($dateNow);
-                        } elseif ('edit' === $request->request->get('action-type')) {
-                            if ($observation->getEvent() !== $event) {
-                                $observation->setEvent($event);
-                            }
-                            if ($observation->getDate() !== $date) {
-                                $observation->setDate($date);
-                            }
-                            if ($observation->getDetails() !== $details) {
-                                $observation->setDetails($details);
-                            }
+                        } elseif ($observation->getUser() === $this->getUser() || $canModifyStation) {
                             $isDeletePicture = 'true' === $request->request->get('is-delete-picture');
-
                             if ($picture || $isDeletePicture) {
                                 if ($oldPicture) {
                                     $this->uploadImageService->deleteImage($oldPicture);
@@ -311,7 +252,14 @@ class StationsController extends PagesController
                             }
                             $observation->setUpdatedAt($dateNow);
                         }
-                        $observation->setIsMissing($isMissing);
+                        $observation->setEvent(
+                            $eventRepository->find($observationFormValues['event'])
+                        );
+                        $observation->setIndividual(
+                            $individualRepository->find($observationFormValues['individual'])
+                        );
+                        $observation->setDate(date_create($observationFormValues['date']));
+                        $observation->setIsMissing(!empty($observationFormValues['is_missing']));
 
                         $entityManager = $doctrine->getManager();
                         $entityManager->persist($observation);

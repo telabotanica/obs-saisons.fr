@@ -8,23 +8,26 @@
         [...] Observation
 #}
 <div class="card" data-tab="{{ station.user.id }}">
-    <a
-        href=""
-        class="edit-icon edit open"
-        data-open="station"
-        data-action-type="edit"
-        data-station-id="{{ station.id }}"
-        data-name="{{ station.name }}"
-        data-habitat="{{ station.habitat }}"
-        data-description="{{ station.description }}"
-        data-latitude="{{ station.latitude }}"
-        data-longitude="{{ station.longitude }}"
-        data-altitude="{{ station.altitude }}"
-        data-locality="{{ station.locality }}"
-        data-insee-code="{{ station.inseeCode }}"
-        data-is-private="{{ station.isPrivate }}"
-        data-header-image="{{ station.headerImage }}"
-    ></a>
+    {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
+    {% if canAdminStation %}
+        <a
+            href=""
+            class="edit-icon edit open"
+            data-open="station"
+            data-action-type="edit"
+            data-station-id="{{ station.id }}"
+            data-name="{{ station.name }}"
+            data-habitat="{{ station.habitat }}"
+            data-description="{{ station.description }}"
+            data-latitude="{{ station.latitude }}"
+            data-longitude="{{ station.longitude }}"
+            data-altitude="{{ station.altitude }}"
+            data-locality="{{ station.locality }}"
+            data-insee-code="{{ station.inseeCode }}"
+            data-is-private="{{ station.isPrivate }}"
+            data-header-image="{{ station.headerImage }}"
+        ></a>
+    {% endif %}
 
     <a href="{{ path("stations_show", {'slug': station.slug}) }}" class="card-header" style="background-image:url({{ station.headerImage ?? '/media/layout/image-placeholder.svg' }})">
         {% if station.isPrivate %}
