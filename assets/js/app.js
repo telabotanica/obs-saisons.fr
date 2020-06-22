@@ -736,7 +736,6 @@ function ajaxSendFile($picture, files) {
                 return false;
             }
             ajaxData.append($picture.attr('name'), file);
-            console.log(ajaxUpload);
         }
 
         $.ajax({
