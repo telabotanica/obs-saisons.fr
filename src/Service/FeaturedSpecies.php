@@ -27,6 +27,13 @@ class FeaturedSpecies
         return array_rand($featured);
     }
 
+    public function getShuffledFeaturedSpecies()
+    {
+        $featured = $this->getFeaturedSpecies();
+
+        return shuffle($featured);
+    }
+
     /**
      * Returns EventSpecies collection filtered by featured date.
      *
@@ -43,6 +50,10 @@ class FeaturedSpecies
             $now = $this->now;
             $end = $eventSpecies->getFeaturedEndDay();
             $start = $eventSpecies->getFeaturedStartDay();
+
+            if ($end < 1) {
+                $end += 365;
+            }
 
             if ($eventSpecies->getFeaturedEndDay() < $eventSpecies->getFeaturedStartDay()) {
                 $end += 365;
