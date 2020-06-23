@@ -965,9 +965,11 @@ function switchToNextOnHomepage() {
 }
 
 function findNextTarget($element, targetClass, direction) {
-    let $ret = (direction === 'prev') ? $element.prev(targetClass) : $element.next(targetClass);
-    let valid = valOk($ret);
-    return valid ? $ret : valid;
+    let $nextDisplayedElement = $element.next(targetClass).length ? $element.next(targetClass) : $(targetClass).first();
+    if('prev' === direction) {
+        $nextDisplayedElement = $element.prev(targetClass).length ? $element.prev(targetClass) : $(targetClass).last();
+    }
+    return $nextDisplayedElement;
 }
 
 function stationMapDisplay() {

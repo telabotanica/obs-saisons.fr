@@ -8,11 +8,9 @@
 			<div class="actus-une-content">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title">Actualités</h4>
-					{% set after = lastArticles[1] is defined ? {'path' : ''} : {} %}
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 						'target': 'actu-une-container',
-						'before': {},
-						'after': after
+						'directions': ['prev', 'next'],
 					}} %}
 				</div>
 				{% for lastArticle in lastArticles %}
@@ -42,11 +40,9 @@
 			<div class="next-event">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title orange">Évènements</h4>
-					{% set after = lastEvents[1] is defined ? {'path' : ''} : {} %}
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows: {
 						'target': 'next-event-container',
-						'before': {},
-						'after': after,
+						'directions':['prev','next'],
 						'arrow_color': 'orange',
 						'borders': 'light'
 					}} %}
@@ -65,20 +61,9 @@
 		{% endif %}
 	</div>
 	<div class="content home">
-		<div class="now species" style="background-image: url('https://assets.website-files.com/5ce249c60b5f0ba8c825fa9f/5ce2540624b02e49e654a486_ben-neale-241160-unsplash.jpg');">
-			<div class="content-block-infos horiz">
-				{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
-					'target': 'species',
-					'after': {},
-					'borders': 'no-border'
-				}} %}
-				<div class="infos-insert">
-					<h3 class="content-narrow-title">à Observer en ce moment</h3>
-					<h4 class="content-blocks-title small">Sorbier des oiseleurs</h4>
-					<a href="{{ path('especes') }}" class="home-link green pointer">Comment l'observer ?</a>
-				</div>
-			</div>
-		</div>
+		{% for id,eventSpecies in featuredSpecies %}
+			{% include 'components/featuredSpecies.twig' %}
+		{% endfor %}
 		<div class="recent-obs">
 			<div class="content-narrow-header obs">
 				<h4 class="content-narrow-title dark">Observations récentes</h4>
