@@ -8,11 +8,9 @@
 			<div class="actus-une-content">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title">Actualités</h4>
-					{% set after = lastArticles[1] is defined ? {'path' : ''} : {} %}
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 						'target': 'actu-une-container',
-						'before': {},
-						'after': after
+						'directions': ['prev', 'next'],
 					}} %}
 				</div>
 				{% for lastArticle in lastArticles %}
@@ -42,11 +40,9 @@
 			<div class="next-event">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title orange">Évènements</h4>
-					{% set after = lastEvents[1] is defined ? {'path' : ''} : {} %}
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows: {
 						'target': 'next-event-container',
-						'before': {},
-						'after': after,
+						'directions':['prev','next'],
 						'arrow_color': 'orange',
 						'borders': 'light'
 					}} %}

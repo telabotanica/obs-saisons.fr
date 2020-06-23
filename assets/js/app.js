@@ -749,25 +749,11 @@ function switchToNextOnHomepage() {
 }
 
 function findNextTarget($element, targetClass, direction) {
-    let $ret = false;
-    switch(direction) {
-        case 'next':
-            $ret = $element.next(targetClass);
-            break;
-        case 'prev':
-            $ret = $element.prev(targetClass);
-            break;
-        case 'forward-loop':
-            $ret = $element.next(targetClass).length ? $element.next(targetClass) : $(targetClass).first();
-            break;
-        case 'backward-loop':
-            $ret = $element.prev(targetClass).length ? $element.prev(targetClass) : $(targetClass).last();
-            break;
-        default:
-            break;
+    let $nextDisplayedElement = $element.next(targetClass).length ? $element.next(targetClass) : $(targetClass).first();
+    if('prev' === direction) {
+        $nextDisplayedElement = $element.prev(targetClass).length ? $element.prev(targetClass) : $(targetClass).last();
     }
-    let valid = valOk($ret);
-    return valid ? $ret : valid;
+    return $nextDisplayedElement;
 }
 
 function stationMapDisplay() {

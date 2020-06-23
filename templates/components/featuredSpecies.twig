@@ -5,12 +5,12 @@
 
 
 #}
-{% set pictureSuffixe = eventSpecies.species.type.name == 'arbres' is not null ? "_#{eventSpecies.event.stadeBbch|first}" : '' %}
+{% set pictureSuffixe = eventSpecies.species.type.name == 'arbres' ? "_#{eventSpecies.event.stadeBbch|first}" : '' %}
 <div class="now featured-species species {{ id != 0 ? 'hidden' }}" style="background-image: url({{ "/media/species/#{eventSpecies.species.picture}#{pictureSuffixe}.jpg" }});">
     <div class="content-block-infos horiz">
         {% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
             'target': 'featured-species',
-            'forwardLoop': {'path' : ''},
+            'directions': ['next'],
             'borders': 'no-border'
         }} %}
         <div class="infos-insert">
