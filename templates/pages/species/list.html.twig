@@ -1,12 +1,11 @@
 {% extends 'base.html.twig' %}
-{% set headers = {
-    'species': {
-        'title': 'Espèces à observer',
-        'subtitle': 'Toutes les espèces du programme <strong>Observatoire des saisons</strong>.'
-    }
-} %}
 
 {% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Espèces à observer',
+        'subtitle': 'Toutes les espèces du programme <strong>Observatoire des saisons</strong>.'
+    }) %}
 
     {% include 'components/actionbar.html.twig' with {
         actionbar: {

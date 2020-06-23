@@ -4,6 +4,8 @@
     [int..int]: array indexes ([...] if no precise length defined)
 
     id*: int
+    show*: bool
+    canAdminStation*: bool
     listCard*: Object
         species*: Species
         individuals#: array
@@ -16,6 +18,7 @@
             [...] date(Y)
 
 #}
+{% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
 {% set eventsSpecies = listCard.eventsSpecies %}
 {% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 {% set stagesCssClasses = constant('App\\Entity\\Event::CSS_CLASSES') %}
@@ -53,7 +56,22 @@
         {% for individual in listCard.individuals %}
             {# Displays individual's name #}
             <div class="individu-header">
-                <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
+                <div class="individual">
+                    <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
+                    {% if canAdminStation or individual.user.id == app.user.id|default %}
+                        <a
+                            href=""
+                            class="add-button-like edit-individual edit open"
+                            data-action-type="edit"
+                            data-open="individual"
+                            data-individual-id="{{ individual.id }}"
+                            data-name="{{ individual.name }}"
+                            data-species-id="{{ individual.species.id }}"
+                            data-all-species="1"
+                            style="margin-left: 1px"
+                        ></a>
+                    {% endif %}
+                </div>
                 {% if show %}
                     <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-indiv="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
                         <div>Saisir une observation</div>

@@ -26,20 +26,20 @@
         }) }}
     </div>
     <div class="_2-col-form field-group">
-        <div class="form-col">
-            <label for="search" class="">Localisez votre station</label>
-            <input id="search" type="search" class="" placeholder="Entrez une adresse ici">
+        <div class="form-col search-container">
+            <label for="search" >Localisez votre station</label>
+            <input id="search" type="search" placeholder="Entrez une adresse ici">
         </div>
-        {#<div class="form-col small button-form-container">
+        <div class="form-col small button-form-container">
             <label for=""></label>
             <a href="" class="button bt-add open-map-button">
                 <span id="open-map" class="">Utiliser la carte</span>
-                <span id="close-map" class="hidden ">Fermer la carte</span>
+                <span id="close-map" class="hidden">Fermer la carte</span>
             </a>
-        </div>#}
+        </div>
     </div>
     <div class="form-col map-container">
-        <div id="map" class=""></div>
+        <div id="map" class="hidden"></div>
     </div>
     <div class="_2-col-form field-group">
         {{ form_row(stationForm.latitude, {

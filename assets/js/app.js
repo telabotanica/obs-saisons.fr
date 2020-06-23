@@ -13,6 +13,7 @@ const places = require('places.js');
 const algoliasearch = require('algoliasearch');
 import './ui/wysiwyg';
 import './ui/scientific-name';
+import {off} from "leaflet/src/dom/DomEvent";
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
@@ -29,7 +30,6 @@ const $locality = $('#station_locality');
 const $observationDate = $('#observation_date');
 const imageType = /^image\//;
 
-
 //map configuration
 const MARKER_ICON = L.Icon.extend({
     options: {
@@ -39,7 +39,10 @@ const MARKER_ICON = L.Icon.extend({
         iconAnchor: [12,40]//correctly replaces the dot of the pointer
     }
 });
-
+const PLACES_CONFIG = {
+    appId: 'plV00W9UJC60',
+    apiKey: 'b8630d75d81f1343304ac3547a2994af'
+};
 
 $( document ).ready( function() {
     addModsTouchClass();
@@ -67,10 +70,35 @@ function onOpenOverlay() {
             window.location.href = window.location.origin+'/user/login';
         } else {
             let dataAttrs = $thisLink.data(),
-                $overlay = $('.overlay.'+dataAttrs.open);
-            $overlay.removeClass('hidden');
+                $overlay = $('.overlay.'+dataAttrs.open),
+                isEdit = $thisLink.hasClass('edit');
+
+            $overlay
+                .removeClass('hidden')
+            // triggers onCloseOverlay() when clicking out of container
+                .on('click', function(event) {
+                    if(!$(event.target).closest('.saisie-container, .obs-info-container').length) {
+                        $('a.bt-annuler').trigger('click');
+                    }
+                })
+            ;
+
             if(valOk($('form', $overlay))) {
                 $('form', $overlay).get(0).reset();
+            }
+
+            if (isEdit) {
+                $overlay.addClass('edit')
+                    .find('.action-type')
+                        .val('edit')
+                        .after(
+                        '<input class="'+dataAttrs.open+'-id" type="hidden" name="'+dataAttrs.open+'-id" value="'+dataAttrs[dataAttrs.open+'Id']+'">'
+                    )
+                ;
+                $('.show-on-edit',$overlay).attr(
+                    'href',
+                    '/'+dataAttrs.open+'/'+dataAttrs[dataAttrs.open+'Id']+'/delete'
+                );
             }
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
@@ -79,7 +107,9 @@ function onOpenOverlay() {
                     break;
                 case 'station':
                     onLocation();
+                    toggleMap();
                     onFileEvent();
+                    editStationPreSetFields(dataAttrs);
                     break;
                 case 'observation':
                     openDetailsField();
@@ -88,6 +118,9 @@ function onOpenOverlay() {
                     onChangeObsEvent();
                     onChangeObsDate();
                     observationOvelayManageIndividualAndEvents(dataAttrs);
+                    if(isEdit) {
+                        $thisLink.closest('.overlay').addClass('hidden');
+                    }
                     break;
                 case 'individual':
                     individualOvelayManageSpecies(dataAttrs);
@@ -99,35 +132,85 @@ function onOpenOverlay() {
     });
 }
 
+function editStationPreSetFields(dataAttrs) {
+    if ($('.overlay.station').hasClass('edit')) {
+        if (valOk(dataAttrs.name) && '' !== dataAttrs.name) {
+            $('#station_name').val(dataAttrs.name);
+        }
+        if (valOk(dataAttrs.description) && '' !== dataAttrs.description) {
+            $('#station_description').val(dataAttrs.description);
+        }
+        if (valOk(dataAttrs.latitude) && '' !== dataAttrs.latitude) {
+            $latitude.val(dataAttrs.latitude);
+        }
+        if (valOk(dataAttrs.longitude) && '' !== dataAttrs.longitude) {
+            $longitude.val(dataAttrs.longitude).trigger('blur');
+        }
+        if (valOk(dataAttrs.habitat)) {
+            $('#station_habitat')
+                .find('option[value="'+dataAttrs.habitat+'"]')
+                .prop('selected', true).attr('selected', 'selected')
+            ;
+        }
+        if (valOk(dataAttrs.isPrivate)) {
+            $('#station_is_private').prop('checked', dataAttrs.isPrivate === 1)
+        }
+        if (valOk(dataAttrs.headerImage) && '' !== dataAttrs.headerImage) {
+            $('.upload-zone-placeholder').addClass('hidden');
+            $('img.placeholder-img').addClass('obj').attr('src', dataAttrs.headerImage);
+        }
+    }
+}
+
 function onObsInfo($thisLink, dataAttrs) {
     let $thisCalendar = $thisLink.closest('.periods-calendar'),
         theseObservations = $('.stage-marker[data-year="'+dataAttrs.year+'"][data-stage-name="'+dataAttrs.stageName+'"][data-month="'+dataAttrs.month+'"]:visible', $thisCalendar),
+        $obsInfo = $('.obs-informations'),
         obsInfoTitle = 'Détails de l’observation';
 
-    $('.obs-informations').empty();
+    $obsInfo.empty();
     if(1 === theseObservations.length) {
         if ($thisLink.hasClass('absence')) {
             obsInfoTitle = 'Signalement d’absence de ce stade';
         }
-        $.each(['date', 'author', 'stage'], function (i, infoType) {
-            $('.obs-informations').append('<div class="obs-info obs-' + infoType + '">' + dataAttrs[infoType] + '</div>');
-        });
-    } else if (1 < theseObservations.length)  {
+    } else if (1 < theseObservations.length) {
         obsInfoTitle = 'Détails des observations';
-        for(let index=0;index < theseObservations.length;index++) {
-            dataAttrs = theseObservations[index].dataset;
-            $('.obs-informations').append(
-                '<div class="accordion-block">'+
-                    '<a href="" class="accordion-title-dropdown right-arrow-orange-icon">'+dataAttrs.date+'</a>'+
-                    '<div class="accordion-content" style="display:none;">' +
-                        '<div class="obs-info obs-author">'+dataAttrs.author+'</div>'+
-                        '<div class="obs-info obs-stage">'+dataAttrs.stage+'</div>'+
-                    '</div>'+
-                '</div>'
-            );
-            toggleAccodionBlock();
-        }
     }
+    for(let index=0;index < theseObservations.length;index++) {
+        let editButtons = '';
+        dataAttrs = theseObservations[index].dataset;
+        if(dataAttrs.showEdit) {
+            editButtons =
+                '<div class="dual-blocks-container">'+
+                    '<a href="/observation/'+dataAttrs.obsId+'/delete" class="dual-squared-button delete-icon">'+
+                        '<div class="squared-button-label">Supprimer</div>'+
+                    '</a>'+
+                    '<a href="" class="dual-squared-button edit-obs edit-list-icon edit open" ' +
+                        'data-action-type="edit" ' +
+                        'data-open="observation" '+
+                        'data-species="'+dataAttrs.speciesId+'" '+
+                        'data-species-name="'+dataAttrs.speciesName+'" '+
+                        'data-indiv="'+dataAttrs.indiv+'" '+
+                        'data-observation-id="'+dataAttrs.obsId+'" '+
+                    '>'+
+                        '<div class="squared-button-label">Éditer</div>'+
+                    '</a>'+
+                '</div>'
+        }
+        $obsInfo.append(
+        '<div class="list-cards-item obs" data-id="'+dataAttrs.obsId+'">'+
+            '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
+            '<div class="item-name-block">'+
+                '<div class="item-name">'+dataAttrs.author+'</div>'+
+                '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
+                '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
+            '</div>'+
+            editButtons +
+        '</div>'
+        );
+        onOpenOverlay();
+    }
+
     $('.obs-info.title').text(obsInfoTitle);
 }
 
@@ -148,16 +231,28 @@ function onCloseOverlay() {
 
 function closeOverlay($overlay) {
     $('body').css('overflow', 'auto');
-    $overlay.addClass('hidden');
+    $overlay.addClass('hidden').removeClass('edit');
     if(valOk($('form',$overlay))) {
+
         $('form',$overlay).get(0).reset();
         $overlay.find('option').removeAttr('hidden');
-    }
-    if ($overlay.hasClass('observation')) {
-        observationOvelayManageIndividualAndEvents($('.open-observation-form-all-station').data());
-        $('.ods-form-warning').addClass('hidden').text('');
-    } else if ($overlay.hasClass('individual')) {
-        individualOvelayManageSpecies($('.open-individual-form-all-station').data().species.toString(), true);
+
+        if ($overlay.hasClass('individual')) {
+            individualOvelayManageSpecies($('.open-individual-form-all-station').data().species.toString(), true);
+        } else {
+            if ($overlay.hasClass('observation')) {
+                observationOvelayManageIndividualAndEvents($('.open-observation-form-all-station').data());
+                $('.ods-form-warning').addClass('hidden').text('');
+            } else if($overlay.hasClass('station')) {
+                mapRemove();
+                placesRemove();
+            }
+            $('.delete-file').trigger('click');
+            $('.is-delete-picture').remove();
+        }
+        $('.action-type', $overlay).val('new');
+        $('.observation-id, .individual-id, .station-id').remove();
+        $('.show-on-edit', $overlay).attr('href','');
     } else if ($overlay.hasClass('obs-infos')) {
         $('.saisie-container').find('.obs-info').text('');
     }
@@ -179,6 +274,39 @@ function observationOvelayManageIndividualAndEvents(dataAttrs) {
      } else {
          $formTitle.html(stationName).text();
      }
+
+    if ($('.overlay.observation').hasClass('edit')) {
+        let obsDataAttrs = $('.stage-marker.observation-'+dataAttrs.observationId).data();
+
+        $individual
+            .removeClass('disabled')
+            .find('.individual-option.individual-'+obsDataAttrs.indivId)
+                .prop('selected', true).attr('selected', 'selected')
+                .prop('hidden', false).removeAttr('hidden')
+        ;
+        $individual.trigger('change');
+        if (valOk(obsDataAttrs.eventId)) {
+            $event
+                .find('.event-option.event-'+obsDataAttrs.eventId)
+                    .prop('selected', true).attr('selected', 'selected')
+                    .prop('hidden', false).removeAttr('hidden')
+            ;
+        }
+        if (valOk(obsDataAttrs.obsDate)) {
+            $observationDate.val(obsDataAttrs.obsDate);
+        }
+        if (valOk(obsDataAttrs.isMissing)) {
+            $('#observation_is_missing').prop('checked', obsDataAttrs.isMissing === 1)
+        }
+        if (valOk(obsDataAttrs.obsPicture) && '' !== obsDataAttrs.obsPicture) {
+            $('.upload-zone-placeholder').addClass('hidden');
+            $('img.placeholder-img').addClass('obj').attr('src', obsDataAttrs.obsPicture);
+        }
+        if (valOk(obsDataAttrs.details) && '' !== obsDataAttrs.details) {
+            $('#observation_details').val(obsDataAttrs.details);
+            $('.open-details-button').trigger('click')//triggers openDetailsField()
+        }
+    }
 }
 
 function individualOvelayManageSpecies(dataAttrs) {
@@ -201,6 +329,19 @@ function individualOvelayManageSpecies(dataAttrs) {
     });
 
     updateSelectOptions($species, availableSpecies, !showAll);
+
+    if ($('.overlay.individual').hasClass('edit')) {
+        if (valOk(dataAttrs.name) && '' !== dataAttrs.name) {
+            $('#individual_name').val(dataAttrs.name);
+        }
+        $species.removeClass('disabled');
+        if (valOk(dataAttrs.speciesId)) {
+            $('.species-option.species-'+dataAttrs.speciesId)
+                .prop('selected', true).attr('selected', 'selected')
+                .prop('hidden', false).removeAttr('hidden')
+            ;
+        }
+    }
 }
 
 // returns an array of values from data attributes value
@@ -367,67 +508,118 @@ function checkAberrationsObsDays() {
     $('.ods-form-warning').toggleClass('hidden', message === '').text(message);
 }
 
-// Location events management
-function onLocation() {
-    //Algolia places configuration
-    const placesAutocomplete = places({
-        appId: 'plV00W9UJC60',
-        apiKey: 'b8630d75d81f1343304ac3547a2994af',
+// Create the map
+function mapInit(lat = 46.7111, lon = 1.7191, zoom = 6) {
+    if(valOk($latitude.val()) && valOk($longitude.val())) {
+        lat = $latitude.val();
+        lon = $longitude.val();
+        zoom = 12;
+    }
+    return mapDisplay('map', lat, lon, zoom);
+}
+
+function mapLocation() {
+    let marker = null;
+    if (!$('#map').hasClass('hidden')) {
+        let mapInfo = mapInit(),
+            marker = mapInfo.marker;
+        map = mapInfo.map;
+
+        // interactions with map
+        map.on('click', function (e) {
+            onPosition(e.latlng, marker);
+        });
+        marker.on('dragend', function (e) {
+            onPosition(marker.getLatLng(), e.target);
+        });
+    } else {
+        mapRemove();
+    }
+    return marker;
+}
+
+// Remove the map
+function mapRemove() {
+    // reset map
+    map = L.DomUtil.get('map');
+
+    if(map != null){
+        map._leaflet_id = null;
+    }
+    $('#map').remove();
+    $('.map-container').append('<div id="map" class="hidden"></div>');
+}
+
+// intit places
+function placesInit() {
+    placesRemove();
+    return places({
+        appId: PLACES_CONFIG.appId,
+        apiKey: PLACES_CONFIG.apiKey,
         container: '#search',
         language: 'fr',
         countries: ['fr']
     });
-    //toggleMap();
+}
 
-    // Create the map
-    let mapInfo = mapDisplay('map', 46.7111, 1.7191, 6),
-        marker = mapInfo.marker;
-    map = mapInfo.map;
-
-
-    // interactions with map
-    map.on('click', function (e) {
-        onPosition(marker, e.latlng);
-    });
-    marker.on('dragend', function(e){
-        onPosition(e.target, marker.getLatLng());
-    });
-    // location fields filled
-    $('#station_latitude, #station_longitude').on('blur', function() {
-        let latitude = parseFloat($latitude.val()),
-            longitude = parseFloat($longitude.val());
-        if(!isNaN(latitude) && !isNaN(longitude)) {
-            onPosition(marker, {'lat': latitude,'lng': longitude});
-        }
+function placesLocation(marker) {
+    //Algolia places configuration
+    let placesAutocomplete = placesInit();
+    placesAutocomplete.on('change', function (e) {
+        onPosition(e.suggestion.latlng, marker);
     });
     // algolia places search
     $locality.on('blur',function () {
-        const localitySearch = algoliasearch.initPlaces('plV00W9UJC60', 'b8630d75d81f1343304ac3547a2994af');
+        const localitySearch = algoliasearch.initPlaces(PLACES_CONFIG.appId, PLACES_CONFIG.apiKey);
         localitySearch.search({
             query: $(this).val()
         }).then(function (results) {
             let hits = results.hits;
             if (hits[0]) {
-                onPosition(marker, hits[0]._geoloc);
+                onPosition(hits[0]._geoloc, marker);
             }
         });
     });
-    placesAutocomplete.on('change', function (e) {
-        onPosition(marker, e.suggestion.latlng);
+}
+
+// remove places
+function placesRemove() {
+    $('.search-container')
+        .empty()
+        .append(
+            '<label for="search" class="search-label">Localisez votre station</label>' +
+            '<input id="search" type="search" placeholder="Entrez une adresse ici">'
+        )
+    ;
+}
+
+// Location events management
+function onLocation() {
+    let marker = mapLocation();
+    // location fields filled
+    $('#station_latitude, #station_longitude').on('blur', function() {
+        let latitude = parseFloat($latitude.val()),
+            longitude = parseFloat($longitude.val());
+        if(!isNaN(latitude) && !isNaN(longitude)) {
+            onPosition({'lat': latitude,'lng': longitude}, marker);
+        }
     });
+    placesLocation(marker);
 }
 
 // Fills location fields when information is available
-function onPosition(marker, position) {
+function onPosition(position, marker = null) {
     let transmittedLatitude = Number.parseFloat(position.lat).toFixed(4),
         transmittedLongitude = Number.parseFloat(position.lng).toFixed(5),
         $addLoadingClassElements = $('#station_locality,#station_insee_code').siblings('label');
     //updates coordinates fields
     $latitude.val(transmittedLatitude);
     $longitude.val(transmittedLongitude);
-    // updates map
-    map.panTo(new L.LatLng(position.lat, position.lng));
-    marker.setLatLng(new L.LatLng(position.lat, position.lng),{draggable:'true'});
+    if(valOk(marker) && valOk(map)) {
+        // updates map
+        map.panTo(new L.LatLng(position.lat, position.lng));
+        marker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
+    }
     // displays loading gif
     $addLoadingClassElements.addClass('loading');
     $.ajax({
@@ -447,10 +639,11 @@ function onPosition(marker, position) {
 }
 
 function toggleMap() {
-    $('.open-map-button').on('click', function (e) {
+    $('.open-map-button').off('click').on('click', function (e) {
         e.preventDefault();
         $(this).find('span').toggleClass('hidden');
         $('#map').toggleClass('hidden');
+        mapLocation();
     });
 }
 
@@ -476,17 +669,23 @@ function onFileEvent() {
                 $picture.removeClass('is-dragover');
             })
             .on('drop', function(event) {
-                droppedFiles = event.originalEvent.dataTransfer.files;
-                displayThumbs(droppedFiles);
-                ajaxSendFile($(this), droppedFiles);
-            })
-        ;
+                if (event.originalEvent) {
+                    droppedFiles = event.originalEvent.dataTransfer.files;
+                    $('.is-delete-picture').remove();
+                    displayThumbs(droppedFiles);
+                    ajaxSendFile($(this), droppedFiles);
+                }
+            });
+
 
     }
     $picture.on('change', function (event) {
         droppedFiles = event.target.files;
+        $('.is-delete-picture').remove();
         displayThumbs(droppedFiles);
     });
+
+    onDeleteFile()
 }
 
 function displayThumbs(files) {
@@ -519,7 +718,7 @@ function displayThumbs(files) {
 function ajaxSendFile($picture, files) {
     let $form = $picture.closest('form');
 
-    $form.on('submit', function(e) {
+    $form.on('submit.ddupload', function(e) {
         if ($form.hasClass('is-uploading')) {
             return false;
         }
@@ -558,6 +757,23 @@ function ajaxSendFile($picture, files) {
                 console.log('Drag’n’drop file upload failed.');
             }
         });
+    });
+}
+
+function onDeleteFile() {
+    $('.delete-file').off('click').on('click', function (event) {
+        event.preventDefault();
+
+        $('.upload-zone .upload-input')
+            .val('')
+            .after(
+                '<input type="hidden" class="is-delete-picture" name="is-delete-picture" value="true">'
+            )
+            .closest('form').off('submit.ddupload')
+        ;
+        $('.placeholder-img').removeClass('obj').attr('src', '/media/layout/icons/photo.svg');
+        $('.upload-zone-placeholder').removeClass('hidden').text('Ajoutez une photo');
+
     });
 }
 
@@ -763,7 +979,14 @@ function stationMapDisplay() {
     }
 }
 
-function mapDisplay(elementIdAttr, lat, lng, zoom, hasZoomcontrol = true, isDraggable = true) {
+function mapDisplay(
+    elementIdAttr,
+    lat,
+    lng,
+    zoom,
+    hasZoomcontrol = true,
+    isDraggable = true
+) {
 // Create the map
     let map = L.map(elementIdAttr, {zoomControl: hasZoomcontrol}).setView([lat, lng], zoom);
     // Set up the OSM layer

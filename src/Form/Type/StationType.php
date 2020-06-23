@@ -47,8 +47,8 @@ class StationType extends AbstractType
             ])
             ->add('is_private', CheckboxType::class, ['required' => false])
             ->add('header_image', FileType::class, [
+                'data_class' => null,
                 'required' => false,
-                'error_bubbling' => true,
                 'label' => 'Image de la station',
                 'attr' => [
                     'class' => 'upload-input',

@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% set page_container_classes = 'narrow' %}
-{% set show = not station.isPrivate or app.user.id|default('none') == station.user.id %}
+{% set show = not station.isPrivate or app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
 {% set disable = (app.user.id is not defined) %}
 
 {% set species = species|default([])|merge(individuals|map(i => i.species))|removeDuplicates %}
@@ -169,18 +169,20 @@
 			</a>
 		{% endif %}
 	{% endif %}
-	{# displays observation informations overlay #}
-	<div class="overlay hidden obs-infos">
-		<div class="obs-info-container">
-			<h3 class="obs-info title">Détails de l’observation</h3>
-			<div class="obs-informations"></div>
-			<div class="saisie-footer">
-				<a href="" class="button bt-form bt-annuler">
-					<div>Fermer</div>
-				</a>
+	{% if observations %}
+		{# displays observation informations overlay #}
+		<div class="overlay hidden obs-infos">
+			<div class="obs-info-container">
+				<h3 class="obs-info title">Détails de l’observation</h3>
+				<div class="obs-informations"></div>
+				<div class="saisie-footer">
+					<a href="" class="button bt-form bt-annuler">
+						<div>Fermer</div>
+					</a>
+				</div>
 			</div>
 		</div>
-	</div>
+	{% endif %}
 
 
 {% endblock %}
