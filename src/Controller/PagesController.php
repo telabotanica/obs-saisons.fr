@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Observation;
 use App\Entity\Post;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\FeaturedSpecies;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,10 +40,12 @@ class PagesController extends AbstractController
         $manager = $this->getDoctrine();
         $postRepository = $manager->getRepository(Post::class);
         $observationRepository = $manager->getRepository(Observation::class);
+        $featuredSpeciesService = new FeaturedSpecies($manager->getManager());
 
         return $this->render('pages/homepage.html.twig', [
             'lastArticles' => $postRepository->setPosts('article')->findLastFeaturedPosts(),
             'lastEvents' => $postRepository->setPosts('event')->findLastFeaturedPosts(),
+            'featuredSpecies' => $featuredSpeciesService->getShuffledFeaturedSpecies(),
             'lastObservations' => $observationRepository->findLastObs(5),
             'lastObservationsWithImages' => $observationRepository->findLastObsWithImages(4),
             'obsCount' => $observationRepository->findObsCountThisYear(),

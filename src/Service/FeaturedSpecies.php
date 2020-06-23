@@ -30,8 +30,9 @@ class FeaturedSpecies
     public function getShuffledFeaturedSpecies()
     {
         $featured = $this->getFeaturedSpecies();
+        shuffle($featured);
 
-        return shuffle($featured);
+        return $featured;
     }
 
     /**

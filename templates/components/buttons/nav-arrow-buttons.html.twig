@@ -21,4 +21,9 @@
             <img src="{{ asset("media/layout/icons/right-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="suivant" class="" width="15" height="15">
         </a>
     {% endif %}
+    {% if arrows.forwardLoop is defined %}
+    <a href="{{ path(arrows.forwardLoop.path|default('homepage')) }}" class="nav-arrow loop {{ arrows.borders|default }} {{ arrows.forwardLoop.path is not defined ? 'inactive'  }}" data-direction="forward-loop">
+        <img src="{{ asset("media/layout/icons/right-arrow-#{arrows.arrow_color|default('green')}.svg") }}" alt="suivant" class="" width="15" height="15">
+    </a>
+    {% endif %}
 </div>
