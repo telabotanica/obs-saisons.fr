@@ -12,11 +12,11 @@ use App\Form\Type\IndividualType;
 use App\Form\Type\ObservationType;
 use App\Form\Type\StationType;
 use App\Security\Voter\UserVoter;
+use App\Service\BreadcrumbsGenerator;
 use App\Service\SlugGenerator;
 use App\Service\UploadService;
 use DateTime;
-use Exception;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,13 +28,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class StationsController extends PagesController
 {
-    public $uploadImageService;
-
-    public function __construct(UploadService $uploadImageService)
-    {
-        parent::__construct();
-        $this->uploadImageService = $uploadImageService;
-    }
 
     /* ************************************************ *
      * Stations
@@ -43,12 +36,16 @@ class StationsController extends PagesController
     /**
      * @Route("/participer/stations", name="stations", methods={"GET", "POST"})
      */
-    public function stations(Request $request): Response
-    {
-        $doctrine = $this->getDoctrine();
+    public function stations(
+        Request $request,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        SlugGenerator $slugGenerator,
+        EntityManagerInterface $manager,
+        UploadService $uploadImageService
+    ): Response {
         $station = new Station();
         $stationForm = $this->createForm(StationType::class, $station);
-        $stationRepository = $doctrine->getRepository(Station::class);
+        $stationRepository = $manager->getRepository(Station::class);
 
         if ($request->isMethod('POST') && !$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -78,7 +75,6 @@ class StationsController extends PagesController
             }
             $stationForm->handleRequest($request);
             if ($stationForm->isSubmitted() && $stationForm->isValid()) {
-                $slugGenerator = new SlugGenerator();
                 $stationFormValues = $request->request->get('station');
 
                 $dateNow = new DateTime('NOW');
@@ -89,7 +85,7 @@ class StationsController extends PagesController
                 if ('new' === $request->request->get('action-type')) {
                     $station->setUser($this->getUser());
                     $station->setSlug($slugGenerator->slugify($name));
-                    $station->setHeaderImage($this->uploadImageService->uploadImage($headerImage));
+                    $station->setHeaderImage($uploadImageService->uploadImage($headerImage));
                     $station->setCreatedAt($dateNow);
                 } else {
                     if ($name !== $oldName) {
@@ -98,10 +94,10 @@ class StationsController extends PagesController
                     $isDeletePicture = 'true' === $request->request->get('is-delete-picture');
                     if ($headerImage || $isDeletePicture) {
                         if ($oldHeaderImage) {
-                            $this->uploadImageService->deleteImage($oldHeaderImage);
+                            $uploadImageService->deleteImage($oldHeaderImage);
                         }
                         if (!$isDeletePicture) {
-                            $station->setHeaderImage($this->uploadImageService->uploadImage($headerImage));
+                            $station->setHeaderImage($uploadImageService->uploadImage($headerImage));
                         } else {
                             $station->setHeaderImage(null);
                         }
@@ -112,9 +108,8 @@ class StationsController extends PagesController
                 }
                 $station->setIsPrivate($is_private);
 
-                $entityManager = $doctrine->getManager();
-                $entityManager->persist($station);
-                $entityManager->flush();
+                $manager->persist($station);
+                $manager->flush();
 
                 if ($request->isXmlHttpRequest()) {
                     return new JsonResponse([
@@ -129,7 +124,7 @@ class StationsController extends PagesController
 
         return $this->render('pages/stations.html.twig', [
             'stations' => $stationRepository->findAll(),
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'stationForm' => $stationForm->createView(),
         ]);
     }
@@ -141,18 +136,22 @@ class StationsController extends PagesController
     /**
      * @Route("/participer/stations/{slug}", name="stations_show", methods={"GET", "POST"})
      */
-    public function stationPage(Request $request, string $slug): Response
-    {
-        $doctrine = $this->getDoctrine();
+    public function stationPage(
+        Request $request,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $manager,
+        UploadService $uploadImageService,
+        string $slug
+    ): Response {
         $individual = new Individual();
         $observation = new Observation();
         $dateNow = new DateTime('NOW');
 
-        $stationRepository = $doctrine->getRepository(Station::class);
-        $individualRepository = $doctrine->getRepository(Individual::class);
-        $observationRepository = $doctrine->getRepository(Observation::class);
-        $speciesRepository = $doctrine->getRepository(Species::class);
-        $eventRepository = $doctrine->getRepository(Event::class);
+        $stationRepository = $manager->getRepository(Station::class);
+        $individualRepository = $manager->getRepository(Individual::class);
+        $observationRepository = $manager->getRepository(Observation::class);
+        $speciesRepository = $manager->getRepository(Species::class);
+        $eventRepository = $manager->getRepository(Event::class);
         $station = $stationRepository->findOneBy(['slug' => $slug]);
         if (!$station) {
             throw new \Exception('Station not found: '.$slug);
@@ -205,14 +204,12 @@ class StationsController extends PagesController
                                     ->findBy(['individual' => $individual], ['date' => 'DESC'])
                                 ;
                                 foreach ($observations as $observation) {
-                                    $this->deleteEntityObject(Observation::class, $observation->getId());
+                                    $manager->remove($observation);
                                 }
                             }
                             $individual->setSpecies($species);
                         }
-                        $entityManager = $doctrine->getManager();
-                        $entityManager->persist($individual);
-                        $entityManager->flush();
+                        $manager->persist($individual);
                     }
                     break;
                 case 'observation':
@@ -234,16 +231,16 @@ class StationsController extends PagesController
                         $picture = $request->files->get('observation')['picture'];
                         if ('new' === $request->request->get('action-type')) {
                             $observation->setUser($this->getUser());
-                            $observation->setPicture($this->uploadImageService->uploadImage($picture));
+                            $observation->setPicture($uploadImageService->uploadImage($picture));
                             $observation->setCreatedAt($dateNow);
                         } elseif ($observation->getUser() === $this->getUser() || $canModifyStation) {
                             $isDeletePicture = 'true' === $request->request->get('is-delete-picture');
                             if ($picture || $isDeletePicture) {
                                 if ($oldPicture) {
-                                    $this->uploadImageService->deleteImage($oldPicture);
+                                    $uploadImageService->deleteImage($oldPicture);
                                 }
                                 if (!$isDeletePicture) {
-                                    $observation->setPicture($this->uploadImageService->uploadImage($picture));
+                                    $observation->setPicture($uploadImageService->uploadImage($picture));
                                 } else {
                                     $observation->setPicture(null);
                                 }
@@ -261,14 +258,15 @@ class StationsController extends PagesController
                         $observation->setDate(date_create($observationFormValues['date']));
                         $observation->setIsMissing(!empty($observationFormValues['is_missing']));
 
-                        $entityManager = $doctrine->getManager();
-                        $entityManager->persist($observation);
-                        $entityManager->flush();
+                        $manager->persist($observation);
                     }
                     break;
                 default:
                     break;
             }
+
+            $manager->flush();
+
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => true,
@@ -283,7 +281,7 @@ class StationsController extends PagesController
             'station' => $station,
             'individuals' => $stationAllIndividuals,
             'observations' => $observationRepository->findAllObservationsInStation($station, $stationAllIndividuals),
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
             'individualForm' => $individualForm->createView(),
             'observationForm' => $observationForm->createView(),
         ]);
@@ -292,25 +290,21 @@ class StationsController extends PagesController
     /**
      * @Route("/station/{stationId}/delete", name="station_delete")
      */
-    public function stationDelete(Request $request, int $stationId): Response
-    {
-        /**
-         * @var Station $station;
-         */
-        $station = $this->deleteEntityObject(Station::class, $stationId);
+    public function stationDelete(
+        EntityManagerInterface $manager,
+        int $stationId
+    ): Response {
+        $station = $manager->getRepository(Station::class)
+            ->find($stationId)
+        ;
 
         if (!$station) {
             throw $this->createNotFoundException('La station n’existe pas');
         }
 
-        $individuals = $this->getDoctrine()
-            ->getRepository(Individual::class)
-            ->findSpeciesIndividualsForStation($station)
-        ;
+        $manager->remove($station);
+        $manager->flush();
 
-        foreach ($individuals as $individual) {
-            $this->deleteEntityObject(Individual::class, $individual->getId());
-        }
 
         $this->addFlash('notice', 'La station a été supprimée');
 
@@ -320,26 +314,20 @@ class StationsController extends PagesController
     /**
      * @Route("/individual/{individualId}/delete", name="individual_delete")
      */
-    public function individualDelete(Request $request, int $individualId): Response
-    {
-        /**
-         * @var Individual $individual;
-         */
-        $individual = $this->deleteEntityObject(Individual::class, $individualId);
+    public function individualDelete(
+        EntityManagerInterface $manager,
+        int $individualId
+    ): Response {
+        $individual = $manager->getRepository(Individual::class)
+            ->find($individualId)
+        ;
 
         if (!$individual) {
             throw $this->createNotFoundException('L’individu n’existe pas');
         }
-        $observations = $this->getDoctrine()->getRepository(Observation::class)
-            ->findBy(['individual' => $individual], ['date' => 'DESC'])
-        ;
 
-        foreach ($observations as $observation) {
-            /*
-             * @var Observation $observation;
-             */
-            $this->deleteEntityObject(Observation::class, $observation->getId());
-        }
+        $manager->remove($individual);
+        $manager->flush();
 
         $this->addFlash('notice', 'L’individu a été supprimé');
 
@@ -349,71 +337,27 @@ class StationsController extends PagesController
     }
 
     /**
-     * @Route("/observation/{obsId}/delete", name="observation_delete")
+     * @Route("/observation/{$observationId}/delete", name="observation_delete")
      */
-    public function observationDelete(Request $request, int $obsId): Response
-    {
-        /**
-         * @var Observation $obs;
-         */
-        $obs = $this->deleteEntityObject(Observation::class, $obsId);
+    public function observationDelete(
+        EntityManagerInterface $manager,
+        int $observationId
+    ): Response {
+        $observation = $manager->getRepository(Individual::class)
+            ->find($observationId)
+        ;
 
-        if (!$obs) {
+        if (!$observation) {
             throw $this->createNotFoundException('Cette observation n’existe pas');
         }
+
+        $manager->remove($observation);
+        $manager->flush();
 
         $this->addFlash('notice', 'L’observation a été supprimée');
 
         return $this->redirectToRoute('stations_show', [
             'slug' => $obs->getIndividual()->getStation()->getSlug(),
         ]);
-    }
-
-    /**
-     * @return Station|Observation|Individual|null
-     */
-    private function deleteEntityObject(string $entity, int $id)
-    {
-        $doctrine = $this->getDoctrine();
-
-        /**
-         * @var Station|Observation|Individual|null $entityInstance;
-         */
-        $entityInstance = $doctrine->getRepository($entity)
-            ->find($id)
-        ;
-
-        if (!$entityInstance) {
-            return null;
-        }
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->remove($entityInstance);
-        $entityManager->flush();
-
-        return $entityInstance;
-    }
-
-    /**
-     * @param Station|Observation $entityInstance
-     *
-     * @throws Exception
-     */
-    private function handleEditEntityInstanceDeletePicture(
-        $entityInstance,
-        ?bool $isDeletePicture,
-        ?UploadedFile $picture,
-        ?string $oldPicture
-    ): void {
-        if ($picture || $isDeletePicture) {
-            if ($oldPicture) {
-                $this->uploadImageService->deleteImage($oldPicture);
-            }
-            if (!$isDeletePicture) {
-                $entityInstance->setPicture($this->uploadImageService->uploadImage($picture));
-            } else {
-                $entityInstance->setPicture(null);
-            }
-        }
     }
 }
