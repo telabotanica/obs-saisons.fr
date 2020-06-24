@@ -16,7 +16,9 @@ class SpeciesPostType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class)
-            ->add('pdfUrl', UrlType::class)
+            ->add('pdfUrl', UrlType::class, [
+                'required' => false,
+            ])
             ->add('submit', SubmitType::class)
         ;
     }
