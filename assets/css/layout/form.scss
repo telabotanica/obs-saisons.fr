@@ -73,6 +73,10 @@
 	border: 1px solid grey(80);
 }
 
+textarea {
+	width: 100%;
+}
+
 .text-field {
 	@extend %input;
 	border-radius: 4px;
