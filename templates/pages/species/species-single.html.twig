@@ -7,8 +7,6 @@
         'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
     }) %}
 
-    <p>{{ species.description|raw }}</p>
-
     <p>{{ post.content|default('')|raw }}</p>
 
 {% endblock %}
