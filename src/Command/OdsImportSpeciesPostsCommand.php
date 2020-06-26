@@ -4,7 +4,6 @@ namespace App\Command;
 
 use App\Entity\Post;
 use App\Entity\Species;
-use App\Entity\TypeSpecies;
 use App\Entity\User;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,6 +47,10 @@ class OdsImportSpeciesPostsCommand extends Command
 
         $notFound = [];
         $admin = $this->em->getRepository(User::class)->findByRole(User::ROLE_ADMIN);
+        if (!isset($admin[0])) {
+            throw new \Exception('No admin user account found');
+        }
+        $admin = $admin[0];
 
         foreach ($allSpecies as $species) {
             // trying to cover all naming inconsistency
