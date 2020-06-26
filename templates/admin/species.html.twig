@@ -9,7 +9,12 @@
             {% set type = species.type.name %}
             <dt>{{ type }}</dt>
         {% endif %}
-        <dd><a href="{{ path('admin_species_page_edit', {speciesId: species.id}) }}">{{ species.vernacularName }} ({{ species.scientificName }})</a> {{ species.post ? '✅' }}</dd>
+        <dd>
+            <a href="{{ path('admin_species_page_edit', {speciesId: species.id}) }}">
+                {{ species.vernacularName }} ({{ species.scientificName }})
+            </a>
+            (<a href="{{ path('admin_species_page_edit', {speciesId: species.id, mode: 'html'}) }}">html</a>) {{ species.post ? '✅' }}
+        </dd>
     {% endfor %}
     </dl>
 

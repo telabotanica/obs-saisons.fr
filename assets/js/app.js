@@ -14,6 +14,7 @@ const algoliasearch = require('algoliasearch');
 import './ui/wysiwyg';
 import './ui/scientific-name';
 import {off} from "leaflet/src/dom/DomEvent";
+import './ui/textarea-auto-resize';
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');

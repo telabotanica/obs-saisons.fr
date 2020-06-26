@@ -21,7 +21,7 @@ class SpeciesController extends PagesController
     {
 //        return $this->render('pages/species/list.html.twig', [
 //            'accordions' => $this->setAccordions(),
-        return $this->render('pages/species/list.html.twig', [
+        return $this->render('pages/species/species-list.html.twig', [
             'allSpecies' => $this->getDoctrine()->getRepository(Species::class)->findAll(),
             'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
         ]);
@@ -42,7 +42,7 @@ class SpeciesController extends PagesController
             $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
-        return $this->render('pages/species/single.html.twig', [
+        return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
             'post' => $post,
         ]);

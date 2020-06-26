@@ -39,10 +39,11 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/espece/{speciesId}/edit", name="admin_species_page_edit")
+     * @Route("/admin/espece/{speciesId}/edit/{mode}", defaults={"mode"="wysiwyg"}, name="admin_species_page_edit")
      */
     public function editSpeciesPage(
         $speciesId,
+        $mode,
         Request $request,
         EntityManagerInterface $manager,
         SlugGenerator $slugGenerator
@@ -79,6 +80,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/edit-species.html.twig', [
             'species' => $species,
+            'editMode' => $mode,
             'form' => $form->createView(),
         ]);
     }

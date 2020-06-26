@@ -11,7 +11,7 @@ class SlugGenerator
      * @return string
      * @throws \Exception
      */
-    public function generateSlug(string $title, \DateTime $date = null)
+    public function generateSlug(string $title, \DateTimeInterface $date = null)
     {
         if (null === $date) {
             $date = new \DateTime('now');

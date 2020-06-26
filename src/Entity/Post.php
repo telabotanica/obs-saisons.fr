@@ -89,6 +89,16 @@ class Post
      */
     private $endDate;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url(
+     *     message="L’url '{{ value }}' n’est pas valide",
+     *     protocols={"https"},
+     *     normalizer="trim",
+     * )
+     */
+    private $pdfUrl;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -274,6 +284,18 @@ class Post
     public function setAuthor(User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getPdfUrl(): ?string
+    {
+        return $this->pdfUrl;
+    }
+
+    public function setPdfUrl(?string $pdfUrl): self
+    {
+        $this->pdfUrl = $pdfUrl;
 
         return $this;
     }
