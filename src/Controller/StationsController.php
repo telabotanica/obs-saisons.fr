@@ -65,15 +65,17 @@ class StationsController extends AbstractController
             $manager->persist($station);
             $manager->flush();
 
-            if ($request->isXmlHttpRequest()) {
-                return new JsonResponse([
-                    'success' => true,
-                    'redirect' => $this->generateUrl('stations'),
-                ]);
-            }
+            $this->addFlash('success', 'Votre station a été créée');
+        } else {
+            $this->addFlash('error', 'Votre station n’a pas pu être créée');
         }
 
-        $this->addFlash('success', 'Votre station a été créée');
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('stations'),
+            ]);
+        }
 
         return $this->redirectToRoute('stations');
     }
@@ -94,7 +96,7 @@ class StationsController extends AbstractController
             ->find($stationId)
         ;
         if (!$station) {
-            throw $this->createNotFoundException('Votre station n’existe pas');
+            throw $this->createNotFoundException('la station n’existe pas');
         }
         $this->denyAccessUnlessGranted(
             'station:edit',
@@ -106,18 +108,19 @@ class StationsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($station);
             $manager->flush();
 
-            if ($request->isXmlHttpRequest()) {
-                return new JsonResponse([
-                    'success' => true,
-                    'redirect' => $this->generateUrl('stations'),
-                ]);
-            }
+            $this->addFlash('success', 'Votre station a été modifiée');
+        } else {
+            $this->addFlash('error', 'La station n’a pas pu être modifiée');
         }
 
-        $this->addFlash('success', 'Votre station a été modifiée');
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('stations'),
+            ]);
+        }
 
         return $this->redirectToRoute('stations');
     }
@@ -170,7 +173,7 @@ class StationsController extends AbstractController
             ->findOneBy(['slug' => $slug])
         ;
         if (!$station) {
-            throw new Exception('Station not found: '.$slug);
+            throw $this->createNotFoundException('La station n’existe pas');
         }
 
         $individuals = $manager->getRepository(Individual::class)
@@ -228,7 +231,7 @@ class StationsController extends AbstractController
             ->find($stationId)
         ;
         if (!$station) {
-            throw new Exception(sprintf('Station with id %d not found', $stationId));
+            throw $this->createNotFoundException('La station n’a pas été trouvée');
         }
         $this->denyAccessUnlessGranted(
             'station:contribute',
@@ -245,9 +248,11 @@ class StationsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($individual);
             $manager->flush();
-        }
 
-        $this->addFlash('success', 'Votre individu a été créé');
+            $this->addFlash('success', 'Votre individu a été créé');
+        } else {
+            $this->addFlash('error', 'Votre individu n’a pas pu être créé');
+        }
 
         return $this->redirectToRoute('stations_show', [
             'slug' => $station->getSlug(),
@@ -270,7 +275,7 @@ class StationsController extends AbstractController
             ->find($individualId)
         ;
         if (!$individual) {
-            throw $this->createNotFoundException('Votre individu n’existe pas');
+            throw $this->createNotFoundException('L’individu n’existe pas');
         }
         $this->denyAccessUnlessGranted(
             'individual:edit',
@@ -282,11 +287,12 @@ class StationsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($individual);
             $manager->flush();
-        }
 
-        $this->addFlash('success', 'Votre individu a été modifié');
+            $this->addFlash('success', 'Votre individu a été modifié');
+        } else {
+            $this->addFlash('error', 'L’individu n’a pas pu être modifié');
+        }
 
         return $this->redirectToRoute('stations_show', [
             'slug' => $individual->getStation()->getSlug(),
@@ -308,7 +314,7 @@ class StationsController extends AbstractController
             ->find($individualId)
         ;
         if (!$individual) {
-            throw $this->createNotFoundException('Votre individu n’existe pas');
+            throw $this->createNotFoundException('L’individu n’existe pas');
         }
         $this->denyAccessUnlessGranted(
             'individual:edit',
@@ -344,7 +350,7 @@ class StationsController extends AbstractController
             ->find($stationId)
         ;
         if (!$station) {
-            throw new Exception(sprintf('Station with id %d not found', $stationId));
+            throw $this->createNotFoundException('La station n’a pas été trouvée');
         }
         $this->denyAccessUnlessGranted(
             'station:contribute',
@@ -361,9 +367,11 @@ class StationsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($observation);
             $manager->flush();
-        }
 
-        $this->addFlash('success', 'Votre observation a été créée');
+            $this->addFlash('success', 'Votre observation a été créée');
+        } else {
+            $this->addFlash('error', 'Votre observation n’a pas pu être créée');
+        }
 
         $redirect = $this->generateUrl('stations_show', [
             'slug' => $station->getSlug(),
@@ -395,7 +403,7 @@ class StationsController extends AbstractController
             ->find($observationId)
         ;
         if (!$observation) {
-            throw $this->createNotFoundException('Cette observation n’existe pas');
+            throw $this->createNotFoundException('L’observation n’existe pas');
         }
         $this->denyAccessUnlessGranted(
             'observation:edit',
@@ -410,11 +418,12 @@ class StationsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($observation);
             $manager->flush();
-        }
 
-        $this->addFlash('success', 'Votre observation a été modifiée');
+            $this->addFlash('success', 'Votre observation a été modifiée');
+        } else {
+            $this->addFlash('error', 'L’observation n’a pas pu être modifiée');
+        }
 
         $redirect = $this->generateUrl('stations_show', [
             'slug' => $station->getSlug(),
@@ -445,7 +454,7 @@ class StationsController extends AbstractController
             ->find($observationId)
         ;
         if (!$observation) {
-            throw $this->createNotFoundException('Cette observation n’existe pas');
+            throw $this->createNotFoundException('L’observation n’existe pas');
         }
         $this->denyAccessUnlessGranted(
             'observation:edit',
