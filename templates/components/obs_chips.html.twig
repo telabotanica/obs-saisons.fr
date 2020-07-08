@@ -78,26 +78,23 @@
         <a
             href=""
             class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}"
-            data-year="{{ obs.date|date("Y") }}"
-            data-month="{{ obs.date|date("n") }}"
-            data-species-id="{{ obs.individual.species.id }}"
-            data-indiv-id="{{ obs.individual.id }}"
-            data-indiv="{{ individualsIds|join(',') }}"
-            data-species-name="{{ obs.individual.species.vernacularName }}"
+            {# matching tabs #}
             data-tab="{{ obs.user.id }}"
-            data-open="obs-infos"
-            data-show-edit="{{ canAdminStation or app.user.id|default == obs.user.id }}"
-            data-is-missing="{{ obs.isMissing }}"
-            data-obs-id="{{ obs.id }}"
-            data-event-id="{{ obs.event.id }}"
-            data-author="{{ obs.user.displayName }}"
-            data-stage-name="{{ periodsNames[obs.event.name] }}"
+            {# matching calendar years menu and selecting observations for obs-infos list cards #}
+            data-year="{{ obs.date|date("Y") }}"
+            {# selecting observations for obs-infos list cards #}
+            data-month="{{ obs.date|date("n") }}"
+            {# selecting and displaying observations for obs-infos list cards #}
             data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
-            data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
-            data-obs-date="{{ obs.date|date("Y-m-d", "Europe/Paris") }}"
-            data-obs-picture="{{ obs.picture }}"
+            {# displaying obs-infos list cards #}
             data-picture-url="{{ pictureUrl }}"
-            data-details="{{ obs.details }}"
+            data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
+            data-show-edit="{{ canAdminStation or app.user.id|default == obs.user.id }}"
+            data-open="obs-infos"
+            {# editting observation #}
+            data-observation="{{ obs|getJsonSerializedEditObservation }}"
+            data-individuals-ids="{{ individualsIds|join(',') }}"{# all individual ids for this species #}
+            data-obs-date="{{ obs.date|date("Y-m-d", "Europe/Paris") }}"
             style="
                 {{
                     "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};
