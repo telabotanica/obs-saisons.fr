@@ -155,7 +155,7 @@
 		"description":"Arbuste qui mesure en moyenne entre 1 et 3 m\u00e8tres et peut atteindre 5 m\u00e8tres, aux tiges cylindriques allong\u00e9es et dress\u00e9es. Les feuilles sont lanc\u00e9ol\u00e9es (en forme de fer de lance), enti\u00e8res et velus sur la face inf\u00e9rieure. Elles sont \u00e9parses et pr\u00e9sentes sur l\u2019arbuste durant une courte p\u00e9riode.\r\nLes grandes fleurs (2 \u00e0 2,5 cm) sont jaune vif, dispos\u00e9es en grappes terminales allong\u00e9es et tr\u00e8s parfum\u00e9es. Elles sont form\u00e9es par un \u00e9tendard de grande taille (deux p\u00e9tales soud\u00e9s), deux autres p\u00e9tales (les ailes) et une car\u00e8ne centrale (deux p\u00e9tales soud\u00e9s) de forme tubul\u00e9e, pro\u00e9minente et dress\u00e9.\r\nLes fruits sont des gousses ovales de 6 \u00e0 8 centim\u00e8tres : les gousses jeunes sont pubescentes et deviennent presque glabres et noires \u00e0 maturit\u00e9 ; elles contiennent entre 12 et 18 graines.",
 		"type_id":1,
 		"type_name":"arbres",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61,65,85",
 		"is_active":1,
 		"picture":"genet"
 	},
@@ -399,7 +399,7 @@
 		"description":"Arbuste de 1 \u00e0 4 m\u00e8tres, au port compact, tr\u00e8s ramifi\u00e9 et arrondi. Jeunes pousses velues et rouge\u00e2tres.\r\n\u00c9corce marron gris\u00e2tre couverte de petits points (les lenticelles qui sont en fait des voies d\u2019a\u00e9rations) plus\r\nfonc\u00e9es.\r\nFeuilles persistantes, ovales, coriaces,\r\nlustr\u00e9es, vert fonc\u00e9 aux nervures plus claires, leur revers est rugueux plus p\u00e2le l\u00e9g\u00e8rement velu surtout au niveau de la nervure centrale et glanduleuse. Petit p\u00e9tiole.\r\nGroupement dense et bomb\u00e9 form\u00e9 de petites fleurs \u00e0 5 lobes ovales, de couleur blanc \u00e0 ros\u00e9. Les boutons\r\nfloraux sont roses.\r\nLes fruits sont de petites baies (drupes), ovo\u00efdes, d\u2019un bleu noir m\u00e9tallique et contenant une seule graine.",
 		"type_id":1,
 		"type_name":"arbres",
-		"bbch_list":"11,15,61,65,85,91,95",
+		"bbch_list":"61,65,85",
 		"is_active":1,
 		"picture":"viorne-tin"
 	},

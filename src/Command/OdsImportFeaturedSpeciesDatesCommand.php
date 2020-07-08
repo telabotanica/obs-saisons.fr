@@ -61,7 +61,7 @@ class OdsImportFeaturedSpeciesDatesCommand extends Command
             $start = intval($featured['start']);
             $end = intval($featured['end']);
 
-            if (!$start || !$end) {
+            if ((!$start && '0' !== $featured['start']) || (!$end && '0' !== $featured['end'])) {
                 $output->writeln(sprintf(
                     '<error>Wrong values for %s stade %s featured start %s (%d) end %s (%d)</error>',
                     $featured['species'],

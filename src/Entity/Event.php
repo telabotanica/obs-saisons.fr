@@ -34,6 +34,7 @@ class Event
      * @ORM\Column(type="string", length=100)
      */
     private $description;
+
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */

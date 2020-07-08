@@ -11,7 +11,6 @@
     {% set event_dates = event_dates|merge([event.endDate]) %}
 {% endif %}
 <div id="{{ event.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
-
     <div class="dual-blocks-container">
         {% for date in event_dates %}
             <div class="event-date {{ loop.index == 2 ? 'last' }}">
