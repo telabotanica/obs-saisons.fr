@@ -85,14 +85,14 @@
                 'data-name': 'locality'
             }
         }) }}
-        {{ form_row(stationForm.insee_code, {
+        {{ form_row(stationForm.inseeCode, {
             'row_attr': {'class': 'form-col small ml'},
             'label': 'Code INSEE *',
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
                 'pattern':'(100[1-9]|10[1-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-8][0-9]{4}|9[0-8][0-9]{3}|990[0-9]{2}|991[0-2][0-9]|9913[0-8])|(2(A001|B36[4-6]|(A|B)(00[2-9]|0[1-8][0-9]|09[0-9]|[12][0-9]{2}|3[0-5][0-9]|36[0-3])))',
-                'data-name': 'insee_code'
+                'data-name': 'inseeCode'
             },
         }) }}
     </div>
@@ -108,13 +108,13 @@
             'placeholder': 'Choisir'
         }) }}
         <div class="form-col check ml">
-            {{ form_row(stationForm.is_private, {
+            {{ form_row(stationForm.isPrivate, {
                 'row_attr': {'class': 'ods-checkbox'},
                 'label': 'Station personnelle',
                 'label_attr': {'class': 'checkbox-label ods-form-label'},
                 'attr': {
                     'class': 'ods-checkbox-input',
-                    'data-name': 'is_private'
+                    'data-name': 'isPrivate'
                 },
                 'help': 'Si vous souhaitez signaler que cette station est personnelle,
             vous pouvez cocher cette case.',
@@ -122,5 +122,5 @@
             }) }}
         </div>
     </div>
-    {% include 'forms/components/upload-block.html.twig' with { formField: stationForm.header_image } %}
+    {% include 'forms/components/upload-block.html.twig' with { formField: stationForm.headerImage } %}
 {% endblock %}

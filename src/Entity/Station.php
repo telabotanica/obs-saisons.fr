@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,7 +22,7 @@ class Station
     /**
      * @ORM\Column(type="boolean")
      */
-    private $is_private;
+    private $isPrivate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -30,6 +30,7 @@ class Station
     private $user;
 
     /**
+     * @Gedmo\Slug(fields={"name"}, separator="-")
      * @ORM\Column(type="string", length=100)
      */
     private $slug;
@@ -45,16 +46,9 @@ class Station
     private $habitat;
 
     /**
-     * @Assert\File(
-     *     mimeTypes = {"image/png", "image/jpeg"},
-     *     mimeTypesMessage = "Le format de l'image doit être .jpg ou .png",
-     *     maxSize = "5242880",
-     *     maxSizeMessage = "Le fichier est trop lourd ({{ size }} {{ suffix }}). Le maximum autorisé est de {{ limit }} {{ suffix }}."
-     * )
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $header_image;
+    private $headerImage;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -101,14 +95,16 @@ class Station
      *
      * @ORM\Column(type="string", length=5)
      */
-    private $insee_code;
+    private $inseeCode;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
@@ -125,12 +121,12 @@ class Station
 
     public function getIsPrivate(): ?bool
     {
-        return $this->is_private;
+        return $this->isPrivate;
     }
 
-    public function setIsPrivate(bool $is_private): self
+    public function setIsPrivate(bool $isPrivate): self
     {
-        $this->is_private = $is_private;
+        $this->isPrivate = $isPrivate;
 
         return $this;
     }
@@ -185,12 +181,12 @@ class Station
 
     public function getHeaderImage(): ?string
     {
-        return $this->header_image;
+        return $this->headerImage;
     }
 
-    public function setHeaderImage(?string $header_image): self
+    public function setHeaderImage(?string $headerImage): self
     {
-        $this->header_image = $header_image;
+        $this->headerImage = $headerImage;
 
         return $this;
     }
@@ -255,16 +251,16 @@ class Station
         return $this->altitude;
     }
 
-    public function setInseeCode(string $insee_code): self
+    public function setInseeCode(string $inseeCode): self
     {
-        $this->insee_code = $insee_code;
+        $this->inseeCode = $inseeCode;
 
         return $this;
     }
 
     public function getInseeCode(): ?string
     {
-        return $this->insee_code;
+        return $this->inseeCode;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface

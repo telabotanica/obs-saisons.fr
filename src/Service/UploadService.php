@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Service\SlugGenerator as SlugGenerator;
+use Exception;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,39 +26,67 @@ class UploadService
         $this->slugGenerator = new SlugGenerator();
     }
 
-    public function uploadImage(?UploadedFile $formValue)
-    {
-        $imageDirectoryPath = $this->rootDir.self::IMAGE_DIRECTORY_PATH;
-        $fileName = null;
+    public function uploadFile(
+        ?UploadedFile $formValue
+    ): ?string {
+        $fileDirectoryPath = $this->rootDir.self::IMAGE_DIRECTORY_PATH;
+        $filePath = null;
         if ($formValue) {
-            if (!is_dir($imageDirectoryPath)) {
-                mkdir($imageDirectoryPath, 0777, true);
+            if (!is_dir($fileDirectoryPath)) {
+                mkdir($fileDirectoryPath, 0777, true);
             }
 
             $file = $formValue;
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFilename = $this->slugGenerator->slugify($originalFilename).'-'.uniqid().'.'.$file->guessExtension();
-            $fileName = self::IMAGE_URI_PREFIX.'/'.$safeFilename;
+            $filePath = self::IMAGE_URI_PREFIX.'/'.$safeFilename;
 
             try {
                 $file->move(
-                    $imageDirectoryPath, // Le dossier dans le quel le fichier va etre charger
-                    $fileName
+                    $fileDirectoryPath, // Le dossier dans le quel le fichier va etre charger
+                    $filePath
                 );
             } catch (FileException $e) {
                 return new Response($e->getMessage());
             }
         }
 
-        return $fileName;
+        return $filePath;
     }
 
-    public function deleteImage(string $imagePath): void
+    /**
+     * @throws Exception
+     */
+    public function setFile(
+        ?UploadedFile $uploadedFile,
+        ?string $previousFilepath,
+        bool $isDeleteFile
+    ): ?string {
+        $filePath = $previousFilepath;
+
+        if ($uploadedFile || $isDeleteFile) {
+            if ($previousFilepath) {
+                // throws exception
+                $this->deleteFile($previousFilepath);
+            }
+            $filePath = !$isDeleteFile ? $this->uploadFile($uploadedFile) : null;
+        }
+
+        return $filePath;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteFile(string $filePath): void
     {
-        $directoryPath = $this->rootDir.self::DIRECTORY_PATH;
-        $result = unlink($directoryPath.$imagePath);
+        $absoluteFilePath = $this->rootDir.self::DIRECTORY_PATH.$filePath;
+        $result = true;
+        if (is_file($absoluteFilePath)) {
+            $result = unlink($absoluteFilePath);
+        }
         if (!$result) {
-            throw new \Exception(sprintf('Error deleting "%s"', $imagePath));
+            throw new Exception(sprintf('Error deleting "%s"', $filePath));
         }
     }
 }

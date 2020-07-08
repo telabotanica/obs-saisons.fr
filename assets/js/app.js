@@ -58,6 +58,7 @@ $( document ).ready( function() {
     hideCalendarLegend();
     toggleAccodionBlock();
     stationMapDisplay();
+    hideFlashMessages();
 });
 
 // open overlay
@@ -67,12 +68,11 @@ function onOpenOverlay() {
         event.stopPropagation();
         const $thisLink = $(this);
 
-        if ($thisLink.hasClass('disabled')) {
+        if ($thisLink.hasClass('disabled')) {//user is not logged
             window.location.href = window.location.origin+'/user/login';
         } else {
             let dataAttrs = $thisLink.data(),
-                $overlay = $('.overlay.'+dataAttrs.open),
-                isEdit = $thisLink.hasClass('edit');
+                $overlay = $('.overlay.'+dataAttrs.open);
 
             $overlay
                 .removeClass('hidden')
@@ -85,22 +85,14 @@ function onOpenOverlay() {
             ;
 
             if(valOk($('form', $overlay))) {
-                $('form', $overlay).get(0).reset();
+                let $form = $('form', $overlay);
+
+                $form.get(0).reset();
+                if ($thisLink.hasClass('edit')) {
+                    dataAttrs = setEditForm($overlay, $form, $thisLink, dataAttrs);
+                }
             }
 
-            if (isEdit) {
-                $overlay.addClass('edit')
-                    .find('.action-type')
-                        .val('edit')
-                        .after(
-                        '<input class="'+dataAttrs.open+'-id" type="hidden" name="'+dataAttrs.open+'-id" value="'+dataAttrs[dataAttrs.open+'Id']+'">'
-                    )
-                ;
-                $('.show-on-edit',$overlay).attr(
-                    'href',
-                    '/'+dataAttrs.open+'/'+dataAttrs[dataAttrs.open+'Id']+'/delete'
-                );
-            }
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
                 case 'obs-infos':
@@ -119,12 +111,11 @@ function onOpenOverlay() {
                     onChangeObsEvent();
                     onChangeObsDate();
                     observationOvelayManageIndividualAndEvents(dataAttrs);
-                    if(isEdit) {
-                        $thisLink.closest('.overlay').addClass('hidden');
-                    }
+                    editObservationPreSetFields(dataAttrs);
                     break;
                 case 'individual':
                     individualOvelayManageSpecies(dataAttrs);
+                    editIndividualPreSetFields(dataAttrs);
                     break;
                 default:
                     break;
@@ -133,43 +124,53 @@ function onOpenOverlay() {
     });
 }
 
-function editStationPreSetFields(dataAttrs) {
-    if ($('.overlay.station').hasClass('edit')) {
-        if (valOk(dataAttrs.name) && '' !== dataAttrs.name) {
-            $('#station_name').val(dataAttrs.name);
+function setEditForm($overlay, $form, $thisLink, dataAttrs) {
+    let formActionReset = '/'+dataAttrs.open+'/new';
+
+    if ('station' !== dataAttrs.open) {
+        let stationId;
+        if ('observation' === dataAttrs.open) {
+            let $observation = $('.stage-marker.observation-' + dataAttrs.observationId);
+            // close obs-infos overlay
+            $thisLink.closest('.overlay').addClass('hidden');
+
+            dataAttrs.observation = $observation.data('observation');
+            dataAttrs.individualsIds = $observation.data('individualsIds');
+            dataAttrs.speciesName = dataAttrs.observation.individual.species.vernacularName;
+
+            stationId = dataAttrs.observation.individual.station.id;
+        } else {
+            stationId = dataAttrs.individual.station.id;
         }
-        if (valOk(dataAttrs.description) && '' !== dataAttrs.description) {
-            $('#station_description').val(dataAttrs.description);
-        }
-        if (valOk(dataAttrs.latitude) && '' !== dataAttrs.latitude) {
-            $latitude.val(dataAttrs.latitude);
-        }
-        if (valOk(dataAttrs.longitude) && '' !== dataAttrs.longitude) {
-            $longitude.val(dataAttrs.longitude).trigger('blur');
-        }
-        if (valOk(dataAttrs.habitat)) {
-            $('#station_habitat')
-                .find('option[value="'+dataAttrs.habitat+'"]')
-                .prop('selected', true).attr('selected', 'selected')
-            ;
-        }
-        if (valOk(dataAttrs.isPrivate)) {
-            $('#station_is_private').prop('checked', dataAttrs.isPrivate === 1)
-        }
-        if (valOk(dataAttrs.headerImage) && '' !== dataAttrs.headerImage) {
-            $('.upload-zone-placeholder').addClass('hidden');
-            $('img.placeholder-img').addClass('obj').attr('src', dataAttrs.headerImage);
-        }
+        formActionReset = '/station/'+ stationId + formActionReset;
     }
+
+    let editionPath = '/'+dataAttrs.open+'/'+dataAttrs[dataAttrs.open]['id'];
+
+    $overlay.addClass('edit');
+    $form
+        .attr('action', editionPath+'/edit')
+        .data('formActionReset', formActionReset)
+    ;
+    $('.show-on-edit', $overlay).attr('href', editionPath+'/delete');
+
+    return dataAttrs;
 }
 
 function onObsInfo($thisLink, dataAttrs) {
     let $thisCalendar = $thisLink.closest('.periods-calendar'),
-        theseObservations = $('.stage-marker[data-year="'+dataAttrs.year+'"][data-stage-name="'+dataAttrs.stageName+'"][data-month="'+dataAttrs.month+'"]:visible', $thisCalendar),
+        theseObservations = $(
+            '.stage-marker' +
+            '[data-stage="'+dataAttrs.stage+'"]' +
+            '[data-year="'+dataAttrs.year+'"]' +
+            '[data-month="'+dataAttrs.month+'"]' +
+            ':visible',
+            $thisCalendar
+        ),
         $obsInfo = $('.obs-informations'),
         obsInfoTitle = 'Détails de l’observation';
-
     $obsInfo.empty();
+
     if(1 === theseObservations.length) {
         if ($thisLink.hasClass('absence')) {
             obsInfoTitle = 'Signalement d’absence de ce stade';
@@ -178,31 +179,31 @@ function onObsInfo($thisLink, dataAttrs) {
         obsInfoTitle = 'Détails des observations';
     }
     for(let index=0;index < theseObservations.length;index++) {
-        let editButtons = '';
         dataAttrs = theseObservations[index].dataset;
+
+        let observation = $.parseJSON(dataAttrs.observation),
+            editButtons = '';
+
         if(dataAttrs.showEdit) {
             editButtons =
                 '<div class="dual-blocks-container">'+
-                    '<a href="/observation/'+dataAttrs.obsId+'/delete" class="dual-squared-button delete-icon">'+
+                    '<a href="/observation/'+observation.id+'/delete" class="dual-squared-button delete-icon">'+
                         '<div class="squared-button-label">Supprimer</div>'+
                     '</a>'+
                     '<a href="" class="dual-squared-button edit-obs edit-list-icon edit open" ' +
-                        'data-action-type="edit" ' +
                         'data-open="observation" '+
-                        'data-species="'+dataAttrs.speciesId+'" '+
-                        'data-species-name="'+dataAttrs.speciesName+'" '+
-                        'data-indiv="'+dataAttrs.indiv+'" '+
-                        'data-observation-id="'+dataAttrs.obsId+'" '+
+                        'data-observation-id="'+observation.id+'" '+
                     '>'+
                         '<div class="squared-button-label">Éditer</div>'+
                     '</a>'+
                 '</div>'
+            ;
         }
         $obsInfo.append(
-        '<div class="list-cards-item obs" data-id="'+dataAttrs.obsId+'">'+
+        '<div class="list-cards-item obs" data-id="'+observation.id+'">'+
             '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
             '<div class="item-name-block">'+
-                '<div class="item-name">'+dataAttrs.author+'</div>'+
+                '<div class="item-name">'+observation.user.displayedName+'</div>'+
                 '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
                 '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
             '</div>'+
@@ -233,9 +234,13 @@ function onCloseOverlay() {
 function closeOverlay($overlay) {
     $('body').css('overflow', 'auto');
     $overlay.addClass('hidden').removeClass('edit');
-    if(valOk($('form',$overlay))) {
 
-        $('form',$overlay).get(0).reset();
+    if(valOk($('form',$overlay))) {
+        let $form = $('form', $overlay);
+
+        $form.attr('action',$form.data('formActionReset'));
+        $form.get(0).reset();
+
         $overlay.find('option').removeAttr('hidden');
 
         if ($overlay.hasClass('individual')) {
@@ -251,60 +256,93 @@ function closeOverlay($overlay) {
             $('.delete-file').trigger('click');
             $('.is-delete-picture').remove();
         }
-        $('.action-type', $overlay).val('new');
-        $('.observation-id, .individual-id, .station-id').remove();
         $('.show-on-edit', $overlay).attr('href','');
     } else if ($overlay.hasClass('obs-infos')) {
         $('.saisie-container').find('.obs-info').text('');
     }
 }
 
+function editStationPreSetFields(dataAttrs) {
+    let station = dataAttrs.station;
+    if ($('.overlay.station').hasClass('edit')) {
+        if (valOk(station.name) && '' !== station.name) {
+            $('#station_name').val(station.name);
+        }
+        if (valOk(station.description) && '' !== station.description) {
+            $('#station_description').val(station.description);
+        }
+        if (valOk(station.latitude) && '' !== station.latitude) {
+            $latitude.val(station.latitude);
+        }
+        if (valOk(station.longitude) && '' !== station.longitude) {
+            $longitude.val(station.longitude).trigger('blur');
+        }
+        if (valOk(station.habitat)) {
+            $('#station_habitat')
+                .find('option[value="'+station.habitat+'"]')
+                .prop('selected', true).attr('selected', 'selected')
+            ;
+        }
+        if (valOk(station.isPrivate)) {
+            $('#station_isPrivate').prop('checked', station.isPrivate);
+        }
+        if (valOk(station.headerImage) && '' !== station.headerImage) {
+            $('.upload-zone-placeholder').addClass('hidden');
+            $('img.placeholder-img').addClass('obj').attr('src', station.headerImage);
+        }
+    }
+}
+
 function observationOvelayManageIndividualAndEvents(dataAttrs) {
-    let availableIndividuals = getDataAttrValuesArray(dataAttrs.indiv.toString()),
+    let availableIndividuals = dataAttrs.individualsIds ? getDataAttrValuesArray(dataAttrs.individualsIds.toString()) : [],
         $formTitle = $('.overlay.observation .saisie-title'),
         stationName = $formTitle.data('stationName');
 
     updateSelectOptions($individual, availableIndividuals);
     $individual.trigger('change');//triggers onChangeSetIndividual()
-     // Display species name in title
-     if (valOk(dataAttrs.speciesName)) {
-         // capitalize species name
-         let speciesName = dataAttrs.speciesName.charAt(0).toUpperCase() + dataAttrs.speciesName.slice(1);
-         // unescape special chars and display in title
-         $formTitle.html(speciesName).text();
-     } else {
-         $formTitle.html(stationName).text();
-     }
+    // Display species name in title
+    if (valOk(dataAttrs.speciesName)) {
+        let speciesName = dataAttrs.speciesName;
+        // capitalize species name
+        speciesName = speciesName.charAt(0).toUpperCase() + speciesName.slice(1);
+        // unescape special chars and display in title
+        $formTitle.html(speciesName).text();
+    } else {
+        // unescape special chars and display in title
+        $formTitle.html(stationName).text();
+    }
+}
 
+function editObservationPreSetFields(dataAttrs) {
     if ($('.overlay.observation').hasClass('edit')) {
-        let obsDataAttrs = $('.stage-marker.observation-'+dataAttrs.observationId).data();
+        let observation = dataAttrs.observation;
 
         $individual
             .removeClass('disabled')
-            .find('.individual-option.individual-'+obsDataAttrs.indivId)
-                .prop('selected', true).attr('selected', 'selected')
-                .prop('hidden', false).removeAttr('hidden')
+            .find('.individual-option.individual-'+observation.individual.id)
+            .prop('selected', true).attr('selected', 'selected')
+            .prop('hidden', false).removeAttr('hidden')
         ;
         $individual.trigger('change');
-        if (valOk(obsDataAttrs.eventId)) {
+        if (valOk(observation.event.id)) {
             $event
-                .find('.event-option.event-'+obsDataAttrs.eventId)
-                    .prop('selected', true).attr('selected', 'selected')
-                    .prop('hidden', false).removeAttr('hidden')
+                .find('.event-option.event-'+observation.event.id)
+                .prop('selected', true).attr('selected', 'selected')
+                .prop('hidden', false).removeAttr('hidden')
             ;
         }
-        if (valOk(obsDataAttrs.obsDate)) {
-            $observationDate.val(obsDataAttrs.obsDate);
+        if (valOk(observation.date)) {
+            $observationDate.val(observation.date);
         }
-        if (valOk(obsDataAttrs.isMissing)) {
-            $('#observation_is_missing').prop('checked', obsDataAttrs.isMissing === 1)
+        if (valOk(observation.isMissing)) {
+            $('#observation_isMissing').prop('checked', observation.isMissing);
         }
-        if (valOk(obsDataAttrs.obsPicture) && '' !== obsDataAttrs.obsPicture) {
+        if (valOk(observation.picture) && '' !== observation.picture) {
             $('.upload-zone-placeholder').addClass('hidden');
-            $('img.placeholder-img').addClass('obj').attr('src', obsDataAttrs.obsPicture);
+            $('img.placeholder-img').addClass('obj').attr('src', observation.picture);
         }
-        if (valOk(obsDataAttrs.details) && '' !== obsDataAttrs.details) {
-            $('#observation_details').val(obsDataAttrs.details);
+        if (valOk(observation.details) && '' !== observation.details) {
+            $('#observation_details').val(observation.details);
             $('.open-details-button').trigger('click')//triggers openDetailsField()
         }
     }
@@ -330,14 +368,18 @@ function individualOvelayManageSpecies(dataAttrs) {
     });
 
     updateSelectOptions($species, availableSpecies, !showAll);
+}
+
+function editIndividualPreSetFields(dataAttrs) {
+    let individual = dataAttrs.individual;
 
     if ($('.overlay.individual').hasClass('edit')) {
-        if (valOk(dataAttrs.name) && '' !== dataAttrs.name) {
-            $('#individual_name').val(dataAttrs.name);
+        if (valOk(individual.name) && '' !== individual.name) {
+            $('#individual_name').val(individual.name);
         }
         $species.removeClass('disabled');
-        if (valOk(dataAttrs.speciesId)) {
-            $('.species-option.species-'+dataAttrs.speciesId)
+        if (valOk(individual.species.id)) {
+            $('.species-option.species-'+individual.species.id)
                 .prop('selected', true).attr('selected', 'selected')
                 .prop('hidden', false).removeAttr('hidden')
             ;
@@ -378,7 +420,6 @@ function updateSelectOptions($selectEl, itemsToMatch, sortOptions = true) {
             $selectEl.val(itemsToMatch[0]);
         }
     }
-
 }
 
 function onChangeSetIndividual() {
@@ -612,7 +653,7 @@ function onLocation() {
 function onPosition(position, marker = null) {
     let transmittedLatitude = Number.parseFloat(position.lat).toFixed(4),
         transmittedLongitude = Number.parseFloat(position.lng).toFixed(5),
-        $addLoadingClassElements = $('#station_locality,#station_insee_code').siblings('label');
+        $addLoadingClassElements = $('#station_locality,#station_inseeCode').siblings('label');
     //updates coordinates fields
     $latitude.val(transmittedLatitude);
     $longitude.val(transmittedLongitude);
@@ -631,7 +672,7 @@ function onPosition(position, marker = null) {
             let locationInformations = JSON.parse(data);
             // updates location informations fields
             $locality.val(locationInformations.commune);
-            $('#station_insee_code').val(locationInformations.code_insee);
+            $('#station_inseeCode').val(locationInformations.code_insee);
             $('#station_altitude').val(locationInformations.alt);
             // stops displaying loading gif
             $addLoadingClassElements.removeClass('loading');
@@ -764,11 +805,12 @@ function ajaxSendFile($picture, files) {
 function onDeleteFile() {
     $('.delete-file').off('click').on('click', function (event) {
         event.preventDefault();
+        let action = $(this).closest('form').attr('name');
 
         $('.upload-zone .upload-input')
             .val('')
             .after(
-                '<input type="hidden" class="is-delete-picture" name="is-delete-picture" value="true">'
+                '<input type="hidden" class="is-delete-picture" name="'+action+'[isDeletePicture]" value="true">'
             )
             .closest('form').off('submit.ddupload')
         ;
@@ -1014,6 +1056,10 @@ function mapDisplay(
     map.addLayer(marker);
 
     return {map:map,marker:marker};
+}
+
+function hideFlashMessages() {
+    $('.app-flashes').delay(5000).slideUp(300);
 }
 
 function valOk(value, comparisonDirection = true, compareTo = null) {
