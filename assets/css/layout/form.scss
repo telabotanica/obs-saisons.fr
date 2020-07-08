@@ -125,18 +125,31 @@
 	}
 }
 
-.ods-form-done {
-	@extend %hide;
+@mixin app-flashes {
+	width: 100%;
 	padding: 20px;
 	text-align: center;
-	background-color: grey(87);
+	color: $grey306092;
 }
 
-.ods-form-fail {
-	@extend %hide;
-	margin-top: 10px;
-	padding: 10px;
-	background-color: #ffdede;
+.app-flashes-success {
+	@include app-flashes;
+	background-color: $green725760;
+}
+
+.app-flashes-notice {
+	@include app-flashes;
+	background-color: $blue;
+}
+
+.app-flashes-error {
+	@include app-flashes;
+	background-color: $red;
+}
+
+.app-flashes-warning {
+	@include app-flashes;
+	background-color: $orange;
 }
 
 .ods-form-warning {
