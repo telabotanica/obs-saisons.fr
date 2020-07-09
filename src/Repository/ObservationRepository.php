@@ -6,7 +6,6 @@ use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -42,7 +41,7 @@ class ObservationRepository extends ServiceEntityRepository
     public function findLastObs(int $limit): array
     {
         return $this->createQueryBuilder('o')
-            ->where('o.is_missing = 0')
+            ->where('o.isMissing = 0')
             ->orderBy('o.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
@@ -54,7 +53,7 @@ class ObservationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->where('o.picture IS NOT NULL')
-            ->andWhere('o.is_missing = 0')
+            ->andWhere('o.isMissing = 0')
             ->orderBy('o.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()

@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Security\Voter\UserVoter;
+use App\Service\BreadcrumbsGenerator;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -15,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class PostsController.
  */
-class PostsController extends PagesController
+class PostsController extends AbstractController
 {
     /* ************************************************ *
      * actualites
@@ -26,15 +28,17 @@ class PostsController extends PagesController
      */
     public function actualitesIndex(
         Request $request,
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
     ) {
         $limit = 10;
-        $articleRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('article');
+        $articleRepository = $manager->getRepository(Post::class)->setPosts('article');
         $articles = $articleRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($articleRepository->findAll()) / $limit);
 
         return $this->render('pages/actualites.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
             'articles' => $articles,
             'pagination' => [
                 'currentPage' => $page,
@@ -52,9 +56,11 @@ class PostsController extends PagesController
      */
     public function articlePage(
         Request $request,
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
     ) {
-        $articleRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('article');
+        $articleRepository = $manager->getRepository(Post::class)->setPosts('article');
         $article = $articleRepository->findBySlug($slug);
         if (null === $article) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
@@ -68,7 +74,7 @@ class PostsController extends PagesController
         ];
 
         return $this->render('pages/article.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
             'article' => $article,
             'nextPreviousArticles' => $nextPreviousArticles,
         ]);
@@ -119,7 +125,7 @@ class PostsController extends PagesController
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
         $post = $manager->getRepository(Post::class)
-            ->findById($postId);
+            ->find($postId);
 
         if (!$post) {
             throw $this->createNotFoundException('L’article n’existe pas');
@@ -151,7 +157,7 @@ class PostsController extends PagesController
         EntityManagerInterface $manager
     ) {
         $post = $manager->getRepository(Post::class)
-            ->findById($postId);
+            ->find($postId);
 
         if (!$post) {
             throw $this->createNotFoundException('L’article n’existe pas');
@@ -185,15 +191,17 @@ class PostsController extends PagesController
      */
     public function evenementsIndex(
         Request $request,
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
     ) {
         $limit = 10;
-        $eventRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('event');
+        $eventRepository = $manager->getRepository(Post::class)->setPosts('event');
         $events = $eventRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($eventRepository->findAll()) / $limit);
 
         return $this->render('pages/evenements.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
             'events' => $events,
             'pagination' => [
                 'currentPage' => $page,
@@ -211,9 +219,11 @@ class PostsController extends PagesController
      */
     public function eventPage(
         Request $request,
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
     ) {
-        $eventRepository = $this->getDoctrine()->getRepository(Post::class)->setPosts('event');
+        $eventRepository = $manager->getRepository(Post::class)->setPosts('event');
         $event = $eventRepository->findBySlug($slug);
         if (null === $event) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
@@ -227,7 +237,7 @@ class PostsController extends PagesController
         ];
 
         return $this->render('pages/event.html.twig', [
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
             'event' => $event,
             'nextPreviousEvents' => $nextPreviousEvents,
         ]);

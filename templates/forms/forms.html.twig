@@ -6,9 +6,9 @@
 	<div class="saisie ods-form">
 		{{ form_start(form, {
 			'attr' : {
-				'action' : app.request.getPathInfo(),
 				'id' : "#{action}_form",
-				'data-name' : action
+				'data-name' : action,
+				'data-form-action-reset' : ''
 			}
 		}) }}
 			{% block form_container %}
@@ -21,13 +21,6 @@
 				{% block form_submission %}
 					{{ form_errors(form) }}
 					{{ form_widget(form._token) }}
-					<div class="ods-form-done">
-						<div>Merci! votre formulaire a bien été envoyé!</div>
-					</div>
-					<div class="ods-form-fail">
-						<div>Désolé quelque chose s'est mal passé lors de l'envoi de votre formulaire</div>
-					</div>
-
 					<div class="saisie-footer">
 						<a href="" class="button bt-form bt-annuler">
 							<div>Annuler</div>

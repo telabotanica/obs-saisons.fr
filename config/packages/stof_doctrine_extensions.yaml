@@ -5,3 +5,5 @@ stof_doctrine_extensions:
     orm:
         default:
             softdeleteable: true
+            timestampable: true
+            sluggable: true

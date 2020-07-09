@@ -3,7 +3,6 @@
 {% block title %}Créer une nouvelle fiche espèce {{ species.scientificName }} ({{ species.vernacularName }}){% endblock %}
 
 {% block main_content %}
-    {% include 'components/app-flashes.html.twig' %}
 
     {% include 'layout/header.html.twig' with ({
         'title': 'Édition de la fiche espèce : ' ~ species.vernacularName,

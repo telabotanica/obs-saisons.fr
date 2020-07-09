@@ -2,16 +2,14 @@
 
 namespace App\Service;
 
+use Exception;
+
 /**
  * Class SlugGenerator.
  */
 class SlugGenerator
 {
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    public function generateSlug(string $title, \DateTimeInterface $date = null)
+    public function generateSlug(string $title, \DateTimeInterface $date = null): string
     {
         if (null === $date) {
             $date = new \DateTime('now');

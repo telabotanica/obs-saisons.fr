@@ -2,289 +2,127 @@
 
 namespace App\Controller;
 
-use App\Entity\Event;
 use App\Entity\Individual;
 use App\Entity\Observation;
-use App\Entity\Species;
 use App\Entity\Station;
-use App\Entity\User;
-use App\Form\Type\IndividualType;
-use App\Form\Type\ObservationType;
-use App\Form\Type\StationType;
+use App\Form\IndividualType;
+use App\Form\ObservationType;
+use App\Form\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
-use App\Service\SlugGenerator;
-use App\Service\UploadService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class StationsController.
  */
-class StationsController extends PagesController
+class StationsController extends AbstractController
 {
-
     /* ************************************************ *
      * Stations
      * ************************************************ */
 
     /**
-     * @Route("/participer/stations", name="stations", methods={"GET", "POST"})
+     * @Route("/participer/stations", name="stations", methods={"GET"})
      */
     public function stations(
         Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
-        SlugGenerator $slugGenerator,
-        EntityManagerInterface $manager,
-        UploadService $uploadImageService
-    ): Response {
+        EntityManagerInterface $manager
+    ) {
         $station = new Station();
-        $stationForm = $this->createForm(StationType::class, $station);
-        $stationRepository = $manager->getRepository(Station::class);
-
-        if ($request->isMethod('POST') && !$this->isGranted(UserVoter::LOGGED)) {
-            return $this->redirectToRoute('user_login');
-        }
-
-        if ($request->isMethod('POST') && 'station' === $request->request->get('action')) {
-            if (!$this->isGranted(UserVoter::LOGGED)) {
-                return $this->redirectToRoute('user_login');
-            }
-            $oldHeaderImage = null;
-            if ('edit' === $request->request->get('action-type')) {
-                $stationId = $request->request->get('station-id') ?? null;
-                $station = $stationId ? $stationRepository->find($stationId) : null;
-                if (!$station) {
-                    throw $this->createNotFoundException('La station n’existe pas');
-                }
-                $oldName = $station->getName();
-                $oldHeaderImage = $station->getHeaderImage();
-                if (
-                    $station->getIsPrivate()
-                    && $station->getUser() !== $this->getUser()
-                    && !$this->isGranted(User::ROLE_ADMIN)
-                ) {
-                    throw new AccessDeniedException('Vous n’êtes pas autorisé à contribuer sur cette station');
-                }
-                $stationForm = $this->createForm(StationType::class, $station);
-            }
-            $stationForm->handleRequest($request);
-            if ($stationForm->isSubmitted() && $stationForm->isValid()) {
-                $stationFormValues = $request->request->get('station');
-
-                $dateNow = new DateTime('NOW');
-                $name = $stationFormValues['name'];
-                $is_private = !empty($stationFormValues['is_private']);
-                $headerImage = $request->files->get('station')['header_image'];
-
-                if ('new' === $request->request->get('action-type')) {
-                    $station->setUser($this->getUser());
-                    $station->setSlug($slugGenerator->slugify($name));
-                    $station->setHeaderImage($uploadImageService->uploadImage($headerImage));
-                    $station->setCreatedAt($dateNow);
-                } else {
-                    if ($name !== $oldName) {
-                        $station->setSlug($slugGenerator->slugify($name));
-                    }
-                    $isDeletePicture = 'true' === $request->request->get('is-delete-picture');
-                    if ($headerImage || $isDeletePicture) {
-                        if ($oldHeaderImage) {
-                            $uploadImageService->deleteImage($oldHeaderImage);
-                        }
-                        if (!$isDeletePicture) {
-                            $station->setHeaderImage($uploadImageService->uploadImage($headerImage));
-                        } else {
-                            $station->setHeaderImage(null);
-                        }
-                    } elseif ($oldHeaderImage) {
-                        $station->setHeaderImage($oldHeaderImage);
-                    }
-                    $station->setUpdatedAt($dateNow);
-                }
-                $station->setIsPrivate($is_private);
-
-                $manager->persist($station);
-                $manager->flush();
-
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse([
-                        'success' => true,
-                        'redirect' => $request->getUri(),
-                    ]);
-                }
-
-                return $this->redirect($request->getUri());
-            }
-        }
+        $form = $this->createForm(StationType::class, $station, [
+            'action' => $this->generateUrl('stations_new'),
+        ]);
 
         return $this->render('pages/stations.html.twig', [
-            'stations' => $stationRepository->findAll(),
+            'stations' => $manager->getRepository(Station::class)->findAll(),
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'stationForm' => $stationForm->createView(),
+            'stationForm' => $form->createView(),
         ]);
     }
 
-    /* ************************************************ *
-     * Station
-     * ************************************************ */
-
     /**
-     * @Route("/participer/stations/{slug}", name="stations_show", methods={"GET", "POST"})
+     * @Route("/station/new", name="stations_new", methods={"POST"})
      */
-    public function stationPage(
+    public function stationsNew(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator,
-        EntityManagerInterface $manager,
-        UploadService $uploadImageService,
-        string $slug
-    ): Response {
-        $individual = new Individual();
-        $observation = new Observation();
-        $dateNow = new DateTime('NOW');
-
-        $stationRepository = $manager->getRepository(Station::class);
-        $individualRepository = $manager->getRepository(Individual::class);
-        $observationRepository = $manager->getRepository(Observation::class);
-        $speciesRepository = $manager->getRepository(Species::class);
-        $eventRepository = $manager->getRepository(Event::class);
-        $station = $stationRepository->findOneBy(['slug' => $slug]);
-        if (!$station) {
-            throw new \Exception('Station not found: '.$slug);
+        EntityManagerInterface $manager
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
         }
-        $stationAllIndividuals = $individualRepository->findSpeciesIndividualsForStation($station);
 
-        $individualForm = $this->createForm(IndividualType::class, $individual, ['individuals' => $stationAllIndividuals]);
-        $observationForm = $this->createForm(ObservationType::class, $observation, ['individuals' => $stationAllIndividuals]);
+        $station = new Station();
+        $form = $this->createForm(StationType::class, $station);
 
-        $activePageBreadCrumb = [
-            'slug' => $slug,
-            'title' => $station->getName(),
-        ];
-        if ($request->isMethod('POST')) {
-            if (!$this->isGranted(UserVoter::LOGGED)) {
-                return $this->redirectToRoute('user_login');
-            }
-
-            $canModifyStation = $station->getUser() === $this->getUser() || $this->isGranted(User::ROLE_ADMIN);
-            if ($station->getIsPrivate() && !$canModifyStation) {
-                throw new AccessDeniedException('Vous n’êtes pas autorisé à contribuer sur cette station');
-            }
-
-            switch ($request->request->get('action')) {
-                case 'individual':
-                    if ('edit' === $request->request->get('action-type')) {
-                        $individualId = $request->request->get('individual-id') ?? null;
-                        $individual = $individualId ? $individualRepository->find($individualId) : null;
-                        if (!$individual) {
-                            throw $this->createNotFoundException('L’individu n’existe pas');
-                        }
-                        if ($individual->getUser() === $this->getUser() || $canModifyStation) {
-                            $oldSpecies = $individual->getSpecies();
-                            $individualForm = $this->createForm(IndividualType::class, $individual, ['individuals' => $stationAllIndividuals]);
-                        }
-                    }
-                    $individualForm->handleRequest($request);
-                    if ($individualForm->isSubmitted() && $individualForm->isValid()) {
-                        $individualFormValues = $request->request->get('individual');
-                        $species = $speciesRepository->find($individualFormValues['species']);
-                        if ('new' === $request->request->get('action-type')) {
-                            $individual->setUser($this->getUser());
-                            $individual->setStation($station);
-                            $individual->setSpecies($species);
-                            $individual->setCreatedAt($dateNow);
-                        } elseif ($individual->getUser() === $this->getUser() || $canModifyStation) {
-                            $individual->setUpdatedAt($dateNow);
-                            if ($oldSpecies !== $species) {
-                                $observations = $this->getDoctrine()->getRepository(Observation::class)
-                                    ->findBy(['individual' => $individual], ['date' => 'DESC'])
-                                ;
-                                foreach ($observations as $observation) {
-                                    $manager->remove($observation);
-                                }
-                            }
-                            $individual->setSpecies($species);
-                        }
-                        $manager->persist($individual);
-                    }
-                    break;
-                case 'observation':
-                    $oldPicture = null;
-                    if ('edit' === $request->request->get('action-type')) {
-                        $observationId = $request->request->get('observation-id') ?? null;
-                        $observation = $observationId ? $observationRepository->find($observationId) : null;
-                        if (!$observation) {
-                            throw $this->createNotFoundException('L’observation n’existe pas');
-                        }
-                        if ($observation->getUser() === $this->getUser() || $canModifyStation) {
-                            $oldPicture = $observation->getPicture();
-                            $observationForm = $this->createForm(ObservationType::class, $observation, ['individuals' => $stationAllIndividuals]);
-                        }
-                    }
-                    $observationForm->handleRequest($request);
-                    if ($observationForm->isSubmitted() && $observationForm->isValid()) {
-                        $observationFormValues = $request->request->get('observation');
-                        $picture = $request->files->get('observation')['picture'];
-                        if ('new' === $request->request->get('action-type')) {
-                            $observation->setUser($this->getUser());
-                            $observation->setPicture($uploadImageService->uploadImage($picture));
-                            $observation->setCreatedAt($dateNow);
-                        } elseif ($observation->getUser() === $this->getUser() || $canModifyStation) {
-                            $isDeletePicture = 'true' === $request->request->get('is-delete-picture');
-                            if ($picture || $isDeletePicture) {
-                                if ($oldPicture) {
-                                    $uploadImageService->deleteImage($oldPicture);
-                                }
-                                if (!$isDeletePicture) {
-                                    $observation->setPicture($uploadImageService->uploadImage($picture));
-                                } else {
-                                    $observation->setPicture(null);
-                                }
-                            } elseif ($oldPicture) {
-                                $observation->setPicture($oldPicture);
-                            }
-                            $observation->setUpdatedAt($dateNow);
-                        }
-                        $observation->setEvent(
-                            $eventRepository->find($observationFormValues['event'])
-                        );
-                        $observation->setIndividual(
-                            $individualRepository->find($observationFormValues['individual'])
-                        );
-                        $observation->setDate(date_create($observationFormValues['date']));
-                        $observation->setIsMissing(!empty($observationFormValues['is_missing']));
-
-                        $manager->persist($observation);
-                    }
-                    break;
-                default:
-                    break;
-            }
-
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($station);
             $manager->flush();
 
-            if ($request->isXmlHttpRequest()) {
-                return new JsonResponse([
-                    'success' => true,
-                    'redirect' => $request->getUri(),
-                ]);
-            }
-
-            return $this->redirect($request->getUri());
+            $this->addFlash('success', 'Votre station a été créée');
+        } else {
+            $this->addFlash('error', 'Votre station n’a pas pu être créée');
         }
 
-        return $this->render('pages/station-page.html.twig', [
-            'station' => $station,
-            'individuals' => $stationAllIndividuals,
-            'observations' => $observationRepository->findAllObservationsInStation($station, $stationAllIndividuals),
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
-            'individualForm' => $individualForm->createView(),
-            'observationForm' => $observationForm->createView(),
-        ]);
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('stations'),
+            ]);
+        }
+
+        return $this->redirectToRoute('stations');
+    }
+
+    /**
+     * @Route("/station/{stationId}/edit", name="stations_edit", methods={"POST"})
+     */
+    public function stationsEdit(
+        Request $request,
+        EntityManagerInterface $manager,
+        int $stationId
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $station = $manager->getRepository(Station::class)
+            ->find($stationId)
+        ;
+        if (!$station) {
+            throw $this->createNotFoundException('la station n’existe pas');
+        }
+        $this->denyAccessUnlessGranted(
+            'station:edit',
+            $station,
+            'Vous n’êtes pas autorisé à modifier cette station'
+        );
+
+        $form = $this->createForm(StationType::class, $station);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre station a été modifiée');
+        } else {
+            $this->addFlash('error', 'La station n’a pas pu être modifiée');
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $this->generateUrl('stations'),
+            ]);
+        }
+
+        return $this->redirectToRoute('stations');
     }
 
     /**
@@ -293,22 +131,172 @@ class StationsController extends PagesController
     public function stationDelete(
         EntityManagerInterface $manager,
         int $stationId
-    ): Response {
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
         $station = $manager->getRepository(Station::class)
             ->find($stationId)
         ;
-
         if (!$station) {
             throw $this->createNotFoundException('La station n’existe pas');
         }
+        $this->denyAccessUnlessGranted(
+            'station:edit',
+            $station,
+            'Vous n’êtes pas autorisé à supprimer cette station'
+        );
 
         $manager->remove($station);
         $manager->flush();
 
-
         $this->addFlash('notice', 'La station a été supprimée');
 
         return $this->redirectToRoute('stations');
+    }
+
+    /* ************************************************ *
+     * Station
+     * ************************************************ */
+
+    /**
+     * @Route("/participer/stations/{slug}", name="stations_show", methods={"GET"})
+     */
+    public function stationPage(
+        Request $request,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $manager,
+        string $slug
+    ) {
+        $station = $manager->getRepository(Station::class)
+            ->findOneBy(['slug' => $slug])
+        ;
+        if (!$station) {
+            throw $this->createNotFoundException('La station n’existe pas');
+        }
+
+        $individuals = $manager->getRepository(Individual::class)
+            ->findSpeciesIndividualsForStation($station)
+        ;
+
+        $individual = new Individual();
+        $stationId = $station->getId();
+        $individualForm = $this->createForm(IndividualType::class, $individual, [
+            'action' => $this->generateUrl('individual_new', [
+                'stationId' => $stationId,
+            ]),
+            'station' => $station,
+        ]);
+
+        $observation = new Observation();
+        $observationForm = $this->createForm(ObservationType::class, $observation, [
+            'action' => $this->generateUrl('observation_new', [
+                'stationId' => $stationId,
+            ]),
+            'station' => $station,
+        ]);
+
+        $observations = $manager->getRepository(Observation::class)->findAllObservationsInStation($station, $individuals);
+
+        $breadcrumbs = $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), [
+            'slug' => $slug,
+            'title' => $station->getName(),
+        ]);
+
+        return $this->render('pages/station-page.html.twig', [
+            'station' => $station,
+            'individuals' => $individuals,
+            'observations' => $observations,
+            'individualForm' => $individualForm->createView(),
+            'observationForm' => $observationForm->createView(),
+            'breadcrumbs' => $breadcrumbs,
+        ]);
+    }
+
+    /**
+     * @Route("station/{stationId}/individual/new", name="individual_new", methods={"POST"})
+     *
+     * @throws Exception
+     */
+    public function individualNew(
+        Request $request,
+        EntityManagerInterface $manager,
+        int $stationId
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+        $station = $manager->getRepository(Station::class)
+            ->find($stationId)
+        ;
+        if (!$station) {
+            throw $this->createNotFoundException('La station n’a pas été trouvée');
+        }
+        $this->denyAccessUnlessGranted(
+            'station:contribute',
+            $station,
+            'Vous n’êtes pas autorisé à contribuer sur cette station'
+        );
+
+        $individual = new Individual();
+        $form = $this->createForm(IndividualType::class, $individual, [
+            'station' => $station,
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($individual);
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre individu a été créé');
+        } else {
+            $this->addFlash('error', 'Votre individu n’a pas pu être créé');
+        }
+
+        return $this->redirectToRoute('stations_show', [
+            'slug' => $station->getSlug(),
+        ]);
+    }
+
+    /**
+     * @Route("/individual/{individualId}/edit", name="individual_edit", methods={"POST"})
+     */
+    public function individualEdit(
+        Request $request,
+        EntityManagerInterface $manager,
+        int $individualId
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $individual = $manager->getRepository(Individual::class)
+            ->find($individualId)
+        ;
+        if (!$individual) {
+            throw $this->createNotFoundException('L’individu n’existe pas');
+        }
+        $this->denyAccessUnlessGranted(
+            'individual:edit',
+            $individual,
+            'Vous n’êtes pas autorisé à modifier ce individu'
+        );
+
+        $form = $this->createForm(IndividualType::class, $individual);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre individu a été modifié');
+        } else {
+            $this->addFlash('error', 'L’individu n’a pas pu être modifié');
+        }
+
+        return $this->redirectToRoute('stations_show', [
+            'slug' => $individual->getStation()->getSlug(),
+        ]);
     }
 
     /**
@@ -317,19 +305,27 @@ class StationsController extends PagesController
     public function individualDelete(
         EntityManagerInterface $manager,
         int $individualId
-    ): Response {
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
         $individual = $manager->getRepository(Individual::class)
             ->find($individualId)
         ;
-
         if (!$individual) {
             throw $this->createNotFoundException('L’individu n’existe pas');
         }
+        $this->denyAccessUnlessGranted(
+            'individual:edit',
+            $individual,
+            'Vous n’êtes pas autorisé à supprimer cet individu'
+        );
 
         $manager->remove($individual);
         $manager->flush();
 
-        $this->addFlash('notice', 'L’individu a été supprimé');
+        $this->addFlash('notice', 'Votre individu a été supprimé');
 
         return $this->redirectToRoute('stations_show', [
             'slug' => $individual->getStation()->getSlug(),
@@ -337,27 +333,142 @@ class StationsController extends PagesController
     }
 
     /**
-     * @Route("/observation/{$observationId}/delete", name="observation_delete")
+     * @Route("station/{stationId}/observation/new", name="observation_new", methods={"POST"})
+     *
+     * @throws Exception
+     */
+    public function observationNew(
+        Request $request,
+        EntityManagerInterface $manager,
+        int $stationId
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $station = $manager->getRepository(Station::class)
+            ->find($stationId)
+        ;
+        if (!$station) {
+            throw $this->createNotFoundException('La station n’a pas été trouvée');
+        }
+        $this->denyAccessUnlessGranted(
+            'station:contribute',
+            $station,
+            'Vous n’êtes pas autorisé à contribuer sur cette station'
+        );
+
+        $observation = new Observation();
+        $form = $this->createForm(ObservationType::class, $observation, [
+            'station' => $station,
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($observation);
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre observation a été créée');
+        } else {
+            $this->addFlash('error', 'Votre observation n’a pas pu être créée');
+        }
+
+        $redirect = $this->generateUrl('stations_show', [
+            'slug' => $station->getSlug(),
+        ]);
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $redirect,
+            ]);
+        }
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @Route("/observation/{observationId}/edit", name="observation_edit", methods={"POST"})
+     */
+    public function observationEdit(
+        Request $request,
+        EntityManagerInterface $manager,
+        int $observationId
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $observation = $manager->getRepository(Observation::class)
+            ->find($observationId)
+        ;
+        if (!$observation) {
+            throw $this->createNotFoundException('L’observation n’existe pas');
+        }
+        $this->denyAccessUnlessGranted(
+            'observation:edit',
+            $observation,
+            'Vous n’êtes pas autorisé à modifier cette observation'
+        );
+
+        $station = $observation->getIndividual()->getStation();
+        $form = $this->createForm(ObservationType::class, $observation, [
+            'station' => $station,
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre observation a été modifiée');
+        } else {
+            $this->addFlash('error', 'L’observation n’a pas pu être modifiée');
+        }
+
+        $redirect = $this->generateUrl('stations_show', [
+            'slug' => $station->getSlug(),
+        ]);
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'success' => true,
+                'redirect' => $redirect,
+            ]);
+        }
+
+        return $this->redirect($redirect);
+    }
+
+    /**
+     * @Route("/observation/{observationId}/delete", name="observation_delete")
      */
     public function observationDelete(
         EntityManagerInterface $manager,
         int $observationId
-    ): Response {
-        $observation = $manager->getRepository(Individual::class)
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $observation = $manager->getRepository(Observation::class)
             ->find($observationId)
         ;
-
         if (!$observation) {
-            throw $this->createNotFoundException('Cette observation n’existe pas');
+            throw $this->createNotFoundException('L’observation n’existe pas');
         }
+        $this->denyAccessUnlessGranted(
+            'observation:edit',
+            $observation,
+            'Vous n’êtes pas autorisé à supprimer cette observation'
+        );
 
         $manager->remove($observation);
         $manager->flush();
 
-        $this->addFlash('notice', 'L’observation a été supprimée');
+        $this->addFlash('notice', 'Votre observation a été supprimée');
 
         return $this->redirectToRoute('stations_show', [
-            'slug' => $obs->getIndividual()->getStation()->getSlug(),
+            'slug' => $observation->getIndividual()->getStation()->getSlug(),
         ]);
     }
 }

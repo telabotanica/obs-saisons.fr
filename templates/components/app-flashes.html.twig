@@ -1,14 +1,19 @@
-{% set flashes = app.flashes %}
-{% if flashes is not empty %}
-	<div class="app-flashes">
-		{% for label, messages in flashes %}
-			<div class="app-flashes__{{ label }}">
-				{% for message in messages %}
-					<div class="flash flash__{{ label }}">
-						{{ message|raw }}
+{% set types = [
+	'success',
+	'notice',
+	'warning',
+	'error'
+] %}
+{% for type in types %}
+	{% if app.session.flashbag.peek(type)|length > 0 %}
+		<div class="app-flashes">
+			{% for label, message in app.flashes(type) %}
+				<div class="app-flashes__{{ label }} app-flashes-{{ type }}" style="width: 100%">
+					<div>
+						{{ message }}
 					</div>
-				{% endfor %}
-			</div>
-		{% endfor %}
-	</div>
-{% endif %}
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endfor %}

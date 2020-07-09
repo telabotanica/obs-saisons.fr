@@ -19,6 +19,29 @@ class StationRepository extends ServiceEntityRepository
         parent::__construct($registry, Station::class);
     }
 
+    public function findStationEditArray(Station $station)
+    {
+        return $this->createQueryBuilder('s')
+            ->select(
+                's.id,
+                s.name,
+                s.habitat,
+                s.description,
+                s.latitude,
+                s.longitude,
+                s.altitude,
+                s.locality,
+                s.inseeCode,
+                s.isPrivate,
+                s.headerImage'
+            )
+            ->where('s = :station')
+            ->setParameter('station', $station)
+            ->getQuery()
+            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+        ;
+    }
+
     // /**
     //  * @return Station[] Returns an array of Station objects
     //  */

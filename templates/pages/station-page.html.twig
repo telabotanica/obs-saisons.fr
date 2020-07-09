@@ -164,7 +164,7 @@
 			{% set individualsIds = individualsIdsArray|default([])|merge(individuals|map(i => i.id))|removeDuplicates|join(',') %}
 
 			{# displays open observation form button #}
-			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-indiv="{{ individualsIds|default }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-individuals-ids="{{ individualsIds|default }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
 				Saisir une observation
 			</a>
 		{% endif %}

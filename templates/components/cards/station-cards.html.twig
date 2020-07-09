@@ -14,18 +14,7 @@
             href=""
             class="edit-icon edit open"
             data-open="station"
-            data-action-type="edit"
-            data-station-id="{{ station.id }}"
-            data-name="{{ station.name }}"
-            data-habitat="{{ station.habitat }}"
-            data-description="{{ station.description }}"
-            data-latitude="{{ station.latitude }}"
-            data-longitude="{{ station.longitude }}"
-            data-altitude="{{ station.altitude }}"
-            data-locality="{{ station.locality }}"
-            data-insee-code="{{ station.inseeCode }}"
-            data-is-private="{{ station.isPrivate }}"
-            data-header-image="{{ station.headerImage }}"
+            data-station="{{ station|getJsonSerializedEditStation }}"
         ></a>
     {% endif %}
 

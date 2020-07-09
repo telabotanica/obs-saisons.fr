@@ -27,7 +27,12 @@
 					{% include 'layout/topbar.html.twig' %}
 				{% endblock %}
 
+				{% block flashes %}
+					{% include 'components/app-flashes.html.twig' %}
+				{% endblock %}
+
 				{% block content %}
+
 					{% block top_content %}{% endblock %}
 
 					<div class="content page">

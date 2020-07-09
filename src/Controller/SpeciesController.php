@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Species;
+use App\Service\BreadcrumbsGenerator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SpeciesController extends PagesController
+class SpeciesController extends AbstractController
 {
     /* ************************************************ *
      * Species
@@ -17,21 +18,26 @@ class SpeciesController extends PagesController
     /**
      * @Route("/especes", name="especes")
      */
-    public function species(Request $request): Response
-    {
-//        return $this->render('pages/species/list.html.twig', [
-//            'accordions' => $this->setAccordions(),
+    public function species(
+        Request $request,
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator
+    ) {
         return $this->render('pages/species/species-list.html.twig', [
-            'allSpecies' => $this->getDoctrine()->getRepository(Species::class)->findAll(),
-            'breadcrumbs' => $this->breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'allSpecies' => $manager->getRepository(Species::class)->findAll(),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
         ]);
     }
 
     /**
      * @Route("/espece/{vernacularName}", name="species_single_show")
      */
-    public function showSpecy(string $vernacularName, EntityManagerInterface $manager): Response
-    {
+    public function showSpecy(
+        Request $request,
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        string $vernacularName
+    ) {
         $species = $manager->getRepository(Species::class)->findOneBy(['vernacular_name' => $vernacularName]);
         if (!$species) {
             $this->createNotFoundException('L’espèce n’a pas été trouvée');
@@ -42,9 +48,15 @@ class SpeciesController extends PagesController
             $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
+        $activePageBreadCrumb = [
+            'slug' => $vernacularName,
+            'title' => $vernacularName,
+        ];
+
         return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
             'post' => $post,
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
         ]);
     }
 }

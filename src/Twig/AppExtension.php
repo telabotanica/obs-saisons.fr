@@ -8,9 +8,11 @@ use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Species;
-use App\Service\SlugGenerator;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Station;
+use App\Service\EntityJsonSerialize;
 use App\Service\HandleDateTime;
+use App\Service\SlugGenerator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -24,7 +26,7 @@ class AppExtension extends AbstractExtension
     private $security;
     private $manager;
 
-    public function __construct(Security $security, ManagerRegistry $manager)
+    public function __construct(Security $security, EntityManagerInterface $manager)
     {
         $this->security = $security;
         $this->manager = $manager;
@@ -36,13 +38,34 @@ class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('eventDatesDisplay', [$this, 'displayEventDates']),
-            new TwigFunction('setStationListCards', [$this, 'setStationListCards']),
-            new TwigFunction('setStationActionBarSquaredButton', [$this, 'setStationActionBarSquaredButton']),
-            new TwigFunction('setStationCards', [$this, 'setStationCards']),
-            new TwigFunction('setSpeciesDisplayData', [$this, 'setSpeciesDisplayData']),
-            new TwigFunction('setObsChips', [$this, 'setObsChips']),
-            new TwigFunction('getEventsSpeciesForSpecies', [$this, 'getEventsSpeciesForSpecies']),
+            new TwigFunction('eventDatesDisplay', [
+                $this,
+                'displayEventDates',
+            ]),
+            new TwigFunction('setStationListCards', [
+                $this,
+                'setStationListCards',
+            ]),
+            new TwigFunction('setStationActionBarSquaredButton', [
+                $this,
+                'setStationActionBarSquaredButton',
+            ]),
+            new TwigFunction('setStationCards', [
+                $this,
+                'setStationCards',
+            ]),
+            new TwigFunction('setSpeciesDisplayData', [
+                $this,
+                'setSpeciesDisplayData',
+            ]),
+            new TwigFunction('setObsChips', [
+                $this,
+                'setObsChips',
+            ]),
+            new TwigFunction('getEventsSpeciesForSpecies', [
+                $this,
+                'getEventsSpeciesForSpecies',
+            ]),
         ];
     }
 
@@ -52,8 +75,26 @@ class AppExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('slugify', [$this, 'slugify']),
-            new TwigFilter('removeDuplicates', [$this, 'removeDuplicates']),
+            new TwigFilter('slugify', [
+                $this,
+                'slugify',
+            ]),
+            new TwigFilter('removeDuplicates', [
+                $this,
+                'removeDuplicates',
+            ]),
+            new TwigFilter('getJsonSerializedEditStation', [
+                $this,
+                'getJsonSerializedEditStation',
+            ]),
+            new TwigFilter('getJsonSerializedEditIndividual', [
+                $this,
+                'getJsonSerializedEditIndividual',
+            ]),
+            new TwigFilter('getJsonSerializedEditObservation', [
+                $this,
+                'getJsonSerializedEditObservation',
+            ]),
         ];
     }
 
@@ -62,6 +103,27 @@ class AppExtension extends AbstractExtension
         $slugGenerator = new SlugGenerator();
 
         return $slugGenerator->slugify($string);
+    }
+
+    public function getJsonSerializedEditStation(Station $station)
+    {
+        $entityJsonSerialize = new EntityJsonSerialize();
+
+        return $entityJsonSerialize->getJsonSerializedEditStation($station);
+    }
+
+    public function getJsonSerializedEditIndividual(Individual $individual)
+    {
+        $entityJsonSerialize = new EntityJsonSerialize();
+
+        return $entityJsonSerialize->getJsonSerializedEditIndividual($individual);
+    }
+
+    public function getJsonSerializedEditObservation(Observation $observation)
+    {
+        $entityJsonSerialize = new EntityJsonSerialize();
+
+        return $entityJsonSerialize->getJsonSerializedEditObservation($observation);
     }
 
     public function removeDuplicates(array $array): array
@@ -76,12 +138,22 @@ class AppExtension extends AbstractExtension
         return $removeDuplicates;
     }
 
-    public function displayEventDates(\DateTimeInterface $startDate, \DateTimeInterface $endDate, string $separator = '-'): string
-    {
-        $startDateSplit = explode('-', $startDate->format('Y-m-d'));
-        $endDateSplit = explode('-', $endDate->format('Y-m-d'));
+    public function displayEventDates(
+        \DateTimeInterface $startDate,
+        \DateTimeInterface $endDate,
+        string $separator = '-'
+    ): string {
+        $startDateSplit = explode(
+            '-',
+            $startDate->format('Y-m-d')
+        );
+        $endDateSplit = explode(
+            '-',
+            $endDate->format('Y-m-d')
+        );
         $pattern = 'd MMMM Y';
-        $patternArray = array_reverse(explode(' ', $pattern));
+        $patternArray = explode(' ', $pattern);
+        $patternArray = array_reverse($patternArray);
         $transDateTime = new HandleDateTime();
         $displayedEndDate = $transDateTime->dateTransFormat($pattern, $endDate);
         if ($startDateSplit === $endDateSplit) {
@@ -90,7 +162,12 @@ class AppExtension extends AbstractExtension
 
         foreach ($startDateSplit as $key => $date) {
             if ($endDateSplit[$key] != $date) {
-                $pattern = implode(' ', array_reverse(array_slice($patternArray, $key)));
+                $pattern = implode(
+                    ' ',
+                    array_reverse(
+                        array_slice($patternArray, $key)
+                    )
+                );
 
                 break;
             }
@@ -104,8 +181,8 @@ class AppExtension extends AbstractExtension
         $observationsRepository = $this->manager->getRepository(Observation::class);
         $individualsRepository = $this->manager->getRepository(Individual::class);
 
+        $lastStationsActivity = $this->getLastActivity($stations);
         $cards = [];
-
         foreach ($stations as $station) {
             $individuals = $individualsRepository->findAllIndividualsInStation($station);
             $observations = $observationsRepository->findAllObservationsInStation($station, $individuals);
@@ -117,7 +194,7 @@ class AppExtension extends AbstractExtension
             $cards[] = [
                 'station' => $station,
                 'observations' => $observations,
-                'lastActivity' => $lastActivity,
+                'lastActivity' => max($lastStationsActivity, $lastActivity),
             ];
         }
 
@@ -135,8 +212,11 @@ class AppExtension extends AbstractExtension
         return $lastActivity;
     }
 
-    public function setStationListCards(array $stationSpecies, array $stationIndividuals, array $stationObservations): array
-    {
+    public function setStationListCards(
+        array $stationSpecies,
+        array $stationIndividuals,
+        array $stationObservations
+    ): array {
         $listCards = [];
         foreach ($stationSpecies as $species) {
             // sets individuals
@@ -206,7 +286,10 @@ class AppExtension extends AbstractExtension
         foreach ($individualObservations as $observation) {
             if (in_array($observation->getEvent(), $validEvents)) {
                 $year = date_format($observation->getDate(), 'Y');
-                $i = array_search($year, array_column($observationsPerYear, 'year'));
+                $i = array_search(
+                    $year,
+                    array_column($observationsPerYear, 'year')
+                );
                 if (false === $i) {
                     $observationsPerYear[] = [
                         'year' => $year,
@@ -223,7 +306,9 @@ class AppExtension extends AbstractExtension
 
     public function getEventsSpeciesForSpecies(Species $species): array
     {
-        return $this->manager->getRepository(EventSpecies::class)->findBy(['species' => $species]);
+        return $this->manager->getRepository(EventSpecies::class)
+            ->findBy(['species' => $species])
+        ;
     }
 
     public function setSpeciesDisplayData(array $allSpecies): array
@@ -231,7 +316,10 @@ class AppExtension extends AbstractExtension
         $speciesDisplayData = [];
         foreach ($allSpecies as $species) {
             $type = $species->getType();
-            $i = array_search($type, array_column($speciesDisplayData, 'type'));
+            $i = array_search(
+                $type,
+                array_column($speciesDisplayData, 'type')
+            );
             if (false === $i) {
                 $speciesDisplayData[] = [
                     'type' => $type,

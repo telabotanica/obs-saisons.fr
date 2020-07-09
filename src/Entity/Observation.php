@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
@@ -37,13 +36,6 @@ class Observation
     private $user;
 
     /**
-     * @Assert\File(
-     *     mimeTypes = {"image/png", "image/jpeg"},
-     *     mimeTypesMessage = "Le format de l'image doit être .jpg ou .png",
-     *     maxSize = "5242880",
-     *     maxSizeMessage = "Le fichier est trop lourd ({{ size }} {{ suffix }}). Le maximum autorisé est de {{ limit }} {{ suffix }}."
-     * )
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $picture;
@@ -56,7 +48,7 @@ class Observation
     /**
      * @ORM\Column(type="boolean")
      */
-    private $is_missing;
+    private $isMissing;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -64,11 +56,13 @@ class Observation
     private $details;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
@@ -145,12 +139,12 @@ class Observation
 
     public function getIsMissing(): ?bool
     {
-        return $this->is_missing;
+        return $this->isMissing;
     }
 
-    public function setIsMissing(bool $is_missing): self
+    public function setIsMissing(bool $isMissing): self
     {
-        $this->is_missing = $is_missing;
+        $this->isMissing = $isMissing;
 
         return $this;
     }
