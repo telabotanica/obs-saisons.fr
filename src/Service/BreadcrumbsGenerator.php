@@ -34,7 +34,7 @@ class BreadcrumbsGenerator
     {
         $this->trails[] = [
             'label' => $label,
-            'route' => $route,
+            'route' => urldecode($route),
         ];
     }
 

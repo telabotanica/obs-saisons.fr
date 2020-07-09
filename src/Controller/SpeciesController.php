@@ -30,7 +30,7 @@ class SpeciesController extends AbstractController
     }
 
     /**
-     * @Route("/espece/{vernacularName}", name="species_single_show")
+     * @Route("/especes/{vernacularName}", name="species_single_show")
      */
     public function showSpecy(
         Request $request,
@@ -48,15 +48,15 @@ class SpeciesController extends AbstractController
             $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
-        /*$activePageBreadCrumb = [
+        $activePageBreadCrumb = [
             'slug' => $vernacularName,
             'title' => $vernacularName,
-        ];*/
+        ];
 
         return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
             'post' => $post,
-            //'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
         ]);
     }
 }
