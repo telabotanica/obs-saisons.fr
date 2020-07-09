@@ -48,15 +48,15 @@ class SpeciesController extends AbstractController
             $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
-        $activePageBreadCrumb = [
+        /*$activePageBreadCrumb = [
             'slug' => $vernacularName,
             'title' => $vernacularName,
-        ];
+        ];*/
 
         return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
             'post' => $post,
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            //'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
         ]);
     }
 }
