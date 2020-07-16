@@ -47,7 +47,6 @@ class SpeciesImportCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $io = $this->io;
         $helper = $this->getHelper('question');
 
         $question = new ConfirmationQuestion('Cleaning previous Species? [Y/n]', true);
@@ -66,7 +65,7 @@ class SpeciesImportCommand extends Command
         $speciesData = json_decode(file_get_contents('src/Ressources/ods_species.json'));
 
         foreach ($speciesData as $singleSpeciesData) {
-            $io->section('Creating : '.$singleSpeciesData->vernacular_name);
+            $this->io->section('Creating : '.$singleSpeciesData->vernacular_name);
 
             /**
              * @var TypeSpecies
@@ -74,7 +73,7 @@ class SpeciesImportCommand extends Command
             $typeSpecies = $typeSpeciesRepository->findOneByName($singleSpeciesData->type_name);
 
             if (empty($typeSpecies)) {
-                $io->error('type not found : '.$singleSpeciesData->type_name);
+                $this->io->error('type not found : '.$singleSpeciesData->type_name);
 
                 return 1;
             }
@@ -88,7 +87,7 @@ class SpeciesImportCommand extends Command
             $species->setPicture($singleSpeciesData->picture);
 
             $this->em->persist($species);
-            $io->text('...Ok.');
+            $this->io->text('...Ok.');
         }
 
         $this->em->flush();
@@ -96,8 +95,8 @@ class SpeciesImportCommand extends Command
         if ($mustClean) {
             $this->updateIndividuals();
             // remind user to reset event-species if needed
-            $io->newLine();
-            $io->warning([
+            $this->io->newLine();
+            $this->io->warning([
                 'EventSpecies Table has to be updated',
                 'If you wish to update both events and species',
                 'make sure both updates are done',
@@ -113,8 +112,8 @@ class SpeciesImportCommand extends Command
             );
         }
 
-        $io->newLine();
-        $io->text('Done.');
+        $this->io->newLine();
+        $this->io->text('Done.');
 
         return 0;
     }
@@ -146,9 +145,8 @@ class SpeciesImportCommand extends Command
 
     private function updateIndividuals()
     {
-        $io = $this->io;
         //updating individuals
-        $io->section('Updating individuals...');
+        $this->io->section('Updating individuals...');
         foreach ($this->individualsSpeciesBackup as $individualSpeciesBackup) {
             $individual = $individualSpeciesBackup['individual'];
             $species = $this->em->getRepository(Species::class)
@@ -158,18 +156,18 @@ class SpeciesImportCommand extends Command
             ;
 
             if (!$species) {
-                $io->error(sprintf('species not found for individual, id: %d.', $individual->getId()));
+                $this->io->error(sprintf('species not found for individual, id: %d.', $individual->getId()));
             } else {
                 $individual->setSpecies($species);
 
-                $io->success(sprintf('updated species for individual, id: %d.', $individual->getId()));
+                $this->io->success(sprintf('updated species for individual, id: %d.', $individual->getId()));
             }
         }
 
         $this->em->flush();
         $this->em->getConnection()->exec('SET foreign_key_checks = 1;');
 
-        $io->newLine();
-        $io->text('...Ok.');
+        $this->io->newLine();
+        $this->io->text('...Ok.');
     }
 }

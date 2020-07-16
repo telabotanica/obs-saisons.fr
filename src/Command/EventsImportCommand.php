@@ -46,7 +46,6 @@ class EventsImportCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $io = $this->io;
         $helper = $this->getHelper('question');
 
         $question = new ConfirmationQuestion('Cleaning previous Events? [Y/n]', true);
@@ -63,7 +62,7 @@ class EventsImportCommand extends Command
         $eventsData = json_decode(file_get_contents('src/Ressources/ods_events.json'));
 
         foreach ($eventsData as $eventData) {
-            $io->section('Creating : '.$eventData->name.' stade '.$eventData->stade_bbch);
+            $this->io->section('Creating : '.$eventData->name.' stade '.$eventData->stade_bbch);
 
             $event = new Event();
             $event->setStadeBbch($eventData->stade_bbch);
@@ -72,7 +71,7 @@ class EventsImportCommand extends Command
             $event->setIsObservable($eventData->is_observable);
 
             $this->em->persist($event);
-            $io->text('...Ok.');
+            $this->io->text('...Ok.');
         }
 
         $this->em->flush();
@@ -80,8 +79,8 @@ class EventsImportCommand extends Command
         if ($mustClean) {
             $this->updateObservations();
             // remind user to reset event-species if needed
-            $io->newLine();
-            $io->warning([
+            $this->io->newLine();
+            $this->io->warning([
                 'EventSpecies table has to be updated',
                 'If you wish to update both Events and Species tables, make sure both are done before updating EventSpecies',
                 'Otherwise you can run EventSpecies import commands now...',
@@ -96,8 +95,8 @@ class EventsImportCommand extends Command
             );
         }
 
-        $io->newLine();
-        $io->text('Done.');
+        $this->io->newLine();
+        $this->io->text('Done.');
 
         return 0;
     }
@@ -129,10 +128,9 @@ class EventsImportCommand extends Command
 
     private function updateObservations()
     {
-        $io = $this->io;
         $eventRepository = $this->em->getRepository(Event::class);
         //updating observations
-        $io->section('Updating observations...');
+        $this->io->section('Updating observations...');
         foreach ($this->observationsEventsBackup as $observationEventBackup) {
             $observation = $observationEventBackup['observation'];
             $event = null;
@@ -145,17 +143,17 @@ class EventsImportCommand extends Command
             }
 
             if (!$event) {
-                $io->error(sprintf('event not found for observation, id: %d.', $observation->getId()));
+                $this->io->error(sprintf('event not found for observation, id: %d.', $observation->getId()));
             } else {
                 $observation->setEvent($event);
 
-                $io->success(sprintf('updated event for observation, id: %d.', $observation->getId()));
+                $this->io->success(sprintf('updated event for observation, id: %d.', $observation->getId()));
             }
         }
         $this->em->flush();
         $this->em->getConnection()->exec('SET foreign_key_checks = 1;');
 
-        $io->newLine();
-        $io->text('...Ok.');
+        $this->io->newLine();
+        $this->io->text('...Ok.');
     }
 }
