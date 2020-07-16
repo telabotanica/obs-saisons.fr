@@ -148,6 +148,22 @@ class StationsController extends AbstractController
             'Vous n’êtes pas autorisé à supprimer cette station'
         );
 
+        // related individuals must also be removed
+        $individuals = $manager->getRepository(Individual::class)
+            ->findBy(['individual' => $station])
+        ;
+
+        foreach ($individuals as $individual) {
+            // related observations must also be removed
+            $observations = $manager->getRepository(Observation::class)
+                ->findBy(['individual' => $individual]);
+            foreach ($observations as $observation) {
+                $manager->remove($observation);
+            }
+
+            $manager->remove($individual);
+        }
+
         $manager->remove($station);
         $manager->flush();
 
@@ -321,6 +337,14 @@ class StationsController extends AbstractController
             $individual,
             'Vous n’êtes pas autorisé à supprimer cet individu'
         );
+
+        // related observations must also be removed
+        $observations = $manager->getRepository(Observation::class)
+            ->findBy(['individual' => $individual])
+        ;
+        foreach ($observations as $observation) {
+            $manager->remove($observation);
+        }
 
         $manager->remove($individual);
         $manager->flush();
