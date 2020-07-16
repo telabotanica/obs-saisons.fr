@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class EventsImportCommand extends Command
 {
@@ -24,10 +23,10 @@ class EventsImportCommand extends Command
     public $em;
     private $observationsEventsBackup;
 
-    public function __construct(EntityManagerInterface $em, KernelInterface $kernel)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->kernel = $kernel;
         $this->em = $em;
+
         parent::__construct();
     }
 
@@ -62,6 +61,7 @@ class EventsImportCommand extends Command
 
         //updating events
         $eventsData = json_decode(file_get_contents('src/Ressources/ods_events.json'));
+
         foreach ($eventsData as $eventData) {
             $io->section('Creating : '.$eventData->name.' stade '.$eventData->stade_bbch);
 
@@ -88,6 +88,7 @@ class EventsImportCommand extends Command
             ]);
             // from importCommandTrait
             $this->importEventSpeciesAndPeriods(
+                $this->getApplication(),
                 $helper,
                 $input,
                 $output,

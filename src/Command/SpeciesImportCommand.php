@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class SpeciesImportCommand extends Command
 {
@@ -25,10 +24,10 @@ class SpeciesImportCommand extends Command
     public $em;
     private $individualsSpeciesBackup;
 
-    public function __construct(EntityManagerInterface $em, KernelInterface $kernel)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->kernel = $kernel;
         $this->em = $em;
+
         parent::__construct();
     }
 
@@ -39,8 +38,8 @@ class SpeciesImportCommand extends Command
             ->setHelp('Import species')
         ;
         $this->addArgument(
-          'importEventSpeciesAndPeriods',
-          InputArgument::OPTIONAL,
+            'importEventSpeciesAndPeriods',
+            InputArgument::OPTIONAL,
             'import EventSpecies and fill periods [y/N]'
         );
     }
@@ -65,6 +64,7 @@ class SpeciesImportCommand extends Command
 
         //updating species
         $speciesData = json_decode(file_get_contents('src/Ressources/ods_species.json'));
+
         foreach ($speciesData as $singleSpeciesData) {
             $io->section('Creating : '.$singleSpeciesData->vernacular_name);
 
@@ -105,6 +105,7 @@ class SpeciesImportCommand extends Command
             ]);
             // from importCommandTrait
             $this->importEventSpeciesAndPeriods(
+                $this->getApplication(),
                 $helper,
                 $input,
                 $output,

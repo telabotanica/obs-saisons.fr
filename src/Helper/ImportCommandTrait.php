@@ -2,7 +2,8 @@
 
 namespace App\Helper;
 
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,12 +12,11 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 trait ImportCommandTrait
 {
-    public $kernel;
-
     /**
      * @return int|void
      */
     public function importEventSpeciesAndPeriods(
+        Application $application,
         QuestionHelper $helper,
         InputInterface $input,
         OutputInterface $output,
@@ -47,8 +47,8 @@ trait ImportCommandTrait
                         $input = new ArrayInput([]);
                         break;
                 }
-
-                $returnCode = $this->runCommand($commandName, $input, $output);
+                $command = $application->find($commandName);
+                $returnCode = $this->runCommand($command, $input, $output);
                 if (0 !== $returnCode) {
                     $output->writeln(sprintf("<error>\n  Something went wrong with \"%s\"\n</error>", $commandName));
 
@@ -68,14 +68,15 @@ trait ImportCommandTrait
      * @return int|void
      */
     private function runCommand(
-        string $commandName,
+        Command $command,
+        /*string $commandName,*/
         InputInterface $input,
         OutputInterface $output
     ) {
-        $application = new Application($this->kernel);
-        $output->writeln($commandName);
+        /*;
+        $output->writeln($commandName);*/
         try {
-            return $application->find($commandName)->run($input, $output);
+            return $command->run($input, $output);
         } catch (\Exception $e) {
             $output->writeln($e);
         }
