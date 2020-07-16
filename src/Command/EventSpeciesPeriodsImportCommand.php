@@ -32,7 +32,11 @@ class EventSpeciesPeriodsImportCommand extends Command
             ->setDescription('Import events species periods')
             ->setHelp('Import events species periods');
         $this
-            ->addArgument('periodTypeFromCommand', InputArgument::OPTIONAL, 'set periods type (s : stages periods, a : observations alerts periods, b : both), if this command is ran from other command');
+            ->addArgument(
+                'periodTypeFromCommand',
+                InputArgument::OPTIONAL,
+                'set periods type (s : stages periods, a : observations alerts periods, b : both), if this command is ran from other command'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

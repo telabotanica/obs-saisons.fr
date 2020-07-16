@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Helper\ImportCommandTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -10,13 +11,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class OdsStaticDataMigrate extends Command
 {
+    use  ImportCommandTrait;
+
     protected static $defaultName = 'ods:bootstrap:all-static-data';
 
-    private $manager;
+    private $em;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->manager = $manager;
+        $this->em = $em;
 
         parent::__construct();
     }
@@ -34,17 +37,26 @@ class OdsStaticDataMigrate extends Command
             'ods:import:typespecies',
             'ods:import:species',
             'ods:import:events',
-            'ods:generate:eventspecies',
-            'ods:import:periods',
-            'ods:import:featured-species-dates',
         ];
 
         foreach ($odsStaticDataMigrateCommandNames as $commandName) {
-            if ('periods:import' === $commandName) {
-                $input = new ArrayInput(['periodTypeFromCommand' => 'b']);
+            switch ($commandName) {
+                case 'ods:import:species':
+                    $input = new ArrayInput(['importEventSpeciesAndPeriods' => false]);
+                    break;
+                case 'ods:import:event':
+                    $input = new ArrayInput(['importEventSpeciesAndPeriods' => true]);
+                    break;
+                default:
+                    $input = new ArrayInput([]);
+                    break;
             }
 
-            $returnCode = $this->runCommand($commandName, $input, $output);
+            $returnCode = $this->runCommand( // from importCommandTrait
+                $this->getApplication()->find($commandName),
+                $input,
+                $output
+            );
             if (0 !== $returnCode) {
                 $output->writeln(sprintf("<error>\n  Something went wrong with \"%s\"\n</error>", $commandName));
 
@@ -57,15 +69,5 @@ class OdsStaticDataMigrate extends Command
         $output->writeln("\n...OdsStaticDataMigrate ...Done.\n");
 
         return 0;
-    }
-
-    private function runCommand(string $commandName, InputInterface $input, OutputInterface $output)
-    {
-        $command = $this->getApplication()->find($commandName);
-        try {
-            return $command->run($input, $output);
-        } catch (\Exception $e) {
-            $output->writeln($e);
-        }
     }
 }

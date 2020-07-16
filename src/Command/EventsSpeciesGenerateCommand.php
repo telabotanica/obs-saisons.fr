@@ -44,7 +44,7 @@ class EventsSpeciesGenerateCommand extends Command
         $eventRepository = $this->manager->getRepository(Event::class);
         $speciesData = json_decode(file_get_contents('src/Ressources/ods_species.json'));
         if (!$speciesData) {
-            $output->writeln("<error>\n  couldn’t read species file\n</error>");
+            $output->writeln("<error>\n  couldn’t read species file \n</error>");
 
             return 1;
         }

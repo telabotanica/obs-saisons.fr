@@ -8,10 +8,10 @@ use App\Entity\Species;
 use App\Service\HandleCsvFile as HandleCsvFile;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class OdsImportFeaturedSpeciesDatesCommand extends Command
 {
@@ -32,6 +32,12 @@ class OdsImportFeaturedSpeciesDatesCommand extends Command
             ->setDescription('Import featured species dates from file')
             ->setHelp('Import featured species dates from file')
         ;
+        $this
+            ->addArgument(
+                'cleanFeaturedSpeciesDates',
+                InputArgument::OPTIONAL,
+                'Cleaning previous featured dates? [Y/n]'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -43,10 +49,13 @@ class OdsImportFeaturedSpeciesDatesCommand extends Command
             return 1;
         }
 
-        $helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion('Cleaning previous featured dates? [Y/n]', true);
-
-        if ($helper->ask($input, $output, $question)) {
+        $mustClean = $input->getArgument('cleanFeaturedSpeciesDates');
+        if (null === $mustClean) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion('Cleaning previous featured dates? [Y/n]', true);
+            $mustClean = $helper->ask($input, $output, $question);
+        }
+        if ($mustClean) {
             $allEventSpecies = $this->em->getRepository(EventSpecies::class)->findAll();
             foreach ($allEventSpecies as $eventSpecies) {
                 $eventSpecies->setFeaturedStartDay(null);
