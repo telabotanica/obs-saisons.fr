@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Service\BreadcrumbsGenerator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PagesControllerTest extends WebTestCase
@@ -13,21 +14,15 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $pages = [
-            'apropos',
-            'participer',
-            'participer/protocole',
-            'outils-ressources',
-            'resultats',
-            'relais',
-        ];
+        $pages = array_keys(BreadcrumbsGenerator::MENU);
         foreach ($pages as $page) {
-            $crawler = $client->request('GET', '/'.$page);
+            $url = '/'.$page;
+            $crawler = $client->request('GET', $url);
 
             $this->assertEquals(
                 200,
                 $client->getResponse()->getStatusCode(),
-                'Assert '.$page.' is StatusCode 200'
+                sprintf('Assert page %s (%d) is StatusCode 200', $page, $url)
             );
         }
 
