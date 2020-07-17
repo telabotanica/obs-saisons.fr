@@ -21,7 +21,6 @@ class StationFixtures extends Fixture implements DependentFixtureInterface
             $dateCreatedAt = $faker->dateTimeBetween('-10 years', 'now', 'Europe/Paris');
             $station = new Station();
             $station->setName($name);
-            $station->setSlug($slugGenerator->slugify($name));
             $station->setDescription($faker->text(200));
             $station->setUser($this->getReference('user-'.$faker->randomDigit));
             $station->setIsPrivate((bool) ($i % 2));
