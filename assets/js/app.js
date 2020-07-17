@@ -88,9 +88,7 @@ function onOpenOverlay() {
                 let $form = $('form', $overlay);
 
                 $form.get(0).reset();
-
                 if ($thisLink.hasClass('edit')) {
-                    console.log(dataAttrs);
                     dataAttrs = setEditForm($overlay, $form, $thisLink, dataAttrs);
                 }
             }
