@@ -233,12 +233,15 @@ function onCloseOverlay() {
 
 function closeOverlay($overlay) {
     $('body').css('overflow', 'auto');
-    $overlay.addClass('hidden').removeClass('edit');
+    $overlay.addClass('hidden');
 
     if(valOk($('form',$overlay))) {
         let $form = $('form', $overlay);
 
-        $form.attr('action',$form.data('formActionReset'));
+        if ($overlay.hasClass('edit')) {
+            $form.attr('action', $form.data('formActionReset'));
+            $overlay.removeClass('edit');
+        }
         $form.get(0).reset();
 
         $overlay.find('option').removeAttr('hidden');
