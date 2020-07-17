@@ -7,6 +7,6 @@
         'subtitle': 'Participez au programme de <strong>l’ODS</strong>.'
     }) %}
 
-    {{ page.content|raw }}
+    {{ page.content|default|raw }}
 
 {% endblock %}

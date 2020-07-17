@@ -5,6 +5,7 @@
     <dl>
         {% set type = '' %}
         {% for staticPageSlug, staticPageTitle in staticPagesList %}
+            {% if staticPageSlug not in ['actualites', 'evenements', 'especes'] %}
             <dt>
                 <a href="{{ path(staticPageSlug) }}">
                     {{ staticPageTitle }}
@@ -20,6 +21,7 @@
                     Éditeur HTML
                 </a>
             </dd>
+            {% endif %}
         {% endfor %}
     </dl>
 

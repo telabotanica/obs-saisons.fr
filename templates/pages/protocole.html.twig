@@ -10,4 +10,6 @@
             Saisir une <a href=#{path('stations')}>obsevation ou une nouvelle station</a>."
     }) %}
 
+    {{ page.content|default|raw }}
+
 {% endblock %}
