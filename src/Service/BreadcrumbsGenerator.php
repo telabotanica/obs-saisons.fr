@@ -8,7 +8,7 @@ namespace App\Service;
 class BreadcrumbsGenerator
 {
     const MENU = [
-        'apropos' => 'À propos',
+        'a-propos' => 'À propos',
         'actualites' => 'Actualités',
         'evenements' => 'Évènements',
         'especes' => 'Espèces à Observer',

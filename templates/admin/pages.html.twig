@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+
+    <dl>
+        {% set type = '' %}
+        {% for staticPageSlug, staticPageTitle in staticPagesList %}
+            <dt>
+                <a href="{{ path(staticPageSlug) }}">
+                    {{ staticPageTitle }}
+                </a>
+            </dt>
+            <dd>
+                <a href="{{ path('admin_static_page_edit', {slug: staticPageSlug}) }}">
+                    Éditeur WYSIWYG
+                </a>
+            </dd>
+            <dd>
+                <a href="{{ path('admin_static_page_edit', {slug: staticPageSlug, mode: 'html'}) }}">
+                    Éditeur HTML
+                </a>
+            </dd>
+        {% endfor %}
+    </dl>
+
+{% endblock %}
+
+{% block title %}Liste des fiches espèces{% endblock %}
+
