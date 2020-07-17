@@ -29,7 +29,7 @@ class SpeciesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/espece/abricotier');
+        $crawler = $client->request('GET', '/especes/Abricotier');
 
         $this->assertEquals(
             200,

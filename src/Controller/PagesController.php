@@ -41,14 +41,20 @@ class PagesController extends AbstractController
     }
 
     /**
-     * @Route("/apropos", name="apropos")
+     * @Route("/a-propos", name="a-propos")
      */
-    public function apropos(
+    public function aPropos(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
     ) {
-        return $this->render('pages/apropos.html.twig', [
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'a-propos']
+        );
+
+        return $this->render('pages/a-propos.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'page' => $page,
         ]);
     }
 
@@ -57,10 +63,16 @@ class PagesController extends AbstractController
      */
     public function participer(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
     ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'participer']
+        );
+
         return $this->render('pages/participer.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'page' => $page,
         ]);
     }
 
@@ -69,10 +81,16 @@ class PagesController extends AbstractController
      */
     public function protocole(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
     ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'protocole']
+        );
+
         return $this->render('pages/protocole.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'page' => $page,
         ]);
     }
 
@@ -81,10 +99,16 @@ class PagesController extends AbstractController
      */
     public function resultats(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
     ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'resultats']
+        );
+
         return $this->render('pages/resultats.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'page' => $page,
         ]);
     }
 
@@ -93,10 +117,16 @@ class PagesController extends AbstractController
      */
     public function outilsRessources(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
     ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'outils-ressources']
+        );
+
         return $this->render('pages/outils-ressources.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'page' => $page,
         ]);
     }
 
@@ -105,10 +135,16 @@ class PagesController extends AbstractController
      */
     public function relais(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
     ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'relais']
+        );
+
         return $this->render('pages/relais.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'page' => $page,
         ]);
     }
 }

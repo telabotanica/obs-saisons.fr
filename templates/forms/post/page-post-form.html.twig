@@ -1,0 +1,11 @@
+{{ form_start(form) }}
+{{ form_errors(form) }}
+<div class="form-row form-row__field {{ editMode }}-editor">
+    {{ form_label(form.content, 'Contenu de la page') }}
+    {{ form_widget(form.content, {'attr': {'placeholder': 'Saississez votre contenu ici…'}}) }}
+</div>
+
+<div class="form-row form-row__submit">
+    {{ form_widget(form.submit, {'label': 'Enregistrer la page'}) }}
+</div>
+{{ form_end(form) }}

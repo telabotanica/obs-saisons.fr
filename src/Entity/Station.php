@@ -30,8 +30,8 @@ class Station
     private $user;
 
     /**
-     * @Gedmo\Slug(fields={"name"}, separator="-")
-     * @ORM\Column(type="string", length=100)
+     * @Gedmo\Slug(fields={"createdAt", "locality", "name"}, dateFormat="Y/m")
+     * @ORM\Column(type="string", length=100, unique=true)
      */
     private $slug;
 
