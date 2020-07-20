@@ -150,7 +150,7 @@ class StationsController extends AbstractController
 
         // related individuals must also be removed
         $individuals = $manager->getRepository(Individual::class)
-            ->findBy(['individual' => $station])
+            ->findBy(['station' => $station])
         ;
 
         foreach ($individuals as $individual) {
