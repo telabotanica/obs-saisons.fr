@@ -38,6 +38,25 @@ class ObservationRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAllObsContributorsCountInStation(array $stationIndividuals): int
+    {
+        $contributorsCount = count(
+            $this->createQueryBuilder('o')
+                ->groupBy('o.user')
+                ->where('o.individual IN (:individuals)')
+                ->setParameter('individuals', $stationIndividuals)
+                ->getQuery()
+                ->getResult()
+        );
+
+        // if the station exists there is at least one contributor
+        if (0 >= $contributorsCount) {
+            return 1;
+        }
+
+        return $contributorsCount;
+    }
+
     public function findLastObs(int $limit): array
     {
         return $this->createQueryBuilder('o')
