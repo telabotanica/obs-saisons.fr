@@ -6,6 +6,7 @@
     station*: Station
     observations#: array
         [...] Observation
+    contributorsCount*: int
 #}
 <div class="card" data-tab="{{ station.user.id }}">
     {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
@@ -34,7 +35,7 @@
 
     <div class="card-footer">
         <div class="card-footer-item">
-            <div class="members-number person-icon">{{ station.contributorsCount|default(1) }}</div>
+            <div class="members-number person-icon">{{ contributorsCount|default(1) }}</div>
         </div>
 
         <div class="card-footer-item">

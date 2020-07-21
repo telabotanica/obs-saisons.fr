@@ -186,6 +186,7 @@ class AppExtension extends AbstractExtension
         foreach ($stations as $station) {
             $individuals = $individualsRepository->findAllIndividualsInStation($station);
             $observations = $observationsRepository->findAllObservationsInStation($station, $individuals);
+            $contributorsCount = $observationsRepository->findAllObsContributorsCountInStation($individuals);
 
             $lastIndivActivity = $this->getLastActivity($individuals);
             $lastObsActivity = $this->getLastActivity($observations);
@@ -194,6 +195,7 @@ class AppExtension extends AbstractExtension
             $cards[] = [
                 'station' => $station,
                 'observations' => $observations,
+                'contributorsCount' => $contributorsCount,
                 'lastActivity' => max($lastStationsActivity, $lastActivity),
             ];
         }

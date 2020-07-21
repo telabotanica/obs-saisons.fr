@@ -48,7 +48,9 @@
 		{%  for card in cards %}
 			{% include 'components/cards/station-cards.html.twig' with {
 				station: card.station,
-				observations: card.observations
+				observations: card.observations,
+				contributorsCount: card.contributorsCount
+
 			} %}
 		{% endfor %}
 	</div>
