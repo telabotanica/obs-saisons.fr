@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EntityJson extends EntityJsonSerialize
@@ -42,5 +43,23 @@ class EntityJson extends EntityJsonSerialize
         ];
 
         return json_encode($observationArray);
+    }
+
+    public function getJsonEditUserProfile(User $user)
+    {
+        $userProfileArray = [
+            'id' => $user->getId(),
+            'displayName' => $user->getDisplayName(),
+            'name' => $user->getName(),
+            'avatar' => $user->getAvatar(),
+            'locality' => $user->getLocality(),
+            'country' => $user->getCountry(),
+            'postCode' => $user->getPostCode(),
+            'profileType' => $user->getProfileType(),
+            'isNewsletterSubscriber' => $user->getIsNewsletterSubscriber(),
+            'isMailsSubscriber' => $user->getIsMailsSubscriber(),
+        ];
+
+        return json_encode($userProfileArray);
     }
 }

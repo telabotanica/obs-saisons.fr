@@ -1,4 +1,4 @@
-<div class="saisie-container">
+<div class="saisie-container{{ isPage|default(false)? ' page' }}">
 	<h3 class="saisie-header">
 		{% block form_title%}{% endblock %}
 	</h3>
@@ -22,10 +22,7 @@
 					{{ form_errors(form) }}
 					{{ form_widget(form._token) }}
 					<div class="saisie-footer">
-						<a href="" class="button bt-form bt-annuler">
-							<div>Annuler</div>
-						</a>
-						<input class="action-type" type="hidden" name="action-type" value="new">
+						<a href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-annuler">Annuler</a>
 						<input type="hidden" name="action" value="{{ action }}">
 						<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
 							Valider

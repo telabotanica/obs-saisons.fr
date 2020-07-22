@@ -10,8 +10,17 @@
 			{% if not is_granted(constant('App\\Security\\Voter\\UserVoter::LOGGED')) %}
 				<a href="{{ path('user_login') }}" class="topbar-link">Connexion</a>
 			{% else %}
-				<a href="{{ path('user_dashboard') }}" class="topbar-link">Profil</a><br>
-				<a href="{{ path('user_logout') }}" class="topbar-link">Se déconnecter</a><br>
+				<div class="dropdown topbar-link">
+					<div class="dropdown-toggle" style="cursor: pointer">
+						<div class="member-avatar down-arrow-icon" style="background-image: url({{ app.user.avatar ?? '/media/layout/icons/member_default.png' }})"></div>
+					</div>
+
+
+					<nav class="dropdown-list profile-menu hidden" style="height: 90px;">
+						<a href="{{ path('user_dashboard') }}" class="dropdown-link">Profil</a>
+						<a href="{{ path('user_logout') }}" class="dropdown-link">Se déconnecter</a>
+					</nav>
+				</div>
 			{% endif %}
 		</div>
 	</div>

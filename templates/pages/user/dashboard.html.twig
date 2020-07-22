@@ -1,15 +1,109 @@
 {% extends 'base.html.twig' %}
 
-{% block content %}
-			<div>Bienvenue !</div>
-			<div>{{ 'Bonjour %s,'|format(app.user.displayName) }}</div>
-			<div>Des infos, des obs, toussa</div>
-			<div>
-				<div>Mes observations</div>
-				<ul>
-				</ul>
-				<div>Mes stations</div>
-				<ul>
-				</ul>
+{% set isPrivateDashboard = user == app.user %}
+
+{% block main_content %}
+	{% if isPrivateDashboard %}
+		{% set subtitle =
+			"Bonjour #{app.user.displayName}, bienvenue !<br>
+			Retrouvez les informations principales de votre profil et vos activités de l’observatoire des saisons"
+		%}
+	{% endif %}
+	{% set title = isPrivateDashboard ? 'Votre profil' : "Profil de #{user.displayName}" %}
+
+
+
+	{% include 'layout/header.html.twig' with ({
+		'title': title,
+		'subtitle': subtitle|default
+	}) %}
+
+
+	<div class="dashboard-container">
+		<div class="member-avatar" style="background-image: url({{ user.avatar ?? '/media/layout/icons/member_default.png' }})"></div>
+		{% if isPrivateDashboard %}
+			<h3>Mes informations</h3>
+			<ul>
+				<li><span class="bolder">Pseudo : </span>{{ user.displayName }}</li>
+				<li><span class="bolder">Nom complet : </span>{{ user.name }}</li>
+				<li><span class="bolder">Commune : </span>{{ user.locality }}</li>
+				<li><span class="bolder">Code postal : </span>{{ user.postCode }}</li>
+				<li><span class="bolder">Pays : </span>{{ user.country }}</li>
+				<li><span class="bolder">Type de profil : </span>{{ user.profileType }}</li>
+
+				<li><span class="bolder">Vous {{ user.isNewsletterSubscriber ? 'recevez' : 'ne recevez pas' }} notre lettre d'actualités</span></li>
+				<li><span class="bolder">Vous {{ user.isMailsSubscriber ? 'acceptez' : 'n’acceptez pas'}} d'être contacté(e) par mail</span></li>
+			</ul>
+			<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profile</a>
+			<ul>
+				<li><span class="bolder">Votre email : </span>{{ user.email }}</li>
+			</ul>
+			<a href="{{ path('user_parameters_edit') }}" class="button bt-add">Modifier mes paramètres</a>
+			<p>Modifier votre e-mail et/ou votre mot de passe</p>
+		{% endif %}
+		<h3>{{ isPrivateDashboard ? 'mes ' }}observations</h3>
+		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
+		{% set pictureUrl = '' %}
+		<div class="dashboard-obs-info-container">
+			{% for observation in observations %}
+				{% if observation.isMissing == 0 %}
+					{% if observation.picture is not null %}
+						{% set pictureUrl = observation.picture %}
+					{% else %}
+						{% set pictureName = observation.individual.species.picture %}
+						{% if observation.individual.species.type.name == 'arbres' %}
+							{% set pictureName = "#{pictureName}_#{observation.event.stadeBbch|first}" %}
+						{% endif %}
+						{% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
+					{% endif %}
+				{% else %}
+					{% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
+				{% endif %}
+				<div class="list-cards-item obs">
+					<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }})" target="_blank"></a>
+					<div class="item-name-block">
+						<div class="item-name">{{ observation.user.displayName }}</div>
+						<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
+						<div class="item-heading-dropdown">{{ observation.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}</div>
+					</div>
+					<div class="item-details">
+						<div class="grey">{{ observation.individual.species.vernacularName }}</div>
+						<div>Station :
+							<a href="{{ path("stations_show", {'slug': observation.individual.station.slug}) }}" class="bolder">
+								{{ observation.individual.station.name }}
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<h3>{{ isPrivateDashboard ? 'mes ' }}stations</h3>
+		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
+		<div class="cards-grid-container">
+			{% set cards = setStationCards(stations)|sort((a, b) => a.lastActivity <=> b.lastActivity)|reverse %}
+			{%  for card in cards %}
+				{% include 'components/cards/station-cards.html.twig' with {
+					station: card.station,
+					observations: card.observations,
+					canAdminStation: false
+				} %}
+			{% endfor %}
+			<div class="card add">
+				<div class="add-card-content">
+					<div class="add-pointer-icon add-card-marker"></div>
+					<div class="add-card-text">Vous souhaitez explorer ou créer votre propre station?</div>
+					<a href="{{ path('stations') }}" class="green-link">
+						Rendez-vous sur la page des stations
+					</a>
+				</div>
 			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block bottom_content %}
+	{% if isPrivateDashboard %}
+		<div class="overlay hidden profile edit">
+			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez votre profil'} %}
+		</div>
+	{% endif %}
 {% endblock %}

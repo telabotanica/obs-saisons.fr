@@ -14,8 +14,8 @@
 	padding-bottom: 200px;
 	max-width: 680px;
 	max-height: 100%;
-	overflow-y: scroll;
-	-ms-overflow-y: scroll;
+	overflow-y: auto;
+	-ms-overflow-y: auto;
 
 	background-color: #fff;
 
@@ -27,6 +27,19 @@
 	@include media(md) {
 		border-radius: 2px;
 		position: static;
+	}
+
+	&.page {
+		position: static;
+		background-color: $grey303394;
+		max-width: 100%;
+		max-height: none;
+		border-radius: unset;
+		padding-bottom: 0;
+
+		.saisie-footer {
+			position: static;
+		}
 	}
 }
 

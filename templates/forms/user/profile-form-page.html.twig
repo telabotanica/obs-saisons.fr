@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Créez Votre Profil',
+        'subtitle': null
+    }) %}
+
+    {% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, isPage: true } %}
+
+{% endblock %}

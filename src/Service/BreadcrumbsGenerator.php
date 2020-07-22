@@ -21,6 +21,7 @@ class BreadcrumbsGenerator
         'stations' => 'Stations d’observation',
         'station-page' => 'Page de la station',
         'protocole' => 'Protocole',
+        'dashboard' => 'Tableau de bord',
     ];
 
     private $trails;

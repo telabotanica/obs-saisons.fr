@@ -32,7 +32,6 @@
 	@include justify-content-space-between;
 	@include align-items-stretch;
 	@include align-self-auto;
-	overflow: hidden;
 	height: 86px;
 	min-height: 80px;
 	background-color: $grey306092;

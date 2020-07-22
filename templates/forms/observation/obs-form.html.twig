@@ -1,7 +1,7 @@
 {% set firstSpecies = individuals[0].species %}
 {% set firstIndividualsEventSpecies = getEventsSpeciesForSpecies(firstSpecies) %}
 {% set firstIndividualsFirstEventSpecies = firstIndividualsEventSpecies[0] %}
-{% extends 'forms/forms.html.twig' %}
+{% extends 'forms/base.html.twig' %}
 {% block form_title%}
     <span class="saisie-title" data-station-name="{{ station.name|capitalize }}">{{ station.name|capitalize }}</span>
     <span class="saisie-title-action">•&nbsp;Saisir une observation</span>

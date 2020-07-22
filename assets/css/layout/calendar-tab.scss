@@ -166,6 +166,10 @@
     @include media(md) {
         min-width: 100%;
     }
+
+    &.profile-menu {
+        right: 0;
+    }
 }
 
 .dropdown-link {
