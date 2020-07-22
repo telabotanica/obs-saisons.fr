@@ -96,6 +96,29 @@ class EntityJsonSerialize
         return $serializer->serialize($eventSpecies, 'json', $context);
     }
 
+    public function getJsonSerializedEditUserProfile(User $user)
+    {
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+
+        $context = [
+            AbstractNormalizer::ATTRIBUTES => [
+                'id',
+                'displayName',
+                'name',
+                'avatar',
+                'locality',
+                'country',
+                'postCode',
+                'profileType',
+                'isNewsletterSubscriber',
+                'isMailsSubscriber',
+            ],
+        ];
+
+        return $serializer->serialize($user, 'json', $context);
+    }
+
     public function entityObjectIdCallback($entityObject)
     {
         return ['id' => $entityObject->getId()];

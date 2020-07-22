@@ -1,0 +1,33 @@
+{% extends 'forms/base.html.twig' %}
+{% block form_title%}Modifier l’adresse e-mail du compte{% endblock %}
+
+{% block form %}
+    <p>L’adresse e-mail du compte est utilisée pour s’identifier à votre profil et pour envoyer des e-mails.</p>
+    <div class="_2-col-form">
+        {{ form_row(form.email_new, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Nouvel e-mail *',
+            'attr': {
+                'class': 'text-field ods-input',
+                'max': '255',
+                'data-name': 'email_new'
+            }
+        }) }}
+    </div>
+    <div class="_2-col-form has-label-side">
+        <a href="{{ path('user_forgotten_password') }}" class="label-side-link">Mot de passe oublié ?</a>
+        {{ form_row(form.password, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Mot de passe actuel *',
+            'attr': {
+                'class': 'text-field ods-input',
+                'max': '255',
+                'data-name': 'password'
+            }
+        }) }}
+    </div>
+{% endblock %}
+
+{% block form_javascript %}{% endblock %}
+
+

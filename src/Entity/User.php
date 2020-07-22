@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -68,6 +69,56 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resetToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $locality;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $country;
+
+    /**
+     * @Assert\Regex(
+     *     pattern = "/(100[1-9]|10[1-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-8][0-9]{4}|9[0-8][0-9]{3}|990[0-9]{2}|991[0-2][0-9]|9913[0-8])|(2(A001|B36[4-6]|(A|B)(00[2-9]|0[1-8][0-9]|09[0-9]|[12][0-9]{2}|3[0-5][0-9]|36[0-3])))/",
+     *     message = "Le code postal saisi est invalide"
+     * )
+     *
+     * @ORM\Column(type="string", length=5, nullable=true)
+     */
+    private $postCode;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $profileType;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isNewsletterSubscriber;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isMailsSubscriber;
+
+    /**
+     * @ORM\Column(type="string", length=180, nullable=true)
+     */
+    private $emailNew;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $emailToken;
 
     public function getId(): ?int
     {
@@ -228,6 +279,110 @@ class User implements UserInterface
     public function setResetToken(?string $resetToken): self
     {
         $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function setLocality(?string $locality): self
+    {
+        $this->locality = $locality;
+
+        return $this;
+    }
+
+    public function getLocality(): ?string
+    {
+        return $this->locality;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setPostCode(?string $postCode): self
+    {
+        $this->postCode = $postCode;
+
+        return $this;
+    }
+
+    public function getPostCode(): ?string
+    {
+        return $this->postCode;
+    }
+
+    public function setProfileType(?string $profileType): self
+    {
+        $this->profileType = $profileType;
+
+        return $this;
+    }
+
+    public function getProfileType(): ?string
+    {
+        return $this->profileType;
+    }
+
+    public function setIsNewsletterSubscriber(?bool $isNewsletterSubscriber): self
+    {
+        $this->isNewsletterSubscriber = $isNewsletterSubscriber;
+
+        return $this;
+    }
+
+    public function getIsNewsletterSubscriber(): ?bool
+    {
+        return $this->isNewsletterSubscriber;
+    }
+
+    public function setIsMailsSubscriber(?bool $isMailsSubscriber): self
+    {
+        $this->isMailsSubscriber = $isMailsSubscriber;
+
+        return $this;
+    }
+
+    public function getIsMailsSubscriber(): ?bool
+    {
+        return $this->isMailsSubscriber;
+    }
+
+    public function getEmailNew (): ?string {
+        return $this->emailNew;
+    }
+
+    public function setEmailNew ( ?string $emailNew ): self {
+        $this->emailNew = mb_convert_case( trim( $emailNew ), MB_CASE_LOWER );;
+
+        return $this;
+    }
+
+    public function getEmailToken (): ?string {
+        return $this->emailToken;
+    }
+
+    public function setEmailToken ( ?string $emailToken ): self {
+        $this->emailToken = $emailToken;
 
         return $this;
     }

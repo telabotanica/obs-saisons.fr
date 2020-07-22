@@ -3,8 +3,14 @@
 namespace App\Controller;
 
 // use App\Entity\LogEvent;
+use App\Entity\Observation;
+use App\Entity\Station;
 use App\Entity\User;
+use App\Form\ProfileType;
+use App\Form\UserEmailType;
+use App\Form\UserPasswordType;
 use App\Security\Voter\UserVoter;
+use App\Service\BreadcrumbsGenerator;
 use App\Service\EmailSender;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -84,7 +90,7 @@ class UserController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function register(
             Request $request,
@@ -299,25 +305,313 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/dashboard", name="user_dashboard")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/user/dashboard", name="user_private_dashboard", methods={"GET"})
+     */
+    public function userDashboard(
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator
+    ) {
+        $this->denyAccessUnlessGranted(UserVoter::LOGGED);
+
+        $user = $this->getUser();
+
+        $form = $this->createForm(ProfileType::class, $user);
+
+        $stations = $manager->getRepository(Station::class)
+            ->findBy(['user' => $user]);
+        $observations = $manager->getRepository(Observation::class)
+            ->findBy(['user' => $user]);
+        foreach ($observations as $observation) {
+            $obsStation = $observation->getIndividual()->getStation();
+            if (!in_array($obsStation, $stations)) {
+                $stations[] = $obsStation;
+            }
+        }
+
+        return $this->render('pages/user/dashboard.html.twig', [
+            'user' => $user,
+            'stations' => $stations,
+            'observations' => $observations,
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
+            'profileForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/{userId}/dashboard", name="user_dashboard", methods={"GET"})
      */
     public function dashboard(
-            Request $request,
-            EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        int $userId
+    ) {
+        $this->denyAccessUnlessGranted(UserVoter::LOGGED);
+
+        $userForProfile = $manager->getRepository(User::class)->find($userId);
+        if (!$userForProfile) {
+            throw $this->createNotFoundException('L’utilisateur n’existe pas');
+        }
+
+        $stations = $manager->getRepository(Station::class)
+            ->findBy(['user' => $userForProfile]);
+        $observations = $manager->getRepository(Observation::class)
+            ->findBy(['user' => $userForProfile]);
+        foreach ($observations as $observation) {
+            $obsStation = $observation->getIndividual()->getStation();
+            if (!in_array($obsStation, $stations)) {
+                $stations[] = $obsStation;
+            }
+        }
+
+        return $this->render('pages/user/dashboard.html.twig', [
+            'user' => $userForProfile,
+            'stations' => $stations,
+            'observations' => $observations,
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
+        ]);
+    }
+
+    /**
+     * @Route("/user/{userId}/dashboard/admin", name="user_dashboard_admin")
+     */
+    public function userDashboardAdmin(
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        int $userId
+    ) {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        $user = $manager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            throw $this->createNotFoundException('L’utilisateur n’existe pas');
+        }
+
+        $form = $this->createForm(ProfileType::class, $user);
+
+        $stations = $manager->getRepository(Station::class)
+            ->findBy(['user' => $user]);
+        $observations = $manager->getRepository(Observation::class)
+            ->findBy(['user' => $user]);
+        foreach ($observations as $observation) {
+            $obsStation = $observation->getIndividual()->getStation();
+            if (!in_array($obsStation, $stations)) {
+                $stations[] = $obsStation;
+            }
+        }
+
+        return $this->render('pages/user/dashboard.html.twig', [
+            'user' => $user,
+            'stations' => $stations,
+            'observations' => $observations,
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
+            'profileForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile/create", name="user_profile_create")
+     */
+    public function profileCreate(
+        Request $request,
+        EntityManagerInterface $manager
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $user = $this->getUser();
+
+        $form = $this->createForm(ProfileType::class, $user);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $manager->flush();
+
+                $this->addFlash('success', 'Votre profil a été créé');
+            } else {
+                $this->addFlash('error', 'Le profil n’a pas pu être créé');
+            }
+
+            return $this->redirectToRoute('user_private_dashboard');
+        }
+
+        return $this->render('forms/user/profile-form-page.html.twig', [
+            'profileForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile/edit", name="user_profile_edit", methods={"POST"})
+     */
+    public function profileEdit(
+        Request $request,
+        EntityManagerInterface $manager
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $user = $this->getUser();
+
+        $form = $this->createForm(ProfileType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre profil a été modifié');
+        } else {
+            $this->addFlash('error', 'Le profil n’a pas pu être modifié');
+        }
+
+        return $this->redirectToRoute('user_private_dashboard');
+    }
+
+    /**
+     * @Route("/user/parameters/edit", name="user_parameters_edit")
+     */
+    public function parametersEdit(
+        Request $request,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $passwordEncoder,
+        TokenGeneratorInterface $tokenGenerator,
+        EmailSender $mailer
     ) {
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
         /**
-         * @var User
+         * @var User $user
          */
         $user = $this->getUser();
 
-        if (empty($user->getName())) {
-            // return $this->redirectToRoute( 'user_profile_create' );
+        /**
+         * @var User $emailUserSubmitted
+         */
+        $emailUserSubmitted = new User();
+        $emailForm = $this->createForm(UserEmailType::class, $emailUserSubmitted);
+
+        $vars = $request->request->get('user_email');
+
+        if (!empty($vars['email_new'])) {
+            $emailForm->handleRequest($request);
         }
 
-        return $this->render('pages/user/dashboard.html.twig');
+        if ($emailForm->isSubmitted() && $emailForm->isValid()) {
+            $userRepository = $manager->getRepository(User::class);
+
+            if (!$passwordEncoder->isPasswordValid($user, $emailUserSubmitted->getPassword())) {
+                $this->addFlash('error', 'Mot de passe incorrect');
+            } elseif ($userRepository->findOneBy(['email' => $vars['email_new']])) {
+                $this->addFlash('error', 'Cet utilisateur est déjà enregistré.');
+            } else {
+                $token = $tokenGenerator->generateToken();
+
+                try {
+                    $user->setEmailNew($vars['email_new']);
+                    $user->setEmailToken($token);
+                    $manager->flush();
+                } catch (Exception $e) {
+                    $this->addFlash('warning', $e->getMessage());
+                }
+
+                // Send Warning
+
+                $message = $this->renderView('emails/email-change-warning.html.twig', [
+                    'user' => $user,
+                ]);
+
+                $mailer->send(
+                    $this->getParameter('plateform')['from'],
+                    $user->getEmail(),
+                    $mailer->getSubjectFromTitle($message),
+                    $message
+                );
+
+                // Send Confirmation
+
+                $message = $this->renderView('emails/email-change-confirm.html.twig', [
+                    'user' => $user,
+                    'url' => $this->generateUrl('user_email_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
+                ]);
+
+                $mailer->send(
+                    $this->getParameter('plateform')['from'],
+                    $vars['email_new'],
+                    $mailer->getSubjectFromTitle($message),
+                    $message
+                );
+
+                $this->addFlash('notice', 'Un email de confirmation du changement d’adresse vous a été envoyé. Regardez la boite de reception de votre nouvelle adresse.');
+            }
+        }
+
+        /**
+         * @var User $passwordUserSubmitted
+         */
+        $passwordUserSubmitted = new User();
+        $passwordForm = $this->createForm(UserPasswordType::class, $passwordUserSubmitted);
+
+        $vars = $request->request->get('user_password');
+
+        if (!empty($vars['password_new'])) {
+            $passwordForm->handleRequest($request);
+        }
+
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+            if ($vars['password_new'] !== $vars['password_confirm']) {
+                $this->addFlash('error', 'Votre mot de passe et sa confirmation doivent être identiques');
+            } elseif (!$passwordEncoder->isPasswordValid($user, $passwordUserSubmitted->getPassword())) {
+                $this->addFlash('error', 'Mot de passe incorrect');
+            } else {
+                $user->setPassword($passwordEncoder->encodePassword($user, $vars['password_new']));
+                $user->setResetToken(null);
+                $manager->flush();
+
+                $this->addFlash('notice', 'Votre mot de passe a été mis à jour.');
+
+                return $this->redirectToRoute('user_dashboard');
+            }
+        }
+
+        return $this->render('pages/user/parameters-edit.html.twig', [
+            'emailForm' => $emailForm->createView(),
+            'passwordForm' => $passwordForm->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/email-change/{token}", name="user_email_confirm")
+     *
+     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function emailChangeConfirm(
+        string $token,
+        EntityManagerInterface $manager
+    ) {
+        $this->denyAccessUnlessGranted(UserVoter::LOGGED);
+
+        /**
+         * @var \App\Entity\User $user
+         */
+        $user = $this->getUser();
+
+        $userRepository = $manager->getRepository(User::class);
+
+        if ($userRepository->findOneBy(['email' => $user->getEmailNew()])) {
+            $this->addFlash('error', 'Cet utilisateur est déjà enregistré.');
+        } elseif (($token !== $user->getEmailToken()) || (empty($user->getEmailNew()))) {
+            $this->addFlash('error', 'Ce token est inconnu.');
+        } else {
+            $user->setEmail($user->getEmailNew());
+            $user->setEmailToken(null);
+            $manager->flush();
+
+            $this->addFlash('notice', 'Votre adresse e-mail a été modifiée.');
+        }
+
+        return $this->redirectToRoute('user_dashboard');
     }
 }

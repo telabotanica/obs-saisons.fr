@@ -49,6 +49,7 @@ $( document ).ready( function() {
     addModsTouchClass();
     toggleMenuSmallDevices();
     onOpenOverlay();
+    onFileEvent();
     onCloseOverlay();
     switchToNextOnHomepage();
     switchTabs();
@@ -101,12 +102,10 @@ function onOpenOverlay() {
                 case 'station':
                     onLocation();
                     toggleMap();
-                    onFileEvent();
                     editStationPreSetFields(dataAttrs);
                     break;
                 case 'observation':
                     openDetailsField();
-                    onFileEvent();
                     onChangeSetIndividual();
                     onChangeObsEvent();
                     onChangeObsDate();
@@ -117,6 +116,9 @@ function onOpenOverlay() {
                     individualOvelayManageSpecies(dataAttrs);
                     editIndividualPreSetFields(dataAttrs);
                     break;
+                case 'profile':
+                    editProfilePreSetFields(dataAttrs);
+                    break;
                 default:
                     break;
             }
@@ -125,27 +127,31 @@ function onOpenOverlay() {
 }
 
 function setEditForm($overlay, $form, $thisLink, dataAttrs) {
-    let formActionReset = '/'+dataAttrs.open+'/new';
+    let formActionReset = '/'+dataAttrs.open+'/new',
+        editionPath = '/'+dataAttrs.open;
 
-    if ('station' !== dataAttrs.open) {
-        let stationId;
-        if ('observation' === dataAttrs.open) {
-            let $observation = $('.stage-marker.observation-' + dataAttrs.observationId);
-            // close obs-infos overlay
-            $thisLink.closest('.overlay').addClass('hidden');
+    if (0 < $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
+        if ('station' !== dataAttrs.open) {
+            let stationId;
 
-            dataAttrs.observation = $observation.data('observation');
-            dataAttrs.individualsIds = $observation.data('individualsIds');
-            dataAttrs.speciesName = dataAttrs.observation.individual.species.vernacularName;
+            if ('observation' === dataAttrs.open) {
+                let $observation = $('.stage-marker.observation-' + dataAttrs.observationId);
+                // close obs-infos overlay
+                $thisLink.closest('.overlay').addClass('hidden');
 
-            stationId = dataAttrs.observation.individual.station.id;
-        } else {
-            stationId = dataAttrs.individual.station.id;
+                dataAttrs.observation = $observation.data('observation');
+                dataAttrs.individualsIds = $observation.data('individualsIds');
+                dataAttrs.speciesName = dataAttrs.observation.individual.species.vernacularName;
+
+                stationId = dataAttrs.observation.individual.station.id;
+            } else {
+                stationId = dataAttrs.individual.station.id;
+            }
+            formActionReset = '/station/' + stationId + formActionReset;
         }
-        formActionReset = '/station/'+ stationId + formActionReset;
-    }
 
-    let editionPath = '/'+dataAttrs.open+'/'+dataAttrs[dataAttrs.open]['id'];
+        editionPath += dataAttrs[dataAttrs.open]['id']+'/';
+    }
 
     $overlay.addClass('edit');
     $form
@@ -169,6 +175,7 @@ function onObsInfo($thisLink, dataAttrs) {
         ),
         $obsInfo = $('.obs-informations'),
         obsInfoTitle = 'Détails de l’observation';
+
     $obsInfo.empty();
 
     if(1 === theseObservations.length) {
@@ -178,6 +185,7 @@ function onObsInfo($thisLink, dataAttrs) {
     } else if (1 < theseObservations.length) {
         obsInfoTitle = 'Détails des observations';
     }
+
     for(let index=0;index < theseObservations.length;index++) {
         dataAttrs = theseObservations[index].dataset;
 
@@ -218,7 +226,7 @@ function onObsInfo($thisLink, dataAttrs) {
 
 // close overlay
 function onCloseOverlay() {
-    $('a.bt-annuler').off('click').on('click', function (event) {
+    $('.overlay a.bt-annuler').off('click').on('click', function (event) {
         event.preventDefault();
 
         closeOverlay($(this).closest('.overlay'));
@@ -266,8 +274,13 @@ function closeOverlay($overlay) {
 }
 
 function editStationPreSetFields(dataAttrs) {
-    let station = dataAttrs.station;
-    if ($('.overlay.station').hasClass('edit')) {
+    let $overlay = $('.overlay.station');
+
+    if ($overlay.hasClass('edit')) {
+        let station = dataAttrs.station;
+
+        $('.saisie-header',$overlay).text('Modifier la station');
+
         if (valOk(station.name) && '' !== station.name) {
             $('#station_name').val(station.name);
         }
@@ -317,8 +330,12 @@ function observationOvelayManageIndividualAndEvents(dataAttrs) {
 }
 
 function editObservationPreSetFields(dataAttrs) {
-    if ($('.overlay.observation').hasClass('edit')) {
+    let $overlay = $('.overlay.observation');
+
+    if ($overlay.hasClass('edit')) {
         let observation = dataAttrs.observation;
+
+        $('.saisie-header',$overlay).text('Modifier l’observation');
 
         $individual
             .removeClass('disabled')
@@ -374,9 +391,13 @@ function individualOvelayManageSpecies(dataAttrs) {
 }
 
 function editIndividualPreSetFields(dataAttrs) {
-    let individual = dataAttrs.individual;
+    let $overlay = $('.overlay.individual');
 
-    if ($('.overlay.individual').hasClass('edit')) {
+    if ($overlay.hasClass('edit')) {
+        let individual = dataAttrs.individual;
+
+        $('.saisie-header', $overlay).text('Modifier l’individu');
+
         if (valOk(individual.name) && '' !== individual.name) {
             $('#individual_name').val(individual.name);
         }
@@ -695,42 +716,46 @@ function toggleMap() {
 function onFileEvent() {
     let droppedFiles = false,
         $picture = $('.upload-zone .upload-input');
-    let isAdvancedUpload = function() {
-        let div = document.createElement('div');
 
-        return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
-    }();
+    if(valOk($picture)) {
+        let isAdvancedUpload = function () {
+            let div = document.createElement('div');
 
-    if (isAdvancedUpload) {
-        $picture
-            .on('drag dragstart dragend dragover dragenter dragleave drop', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-            })
-            .on('dragover dragenter', function() {
-                $picture.addClass('is-dragover');
-            })
-            .on('dragleave dragend drop', function() {
-                $picture.removeClass('is-dragover');
-            })
-            .on('drop', function(event) {
-                if (event.originalEvent) {
-                    droppedFiles = event.originalEvent.dataTransfer.files;
-                    $('.is-delete-picture').remove();
-                    displayThumbs(droppedFiles);
-                    ajaxSendFile($(this), droppedFiles);
-                }
-            });
+            return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+        }();
+
+        if (isAdvancedUpload) {
+            $picture
+                .on('drag dragstart dragend dragover dragenter dragleave drop', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                })
+                .on('dragover dragenter', function () {
+                    $picture.addClass('is-dragover');
+                })
+                .on('dragleave dragend drop', function () {
+                    $picture.removeClass('is-dragover');
+                })
+                .on('drop', function (event) {
+                    if (event.originalEvent) {
+                        droppedFiles = event.originalEvent.dataTransfer.files;
+                        $('.is-delete-picture').remove();
+                        displayThumbs(droppedFiles);
+                        ajaxSendFile($(this), droppedFiles);
+                    }
+                });
 
 
+        }
+        $picture.on('change', function (event) {
+            droppedFiles = event.target.files;
+            console.log(droppedFiles);
+            $('.is-delete-picture').remove();
+            displayThumbs(droppedFiles);
+        });
+
+        onDeleteFile()
     }
-    $picture.on('change', function (event) {
-        droppedFiles = event.target.files;
-        $('.is-delete-picture').remove();
-        displayThumbs(droppedFiles);
-    });
-
-    onDeleteFile()
 }
 
 function displayThumbs(files) {
@@ -925,7 +950,7 @@ function toggleDateSelection() {
 
 // select new date and show/hide observations
 function calendarSwitchDate() {
-    $('.dropdown-link').off('click').on('click', function (event) {
+    $('.periods-calendar .dropdown-link').off('click').on('click', function (event) {
         event.preventDefault();
 
         let $thisCalendar = $(this).closest('.periods-calendar'),
@@ -1059,6 +1084,17 @@ function mapDisplay(
     map.addLayer(marker);
 
     return {map:map,marker:marker};
+}
+
+function editProfilePreSetFields(dataAttrs) {
+    let user = dataAttrs.user;
+
+    if ($('.overlay.profile').hasClass('edit')) {
+        if (valOk(user.avatar) && '' !== user.avatar) {
+            $('.upload-zone-placeholder').addClass('hidden');
+            $('img.placeholder-img').addClass('obj').attr('src', user.avatar);
+        }
+    }
 }
 
 function hideFlashMessages() {

@@ -16,6 +16,10 @@
 	@include media(md) {
 		@include flex-direction-row;
 	}
+
+	&.has-label-side {
+		position: relative;
+	}
 }
 
 .ml {
@@ -57,6 +61,9 @@
 		}
 	}
 
+	&.has-label-side {
+		position: relative;
+	}
 }
 
 %input {
@@ -215,6 +222,14 @@
 	@include media(lg) {
 		padding-left: 10%;
 	}
+}
+
+.label-side-link {
+	position: absolute;
+	right: 0;
+	@extend .green-link;
+	display: block;
+	margin-bottom: 20px;
 }
 
 /******************************************/

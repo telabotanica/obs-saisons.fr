@@ -1,18 +1,25 @@
-<form method="post" action="{{ path('user_login') }}">
-	<div class="form-rows">
-		<div class="form-row form-row__field">
-			<label for="login-form-email">Adresse e-mail</label>
-			<input id="login-form-email" type="email" name="email" value="{{ last_username }}" placeholder="Entrez votre adresse e-mail ici…" required autofocus>
-		</div>
-		<div class="form-row form-row__field">
-			<label for="login-form-password">Mot de passe</label>
-			<input id="login-form-password" type="password" name="password" placeholder="Entrez votre mot de passe ici…" required>
-		</div>
+<div class="saisie-container page">
+	<h3 class="saisie-header">
+		Connectez-vous
+	</h3>
+	<p>Si vous avez déjà un compte</p>
+	<div class="saisie ods-form">
+		<form method="post" action="{{ path('user_login') }}">
+			<div class="form-col">
+				<label for="login-form-email">Adresse e-mail</label>
+				<input id="login-form-email" type="email" name="email" class="text-field ods-input" value="{{ last_username }}" placeholder="Entrez votre adresse e-mail ici…" required autofocus>
+			</div>
+			<div class="form-col has-label-side">
+				<a href="{{ path('user_forgotten_password') }}" class="label-side-link">Mot de passe oublié ?</a>
+				<label for="login-form-password">Mot de passe</label>
+				<input id="login-form-password" type="password" name="password" class="text-field ods-input" placeholder="Entrez votre mot de passe ici…" required>
+			</div>
+
+			<div class="saisie-footer">
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				<input type="hidden" name="_remember_me" value="1">
+				<button type="submit" class="button bt-form bt-valider" style="margin-left:0;">Se connecter</button>
+			</div>
+		</form>
 	</div>
-	<div class="form-row form-row__submit">
-		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-		<input type="hidden" name="_remember_me" value="1">
-		<button type="submit">Se connecter</button>
-		<a href="{{ path('user_forgotten_password') }}">Mot de passe oublié ?</a>
-	</div>
-</form>
+</div>

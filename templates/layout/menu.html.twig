@@ -20,6 +20,9 @@
 				<div>Connexion</div>
 			</a>
 		{% else %}
+			<a href="{{ path('user_private_dashboard') }}" class="nav-item resp-connect">
+				<div>Profil</div>
+			</a>
 			<a href="{{ path('user_logout') }}" class="nav-item resp-connect">
 				<div>Déconnexion</div>
 			</a>

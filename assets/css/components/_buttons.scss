@@ -373,11 +373,10 @@ $button-color-map: (
   }
 }
 
-.overlay .ods-form .show-on-edit {
+.ods-form .show-on-edit {
   display: none;
 }
-
-.overlay.edit .ods-form  .show-on-edit {
+.edit .ods-form  .show-on-edit {
   display: inline-block;
 }
 

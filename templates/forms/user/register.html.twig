@@ -1,16 +1,23 @@
-<form method="post" action="{{ path('user_register') }}">
-	<div class="form-rows">
-		<div class="form-row form-row__field">
-			<label for="register-form-email">Adresse e-mail</label>
-			<input id="register-form-email" type="email" name="email" placeholder="Entrez votre adresse e-mail ici…" required autofocus>
-		</div>
-		<div class="form-row form-row__field">
-			<label for="register-form-password">Mot de passe</label>
-			<input id="register-form-password" type="password" name="password" placeholder="Entrez votre mot de passe ici…" required>
-		</div>
+<div class="saisie-container page">
+	<h3 class="saisie-header">
+		Créer votre compte
+	</h3>
+	<p>Si c’est votre première visite</p>
+	<div class="saisie ods-form">
+		<form method="post" action="{{ path('user_register') }}">
+			<div class="form-col">
+				<label for="login-form-email">Adresse e-mail</label>
+				<input id="login-form-email" type="email" name="email" class="text-field ods-input" placeholder="Entrez votre adresse e-mail ici…" required autofocus>
+			</div>
+			<div class="form-col">
+				<label for="login-form-password">Mot de passe</label>
+				<input id="login-form-password" type="password" name="password" class="text-field ods-input" placeholder="Entrez votre mot de passe ici…" required>
+			</div>
+
+			<div class="saisie-footer">
+				<input type="hidden" name="action" value="register">
+				<button type="submit" class="button bt-form bt-valider" style="margin-left:0;">S’inscrire</button>
+			</div>
+		</form>
 	</div>
-	<div class="form-row form-row__submit">
-		<input type="hidden" name="action" value="register">
-		<button type="submit">S’inscrire</button>
-	</div>
-</form>
+</div>

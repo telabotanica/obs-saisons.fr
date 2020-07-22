@@ -9,6 +9,7 @@ use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Species;
 use App\Entity\Station;
+use App\Entity\User;
 use App\Service\EntityJsonSerialize;
 use App\Service\HandleDateTime;
 use App\Service\SlugGenerator;
@@ -95,6 +96,10 @@ class AppExtension extends AbstractExtension
                 $this,
                 'getJsonSerializedEditObservation',
             ]),
+            new TwigFilter('getJsonSerializedEditUserProfile', [
+                $this,
+                'getJsonSerializedEditUserProfile',
+            ]),
         ];
     }
 
@@ -124,6 +129,13 @@ class AppExtension extends AbstractExtension
         $entityJsonSerialize = new EntityJsonSerialize();
 
         return $entityJsonSerialize->getJsonSerializedEditObservation($observation);
+    }
+
+    public function getJsonSerializedEditUserProfile(User $user)
+    {
+        $entityJsonSerialize = new EntityJsonSerialize();
+
+        return $entityJsonSerialize->getJsonSerializedEditUserProfile($user);
     }
 
     public function removeDuplicates(array $array): array

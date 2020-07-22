@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Modifier mes paramètres',
+        'subtitle': null
+    }) %}
+
+    {% include 'forms/user/parameters-email-form.html.twig' with ({
+        'form':emailForm,
+        'action': 'user_email',
+        'isPage': true,
+        'user':app.user
+    }) %}
+
+    {% include 'forms/user/parameters-password-form.html.twig' with ({
+        'form':passwordForm,
+        'action': 'user_password',
+        'isPage': true,
+        'user':app.user
+    }) %}
+
+{% endblock %}
