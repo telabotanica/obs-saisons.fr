@@ -305,7 +305,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/dashboard", name="user_private_dashboard", methods={"GET"})
+     * @Route("/user/dashboard", name="user_dashboard", methods={"GET"})
      */
     public function userDashboard(
         EntityManagerInterface $manager,
@@ -338,7 +338,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/{userId}/dashboard", name="user_dashboard", methods={"GET"})
+     * @Route("/user/{userId}/profile", name="user_profile", methods={"GET"})
      */
     public function dashboard(
         EntityManagerInterface $manager,
@@ -433,7 +433,7 @@ class UserController extends AbstractController
                 $this->addFlash('error', 'Le profil n’a pas pu être créé');
             }
 
-            return $this->redirectToRoute('user_private_dashboard');
+            return $this->redirectToRoute('user_dashboard');
         }
 
         return $this->render('forms/user/profile-form-page.html.twig', [
@@ -465,7 +465,7 @@ class UserController extends AbstractController
             $this->addFlash('error', 'Le profil n’a pas pu être modifié');
         }
 
-        return $this->redirectToRoute('user_private_dashboard');
+        return $this->redirectToRoute('user_dashboard');
     }
 
     /**

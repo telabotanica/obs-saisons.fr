@@ -29,43 +29,7 @@ class UserPasswordType extends AbstractType
                 'mapped' => false,
                 'required' => true,
             ])
-            ->add('submit', SubmitType::class)
-        ;
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            [$this, 'onPreSetData']
-        );
-
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            [$this, 'onPreSubmit']
-        );
-
-        $builder->addEventListener(
-            FormEvents::SUBMIT,
-            [$this, 'onSubmit']
-        );
-    }
-
-    public function onPreSetData(FormEvent $formEvent)
-    {
-        $user = $formEvent->getData();
-        if ($user && null !== $user->getId()) {
-        }
-    }
-
-    public function onPreSubmit(FormEvent $formEvent)
-    {
-        $user = $formEvent->getData();
-        $formEvent->setData($user);
-    }
-
-    public function onSubmit(FormEvent $formEvent)
-    {
-        $user = $formEvent->getData();
-
-        $formEvent->setData($user);
+            ->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

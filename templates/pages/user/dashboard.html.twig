@@ -24,12 +24,12 @@
 		{% if isPrivateDashboard %}
 			<h3>Mes informations</h3>
 			<ul>
-				<li><span class="bolder">Votre pseudo : </span>{{ user.displayName }}</li>
-				<li><span class="bolder">Votre nom complet : </span>{{ user.name }}</li>
-				<li><span class="bolder">Votre commune : </span>{{ user.locality }}</li>
+				<li><span class="bolder">Pseudo : </span>{{ user.displayName }}</li>
+				<li><span class="bolder">Nom complet : </span>{{ user.name }}</li>
+				<li><span class="bolder">Commune : </span>{{ user.locality }}</li>
 				<li><span class="bolder">Code postal : </span>{{ user.postCode }}</li>
 				<li><span class="bolder">Pays : </span>{{ user.country }}</li>
-				<li><span class="bolder">Votre type de profil : </span>{{ user.profileType }}</li>
+				<li><span class="bolder">Type de profil : </span>{{ user.profileType }}</li>
 
 				<li><span class="bolder">Vous {{ user.isNewsletterSubscriber ? 'recevez' : 'ne recevez pas' }} notre lettre d'actualités</span></li>
 				<li><span class="bolder">Vous {{ user.isMailsSubscriber ? 'acceptez' : 'n’acceptez pas'}} d'être contacté(e) par mail</span></li>
@@ -81,7 +81,6 @@
 		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
 		<div class="cards-grid-container">
 			{% set cards = setStationCards(stations)|sort((a, b) => a.lastActivity <=> b.lastActivity)|reverse %}
-			{#{% set cards = setStationCards(stations) %}#}
 			{%  for card in cards %}
 				{% include 'components/cards/station-cards.html.twig' with {
 					station: card.station,

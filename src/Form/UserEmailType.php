@@ -25,41 +25,6 @@ class UserEmailType extends AbstractType
             ->add('password', PasswordType::class, ['required' => true])
             ->add('submit', SubmitType::class)
         ;
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            [$this, 'onPreSetData']
-        );
-
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            [$this, 'onPreSubmit']
-        );
-
-        $builder->addEventListener(
-            FormEvents::SUBMIT,
-            [$this, 'onSubmit']
-        );
-    }
-
-    public function onPreSetData(FormEvent $formEvent)
-    {
-        $user = $formEvent->getData();
-        if ($user && null !== $user->getId()) {
-        }
-    }
-
-    public function onPreSubmit(FormEvent $formEvent)
-    {
-        $user = $formEvent->getData();
-        $formEvent->setData($user);
-    }
-
-    public function onSubmit(FormEvent $formEvent)
-    {
-        $user = $formEvent->getData();
-
-        $formEvent->setData($user);
     }
 
     public function configureOptions(OptionsResolver $resolver)
