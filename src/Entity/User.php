@@ -120,6 +120,12 @@ class User implements UserInterface
      */
     private $emailToken;
 
+    public function __construct()
+    {
+        $this->isNewsletterSubscriber = false;
+        $this->isMailsSubscriber = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -367,21 +373,25 @@ class User implements UserInterface
         return $this->isMailsSubscriber;
     }
 
-    public function getEmailNew (): ?string {
+    public function getEmailNew(): ?string
+    {
         return $this->emailNew;
     }
 
-    public function setEmailNew ( ?string $emailNew ): self {
-        $this->emailNew = mb_convert_case( trim( $emailNew ), MB_CASE_LOWER );;
+    public function setEmailNew(?string $emailNew): self
+    {
+        $this->emailNew = mb_convert_case(trim($emailNew), MB_CASE_LOWER);
 
         return $this;
     }
 
-    public function getEmailToken (): ?string {
+    public function getEmailToken(): ?string
+    {
         return $this->emailToken;
     }
 
-    public function setEmailToken ( ?string $emailToken ): self {
+    public function setEmailToken(?string $emailToken): self
+    {
         $this->emailToken = $emailToken;
 
         return $this;
