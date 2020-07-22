@@ -1,16 +1,19 @@
 {#
+    #: optionnal,
+    *: required,
+    |: default
+    
     help: object
         text*: string (may contain html to display)
         page_uri#: string | 'participer'
         label#: string | 'protocole'
         presision#: string |  'pour en savoir plus.'
-
 #}
 <div class="help-block">
     <h4 class="helper-title">Besoin d'aide ?</h4>
     <div class="sep"></div>
     <p>{{ help.text|raw }}
         Consultez la page
-        <a href="{{ path(help.page_uri|default('participer')) }}" class="green-link">{{ help.label|default('protocole') }}</a>{{ help.presision|default(' pour en savoir plus.') }}
+        <a href="{{ path(help.page_uri|default('protocole')) }}" class="green-link">{{ help.label|default('protocole') }}</a>{{ help.presision|default(' pour en savoir plus.') }}
     </p>
 </div>
