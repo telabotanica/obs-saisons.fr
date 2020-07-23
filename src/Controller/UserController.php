@@ -255,10 +255,10 @@ class UserController extends AbstractController
             ]);
 
             $mailer->send(
-                    $this->getParameter('plateform')['from'],
-                    $user->getEmail(),
-                    $mailer->getSubjectFromTitle($message),
-                    $message
+                'contact@obs-saisons.fr',
+                $user->getEmail(),
+                $mailer->getSubjectFromTitle($message),
+                $message
             );
 
             $this->addFlash('notice', 'Un email vous a été envoyé. Regardez votre boite de reception.');
@@ -522,7 +522,7 @@ class UserController extends AbstractController
                 ]);
 
                 $mailer->send(
-                    $this->getParameter('plateform')['from'],
+                    'contact@obs-saisons.fr',
                     $user->getEmail(),
                     $mailer->getSubjectFromTitle($message),
                     $message
@@ -536,7 +536,7 @@ class UserController extends AbstractController
                 ]);
 
                 $mailer->send(
-                    $this->getParameter('plateform')['from'],
+                    'contact@obs-saisons.fr',
                     $vars['email_new'],
                     $mailer->getSubjectFromTitle($message),
                     $message
