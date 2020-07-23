@@ -22,12 +22,12 @@
 					{{ form_errors(form) }}
 					{{ form_widget(form._token) }}
 					<div class="saisie-footer">
+						<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer show-on-edit delete-button">supprimer</a>
 						<a href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-annuler">Annuler</a>
 						<input type="hidden" name="action" value="{{ action }}">
 						<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
 							Valider
 						</button>
-						<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer show-on-edit">supprimer</a>
 					</div>
 				{% endblock %}
 			{% endblock %}
