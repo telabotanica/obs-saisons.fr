@@ -150,14 +150,13 @@ function setEditForm($overlay, $form, $thisLink, dataAttrs) {
             formActionReset = '/station/' + stationId + formActionReset;
         }
         editionPath += '/'+dataAttrs[dataAttrs.open]['id'];
+        $('.show-on-edit', $overlay).attr('href', editionPath+'/delete');
     }
-
     $overlay.addClass('edit');
     $form
         .attr('action', editionPath+'/edit')
         .data('formActionReset', formActionReset)
     ;
-    $('.show-on-edit', $overlay).attr('href', editionPath+'/delete');
 
     return dataAttrs;
 }
@@ -1110,9 +1109,6 @@ function onDeleteButton(subject) {
                 break;
             case 'individual':
                 question += 't individu';
-                break;
-            case 'profile':
-                question += ' profil';
                 break;
             default:
                 question += 't élément';
