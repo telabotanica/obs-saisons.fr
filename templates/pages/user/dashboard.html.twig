@@ -34,7 +34,8 @@
 				<li><span class="bolder">Vous {{ user.isNewsletterSubscriber ? 'recevez' : 'ne recevez pas' }} notre lettre d'actualités</span></li>
 				<li><span class="bolder">Vous {{ user.isMailsSubscriber ? 'acceptez' : 'n’acceptez pas'}} d'être contacté(e) par mail</span></li>
 			</ul>
-			<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profile</a>
+			<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profil</a>
+
 			<ul>
 				<li><span class="bolder">Votre email : </span>{{ user.email }}</li>
 			</ul>
