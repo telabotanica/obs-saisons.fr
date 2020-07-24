@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block main_content %}
+	{% include 'components/app-flashes.html.twig' %}
 	{% set loginForm = render(controller( 'App\\Controller\\UserController::loginForm' )) %}
 
 	{{ loginForm|raw }}

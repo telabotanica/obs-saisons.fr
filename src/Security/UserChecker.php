@@ -22,6 +22,10 @@ class UserChecker implements UserCheckerInterface
         if (User::STATUS_PENDING === $user->getStatus()) {
             throw new CustomUserMessageAuthenticationException('Cet utilisateur n’a pas encore été activé.');
         }
+
+        if (User::STATUS_DELETED === $user->getStatus()) {
+            throw new CustomUserMessageAuthenticationException('Cet utilisateur a été supprimé.');
+        }
     }
 
     public function checkPostAuth(UserInterface $user)

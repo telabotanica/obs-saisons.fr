@@ -1097,7 +1097,7 @@ function editProfilePreSetFields(dataAttrs) {
 
 function onDeleteButton(subject) {
     $('.delete-button').off('click').on('click', function (event) {
-        event.preventDefault();
+
 
         let question = 'Êtes vous sûr de vouloir supprimer ce';
         switch (subject) {
@@ -1116,13 +1116,10 @@ function onDeleteButton(subject) {
         }
         question += '?';
 
-        if(confirm(question)) {
-            window.location.href = $(this).attr('href');
+        if(!confirm(question)) {
+            event.preventDefault();
         }
-
-        return false;
     });
-
 }
 
 function hideFlashMessages() {
