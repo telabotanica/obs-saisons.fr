@@ -114,7 +114,7 @@ $button-color-map: (
       @include button-colors(delete);
 
       @include media(sm) {
-        margin-left: 20px;
+        margin-right: 20px;
       }
     }
   }

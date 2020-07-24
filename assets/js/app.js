@@ -84,10 +84,9 @@ function onOpenOverlay() {
                     }
                 })
             ;
-
             if(valOk($('form', $overlay))) {
-                let $form = $('form', $overlay);
 
+                let $form = $('form', $overlay);
                 $form.get(0).reset();
                 if ($thisLink.hasClass('edit')) {
                     dataAttrs = setEditForm($overlay, $form, $thisLink, dataAttrs);
@@ -122,6 +121,7 @@ function onOpenOverlay() {
                 default:
                     break;
             }
+            onDeleteButton(dataAttrs.open);
         }
     });
 }
@@ -130,7 +130,7 @@ function setEditForm($overlay, $form, $thisLink, dataAttrs) {
     let formActionReset = '/'+dataAttrs.open+'/new',
         editionPath = '/'+dataAttrs.open;
 
-    if (0 < $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
+    if (0 <= $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
         if ('station' !== dataAttrs.open) {
             let stationId;
 
@@ -149,16 +149,14 @@ function setEditForm($overlay, $form, $thisLink, dataAttrs) {
             }
             formActionReset = '/station/' + stationId + formActionReset;
         }
-
-        editionPath += dataAttrs[dataAttrs.open]['id']+'/';
+        editionPath += '/'+dataAttrs[dataAttrs.open]['id'];
+        $('.show-on-edit', $overlay).attr('href', editionPath+'/delete');
     }
-
     $overlay.addClass('edit');
     $form
         .attr('action', editionPath+'/edit')
         .data('formActionReset', formActionReset)
     ;
-    $('.show-on-edit', $overlay).attr('href', editionPath+'/delete');
 
     return dataAttrs;
 }
@@ -195,28 +193,28 @@ function onObsInfo($thisLink, dataAttrs) {
         if(dataAttrs.showEdit) {
             editButtons =
                 '<div class="dual-blocks-container">'+
-                    '<a href="/observation/'+observation.id+'/delete" class="dual-squared-button delete-icon">'+
-                        '<div class="squared-button-label">Supprimer</div>'+
-                    '</a>'+
-                    '<a href="" class="dual-squared-button edit-obs edit-list-icon edit open" ' +
+                    '<a href="" class="dual-squared-button edit-obs edit-list-icon edit open" '+
                         'data-open="observation" '+
                         'data-observation-id="'+observation.id+'" '+
                     '>'+
                         '<div class="squared-button-label">Éditer</div>'+
                     '</a>'+
+                    '<a href="/observation/'+observation.id+'/delete" class="dual-squared-button delete-icon delete-button">'+
+                        '<div class="squared-button-label">Supprimer</div>'+
+                    '</a>'+
                 '</div>'
             ;
         }
         $obsInfo.append(
-        '<div class="list-cards-item obs" data-id="'+observation.id+'">'+
-            '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
-            '<div class="item-name-block">'+
-                '<div class="item-name">'+observation.user.displayedName+'</div>'+
-                '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
-                '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
-            '</div>'+
-            editButtons +
-        '</div>'
+            '<div class="list-cards-item obs" data-id="'+observation.id+'">'+
+                '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
+                '<div class="item-name-block">'+
+                    '<div class="item-name">'+observation.user.displayedName+'</div>'+
+                    '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
+                    '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
+                '</div>'+
+                editButtons +
+            '</div>'
         );
         onOpenOverlay();
     }
@@ -1095,6 +1093,36 @@ function editProfilePreSetFields(dataAttrs) {
             $('img.placeholder-img').addClass('obj').attr('src', user.avatar);
         }
     }
+}
+
+function onDeleteButton(subject) {
+    $('.delete-button').off('click').on('click', function (event) {
+        event.preventDefault();
+
+        let question = 'Êtes vous sûr de vouloir supprimer ce';
+        switch (subject) {
+            case 'obs-infos':
+                subject = 'observation';
+            case 'station':
+            case 'observation':
+                question += 'tte '+subject;
+                break;
+            case 'individual':
+                question += 't individu';
+                break;
+            default:
+                question += 't élément';
+                break;
+        }
+        question += '?';
+
+        if(confirm(question)) {
+            window.location.href = $(this).attr('href');
+        }
+
+        return false;
+    });
+
 }
 
 function hideFlashMessages() {
