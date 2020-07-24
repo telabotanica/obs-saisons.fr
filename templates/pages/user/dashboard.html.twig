@@ -41,6 +41,7 @@
 			</ul>
 			<a href="{{ path('user_parameters_edit') }}" class="button bt-add">Modifier mes paramètres</a>
 			<p>Modifier votre e-mail et/ou votre mot de passe</p>
+
 		{% endif %}
 		<h3>{{ isPrivateDashboard ? 'mes ' }}observations</h3>
 		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
@@ -103,6 +104,7 @@
 {% endblock %}
 {% block bottom_content %}
 	{% if isPrivateDashboard %}
+		<a href="{{ path('user_delete') }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer mon compte</a>
 		<div class="overlay hidden profile edit">
 			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez votre profil'} %}
 		</div>

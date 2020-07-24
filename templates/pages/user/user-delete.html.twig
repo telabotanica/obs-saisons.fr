@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block main_content %}
+	{% include 'layout/header.html.twig' with ({
+	 'title': 'Suppression de compte',
+		'subtitle': 'Merci de renseigner votre mot de passe.'
+	}) %}
+
+	<div class="saisie-container page">
+		<div class="saisie ods-form">
+			{{ form_start(form) }}
+
+				{{ form_row(form.password, {
+					'row_attr': {'class': 'form-col'},
+					'label': 'Mot de passe *',
+					'attr': {
+						'class': 'text-field ods-input',
+						'placeholder' : 'Entrez votre adresse e-mail ici…'
+					}
+				}) }}
+				<div class="saisie-footer">
+					{{ form_errors(form) }}
+					{{ form_widget(form._token) }}
+					{{ form_row(form.submit, {
+						'label': 'Valider la suppression',
+						'attr': {
+							'class': 'button bt-form bt-supprimer',
+						}
+					}) }}
+					<a href="{{ path('user_dashboard') }}" class="button bt-form bt-annuler">Annuler</a>
+				</div>
+			{{ form_end(form, {'render_rest': false}) }}
+		</div>
+	</div>
+{% endblock %}

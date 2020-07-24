@@ -14,6 +14,7 @@ class User implements UserInterface
     public const STATUS_DISABLED = 0;
     public const STATUS_ACTIVE = 1;
     public const STATUS_PENDING = 2;
+    public const STATUS_DELETED = 3;
 
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -59,6 +60,11 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -223,6 +229,10 @@ class User implements UserInterface
 
     public function getName(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return 'Utilisateur supprimé';
+        }
+
         return $this->name;
     }
 
@@ -235,6 +245,10 @@ class User implements UserInterface
 
     public function getDisplayName(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return 'Utilisateur supprimé';
+        }
+
         if (!empty($this->displayName)) {
             return $this->displayName;
         }
@@ -265,6 +279,18 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
     public function getSeenAt(): ?\DateTimeInterface
     {
         return $this->seenAt;
@@ -291,6 +317,9 @@ class User implements UserInterface
 
     public function getAvatar(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return null;
+        }
         return $this->avatar;
     }
 
@@ -310,6 +339,9 @@ class User implements UserInterface
 
     public function getLocality(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return null;
+        }
         return $this->locality;
     }
 
@@ -322,6 +354,9 @@ class User implements UserInterface
 
     public function getCountry(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return null;
+        }
         return $this->country;
     }
 
@@ -334,6 +369,9 @@ class User implements UserInterface
 
     public function getPostCode(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return null;
+        }
         return $this->postCode;
     }
 
@@ -346,6 +384,9 @@ class User implements UserInterface
 
     public function getProfileType(): ?string
     {
+        if (User::STATUS_DELETED === $this->status) {
+            return null;
+        }
         return $this->profileType;
     }
 

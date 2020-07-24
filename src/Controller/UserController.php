@@ -7,6 +7,7 @@ use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\ProfileType;
+use App\Form\UserDeleteType;
 use App\Form\UserEmailType;
 use App\Form\UserPasswordType;
 use App\Security\Voter\UserVoter;
@@ -351,6 +352,9 @@ class UserController extends AbstractController
         if (!$userForProfile) {
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
+        if (User::STATUS_DELETED === $userForProfile->getStatus()) {
+            throw $this->createNotFoundException('L’utilisateur a été supprimé');
+        }
 
         $stations = $manager->getRepository(Station::class)
             ->findBy(['user' => $userForProfile]);
@@ -368,43 +372,6 @@ class UserController extends AbstractController
             'stations' => $stations,
             'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
-        ]);
-    }
-
-    /**
-     * @Route("/user/{userId}/dashboard/admin", name="user_dashboard_admin")
-     */
-    public function userDashboardAdmin(
-        EntityManagerInterface $manager,
-        BreadcrumbsGenerator $breadcrumbsGenerator,
-        int $userId
-    ) {
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        $user = $manager->getRepository(User::class)->find($userId);
-        if (!$user) {
-            throw $this->createNotFoundException('L’utilisateur n’existe pas');
-        }
-
-        $form = $this->createForm(ProfileType::class, $user);
-
-        $stations = $manager->getRepository(Station::class)
-            ->findBy(['user' => $user]);
-        $observations = $manager->getRepository(Observation::class)
-            ->findBy(['user' => $user]);
-        foreach ($observations as $observation) {
-            $obsStation = $observation->getIndividual()->getStation();
-            if (!in_array($obsStation, $stations)) {
-                $stations[] = $obsStation;
-            }
-        }
-
-        return $this->render('pages/user/dashboard.html.twig', [
-            'user' => $user,
-            'stations' => $stations,
-            'observations' => $observations,
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
-            'profileForm' => $form->createView(),
         ]);
     }
 
@@ -613,5 +580,58 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('user_dashboard');
+    }
+
+    /**
+     * @Route("/user/delete", name="user_delete")
+     */
+    public function userDelete(
+        Request $request,
+        EntityManagerInterface $manager,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
+        $user = $this->getUser();
+
+        if (User::STATUS_ACTIVE !== $user->getStatus()) {
+            $this->addFlash('error', 'Cet utilisateur n’est pas actif.');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        /**
+         * @var User $passwordUserSubmitted
+         */
+        $passwordUserSubmitted = new User();
+        $passwordForm = $this->createForm(UserDeleteType::class, $passwordUserSubmitted);
+
+        if ($request->isMethod('POST')) {
+            if (!empty($request->request->get('user_delete'))) {
+                $passwordForm->handleRequest($request);
+                if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+                    if (!$passwordEncoder->isPasswordValid($user, $passwordUserSubmitted->getPassword())) {
+                        $this->addFlash('error', 'Mot de passe incorrect');
+                    } else {
+                        $user->setDeletedAt(new DateTime());
+                        $user->setIsNewsletterSubscriber(false);
+                        $user->setIsNewsletterSubscriber(false);
+                        $user->setStatus(User::STATUS_DELETED);
+
+                        $manager->flush();
+
+                        $this->addFlash('notice', 'Votre compte a bien été supprimé');
+
+                        return $this->redirectToRoute('user_logout');
+                    }
+                }
+            }
+        }
+
+        return $this->render('pages/user/user-delete.html.twig', [
+            'form' => $passwordForm->createView(),
+        ]);
     }
 }
