@@ -27,7 +27,7 @@
 
     <div class="card-body">
         <a href="{{ path("stations_show", {'slug': station.slug}) }}">
-            <h4 class="card-heading">{{ station.name }}</h4>
+            <h4 class="card-heading">{{ station.name|capitalize }}</h4>
         </a>
         <div class="card-detail pointer-icon">{{ station.locality|raw }}</div>
         <div class="card-detail leaf-icon">{{ station.habitat|raw }}</div>

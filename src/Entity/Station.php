@@ -30,7 +30,6 @@ class Station
     private $user;
 
     /**
-     * @Gedmo\Slug(fields={"createdAt", "locality", "name"}, dateFormat="Y/m")
      * @ORM\Column(type="string", length=100, unique=true)
      */
     private $slug;
@@ -150,7 +149,7 @@ class Station
 
     public function setSlug(string $slug): self
     {
-        $this->slug = $slug;
+        $this->slug = $slug.'-'.bin2hex(random_bytes(10));
 
         return $this;
     }
