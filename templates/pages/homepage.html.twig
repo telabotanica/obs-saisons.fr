@@ -95,7 +95,7 @@
 			</div>
 			<div class="mosaic">
 				{% for i in 0..3 %}
-					<div style="background-image: url('{{ lastObservationsWithImages[i].picture }}');"></div>
+					<div style="background-image: url('{{ lastObservationsWithImages[i].picture|default }}');"></div>
 				{% endfor %}
 			</div>
 		</div>

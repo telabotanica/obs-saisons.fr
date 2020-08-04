@@ -25,7 +25,7 @@
     </div>
 
     <div class="hero-header-content">
-        <h3 class="hero-header-title"><span class="lighter">{{ station.name }} &nbsp;•</span> &nbsp;Observations</h3>
+        <h3 class="hero-header-title"><span class="lighter">{{ station.name|capitalize }} &nbsp;•</span> &nbsp;Observations</h3>
         <p class="hero-header-subtitle">{{ station.description|default }}</p>
 
             {% if show %}
@@ -40,7 +40,7 @@
             <div  class="member-avatar" style="background-image: url({{ station.getUser().getAvatar()|default(asset('media/layout/icons/member_default.png')) }})"></div>
             <div class="member-label-block-content">
                 <div class="member-label-block-title">Créée par</div>
-                <a href="" class="member-label-block-link">{{ station.user.displayName }}</a>
+                <a href="{{ path('user_profile', { userId:station.user.id }) }}" class="member-label-block-link">{{ station.user.displayName }}</a>
             </div>
         </div>
     {% endif %}
