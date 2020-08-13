@@ -113,6 +113,11 @@ class Station
      */
     private $deletedAt;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $legacyId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -294,6 +299,18 @@ class Station
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getLegacyId(): ?int
+    {
+        return $this->legacyId;
+    }
+
+    public function setLegacyId(int $legacyId): self
+    {
+        $this->legacyId = $legacyId;
 
         return $this;
     }
