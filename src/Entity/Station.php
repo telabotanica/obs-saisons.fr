@@ -115,7 +115,7 @@ class Station
     private $deletedAt;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $legacyId;
 
