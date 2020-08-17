@@ -1,33 +1,40 @@
 {% extends 'base.html.twig' %}
 {% block main_content %}
 	{% include 'layout/header.html.twig' with ({
-	 'title': 'Suppression de compte',
+		'title': 'Suppression de compte',
 		'subtitle': 'Merci de renseigner votre mot de passe.'
 	}) %}
 
 	<div class="saisie-container page">
+		<p>
+			En confirmant la suppression de votre compte, vous ne pourrez plus vous y connecter.
+			Les observations seront conservées et anonymisées pour contribuer à la recherche scientifique.
+			Cette action est toutefois réversible si vous changez d'avis.
+			Dans ce cas, ou si vous souhaitez supprimer totalement toutes vos données personnelles, veuillez le signaler à
+			<a href="mailto:contact@obs-saisons.fr" target="_blank">contact@obs-saisons.fr</a>.
+		</p>
 		<div class="saisie ods-form">
 			{{ form_start(form) }}
 
-				{{ form_row(form.password, {
-					'row_attr': {'class': 'form-col'},
-					'label': 'Mot de passe *',
+			{{ form_row(form.password, {
+				'row_attr': {'class': 'form-col'},
+				'label': 'Mot de passe *',
+				'attr': {
+					'class': 'text-field ods-input',
+					'placeholder' : 'Entrez votre mot de passe ici…'
+				}
+			}) }}
+			<div class="saisie-footer">
+				{{ form_errors(form) }}
+				{{ form_widget(form._token) }}
+				{{ form_row(form.submit, {
+					'label': 'Valider la suppression',
 					'attr': {
-						'class': 'text-field ods-input',
-						'placeholder' : 'Entrez votre adresse e-mail ici…'
+						'class': 'button bt-form bt-supprimer',
 					}
 				}) }}
-				<div class="saisie-footer">
-					{{ form_errors(form) }}
-					{{ form_widget(form._token) }}
-					{{ form_row(form.submit, {
-						'label': 'Valider la suppression',
-						'attr': {
-							'class': 'button bt-form bt-supprimer',
-						}
-					}) }}
-					<a href="{{ path('user_dashboard') }}" class="button bt-form bt-annuler">Annuler</a>
-				</div>
+				<a href="{{ path('user_dashboard') }}" class="button bt-form bt-annuler">Annuler</a>
+			</div>
 			{{ form_end(form, {'render_rest': false}) }}
 		</div>
 	</div>
