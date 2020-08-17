@@ -39,7 +39,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             ';
 
             $article = new Post();
-            $article->setCategory('article');
+            $article->setCategory(Post::CATEGORY_NEWS);
             $article->setCreatedAt($dateCreatedAt);
             $article->setContent($content);
             $article->setTitle($title);
@@ -65,7 +65,7 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             ';
 
             $event = new Post();
-            $event->setCategory('event');
+            $event->setCategory(Post::CATEGORY_EVENT);
             $event->setCreatedAt($dateCreatedAt);
             $event->setContent($content);
             $event->setTitle($title);

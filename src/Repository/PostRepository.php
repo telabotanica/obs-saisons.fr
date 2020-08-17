@@ -38,6 +38,9 @@ class PostRepository extends ServiceEntityRepository
      */
     public function setPosts(string $category): self
     {
+        if (!in_array($category, Post::CATEGORY_CHOICES)) {
+            throw new InvalidArgumentException(sprintf('Category "%s" in not allowed', $category));
+        }
         $this->category = $category;
 
         $queryParameterSet = $this->createQueryBuilder('p')

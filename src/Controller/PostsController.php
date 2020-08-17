@@ -33,7 +33,7 @@ class PostsController extends AbstractController
         int $page = 1
     ) {
         $limit = 10;
-        $articleRepository = $manager->getRepository(Post::class)->setPosts('article');
+        $articleRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_NEWS);
         $articles = $articleRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($articleRepository->findAll()) / $limit);
 
@@ -60,7 +60,7 @@ class PostsController extends AbstractController
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
     ) {
-        $articleRepository = $manager->getRepository(Post::class)->setPosts('article');
+        $articleRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_NEWS);
         $article = $articleRepository->findBySlug($slug);
         if (null === $article) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
@@ -196,7 +196,7 @@ class PostsController extends AbstractController
         int $page = 1
     ) {
         $limit = 10;
-        $eventRepository = $manager->getRepository(Post::class)->setPosts('event');
+        $eventRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_EVENT);
         $events = $eventRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($eventRepository->findAll()) / $limit);
 
@@ -223,7 +223,7 @@ class PostsController extends AbstractController
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
     ) {
-        $eventRepository = $manager->getRepository(Post::class)->setPosts('event');
+        $eventRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_EVENT);
         $event = $eventRepository->findBySlug($slug);
         if (null === $event) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
