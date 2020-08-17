@@ -30,6 +30,7 @@ class Station
     private $user;
 
     /**
+     * @Gedmo\Slug(fields={"locality", "name"})
      * @ORM\Column(type="string", length=100, unique=true)
      */
     private $slug;
@@ -113,6 +114,11 @@ class Station
      */
     private $deletedAt;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $legacyId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -130,7 +136,7 @@ class Station
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -149,7 +155,7 @@ class Station
 
     public function setSlug(string $slug): self
     {
-        $this->slug = $slug.'-'.bin2hex(random_bytes(10));
+        $this->slug = $slug;
 
         return $this;
     }
@@ -294,6 +300,18 @@ class Station
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getLegacyId(): ?int
+    {
+        return $this->legacyId;
+    }
+
+    public function setLegacyId(int $legacyId): self
+    {
+        $this->legacyId = $legacyId;
 
         return $this;
     }

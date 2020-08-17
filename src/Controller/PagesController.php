@@ -31,8 +31,8 @@ class PagesController extends AbstractController
         $observationRepository = $manager->getRepository(Observation::class);
 
         return $this->render('pages/homepage.html.twig', [
-            'lastArticles' => $postRepository->setPosts('article')->findLastFeaturedPosts(),
-            'lastEvents' => $postRepository->setPosts('event')->findLastFeaturedPosts(),
+            'lastArticles' => $postRepository->setPosts(Post::CATEGORY_NEWS)->findLastFeaturedPosts(),
+            'lastEvents' => $postRepository->setPosts(Post::CATEGORY_EVENT)->findLastFeaturedPosts(),
             'featuredSpecies' => $featuredSpecies->getShuffledFeaturedSpecies(),
             'lastObservations' => $observationRepository->findLastObs(5),
             'lastObservationsWithImages' => $observationRepository->findLastObsWithImages(4),

@@ -114,6 +114,10 @@ class Post
      */
     public function setCategory(string $category): self
     {
+        if (!in_array($category, self::CATEGORY_CHOICES)) {
+            throw new \InvalidArgumentException(sprintf('Category "%s" in not allowed', $category));
+        }
+
         $this->category = $category;
 
         return $this;

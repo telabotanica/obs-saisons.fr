@@ -126,6 +126,11 @@ class User implements UserInterface
      */
     private $emailToken;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $legacyId;
+
     public function __construct()
     {
         $this->isNewsletterSubscriber = false;
@@ -434,6 +439,18 @@ class User implements UserInterface
     public function setEmailToken(?string $emailToken): self
     {
         $this->emailToken = $emailToken;
+
+        return $this;
+    }
+
+    public function getLegacyId(): ?int
+    {
+        return $this->legacyId;
+    }
+
+    public function setLegacyId(int $legacyId): self
+    {
+        $this->legacyId = $legacyId;
 
         return $this;
     }
