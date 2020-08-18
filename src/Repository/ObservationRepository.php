@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -61,6 +62,19 @@ class ObservationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->where('o.isMissing = 0')
+            ->orderBy('o.date', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findLastUserObs(User $user, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.user = :user')
+            ->andWhere('o.isMissing = 0')
+            ->setParameter('user', $user)
             ->orderBy('o.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()

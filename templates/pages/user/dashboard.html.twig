@@ -43,7 +43,7 @@
 			<p>Modifier votre e-mail et/ou votre mot de passe</p>
 
 		{% endif %}
-		<h3>{{ isPrivateDashboard ? 'mes ' }}observations</h3>
+		<h3>{{ isPrivateDashboard ? 'mes observations' : 'ses dernières observations' }}</h3>
 		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 		{% set pictureUrl = '' %}
 		<div class="dashboard-obs-info-container">
@@ -79,10 +79,10 @@
 				</div>
 			{% endfor %}
 		</div>
-		<h3>{{ isPrivateDashboard ? 'mes ' }}stations</h3>
+		<h3>{{ isPrivateDashboard ? 'mes stations' : 'ses dernières contributions aux stations'}}</h3>
 		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
 		<div class="cards-grid-container">
-			{% set cards = setStationCards(stations)|sort((a, b) => a.lastActivity <=> b.lastActivity)|reverse %}
+			{% set cards = setStationCards(stations) %}
 			{%  for card in cards %}
 				{% include 'components/cards/station-cards.html.twig' with {
 					station: card.station,
