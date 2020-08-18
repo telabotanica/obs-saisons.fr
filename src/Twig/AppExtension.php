@@ -193,37 +193,20 @@ class AppExtension extends AbstractExtension
         $observationsRepository = $this->manager->getRepository(Observation::class);
         $individualsRepository = $this->manager->getRepository(Individual::class);
 
-        $lastStationsActivity = $this->getLastActivity($stations);
         $cards = [];
         foreach ($stations as $station) {
             $individuals = $individualsRepository->findAllIndividualsInStation($station);
             $observations = $observationsRepository->findAllObservationsInStation($station, $individuals);
             $contributorsCount = $observationsRepository->findAllObsContributorsCountInStation($individuals);
 
-            $lastIndivActivity = $this->getLastActivity($individuals);
-            $lastObsActivity = $this->getLastActivity($observations);
-            $lastActivity = max($lastObsActivity, $lastIndivActivity);
-
             $cards[] = [
                 'station' => $station,
                 'observations' => $observations,
                 'contributorsCount' => $contributorsCount,
-                'lastActivity' => max($lastStationsActivity, $lastActivity),
             ];
         }
 
         return $cards;
-    }
-
-    public function getLastActivity(array $entityObjectsArray)
-    {
-        $lastActivity = null;
-        foreach ($entityObjectsArray as $entityObject) {
-            $entityObjectActivity = $entityObject->getUpdatedAt() ?? $entityObject->getCreatedAt();
-            $lastActivity = max($lastActivity, $entityObjectActivity);
-        }
-
-        return $lastActivity;
     }
 
     public function setStationListCards(
