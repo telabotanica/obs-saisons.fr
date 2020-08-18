@@ -4,6 +4,7 @@
     @include align-content-center;
     background-color: transparent;
     max-width: 100vw;
+    margin-top: 20px;
 
     .pagination {
         @include display-flex;

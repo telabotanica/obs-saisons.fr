@@ -73,17 +73,16 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param int $page
+     * @param int $limit
      * @return Post[]
      */
     public function findAllPaginatedPosts(int $page = 1, int $limit = 10): array
     {
-        if (!is_int($page)) {
-            throw new InvalidArgumentException('La valeur de l’argument $page est incorrecte (valeur : '.$page.').');
-        }
         if (1 > $page) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
         }
-        if (!is_int($limit) || 1 > $limit) {
+        if (1 > $limit) {
             throw new InvalidArgumentException('La valeur de l’argument $limit est incorrecte (valeur : '.$limit.').');
         }
         $firstResult = ($page - 1) * $limit;
@@ -114,8 +113,9 @@ class PostRepository extends ServiceEntityRepository
         if (1 >= $limit) {
             return $lastPublishedPost;
         }
-        if (count($this->posts) < $limit) {
-            $limit = count($this->posts);
+        $postCount = count($this->posts);
+        if ($postCount < $limit) {
+            $limit = $postCount;
         }
 
         for ($i = 1; $i < $limit; ++$i) {

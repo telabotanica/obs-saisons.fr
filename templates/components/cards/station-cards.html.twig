@@ -8,7 +8,7 @@
         [...] Observation
     contributorsCount*: int
 #}
-<div class="card" data-tab="{{ station.user.id }}">
+<div class="card">
     {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
     {% if canAdminStation %}
         <a

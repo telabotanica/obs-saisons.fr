@@ -40,24 +40,22 @@
 			'classes': 'search',
 			'components': [
 				{
-					'name': 'tabs-holder',
-					'data': {
-					'classAttr': ' list',
-					'tabs': [
-						{
-							'title':"Toutes les stations"
-						},
-						{
-							'title':"Mes stations",
-							'reference': app.user.id|default('none')
-						}
-					]
-				}
+					'name': 'stations-tabs-holder',
 				}
 			]
 		}
 	} %}
 	<div class="cards-grid-container">
+
+		{% set cards = setStationCards(stations) %}
+		{%  for card in cards %}
+			{% include 'components/cards/station-cards.html.twig' with {
+				station: card.station,
+				observations: card.observations,
+				contributorsCount: card.contributorsCount
+
+			} %}
+		{% endfor %}
 		<div class="card add">
 			<div class="add-card-content">
 				<div class="add-pointer-icon add-card-marker"></div>
@@ -67,16 +65,8 @@
 				</a>
 			</div>
 		</div>
-		{% set cards = setStationCards(stations)|sort((a, b) => a.lastActivity <=> b.lastActivity)|reverse %}
-		{%  for card in cards %}
-			{% include 'components/cards/station-cards.html.twig' with {
-				station: card.station,
-				observations: card.observations,
-				contributorsCount: card.contributorsCount
-
-			} %}
-		{% endfor %}
 	</div>
+	{% include 'components/pagination.html.twig' with {routePath: path(app.request.get('_route'))} %}
 	{% include 'components/help-block.html.twig' with {
 		help: {
 			'text':

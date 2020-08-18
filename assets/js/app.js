@@ -874,7 +874,7 @@ function toggleMenuSmallDevices(){
 
 // switch between tabs
 function switchTabs() {
-    let $tabsHolder = $('.tabs-holder');
+    let $tabsHolder = $('.tabs-holder:not(.stations)');
     resetTabMatchingElements($tabsHolder);
 
     $('.tab').off('click').on('click', function (event) {
@@ -967,7 +967,7 @@ function calendarSwitchDate() {
             } else {
                 $element.hide(200);
             }
-            resetTabMatchingElements($('.tabs-holder'));
+            resetTabMatchingElements($('.tabs-holder:not(.stations)'));
         });
     });
 }

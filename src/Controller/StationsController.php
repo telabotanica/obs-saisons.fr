@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;
@@ -27,22 +28,59 @@ class StationsController extends AbstractController
      * ************************************************ */
 
     /**
-     * @Route("/participer/stations", name="stations", methods={"GET"})
+     * @Route("/participer/stations/{page<\d+>}", name="stations", methods={"GET"})
      */
     public function stations(
         Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        int $page = 1
     ) {
+        $limit = 11;
         $station = new Station();
         $form = $this->createForm(StationType::class, $station, [
             'action' => $this->generateUrl('stations_new'),
         ]);
+        $stationRepository = $manager->getRepository(Station::class);
+        $lastPage = ceil($stationRepository->countStations() / $limit);
 
         return $this->render('pages/stations.html.twig', [
-            'stations' => $manager->getRepository(Station::class)->findAll(),
+            'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit),
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'stationForm' => $form->createView(),
+            'pagination' => [
+                'currentPage' => $page,
+                'lastPage' => $lastPage,
+            ],
+        ]);
+    }
+
+    /**
+     * @Route("/participer/stations/mes-stations/{page<\d+>}", name="mes-stations", methods={"GET"})
+     */
+    public function mesStations(
+        Request $request,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $manager,
+        int $page = 1
+    ) {
+        $limit = 11;
+        $station = new Station();
+        $form = $this->createForm(StationType::class, $station, [
+            'action' => $this->generateUrl('stations_new'),
+        ]);
+        $user = $this->getUser();
+        $stationRepository = $manager->getRepository(Station::class);
+        $lastPage = ceil($stationRepository->countStations($user) / $limit);
+
+        return $this->render('pages/stations.html.twig', [
+            'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'stationForm' => $form->createView(),
+            'pagination' => [
+                'currentPage' => $page,
+                'lastPage' => $lastPage,
+            ],
         ]);
     }
 

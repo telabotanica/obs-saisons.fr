@@ -1,0 +1,8 @@
+<div class="tabs-holder list stations">
+    <a href="{{ path('stations') }}" class="station-tab {{ app.request.get('_route') != 'stations' ? 'not' }}">
+       Toutes les stations
+    </a>
+    <a href="{{ path('mes-stations') }}" class="station-tab {{ app.request.get('_route') != 'mes-stations' ? 'not' }}">
+        Mes stations
+    </a>
+</div>
