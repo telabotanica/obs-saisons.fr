@@ -319,7 +319,7 @@ class UserController extends AbstractController
         $form = $this->createForm(ProfileType::class, $user);
 
         $stations = $manager->getRepository(Station::class)
-            ->findBy(['user' => $user]);
+            ->findAllOrderedByLastActive($user);
         $observations = $manager->getRepository(Observation::class)
             ->findBy(['user' => $user]);
         foreach ($observations as $observation) {
@@ -357,9 +357,9 @@ class UserController extends AbstractController
         }
 
         $stations = $manager->getRepository(Station::class)
-            ->findBy(['user' => $userForProfile]);
+            ->findAllPaginatedOrderedStations(1, 11, $userForProfile);
         $observations = $manager->getRepository(Observation::class)
-            ->findBy(['user' => $userForProfile]);
+            ->findLastUserObs($userForProfile);
         foreach ($observations as $observation) {
             $obsStation = $observation->getIndividual()->getStation();
             if (!in_array($obsStation, $stations)) {

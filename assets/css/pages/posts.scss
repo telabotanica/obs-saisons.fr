@@ -16,9 +16,11 @@
 .publication-date {
     @extend %publication-date-style;
     @include uppercase-small-text;
-
-    strong {
-        @include green-text-semi-bold;
+    a {
+        text-decoration: none !important;
+        strong {
+            @include green-text-semi-bold;
+        }
     }
 }
 
