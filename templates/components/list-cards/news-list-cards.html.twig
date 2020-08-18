@@ -14,7 +14,7 @@
 
     <div class="item-details">
         <div>
-            <a href="" class="bolder">{{ article.author.getDisplayName() }}</a>
+            <a href="{{ path('user_profile',{userId:article.author.id}) }}" class="bolder">{{ article.author.displayName }}</a>
             - {{ article.createdAt|date("j/m/Y") }}
         </div>
     </div>
