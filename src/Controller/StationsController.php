@@ -74,6 +74,7 @@ class StationsController extends AbstractController
         $lastPage = ceil($stationRepository->countStations($user) / $limit);
 
         return $this->render('pages/stations.html.twig', [
+            'title' => 'Mes stations d’observation',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
             'stationForm' => $form->createView(),
@@ -111,11 +112,11 @@ class StationsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'success' => true,
-                'redirect' => $this->generateUrl('stations'),
+                'redirect' => $this->generateUrl('mes-stations'),
             ]);
         }
 
-        return $this->redirectToRoute('stations');
+        return $this->redirectToRoute('mes-stations');
     }
 
     /**
