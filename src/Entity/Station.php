@@ -119,6 +119,11 @@ class Station
      */
     private $legacyId;
 
+    /**
+     * @ORM\Column(type="string", length=2)
+     */
+    private $department;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -260,6 +265,8 @@ class Station
     {
         $this->inseeCode = $inseeCode;
 
+        $this->setDepartment(substr($inseeCode, 0, 2));
+
         return $this;
     }
 
@@ -312,6 +319,18 @@ class Station
     public function setLegacyId(int $legacyId): self
     {
         $this->legacyId = $legacyId;
+
+        return $this;
+    }
+
+    public function getDepartment(): string
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(string $department): self
+    {
+        $this->department = $department;
 
         return $this;
     }
