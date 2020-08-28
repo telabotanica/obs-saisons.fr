@@ -29,6 +29,8 @@ const $latitude = $('#station_latitude');
 const $longitude = $('#station_longitude');
 const $locality = $('#station_locality');
 const $observationDate = $('#observation_date');
+const $stationSearchField = $('#station-search-field');
+const $stationSearchForm = $('#station-search-form');
 const imageType = /^image\//;
 
 //map configuration
@@ -60,6 +62,7 @@ $( document ).ready( function() {
     toggleAccodionBlock();
     stationMapDisplay();
     hideFlashMessages();
+    stationSearchFormSubmit();
 });
 
 // open overlay
@@ -1117,6 +1120,21 @@ function onDeleteButton(subject) {
         question += '?';
 
         if(!confirm(question)) {
+            event.preventDefault();
+        }
+    });
+}
+
+// trigger search field submit
+function stationSearchFormSubmit() {
+    // submitting form without submit button
+    $stationSearchField.on('blur', function () {
+        $stationSearchForm.trigger('submit');
+    });
+    // form is being submitted on blur or on enter key press
+    $stationSearchForm.on('submit', function (event) {
+        // avoid submitting empty strings
+        if(!valOk($.trim($stationSearchField.val()))) {
             event.preventDefault();
         }
     });
