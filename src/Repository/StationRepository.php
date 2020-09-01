@@ -34,11 +34,10 @@ class StationRepository extends ServiceEntityRepository
             $qb = $qb->where('s.user = (:user)')
                 ->setParameter('user', $user);
         }
-        $qb = $qb->getQuery()
+
+        return $qb->getQuery()
             ->getSingleScalarResult()
         ;
-
-        return $qb;
     }
 
     public function findStationEditArray(Station $station)
