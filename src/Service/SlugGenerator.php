@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use Exception;
-
 /**
  * Class SlugGenerator.
  */
@@ -26,9 +24,6 @@ class SlugGenerator
     {
         $string = preg_replace('/[\s]/', '-', strtolower($string));
 
-        if (!preg_match('/[\x80-\xff]/', $string)) {
-            return $string;
-        }
         $chars = [
             // Decompositions for Latin-1 Supplement
             chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
@@ -128,7 +123,8 @@ class SlugGenerator
 
         $string = strtr($string, $chars);
         $string = preg_replace('/([^.a-z0-9\-]+)/i', '-', $string);
+        $string = preg_replace('/[^A-Za-z0-9_\-]/', '', $string);
 
-        return  preg_replace('/[^A-Za-z0-9_\-]/', '', $string);
+        return  preg_replace('/-+/', '-', $string);
     }
 }
