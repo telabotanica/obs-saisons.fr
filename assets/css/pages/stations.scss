@@ -37,3 +37,15 @@
         }
     }
 }
+
+/*******************/
+/* stations search */
+/*******************/
+
+.search-results {
+    width: 90%;
+    @include gap(margin, "h", auto);
+    margin-top: 50px;
+}
+
+

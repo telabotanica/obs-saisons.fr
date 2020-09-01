@@ -5,8 +5,7 @@
 		'title': title|default('Stations d’observation'),
 		'subtitle': 'Les <strong>stations d’observation</strong> sont les zones où se trouvent les plantes ou animaux que vous souhaitez observer. <br>Vous pouvez rejoindre une station existante ou en créer une nouvelle.'
 	}) %}
-	{# stations search is not availlable yet #}
-	{#{% include 'components/actionbar.html.twig' with {
+	{% include 'components/actionbar.html.twig' with {
 		actionbar: {
 			'classes': 'search',
 			'components': [
@@ -14,59 +13,39 @@
 					'name': 'side-block',
 					'data': {
 						'type': 'search',
-						'text': 'Ville, code postal...'
+						'text': 'Nom, commune, code postal...'
 					}
 				},
 				{
-					'name': 'tabs-holder',
-					'data': {
-						'classAttr': ' list',
-						'tabs': [
-							{
-								'title':"Toutes les stations"
-							},
-							{
-								'title':"Mes stations",
-								'reference': app.user.id|default('none')
-							}
-						]
-					}
-				}
-			]
-		}
-	} %}#}
-	{% include 'components/actionbar.html.twig' with {
-		actionbar: {
-			'classes': 'search',
-			'components': [
-				{
-					'name': 'stations-tabs-holder',
+					'name': 'stations-tabs-holder'
 				}
 			]
 		}
 	} %}
-	<div class="cards-grid-container">
+    {% block stations_grid_cards %}
+        <div class="cards-grid-container">
 
-		{% set cards = setStationCards(stations) %}
-		{%  for card in cards %}
-			{% include 'components/cards/station-cards.html.twig' with {
-				station: card.station,
-				observations: card.observations,
-				contributorsCount: card.contributorsCount
+            {% set cards = setStationCards(stations) %}
+            {%  for card in cards %}
+                {% include 'components/cards/station-cards.html.twig' with {
+                    station: card.station,
+                    observations: card.observations,
+                    contributorsCount: card.contributorsCount
 
-			} %}
-		{% endfor %}
-		<div class="card add">
-			<div class="add-card-content">
-				<div class="add-pointer-icon add-card-marker"></div>
-				<div class="add-card-text">Votre station n’existe pas encore ?</div>
-				<a href="" class="button bt-add open{{ app.user.id is not defined ? ' disabled' }}" data-open="station" {{ app.user.id is not defined ? 'style="cursor:not-allowed;" aria-disabled="true" title="connexion obligatoire"' }}>
-					Créer une station
-				</a>
-			</div>
-		</div>
-	</div>
-	{% include 'components/pagination.html.twig' with {routePath: path(app.request.get('_route'))} %}
+                } %}
+            {% endfor %}
+            <div class="card add">
+                <div class="add-card-content">
+                    <div class="add-pointer-icon add-card-marker"></div>
+                    <div class="add-card-text">Votre station n’existe pas encore ?</div>
+                    <a href="" class="button bt-add open{{ app.user.id is not defined ? ' disabled' }}" data-open="station" {{ app.user.id is not defined ? 'style="cursor:not-allowed;" aria-disabled="true" title="connexion obligatoire"' }}>
+                        Créer une station
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% include 'components/pagination.html.twig' with {routePath: path(app.request.get('_route'))} %}
+    {% endblock %}
 	{% include 'components/help-block.html.twig' with {
 		help: {
 			'text':

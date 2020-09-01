@@ -12,8 +12,8 @@
 <div class="actionbar-list-block {{ type == 'search' ? 'search' }}">
     {% if type == 'search' %}
         <div class="search-form ods-form">
-            <form id="station-search-form" class="search-form" name="station-search-form">
-                <input id="station-search-field" type="text" class="search-field" maxlength="256" name="station-search" placeholder="{{ side_block.text|default }}">
+            <form id="station-search-form" class="search-form" name="station-search-form" action="{{ path('stations_search') }}" method="post">
+                <input id="station-search-field" type="text" class="search-field" value="{{ search|default }}" maxlength="256" name="search-term" placeholder="{{ side_block.text|default }}">
             </form>
         </div>
     {% else %}

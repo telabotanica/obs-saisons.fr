@@ -6,6 +6,7 @@ use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
+use App\Service\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr;
@@ -101,6 +102,81 @@ class StationRepository extends ServiceEntityRepository
         }
 
         return array_slice($stations, $firstResult, $limit);
+    }
+
+    public function search(string $searchTerm, string $searchKey): array
+    {
+        $qb = $this->createQueryBuilder('s');
+        if (!in_array($searchKey, Search::STATIONS_SEARCH_KEYS)) {
+            throw new \InvalidArgumentException(sprintf('Le critère de recherche "%s" n’existe pas.', $searchKey));
+        }
+        $alias = 's';
+        if ('displayName' === $searchKey) {
+            $qb->leftJoin(User::class, 'u', Expr\Join::WITH, 's.user = u.id');
+            $alias = 'u';
+        }
+        if (
+            'department' === $searchKey &&
+            is_numeric(substr($searchTerm, 0, 1))
+        ) {
+            $searchTerm = substr($searchTerm, 0, 2);
+        }
+
+        $searchResults = $qb->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
+            ->setParameter('searchTerm', strtolower($searchTerm))
+            ->getQuery()
+            ->getResult()
+        ;
+
+        if ('department' !== $searchKey && 3 <= strlen($searchTerm)) {
+            $likeSearchResults = $this->likeSearch($searchTerm, $searchKey);
+            $regexpSearchResults = $this->regexpSearch($searchTerm, $searchKey);
+            $otherMatchingStations = array_merge($likeSearchResults, $regexpSearchResults);
+
+            foreach ($otherMatchingStations as $otherMatchingStation) {
+                if (!in_array($otherMatchingStation, $searchResults)) {
+                    $searchResults[] = $otherMatchingStation;
+                }
+            }
+        }
+
+        return $searchResults;
+    }
+
+    private function likeSearch(string $searchTerm, string $searchKey)
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        $alias = 's';
+        if ('displayName' === $searchKey) {
+            $qb->leftJoin(User::class, 'u', Expr\Join::WITH, 's.user = u.id');
+            $alias = 'u';
+        }
+
+        return $qb->andWhere($qb->expr()->like('lower('.$alias.'.'.$searchKey.')', ':searchKey'))
+            ->setParameter('searchKey', strtolower($searchTerm).'%')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    private function regexpSearch(string $searchTerm, string $searchKey)
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        $alias = 's';
+        if ('displayName' === $searchKey) {
+            $qb->leftJoin(User::class, 'u', Expr\Join::WITH, 's.user = u.id');
+            $alias = 'u';
+        }
+
+        $regexp = '.*'.str_replace(' ', '.*', strtolower($searchTerm)).'.*';
+
+        return $qb->andWhere('REGEXP(lower('.$alias.'.'.$searchKey.'), :regexp) = true')
+            ->setParameter('regexp', $regexp)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

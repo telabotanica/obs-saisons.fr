@@ -42,6 +42,8 @@ doctrine:
                 DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat
             numeric_functions:
                 rand: DoctrineExtensions\Query\Mysql\Rand
+            string_functions:
+                regexp: DoctrineExtensions\Query\Mysql\Regexp
         filters:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter

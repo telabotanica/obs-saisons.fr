@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
-use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\Search;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,6 +82,27 @@ class StationsController extends AbstractController
                 'currentPage' => $page,
                 'lastPage' => $lastPage,
             ],
+        ]);
+    }
+
+    /**
+     * @Route("/participer/stations/recherche", name="stations_search")
+     */
+    public function stationsSearch(
+        Request $request,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        Search $searchService
+    ) {
+        $searchTerm = $request->request->get('search-term');
+
+        if (!$searchTerm) {
+            return $this->redirectToRoute('stations');
+        }
+
+        return $this->render('pages/stations-search.html.twig', [
+            'stationsArray' => $searchService->stationsSearch($searchTerm),
+            'search' => $searchTerm,
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
         ]);
     }
 
