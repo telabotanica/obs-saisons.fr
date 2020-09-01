@@ -32,7 +32,6 @@ class ObservationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->where('o.individual IN (:individuals)')
             ->setParameter('individuals', $stationIndividuals)
-            ->addOrderBy('o.individual', 'ASC')
             ->addOrderBy('o.date', 'DESC')
             ->getQuery()
             ->getResult()
@@ -43,9 +42,9 @@ class ObservationRepository extends ServiceEntityRepository
     {
         $contributorsCount = count(
             $this->createQueryBuilder('o')
-                ->groupBy('o.user')
                 ->where('o.individual IN (:individuals)')
                 ->setParameter('individuals', $stationIndividuals)
+                ->groupBy('o.user')
                 ->getQuery()
                 ->getResult()
         );
