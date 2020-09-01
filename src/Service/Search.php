@@ -7,6 +7,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Search
 {
+    public const STATIONS_SEARCH_KEYS = [
+        'name',
+        'locality',
+        'department',
+        'displayName',
+    ];
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -14,20 +20,14 @@ class Search
         $this->em = $em;
     }
 
-    public function stationsSearch(string $searchValue)
+    public function stationsSearch(string $searchTerm)
     {
         $foundStations = [];
-        $tansSearchKeys = [
-            'name' => 'Nom de station',
-            'locality' => 'Commune',
-            'department' => 'Numéro de département',
-            'displayName' => 'Nom du créateur',
-        ];
-        foreach (array_keys($tansSearchKeys) as $searchKey) {
+        foreach (self::STATIONS_SEARCH_KEYS as $searchKey) {
             $foundStationsWithThisKey = $this->em->getRepository(Station::class)
-                ->search($searchValue, $searchKey);
+                ->search($searchTerm, $searchKey);
             if (!empty($foundStationsWithThisKey)) {
-                $foundStations[$tansSearchKeys[$searchKey]] = $foundStationsWithThisKey;
+                $foundStations[$searchKey] = $foundStationsWithThisKey;
             }
         }
 

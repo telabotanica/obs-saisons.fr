@@ -6,6 +6,7 @@ use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
+use App\Service\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr;
@@ -106,7 +107,9 @@ class StationRepository extends ServiceEntityRepository
     public function search(string $searchTerm, string $searchKey): array
     {
         $qb = $this->createQueryBuilder('s');
-
+        if (!in_array($searchKey, Search::STATIONS_SEARCH_KEYS)) {
+            throw new \InvalidArgumentException(sprintf('Le critère de recherche "%s" n’existe pas.', $searchKey));
+        }
         $alias = 's';
         if ('displayName' === $searchKey) {
             $qb->leftJoin(User::class, 'u', Expr\Join::WITH, 's.user = u.id');
@@ -119,8 +122,8 @@ class StationRepository extends ServiceEntityRepository
             $searchTerm = substr($searchTerm, 0, 2);
         }
 
-        $searchResults = $qb->andWhere('lower('.$alias.'.'.$searchKey.') =:searchKey')
-            ->setParameter('searchKey', strtolower($searchTerm))
+        $searchResults = $qb->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
+            ->setParameter('searchTerm', strtolower($searchTerm))
             ->getQuery()
             ->getResult()
         ;

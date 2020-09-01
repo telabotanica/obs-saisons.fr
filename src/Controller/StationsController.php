@@ -86,27 +86,22 @@ class StationsController extends AbstractController
     }
 
     /**
-     * @Route("/participer/stations/recherche", name="stations-search")
+     * @Route("/participer/stations/recherche", name="stations_search")
      */
     public function stationsSearch(
         Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         Search $searchService
     ) {
-        $station = new Station();
-        $form = $this->createForm(StationType::class, $station, [
-            'action' => $this->generateUrl('stations_new'),
-        ]);
-        $searchTerm = $request->request->get('stations-search');
+        $searchTerm = $request->request->get('search-term');
 
-        if (!$searchTerm || '' === $searchTerm) {
+        if (!$searchTerm) {
             return $this->redirectToRoute('stations');
         }
 
-        return $this->render('pages/stationsSearch.html.twig', [
+        return $this->render('pages/stations-search.html.twig', [
             'stationsArray' => $searchService->stationsSearch($searchTerm),
             'search' => $searchTerm,
-            'stationForm' => $form->createView(),
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
         ]);
     }

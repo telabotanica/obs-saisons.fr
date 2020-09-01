@@ -13,7 +13,7 @@
 					'name': 'side-block',
 					'data': {
 						'type': 'search',
-						'text': 'Nom, ville, code postal...'
+						'text': 'Nom, commune, code postal...'
 					}
 				},
 				{
@@ -22,28 +22,30 @@
 			]
 		}
 	} %}
-	<div class="cards-grid-container">
+    {% block stations_grid_cards %}
+        <div class="cards-grid-container">
 
-		{% set cards = setStationCards(stations) %}
-		{%  for card in cards %}
-			{% include 'components/cards/station-cards.html.twig' with {
-				station: card.station,
-				observations: card.observations,
-				contributorsCount: card.contributorsCount
+            {% set cards = setStationCards(stations) %}
+            {%  for card in cards %}
+                {% include 'components/cards/station-cards.html.twig' with {
+                    station: card.station,
+                    observations: card.observations,
+                    contributorsCount: card.contributorsCount
 
-			} %}
-		{% endfor %}
-		<div class="card add">
-			<div class="add-card-content">
-				<div class="add-pointer-icon add-card-marker"></div>
-				<div class="add-card-text">Votre station n’existe pas encore ?</div>
-				<a href="" class="button bt-add open{{ app.user.id is not defined ? ' disabled' }}" data-open="station" {{ app.user.id is not defined ? 'style="cursor:not-allowed;" aria-disabled="true" title="connexion obligatoire"' }}>
-					Créer une station
-				</a>
-			</div>
-		</div>
-	</div>
-	{% include 'components/pagination.html.twig' with {routePath: path(app.request.get('_route'))} %}
+                } %}
+            {% endfor %}
+            <div class="card add">
+                <div class="add-card-content">
+                    <div class="add-pointer-icon add-card-marker"></div>
+                    <div class="add-card-text">Votre station n’existe pas encore ?</div>
+                    <a href="" class="button bt-add open{{ app.user.id is not defined ? ' disabled' }}" data-open="station" {{ app.user.id is not defined ? 'style="cursor:not-allowed;" aria-disabled="true" title="connexion obligatoire"' }}>
+                        Créer une station
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% include 'components/pagination.html.twig' with {routePath: path(app.request.get('_route'))} %}
+    {% endblock %}
 	{% include 'components/help-block.html.twig' with {
 		help: {
 			'text':
