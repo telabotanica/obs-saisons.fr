@@ -40,7 +40,7 @@
             <div  class="member-avatar" style="background-image: url({{ station.getUser().getAvatar()|default(asset('media/layout/icons/member_default.png')) }})"></div>
             <div class="member-label-block-content">
                 <div class="member-label-block-title">Créée par</div>
-                <a href="{{ path('user_profile', { userId:station.user.id }) }}" class="member-label-block-link">{{ station.user.displayName }}</a>
+                <a href="{{ app.user == station.user ? path('user_dashboard') : path('user_profile', { userId:station.user.id }) }}" class="member-label-block-link">{{ station.user.displayName }}</a>
             </div>
         </div>
     {% endif %}
