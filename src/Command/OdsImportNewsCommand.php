@@ -6,17 +6,17 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OdsImportNewsCommand extends Command
 {
     protected static $defaultName = 'ods:import:news';
 
-    private $container;
+    private $managerRegistry;
 
     private $em;
 
@@ -24,9 +24,9 @@ class OdsImportNewsCommand extends Command
 
     private $admin;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em, SlugGenerator $slugGenerator)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $em, SlugGenerator $slugGenerator)
     {
-        $this->container = $container;
+        $this->managerRegistry = $managerRegistry;
 
         $this->em = $em;
 
@@ -48,7 +48,7 @@ class OdsImportNewsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $conn = $this->container->get('doctrine')->getConnection('ods_legacy');
+        $conn = $this->managerRegistry->getConnection('ods_legacy');
 
         $allImportingNews = $conn->fetchAll(
             'SELECT dn.nid as id,

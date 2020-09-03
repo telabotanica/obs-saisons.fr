@@ -17,6 +17,7 @@ security:
             pattern: ^/
             user_checker: App\Security\UserChecker
             anonymous: true
+            lazy: true
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator

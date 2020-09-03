@@ -5,36 +5,40 @@ namespace App\Command;
 use App\Entity\User;
 use App\Service\EmailSender;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Twig\Environment;
 
 class OdsImportUsersCommand extends Command
 {
     protected static $defaultName = 'ods:import:users';
 
     private $em;
-    private $doctrine;
+    private $managerRegistry;
     private $twig;
     private $router;
     private $tokenGenerator;
     private $mailer;
 
     public function __construct(
-        ContainerInterface $container,
         EntityManagerInterface $em,
+        ManagerRegistry $managerRegistry,
+        Environment $twig,
+        RouterInterface $router,
         TokenGeneratorInterface $tokenGenerator,
         EmailSender $mailer
     ) {
         $this->em = $em;
-        $this->doctrine = $container->get('doctrine');
-        $this->twig = $container->get('twig');
-        $this->router = $container->get('router');
+        $this->managerRegistry = $managerRegistry;
+        $this->twig = $twig;
+        $this->router = $router;
         $this->tokenGenerator = $tokenGenerator;
         $this->mailer = $mailer;
 
@@ -52,7 +56,7 @@ class OdsImportUsersCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $conn = $this->doctrine->getConnection('ods_legacy');
+        $conn = $this->managerRegistry->getConnection('ods_legacy');
         $legacyUsers = $conn->fetchAll('
             SELECT DISTINCT du.name AS display_name,
                 du.uid,
@@ -102,7 +106,7 @@ class OdsImportUsersCommand extends Command
             $user->setProfileType($legacyUser['profile_type']);
             $user->setIsNewsletterSubscriber($legacyUser['is_newsletter_subscriber'] ?? '0');
             $user->setIsMailsSubscriber(false);
-            $user->setCreatedAt((new \DateTime)->setTimestamp($legacyUser['created_at']));
+            $user->setCreatedAt((new \DateTime())->setTimestamp($legacyUser['created_at']));
             $user->setResetToken('tok3nha5toBR3s3tedElMe0w');
             $user->setLegacyId($legacyUser['uid']);
 
@@ -158,7 +162,7 @@ class OdsImportUsersCommand extends Command
                 $user->setStatus(User::STATUS_DISABLED);
                 $user->setEmail($user->getEmail().'_'.$i);
             }
-            
+
             $io->text('...Ok.'.count($users).' accounts disabled');
         }
 
@@ -189,6 +193,9 @@ class OdsImportUsersCommand extends Command
 
             foreach ($importedUsers as $importedUser) {
                 $token = $this->tokenGenerator->generateToken();
+                /**
+                 * @var $importedUser User
+                 */
                 $importedUser->setResetToken($token);
 
                 $message = $this->twig->render('emails/forgotten-password.html.twig', [
@@ -200,7 +207,8 @@ class OdsImportUsersCommand extends Command
 
                 $this->mailer->send(
                     'contact@obs-saisons.fr',
-                    $importedUser->getEmail(),
+                    'killian.stefanini.tb@gmail.com',
+//                    $importedUser->getEmail(),
                     'Merci de réinitialiser votre mot de passe',
                     $message
                 );
@@ -209,6 +217,8 @@ class OdsImportUsersCommand extends Command
 
                 // flushing each time to avoid sending mail and lost tokens in case of crash
                 $this->em->flush();
+
+                return 0;
             }
 
             $io->success('Done sending emails!');

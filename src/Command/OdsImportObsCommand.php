@@ -3,30 +3,29 @@
 namespace App\Command;
 
 use App\Entity\Event;
-use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OdsImportObsCommand extends Command
 {
     protected static $defaultName = 'ods:import:obs';
 
-    private $container;
+    private $managerRegistry;
     private $em;
     private $userRepository;
     private $admin;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $em)
     {
-        $this->container = $container;
+        $this->managerRegistry = $managerRegistry;
         $this->em = $em;
         $this->userRepository = $this->em->getRepository(User::class);
         $this->admin = $this->userRepository->findOneBy(['email' => 'contact@obs-saisons.fr']);
@@ -45,7 +44,7 @@ class OdsImportObsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $conn = $this->container->get('doctrine')->getConnection('ods_legacy');
+        $conn = $this->managerRegistry->getConnection('ods_legacy');
 
         // ajouter les individus à identifier par nom station et espèce
         $importingOccurrences = $conn->fetchAll(
