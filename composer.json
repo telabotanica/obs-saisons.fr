@@ -9,26 +9,26 @@
         "beberlei/doctrineextensions": "^1.2",
         "sensio/framework-extra-bundle": "^5.1",
         "stof/doctrine-extensions-bundle": "^1.4",
-        "symfony/asset": "5.0.*",
-        "symfony/console": "5.0.*",
-        "symfony/expression-language": "5.0.*",
+        "symfony/asset": "5.1.*",
+        "symfony/console": "5.1.*",
+        "symfony/expression-language": "5.1.*",
         "symfony/flex": "^1.3.1",
-        "symfony/form": "5.0.*",
-        "symfony/framework-bundle": "5.0.*",
-        "symfony/http-client": "5.0.*",
-        "symfony/intl": "5.0.*",
+        "symfony/form": "5.1.*",
+        "symfony/framework-bundle": "5.1.*",
+        "symfony/http-client": "5.1.*",
+        "symfony/intl": "5.1.*",
         "symfony/monolog-bundle": "^3.5",
         "symfony/orm-pack": "*",
-        "symfony/process": "5.0.*",
-        "symfony/security-bundle": "5.0.*",
+        "symfony/process": "5.1.*",
+        "symfony/security-bundle": "5.1.*",
         "symfony/serializer-pack": "*",
         "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/translation": "5.0.*",
-        "symfony/twig-bundle": "5.0.*",
-        "symfony/validator": "5.0.*",
-        "symfony/web-link": "5.0.*",
+        "symfony/translation": "5.1.*",
+        "symfony/twig-bundle": "5.1.*",
+        "symfony/validator": "5.1.*",
+        "symfony/web-link": "5.1.*",
         "symfony/webpack-encore-bundle": "^1.6",
-        "symfony/yaml": "5.0.*",
+        "symfony/yaml": "5.1.*",
         "twig/extensions": "^1.5"
     },
     "require-dev": {
@@ -36,7 +36,7 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "fzaninotto/faker": "^1.9",
         "symfony/debug-pack": "*",
-        "symfony/dotenv": "5.0.*",
+        "symfony/dotenv": "5.1.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*"
@@ -83,7 +83,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.0.*"
+            "require": "5.1.*"
         }
     }
 }
