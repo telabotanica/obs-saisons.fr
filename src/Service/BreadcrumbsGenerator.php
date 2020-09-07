@@ -19,7 +19,7 @@ class BreadcrumbsGenerator
     ];
     const OTHER_BREADCRUMBS = [
         'stations' => 'Stations d’observation',
-        'mes-stations' => 'Mes Stations',
+        'my_stations' => 'Mes Stations',
         'stations_search' => 'Recherche de stations',
         'protocole' => 'Protocole',
         'dashboard' => 'Tableau de bord',
