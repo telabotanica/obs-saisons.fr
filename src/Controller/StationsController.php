@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StationsController extends AbstractController
 {
+
     /* ************************************************ *
      * Stations
      * ************************************************ */
@@ -56,9 +57,9 @@ class StationsController extends AbstractController
     }
 
     /**
-     * @Route("/participer/stations/mes-stations/{page<\d+>}", name="mes-stations", methods={"GET"})
+     * @Route("/participer/stations/mes-stations/{page<\d+>}", name="my_stations", methods={"GET"})
      */
-    public function mesStations(
+    public function myStations(
         Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $manager,
@@ -133,11 +134,11 @@ class StationsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'success' => true,
-                'redirect' => $this->generateUrl('mes-stations'),
+                'redirect' => $this->generateUrl('my_stations'),
             ]);
         }
 
-        return $this->redirectToRoute('mes-stations');
+        return $this->redirectToRoute('my_stations');
     }
 
     /**
@@ -176,13 +177,15 @@ class StationsController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
+
             return new JsonResponse([
                 'success' => true,
-                'redirect' => $this->generateUrl('stations'),
+                'redirect' => $this->generateUrl('my_stations'),
             ]);
         }
 
-        return $this->redirectToRoute('stations');
+
+        return $this->redirectToRoute('my_stations');
     }
 
     /**
@@ -229,7 +232,7 @@ class StationsController extends AbstractController
 
         $this->addFlash('notice', 'La station a été supprimée');
 
-        return $this->redirectToRoute('stations');
+        return $this->redirectToRoute('my_stations');
     }
 
     /* ************************************************ *
@@ -251,6 +254,10 @@ class StationsController extends AbstractController
         if (!$station) {
             throw $this->createNotFoundException('La station n’existe pas');
         }
+
+        $stationForm = $this->createForm(StationType::class, $station, [
+            'action' => $this->generateUrl('stations_new'),
+        ]);
 
         $individuals = $manager->getRepository(Individual::class)
             ->findSpeciesIndividualsForStation($station)
@@ -284,6 +291,7 @@ class StationsController extends AbstractController
             'station' => $station,
             'individuals' => $individuals,
             'observations' => $observations,
+            'stationForm' => $stationForm->createView(),
             'individualForm' => $individualForm->createView(),
             'observationForm' => $observationForm->createView(),
             'breadcrumbs' => $breadcrumbs,

@@ -158,6 +158,9 @@
 	{% if show %}
 
 		{% if not disable %}
+			<div class="overlay hidden station">
+				{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
+			</div>
 			<div class="overlay hidden individual">
 				{% include 'forms/individual/indiv-form.html.twig' with {action:'individual', form: individualForm} %}
 			</div>

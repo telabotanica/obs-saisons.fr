@@ -162,3 +162,11 @@
         font-size: 12px;
     }
 }
+
+.hero-header-button {
+    @extend .privacy-status;
+    @include media(lg) {
+        @include position(absolute, auto, 0, 0);
+        @include gap(margin, (bottom, right), 20px);
+    }
+}
