@@ -10,7 +10,7 @@
 			{% for label, message in app.flashes(type) %}
 				<div class="app-flashes__{{ label }} app-flashes-{{ type }}" style="width: 100%">
 					<div>
-						{{ message }}
+						{{ message|raw }}
 					</div>
 				</div>
 			{% endfor %}
