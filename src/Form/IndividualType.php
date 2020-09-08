@@ -51,7 +51,7 @@ class IndividualType extends AbstractType
             ->add('name', TextType::class, ['required' => true])
             ->add('species', EntityType::class, [
                 'class' => Species::class,
-                'choice_label' => function ($species) {
+                'choice_label' => function (Species $species) {
                     $vernacularName = $species->getVernacularName();
                     if (in_array($species, $this->stationAllSpecies)) {
                         $vernacularName .= ' (+)';
@@ -59,13 +59,17 @@ class IndividualType extends AbstractType
 
                     return ucfirst($vernacularName);
                 },
-                'choice_attr' => function ($species, $key, $speciesId) {
-                    $choiceClassAttr = 'species-option species-'.$speciesId;
+                'choice_attr' => function (Species $species, $key, $speciesId) {
+                    $choiceAttr['class'] = 'species-option species-'.$speciesId;
                     if (in_array($species, $this->stationAllSpecies)) {
-                        $choiceClassAttr .= ' exists-in-station';
+                        $choiceAttr['class'] .= ' exists-in-station';
+
+                        if ('plantes' !== $species->getType()->getReign()) {
+                            $choiceAttr['disabled'] = 'disabled';
+                        }
                     }
 
-                    return ['class' => $choiceClassAttr];
+                    return $choiceAttr;
                 },
                 'attr' => [
                     'required' => true,
