@@ -110,6 +110,12 @@ class Station
     private $updatedAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastActivity;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $deletedAt;
@@ -295,6 +301,18 @@ class Station
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getLastActivity(): ?\DateTimeInterface
+    {
+        return $this->lastActivity;
+    }
+
+    public function setLastActivity(?\DateTimeInterface $lastActivity): self
+    {
+        $this->lastActivity = $lastActivity;
 
         return $this;
     }

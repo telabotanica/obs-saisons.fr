@@ -23,7 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StationsController extends AbstractController
 {
-
     /* ************************************************ *
      * Stations
      * ************************************************ */
@@ -177,13 +176,11 @@ class StationsController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
-
             return new JsonResponse([
                 'success' => true,
                 'redirect' => $this->generateUrl('my_stations'),
             ]);
         }
-
 
         return $this->redirectToRoute('my_stations');
     }
@@ -458,6 +455,9 @@ class StationsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($observation);
+
+            $station->setUpdatedAt(new \DateTime());
+            $manager->persist($station);
             $manager->flush();
 
             $this->addFlash('success', 'Votre observation a été créée');

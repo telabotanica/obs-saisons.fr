@@ -76,8 +76,9 @@ class StationRepository extends ServiceEntityRepository
             ->setParameter('user', $user);
         }
 
-        return $qb->addOrderBy('MAX(o.createdAt)', 'DESC')
-            ->addOrderBy('s.createdAt', 'DESC')
+        return $qb->addOrderBy('s.lastActivity', 'DESC')
+            ->addOrderBy('MAX(o.createdAt)', 'DESC')
+            ->addOrderBy('s.name', 'ASC')
             ->getQuery()
             ->getResult()
         ;
