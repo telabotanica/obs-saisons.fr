@@ -455,9 +455,7 @@ class StationsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($observation);
-
             $station->setUpdatedAt(new \DateTime());
-            $manager->persist($station);
             $manager->flush();
 
             $this->addFlash('success', 'Votre observation a été créée');
