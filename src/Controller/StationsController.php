@@ -11,6 +11,7 @@ use App\Form\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\Search;
+use App\Service\FormErrorsMessages;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StationsController extends AbstractController
 {
-
     /* ************************************************ *
      * Stations
      * ************************************************ */
@@ -177,13 +177,11 @@ class StationsController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
-
             return new JsonResponse([
                 'success' => true,
                 'redirect' => $this->generateUrl('my_stations'),
             ]);
         }
-
 
         return $this->redirectToRoute('my_stations');
     }
@@ -432,6 +430,7 @@ class StationsController extends AbstractController
     public function observationNew(
         Request $request,
         EntityManagerInterface $manager,
+        FormErrorsMessages $formErrorsMessages,
         int $stationId
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
@@ -462,6 +461,12 @@ class StationsController extends AbstractController
 
             $this->addFlash('success', 'Votre observation a été créée');
         } else {
+            if (!$form->isValid()) {
+                $forbiddenNewObsErrors = $formErrorsMessages->getErrorMessages($form)['date'];
+                foreach ($forbiddenNewObsErrors as $forbiddenNewObsError) {
+                    $this->addFlash('error', $forbiddenNewObsError);
+                }
+            }
             $this->addFlash('error', 'Votre observation n’a pas pu être créée');
         }
 
@@ -485,6 +490,7 @@ class StationsController extends AbstractController
     public function observationEdit(
         Request $request,
         EntityManagerInterface $manager,
+        FormErrorsMessages $formErrorsMessages,
         int $observationId
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
@@ -514,6 +520,12 @@ class StationsController extends AbstractController
 
             $this->addFlash('success', 'Votre observation a été modifiée');
         } else {
+            if (!$form->isValid()) {
+                $forbiddenNewObsErrors = $formErrorsMessages->getErrorMessages($form)['date'];
+                foreach ($forbiddenNewObsErrors as $forbiddenNewObsError) {
+                    $this->addFlash('error', $forbiddenNewObsError);
+                }
+            }
             $this->addFlash('error', 'L’observation n’a pas pu être modifiée');
         }
 

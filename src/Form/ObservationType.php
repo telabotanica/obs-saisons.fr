@@ -9,7 +9,8 @@ use App\Entity\Observation;
 use App\Entity\Station;
 use App\Service\HandleDateTime;
 use App\Service\UploadService;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Service\YearsIndividualObservations;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -23,7 +24,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ObservationType extends AbstractType
 {
@@ -37,7 +40,7 @@ class ObservationType extends AbstractType
     private $eventSpeciesRepository;
 
     public function __construct(
-        ManagerRegistry $manager,
+        EntityManagerInterface $manager,
         Security $security,
         UploadService $uploadFileService
     ) {
@@ -192,7 +195,6 @@ class ObservationType extends AbstractType
             $observation->setUser($this->security->getUser());
         }
 
-
         $formEvent->setData($observation);
     }
 
@@ -269,10 +271,28 @@ class ObservationType extends AbstractType
         return $stadeBbch ? '_'.substr($stadeBbch, 0, 1) : '';
     }
 
+    public function validate(Observation $observation, ExecutionContextInterface $context): void
+    {
+        // determines if individual is animal or herbaceous
+        // then returns years when individual already has (non "isMissing") observations
+        $yearsForbidNewObs = (new YearsIndividualObservations($this->manager, $observation->getIndividual()))->yearsForbidNewObs();
+
+        $year = date_format($observation->getDate(), 'Y');
+
+        if (in_array($year, $yearsForbidNewObs)) {
+            $context->buildViolation('Pour chaque individu animal ou herbacée, une seule observation par an est possible.')
+                ->atPath('date')
+                ->addViolation();
+        }
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Observation::class,
+            'constraints' => [
+                new Callback([$this, 'validate']),
+            ],
         ]);
 
         $resolver->setDefined('station');

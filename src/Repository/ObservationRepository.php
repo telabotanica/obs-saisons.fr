@@ -2,12 +2,14 @@
 
 namespace App\Repository;
 
+use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * @method Observation|null find($id, $lockMode = null, $lockVersion = null)
@@ -104,6 +106,21 @@ class ObservationRepository extends ServiceEntityRepository
         ;
 
         return count($allObsThisYear);
+    }
+
+    public function findValidObsForIndividual(Individual $individual)
+    {
+        return $this->createQueryBuilder('o')
+            ->leftJoin(Individual::class, 'i', Expr\Join::WITH, 'o.individual = i.id')
+            ->innerJoin(EventSpecies::class, 'es', Expr\Join::WITH, 'i.species = es.species')
+            ->addSelect('o')
+            ->andwhere('o.individual = :individual')
+            ->andWhere('o.event = es.event')
+            ->setParameter('individual', $individual)
+            ->orderBy('o.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

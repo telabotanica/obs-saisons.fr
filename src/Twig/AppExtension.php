@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Service\EntityJsonSerialize;
 use App\Service\HandleDateTime;
 use App\Service\SlugGenerator;
+use App\Service\YearsIndividualObservations;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
@@ -269,36 +270,7 @@ class AppExtension extends AbstractExtension
 
     public function setObsChips(Individual $individual): array
     {
-        $individualObservations = $this->manager->getRepository(Observation::class)
-            ->findBy(['individual' => $individual], ['date' => 'DESC'])
-        ;
-
-        $validEvents = [];
-        $eventsForSpecies = $this->getEventsSpeciesForSpecies($individual->getSpecies());
-        foreach ($eventsForSpecies as $eventSpecies) {
-            $validEvents[] = $eventSpecies->getEvent();
-        }
-
-        $observationsPerYear = [];
-        foreach ($individualObservations as $observation) {
-            if (in_array($observation->getEvent(), $validEvents)) {
-                $year = date_format($observation->getDate(), 'Y');
-                $i = array_search(
-                    $year,
-                    array_column($observationsPerYear, 'year')
-                );
-                if (false === $i) {
-                    $observationsPerYear[] = [
-                        'year' => $year,
-                        'observations' => [$observation],
-                    ];
-                } else {
-                    $observationsPerYear[$i]['observations'][] = $observation;
-                }
-            }
-        }
-
-        return $observationsPerYear;
+        return (new YearsIndividualObservations($this->manager, $individual))->getObservationsPerYears();
     }
 
     public function getEventsSpeciesForSpecies(Species $species): array
