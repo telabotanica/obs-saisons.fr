@@ -36,7 +36,7 @@
                 <div class="saisie-aide-txt event">
                     <div class="text-aide-1 event">{{ firstIndividualsFirstEventSpecies.event.name|capitalize }} {{ hasStadeBbch ? "- Stade #{firstIndividualsFirstEventSpecies.event.stadeBbch}" }}</div>
                     <div class="text-aide-2 event">{{ firstIndividualsFirstEventSpecies.event.description }}</div>
-                    <a href="" class="green-link small">Plus de détails</a>
+                    <a href="{{ path('species_single_show', {vernacularName: firstSpecies.vernacularName}) }}" class="green-link small">Plus de détails</a>
                 </div>
             </div>
         </div>

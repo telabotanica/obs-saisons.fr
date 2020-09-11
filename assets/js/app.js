@@ -461,6 +461,7 @@ function onChangeSetIndividual() {
                 availableEvents = getDataAttrValuesArray($selectedIndividual.data('availableEvents').toString()),
                 aberrationsDays = $selectedIndividual.data('aberrationsDays');
 
+            updateSpeciesPageUrl($selectedIndividual);
             $event.removeAttr('disabled').prop('disabled', false);
             if (1 === availableEvents.length) {
                 $event
@@ -498,6 +499,18 @@ function onChangeSetIndividual() {
     });
 }
 
+function updateSpeciesPageUrl($selectedIndividual)
+{
+    let $link = $('.saisie-aide-txt a.green-link'),
+        url = $link.attr('href'),
+        speciesInUrl = url.substring(url.lastIndexOf('/')+1),
+        species = $selectedIndividual.data('speciesName');
+
+    if (speciesInUrl !== species) {
+        $link.attr('href',url.replace(speciesInUrl,species));
+    }
+
+}
 function setEventAberrationDaysDataAttr(eventId, aberrationsDays) {
     let eventOptionEl = $('.event-option.event-'+eventId, $event)[0],
         eventAberrationDays = aberrationsDays.filter(function (aberrationDays) {
@@ -570,7 +583,10 @@ function checkAberrationsObsDays() {
             || comparativeTimeValue(aberrationEndDay) < comparativeTimeValue(observationDay)
         )
     ) {
-        message = 'Votre donnée semble anormale, elle ne correspond pas à la moyenne saisonnière (du '+$selectedEvent.data('displayedStartDate')+' au '+$selectedEvent.data('displayedEndDate')+'), si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message';
+        let species = $('.individual-option:selected', $individual).attr('speciesName')
+        message = 'La date que vous venez de saisir sort de la période habituelle pour cet événement chez cette espèce ('+$selectedEvent.data('displayedStartDate')+' au '+$selectedEvent.data('displayedEndDate')+'). ' +
+            'Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/'+species+'" target="_blank">espèce</a>. ' +
+            'Si vous restez dans le doute, <a href="" target="_blank">contactez nous</a>.';
     }
     $('.ods-form-warning').toggleClass('hidden', message === '').text(message);
 }

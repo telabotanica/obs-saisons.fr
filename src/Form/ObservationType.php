@@ -75,6 +75,7 @@ class ObservationType extends AbstractType
                         'class' => 'individual-option individual-'.$individual->getId(),
                         'selected' => 1 === count($this->individuals),
                         'data-species' => $species->getId(),
+                        'data-species-name' => $species->getVernacularName(),
                         'data-available-events' => implode(',', $this->getEventSpeciesIds($eventsSpeciesArray)),
                         'data-picture' => $species->getPicture(),
                         'data-aberrations-days' => json_encode($this->getAberrationDays($eventsSpeciesArray)),
