@@ -217,7 +217,6 @@
     @include display-flex;
     @include justify-content-center;
     @include align-items-center;
-    @include gap(padding, 'v', 20px);
     background-color: #cde275;
 
     @include media(md) {
@@ -262,7 +261,12 @@
 
     &.add {
         @include display-flex;
+        @include gap(padding, "v", 20px);
         padding-right: 0;
+
+        @include media(md) {
+            @include gap(padding, "v", 0);
+        }
     }
 }
 
@@ -516,6 +520,15 @@ $stage-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
     background-color: grey(100, 0.5);
 
     @include hide_on_small;
+
+    &.legend-comment {
+        display: none;
+        margin: 2px;
+
+        @include media(md) {
+            display: block;
+        }
+    }
 
     .legends{
         @include display-flex;

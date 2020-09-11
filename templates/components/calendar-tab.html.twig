@@ -141,6 +141,11 @@
         </div>
     </div>
 
+    {% if "animaux" == listCard.species.type.reign %}
+        <div class="helper-legend legend-comment">
+            <div class="helper-legend-text">Seule l'observation la plus précoce est affichée</div>
+        </div>
+    {% endif %}
     <div class="helper-legend">
         <div class="legends">
             {# Sets an array of non duplicated values of stages class attibutes for this species #}

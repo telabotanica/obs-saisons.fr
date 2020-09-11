@@ -42,6 +42,7 @@
         {% set buttons = [{
             'icon': 'help-circle',
             'label': 'fiche',
+            'url' : path('species_single_show', {vernacularName: listCard.species.vernacularName})
         }] %}
         {% if show %}
             {% set individualsIds = [] %}

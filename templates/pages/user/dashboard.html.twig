@@ -43,6 +43,27 @@
 			<p>Modifier votre e-mail et/ou votre mot de passe</p>
 
 		{% endif %}
+		<h3>{{ isPrivateDashboard ? 'mes stations' : 'ses dernières contributions aux stations'}}</h3>
+		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
+		<div class="cards-grid-container">
+			{% set cards = setStationCards(stations) %}
+			{%  for card in cards %}
+				{% include 'components/cards/station-cards.html.twig' with {
+					station: card.station,
+					observations: card.observations,
+					canAdminStation: false
+				} %}
+			{% endfor %}
+			<div class="card add">
+				<div class="add-card-content">
+					<div class="add-pointer-icon add-card-marker"></div>
+					<div class="add-card-text">Vous souhaitez explorer ou créer votre propre station?</div>
+					<a href="{{ path('stations') }}" class="green-link">
+						Rendez-vous sur la page des stations
+					</a>
+				</div>
+			</div>
+		</div>
 		<h3>{{ isPrivateDashboard ? 'mes observations' : 'ses dernières observations' }}</h3>
 		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 		{% set pictureUrl = '' %}
@@ -78,27 +99,6 @@
 					</div>
 				</div>
 			{% endfor %}
-		</div>
-		<h3>{{ isPrivateDashboard ? 'mes stations' : 'ses dernières contributions aux stations'}}</h3>
-		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
-		<div class="cards-grid-container">
-			{% set cards = setStationCards(stations) %}
-			{%  for card in cards %}
-				{% include 'components/cards/station-cards.html.twig' with {
-					station: card.station,
-					observations: card.observations,
-					canAdminStation: false
-				} %}
-			{% endfor %}
-			<div class="card add">
-				<div class="add-card-content">
-					<div class="add-pointer-icon add-card-marker"></div>
-					<div class="add-card-text">Vous souhaitez explorer ou créer votre propre station?</div>
-					<a href="{{ path('stations') }}" class="green-link">
-						Rendez-vous sur la page des stations
-					</a>
-				</div>
-			</div>
 		</div>
 	</div>
 {% endblock %}
