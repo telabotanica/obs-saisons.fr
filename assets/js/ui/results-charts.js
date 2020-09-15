@@ -38,17 +38,17 @@ $( document ).ready( () => {
                 retrieveData(
                 `${exportRoute}?year=${criteria.year}&species=${criteria.species.id}&region=${criteria.region.id}&department=${criteria.department.id}`,
                     criteria, ( data ) => {
-                        if (data.length) {
-                            displayPhenologicalChart(
-                                Plotly,
-                                $( '#phenological-chart-container > .chart' )[0],
-                                criteria,
-                                indexObsForPhenologicalChart( data )
-                            );
-                            $( '#phenological-chart-container > .no-data' ).hide();
-                        } else {
-                            $( '#phenological-chart-container > .no-data' ).show();
-                        }
+                    if ( data.length ) {
+                        displayPhenologicalChart(
+                            Plotly,
+                            $( '#phenological-chart-container > .chart' )[0],
+                            criteria,
+                            indexObsForPhenologicalChart( data )
+                        );
+                        $( '#phenological-chart-container > .no-data' ).hide();
+                    } else {
+                        $( '#phenological-chart-container > .no-data' ).show();
+                    }
                 } );
             } );
 
@@ -75,8 +75,8 @@ $( document ).ready( () => {
                 };
 
                 retrieveData(`${eventsEvolutionRoute}?species=${criteria.species.id}&event=${criteria.event.id}&region=${criteria.region.id}&department=${criteria.department.id}`,
-                    criteria, (data) => {
-                    if (data.length) {
+                    criteria, ( data ) => {
+                    if ( data.length ) {
                         displayEvolutionChart(
                             Plotly,
                             $( '#evolution-chart-container > .chart' )[0],
@@ -108,7 +108,7 @@ function displayPhenologicalChart( Plotly, chart, criteria, allObs ) {
         data.push( {
             type: 'violin',
             x: unpack( obs, 'day' ),
-            text: unpack(obs, 'displayDate'),
+            text: unpack( obs, 'displayDate' ),
             points: 'outliers',
             box: {
                 visible: true
@@ -131,7 +131,7 @@ function displayPhenologicalChart( Plotly, chart, criteria, allObs ) {
 
     const subtitle = ( criteria.year === "0" ) ? 'Toutes les années' : `Année ${criteria.year}`;
     const layout = {
-        title: `Calendrier phénologique de l’espèce ${criteria.species.name} <br> ${subtitle}, ${locality(criteria)}`,
+        title: `Calendrier phénologique de l’espèce ${criteria.species.name} <br> ${subtitle}, ${locality( criteria )}`,
         xaxis: {
             zeroline: false,
             tickvals: [15,45,75,105,135,165,195,225,255,285,315,345],
@@ -163,7 +163,7 @@ function displayEvolutionChart( Plotly, chart, criteria, allObs ) {
     }
 
     const multipleEvents = ( obsArray.length > 1 ) ? 'début et fin de ' : '';
-    const title = `Dates moyennes de ${multipleEvents}${criteria.event.name} pour l’espèce ${criteria.species.name} <br> ${locality(criteria)}`;
+    const title = `Dates moyennes de ${multipleEvents}${criteria.event.name} pour l’espèce ${criteria.species.name} <br> ${locality( criteria )}`;
 
     let years = [];
     for ( let i = $( '#evolution-chart-container' ).data( 'minYear' ); i <= new Date().getFullYear(); i++ ) {
@@ -242,7 +242,7 @@ function indexObsForEvolutionChart( allObs ) {
         if (!obsIndexedByEvent[obs.event]) {
             obsIndexedByEvent[obs.event] = [];
         }
-        const date = new Date(obs.date);
+        const date = new Date( obs.date );
         obsIndexedByEvent[obs.event].push( {
             day: obs.dayOfYear,
             year: obs.year,
