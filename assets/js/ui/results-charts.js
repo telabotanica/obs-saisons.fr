@@ -261,7 +261,7 @@ function filterCriteria() {
     if ( speciesId > 0 ) {
         const eventsIds = ( ''+$selectedSpecies.data( 'eventsIds' ) ).split( ', ' );
         $( '#event-evolution-chart option:not(.default-criteria)' ).each( function() {
-            if ( -1 !== eventsIds.indexOf( $( this ).val().substring( 0, 3 ) ) ) {
+            if ( -1 !== eventsIds.indexOf( $( this ).val().split(',')[0] ) ) {
                 $( this ).attr( 'hidden', false ).attr( 'disabled', false );
                 // if only one event, select it
                 if ( 1 === eventsIds.length ) $( this ).attr( 'selected', true );
