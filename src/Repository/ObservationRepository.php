@@ -210,6 +210,9 @@ class ObservationRepository extends ServiceEntityRepository
             ;
         }
 
+        // remove this line for real export:
+        $qb->andWhere($qb->expr()->eq('o.isMissing', 0));
+
         $qb->orderBy('o.date', 'DESC');
 
         return $qb
@@ -238,6 +241,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->setParameter(':species', $species)
             ->andWhere($qb->expr()->in('e.id', ':event'))
             ->setParameter(':event', $events)
+            ->andWhere($qb->expr()->eq('o.isMissing', 0))
         ;
 
         if ($region) {
