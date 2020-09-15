@@ -35,8 +35,6 @@ class ExportController extends AbstractController
 
         $serializer = new EntityJsonSerialize();
 
-        die('fix me');
-
         return new Response(
             $serializer->jsonSerializeObservationForExport($data),
             Response::HTTP_OK,
@@ -91,9 +89,6 @@ class ExportController extends AbstractController
                 $request->query->get('department')
             );
 
-        foreach ($data as $datum) {
-
-        }
         return new JsonResponse($data);
     }
 
