@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\EventSpecies;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr;
 
 /**
  * @method EventSpecies|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,6 +36,20 @@ class EventSpeciesRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->isNotNull('es.featuredEndDay'))
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+    public function findAllScalarIds()
+    {
+        $qb = $this->createQueryBuilder('es');
+
+        return $qb
+            // use IDENTITY function to select the FK IDs
+            ->select('IDENTITY(es.species) AS species_id')
+            ->addSelect('GROUP_CONCAT(IDENTITY(es.event) SEPARATOR \', \') AS events_ids')
+            ->groupBy('species_id')
+            ->getQuery()
+            ->getArrayResult()
         ;
     }
 

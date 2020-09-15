@@ -83,6 +83,20 @@ class StationRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAllForExport()
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb
+            ->innerJoin(Individual::class, 'i', Expr\Join::WITH, 's.id = i.station')
+            ->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+            ->addSelect(['o', 'i'])
+            ->andWhere($qb->expr()->isNull('s.deletedAt'))
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     /**
      * @return Station[]
      */

@@ -3,8 +3,162 @@
 {% block main_content %}
 
     {% include 'layout/header.html.twig' with ({
-        'title': 'Les résultats',
+        'title': 'Carte des résultats',
         'subtitle': 'Tous les résultats du programme <strong>Observatoire des saisons</strong>.'
     }) %}
+
+    <div class="criteria-container">
+        <select name="type-species" id="type-species" class="criteria-list">
+            <option value="0" selected class="default-criteria">Tous les types d'espèces</option>
+            {% for typeSpecies in allTypeSpecies %}
+                <option value="{{ typeSpecies.id }}">{{ typeSpecies.name|capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="species" id="species" class="criteria-list" data-selected-type-species="0">
+            <option value="0" selected class="default-criteria">Toutes les espèces</option>
+            {% for species in allSpecies %}
+                <option
+                        value="{{ species.id }}"
+                        data-events-ids="{{ speciesEvents[species.id] }}"
+                        data-type-species-id="{{ species.type.id }}"
+                        hidden disabled
+                >
+                    {{ species.vernacularName }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="events" id="events" class="criteria-list">
+            <option value="0" selected class="default-criteria">Tous les évènements</option>
+            {% for event in events %}
+                <option value="{{ event.id }}">{{ event.name|capitalize }} {{ event.stadeBbch }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="year" id="year" class="criteria-list">
+            {% for i in minYear..'now'|date('Y') %}
+                <option value="{{ i }}"{% if loop.last %} selected{% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="region" id="region" class="criteria-list">
+            <option value="0">Toutes les régions</option>
+            {% for id, region in regions %}
+                <option value="{{ id }}">{{ region }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="department" id="department" class="criteria-list">
+            <option value="0">Tous les départements</option>
+            {% for id, department in departments %}
+                <option value="{{ id }}">{{ department }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="results-map" class="result-map"></div>
+
+    <script>
+        let dataRoute = "{{ path('export_filtered')|escape('js') }}";
+        let stationUrlTemplate = "{{ path('stations_show', {slug: 'slugPlaceHolder'})|escape('js') }}";
+    </script>
+
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Calendrier phénologique par espèce',
+        'subtitle': 'Ces graphiques représentent les données brutes saisies par les observateur.rice.s.'
+    }) %}
+
+    <div id="phenological-chart-container">
+        <select name="species" id="species-phenological-chart" class="criteria-list">
+            <option value="0" class="default-criteria" disabled>Choisissez unes espèce</option>
+            {% for species in allSpecies %}
+                <option
+                        value="{{ species.id }}"
+                        {% if 'Lilas' == species.vernacularName %} selected{% endif %}
+                >
+                    {{ species.vernacularName }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="year" id="year-phenological-chart" class="criteria-list">
+            <option value="0">Toutes les années</option>
+            {% for i in minYear..'now'|date('Y') %}*
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="region" id="region-phenological-chart" class="criteria-list">
+            <option value="0">Toutes les régions</option>
+            {% for id, region in regions %}
+                <option value="{{ id }}">{{ region }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="department" id="department-phenological-chart" class="criteria-list">
+            <option value="0">Tous les départements</option>
+            {% for id, department in departments %}
+                <option value="{{ id }}">{{ department }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="no-data">Aucune donnée pour les critères demandés</div>
+        <div class="chart"></div>
+    </div>
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Évolution des stades par espèce'
+    }) %}
+
+    <div id="evolution-chart-container"  data-min-year="{{ minYear }}">
+        <select name="species" id="species-evolution-chart" class="criteria-list">
+            <option value="0" class="default-criteria" disabled>Choisissez une espèce</option>
+            {% for species in allSpecies %}
+                <option
+                        value="{{ species.id }}"
+                        data-events-ids="{{ speciesEvents[species.id] }}"
+                        {% if 'Marronnier' == species.vernacularName %} selected{% endif %}
+                >
+                    {{ species.vernacularName }}
+                </option>
+            {% endfor %}
+        </select>
+        <select name="event" id="event-evolution-chart" class="criteria-list">
+            <option value="0" class="default-criteria" disabled>Choisissez un évènement</option>
+            {% for eventName, eventIds in eventsIds %}
+                <option
+                        value="{{ eventIds|join(',') }}"
+                        {% if 'feuillaison' == eventName %} selected{% endif %}
+                >
+                    {{ eventName|capitalize }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="region" id="region-evolution-chart" class="criteria-list">
+            <option value="0">Toutes les régions</option>
+            {% for id, region in regions %}
+                <option value="{{ id }}">{{ region }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="department" id="department-evolution-chart" class="criteria-list">
+            <option value="0">Tous les départements</option>
+            {% for id, department in departments %}
+                <option value="{{ id }}">{{ department }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="no-data">Aucune donnée pour les critères demandés</div>
+        <div class="chart"></div>
+    </div>
+
+
+    <script>
+        let exportRoute = "{{ path('export_filtered')|escape('js') }}";
+        let eventsEvolutionRoute = "{{ path('events_evolution')|escape('js') }}";
+    </script>
 
 {% endblock %}

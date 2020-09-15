@@ -40,10 +40,13 @@ doctrine:
                 MONTH: DoctrineExtensions\Query\Mysql\Month
                 DAY: DoctrineExtensions\Query\Mysql\Day
                 DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat
+                DAYOFYEAR: DoctrineExtensions\Query\Mysql\DayOfYear
+                MAKEDATE: DoctrineExtensions\Query\Mysql\MakeDate
             numeric_functions:
                 rand: DoctrineExtensions\Query\Mysql\Rand
             string_functions:
                 regexp: DoctrineExtensions\Query\Mysql\Regexp
+                group_concat: DoctrineExtensions\Query\Mysql\GroupConcat
         filters:
             softdeleteable:
                 class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter

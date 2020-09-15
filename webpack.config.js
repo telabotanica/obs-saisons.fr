@@ -48,7 +48,9 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
-    .configureBabel(() => {}, {
+    .configureBabel((babelConfig) => {
+        babelConfig.plugins.push("@babel/plugin-syntax-nullish-coalescing-operator");
+    }, {
         useBuiltIns: 'usage',
         corejs: 3
     })

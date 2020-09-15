@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\EventSpecies;
+use App\Entity\Species;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,6 +38,25 @@ class EventRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    public function findAllArray()
+    {
+        return $this->createQueryBuilder('e')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    public function findBySpeciesArray(Species $species)
+    {
+        return $this->createQueryBuilder('e')
+            ->innerJoin(EventSpecies::class, 'es', Expr\Join::WITH, 'e.id = es.event')
+            ->andWhere('es.species = :species')
+            ->setParameter(':species', $species)
+            ->getQuery()
+            ->getArrayResult()
+        ;
     }
 
     // /**
