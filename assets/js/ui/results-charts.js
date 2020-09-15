@@ -162,7 +162,7 @@ function displayEvolutionChart( Plotly, chart, criteria, allObs ) {
         } );
     }
 
-    const multipleEvents = ( obsArray.length > 1 ) ? 'début et fin de ' : '';
+    const multipleEvents = ( obsArray.length > 1 ) ? 'début et de pleine ' : '';
     const title = `Dates moyennes de ${multipleEvents}${criteria.event.name} pour l’espèce ${criteria.species.name} <br> ${locality( criteria )}`;
 
     let years = [];
