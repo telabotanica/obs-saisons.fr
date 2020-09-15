@@ -1,0 +1,16 @@
+.criteria-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.criteria-list {
+  margin: 10px;
+  display: inline-block;
+  width: max-content;
+}
+
+.result-map {
+  width: auto;
+  height: 100vh;
+}

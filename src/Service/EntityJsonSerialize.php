@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Event;
 use App\Entity\EventSpecies;
 use App\Entity\Individual;
 use App\Entity\Observation;
@@ -74,6 +75,31 @@ class EntityJsonSerialize
         return $serializer->serialize($observation, 'json', $context);
     }
 
+    public function jsonSerializeObservationForExport(array $observations)
+    {
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+
+        $context = [
+            AbstractNormalizer::CALLBACKS => [
+                'user' => Closure::fromCallable('self::userCallBack'),
+                'date' => Closure::fromCallable('self::dateCallbackDetails'),
+                'event' => Closure::fromCallable('self::eventCallback'),
+                'individual' => Closure::fromCallable('self::individualDetailedCallback'),
+            ],
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+            ],
+        ];
+
+        foreach ($observations as $observation) {
+            $t[] = $serializer->normalize($observation, null, $context);
+        }
+
+        return $serializer->serialize($t ?? [], 'json');
+    }
+
     public function getJsonSerializedEventSpeciesObservationType(EventSpecies $eventSpecies)
     {
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
@@ -98,7 +124,6 @@ class EntityJsonSerialize
 
     public function getJsonSerializedEditUserProfile(User $user)
     {
-
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
 
         $context = [
@@ -128,7 +153,7 @@ class EntityJsonSerialize
     {
         return [
             'id' => $user->getId(),
-            'displayedName' => $user->getDisplayName(),
+            'displayName' => $user->getDisplayName(),
         ];
     }
 
@@ -136,7 +161,7 @@ class EntityJsonSerialize
     {
         return [
             'id' => $species->getId(),
-            'displayedName' => $species->getVernacularName(),
+            'displayName' => $species->getVernacularName(),
         ];
     }
 
@@ -145,12 +170,52 @@ class EntityJsonSerialize
         return $date instanceof \DateTimeInterface ? $date->format('Y-m-d') : null;
     }
 
+    public function dateCallbackDetails(\DateTimeInterface $date)
+    {
+        return [
+            'dateIso8601' => $date->format('c'),
+            'displayDate' => $date->format('d/m/Y'),
+            'dayOfYear' => ((int) $date->format('z')) + 1,
+        ];
+    }
+
     public function individualCallBack(Individual $individual)
     {
         return [
             'id' => $individual->getId(),
             'species' => $this->speciesCallBack($individual->getSpecies()),
             'station' => $this->entityObjectIdCallback($individual->getStation()),
+        ];
+    }
+
+    public function individualDetailedCallback(Individual $individual)
+    {
+        return [
+            'id' => $individual->getId(),
+            'species' => $this->speciesCallBack($individual->getSpecies()),
+            'station' => $this->stationCallback($individual->getStation()),
+        ];
+    }
+
+    public function eventCallback(Event $event)
+    {
+        return [
+            'id' => $event->getId(),
+            'name' => $event->getName(),
+            'codeBbch' => $event->getStadeBbch(),
+            'displayName' => ucfirst($event->getName().' '.$event->getStadeBbch()),
+        ];
+    }
+
+    public function stationCallback(Station $station)
+    {
+        return [
+            'id' => $station->getId(),
+            'locality' => $station->getLocality(),
+            'habitat' => $station->getHabitat(),
+            'lat' => $station->getLatitude(),
+            'lon' => $station->getLongitude(),
+            'slug' => $station->getSlug(),
         ];
     }
 

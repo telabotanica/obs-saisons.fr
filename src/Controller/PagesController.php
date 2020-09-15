@@ -95,24 +95,6 @@ class PagesController extends AbstractController
     }
 
     /**
-     * @Route("/resultats", name="resultats")
-     */
-    public function resultats(
-        Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator,
-        EntityManagerInterface $em
-    ) {
-        $page = $em->getRepository(Post::class)->findOneBy(
-            ['category' => Post::CATEGORY_PAGE, 'slug' => 'resultats']
-        );
-
-        return $this->render('pages/resultats.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
-            'page' => $page,
-        ]);
-    }
-
-    /**
      * @Route("/outils-ressources", name="outils-ressources")
      */
     public function outilsRessources(

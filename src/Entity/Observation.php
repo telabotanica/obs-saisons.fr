@@ -151,7 +151,7 @@ class Observation
 
     public function getDetails(): ?string
     {
-        return $this->details;
+        return $this->details ?: null;
     }
 
     public function setDetails(?string $details): self

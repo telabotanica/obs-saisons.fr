@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\FrenchRegions;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
@@ -104,6 +105,162 @@ class ObservationRepository extends ServiceEntityRepository
         ;
 
         return count($allObsThisYear);
+    }
+
+    public function findAllPublic(): array
+    {
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->andWhere($qb->expr()->eq('s.isPrivate', $qb->expr()->literal(false)))
+            ->addSelect(['s', 'i'])
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    public function findMinYear(): string
+    {
+        $minYear = '2006';
+
+        $data = $this->createQueryBuilder('o')
+            ->select('o.date as min')
+            ->orderBy('o.date', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        if ($data) {
+            /** @var \DateTime $date */
+            $date = $data[0]['min'];
+            $minYear = $date->format('Y');
+        }
+
+        return $minYear;
+    }
+
+    public function findWithFilters(
+        ?string $year,
+        ?string $typeSpecies,
+        ?string $species,
+        ?string $event,
+        ?string $department,
+        ?string $region,
+        ?string $station,
+        ?string $individual
+    ): array {
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('o.event', 'e')
+            ->innerJoin('i.station', 'st')
+            ->innerJoin('i.species', 'sp')
+            ->innerJoin('sp.type', 'ts')
+            ->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+        ;
+
+        if ($year) {
+            $qb->andWhere($qb->expr()->eq('YEAR(o.date)', ':year'))
+                ->setParameter(':year', $year)
+            ;
+        }
+
+        if ($typeSpecies) {
+            $qb->andWhere($qb->expr()->eq('ts.id', ':typeSpecies'))
+                ->setParameter(':typeSpecies', $typeSpecies)
+            ;
+        }
+
+        if ($species) {
+            $qb->andWhere($qb->expr()->eq('sp.id', ':species'))
+                ->setParameter(':species', $species)
+            ;
+        }
+
+        if ($event) {
+            $events = explode(',', $event);
+            $qb->andWhere($qb->expr()->in('e.id', ':event'))
+                ->setParameter(':event', $events)
+            ;
+        }
+
+        if ($region) {
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('st.department', ':departments'))
+                ->setParameter(':departments', $departments)
+            ;
+        } elseif ($department) {
+            $qb->andWhere($qb->expr()->eq('st.department', ':department'))
+                ->setParameter(':department', $department)
+            ;
+        }
+
+        if ($station) {
+            $qb->andWhere($qb->expr()->eq('st.slug', ':station'))
+                ->setParameter(':station', $station)
+            ;
+        }
+
+        if ($individual) {
+            $qb->andWhere($qb->expr()->eq('i.slug', ':individual'))
+                ->setParameter(':individual', $individual)
+            ;
+        }
+
+        $qb->orderBy('o.date', 'DESC');
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findFilteredForEventsEvolutionChart(
+        string $species,
+        string $event,
+        ?string $region,
+        ?string $department
+    ) {
+        $events = explode(',', $event);
+        $qb = $this->createQueryBuilder('o');
+        $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('o.event', 'e')
+            ->innerJoin('i.station', 'st')
+            ->innerJoin('i.species', 'sp')
+            ->select('YEAR(o.date) as year, AVG(DAYOFYEAR(o.date)) as dayOfYear')
+            ->addSelect('MAKEDATE(YEAR(o.date), AVG(DAYOFYEAR(o.date))) as date, COUNT(o.date) as date_count')
+            ->addSelect('CONCAT(e.name, \' \', e.stade_bbch) as event')
+            ->andWhere($qb->expr()->eq('sp.id', ':species'))
+            ->setParameter(':species', $species)
+            ->andWhere($qb->expr()->in('e.id', ':event'))
+            ->setParameter(':event', $events)
+        ;
+
+        if ($region) {
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('st.department', ':departments'))
+                ->setParameter(':departments', $departments)
+            ;
+        } elseif ($department) {
+            $qb->andWhere($qb->expr()->eq('st.department', ':department'))
+                ->setParameter(':department', $department)
+            ;
+        }
+
+        $qb
+            ->addGroupBy('year')
+            ->addGroupBy('event')
+        ;
+
+        return $qb
+            ->getQuery()
+            ->getScalarResult()
+        ;
+
     }
 
     // /**

@@ -48,6 +48,30 @@ class SpeciesRepository extends ServiceEntityRepository
             ->setParameter('val', $typeSpecies)
             ->getQuery()
             ->getResult()
+            ;
+    }
+
+    public function findAllActiveArray(): array
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb
+            ->andWhere($qb->expr()->eq('s.is_active', $qb->expr()->literal(true)))
+            ->addOrderBy('s.vernacular_name', 'ASC')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    public function findAllActive()
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb
+            ->andWhere($qb->expr()->eq('s.is_active', $qb->expr()->literal(true)))
+            ->addOrderBy('s.vernacular_name', 'ASC')
+            ->getQuery()
+            ->getResult()
         ;
     }
 

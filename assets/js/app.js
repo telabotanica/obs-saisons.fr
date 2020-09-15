@@ -7,14 +7,19 @@
 
 // any CSS you require will output into a single css file (app.css in this case)
 import '../css/app.scss';
-import L from 'leaflet';
-import 'leaflet-draw';
 const places = require('places.js');
 const algoliasearch = require('algoliasearch');
+import L from 'leaflet';
+import {off} from "leaflet/src/dom/DomEvent";
+import 'leaflet-draw';
+import 'leaflet.markercluster';
+
 import './ui/wysiwyg';
 import './ui/scientific-name';
-import {off} from "leaflet/src/dom/DomEvent";
 import './ui/textarea-auto-resize';
+import './ui/create-map';
+import './ui/results-charts';
+import './ui/results-map';
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
@@ -212,7 +217,7 @@ function onObsInfo($thisLink, dataAttrs) {
             '<div class="list-cards-item obs" data-id="'+observation.id+'">'+
                 '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
                 '<div class="item-name-block">'+
-                    '<div class="item-name">'+observation.user.displayedName+'</div>'+
+                    '<div class="item-name">'+observation.user.displayName+'</div>'+
                     '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
                     '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
                 '</div>'+
