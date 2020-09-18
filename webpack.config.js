@@ -48,11 +48,12 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = 3;
+    })
     .configureBabel((babelConfig) => {
         babelConfig.plugins.push("@babel/plugin-syntax-nullish-coalescing-operator");
-    }, {
-        useBuiltIns: 'usage',
-        corejs: 3
     })
 
     // enables Sass/SCSS support
@@ -79,7 +80,6 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
-
 ;
 
 module.exports = Encore.getWebpackConfig();
