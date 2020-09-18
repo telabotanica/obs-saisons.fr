@@ -143,6 +143,23 @@ class ObservationRepository extends ServiceEntityRepository
         return $minYear;
     }
 
+    public function findByStationSlugForExport(string $stationSlug): array
+    {
+        $qb = $this->createQueryBuilder('o');
+        return $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('o.event', 'e')
+            ->innerJoin('i.station', 'st')
+            ->innerJoin('i.species', 'sp')
+            ->innerJoin('sp.type', 'ts')
+            ->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+            ->andWhere($qb->expr()->eq('st.slug', ':slug'))
+            ->setParameter(':slug', $stationSlug)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findWithFilters(
         ?string $year,
         ?string $typeSpecies,

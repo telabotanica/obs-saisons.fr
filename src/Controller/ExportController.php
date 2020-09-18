@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ExportController extends AbstractController
@@ -32,6 +33,32 @@ class ExportController extends AbstractController
     public function exportRetro(EntityManagerInterface $em)
     {
         $data = $em->getRepository(Station::class)->findAllForExport();
+
+        $serializer = new EntityJsonSerialize();
+
+        return new Response(
+            $serializer->jsonSerializeObservationForExport($data),
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/export/station/{slug}", name="export_station")
+     */
+    public function exportStation(EntityManagerInterface $em, string $slug)
+    {
+        $station = $em->getRepository(Station::class)
+            ->findBy(['slug' => $slug])
+        ;
+
+        if (!$station) {
+            throw new NotFoundHttpException(sprintf('Station slug %s not found', $slug));
+        }
+
+        $data = $em->getRepository(Observation::class)
+            ->findByStationSlugForExport($slug)
+        ;
 
         $serializer = new EntityJsonSerialize();
 
