@@ -3,9 +3,8 @@
 {% block main_content %}
 
     <dl>
-        {% set type = '' %}
         {% for staticPageSlug, staticPageTitle in staticPagesList %}
-            {% if staticPageSlug not in ['actualites', 'evenements', 'especes'] %}
+            {% if staticPageSlug in constant('App\\Service\\BreadcrumbsGenerator::EDITABLE_PAGES') %}
             <dt>
                 <a href="{{ path(staticPageSlug) }}">
                     {{ staticPageTitle }}

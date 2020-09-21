@@ -24,6 +24,14 @@ class BreadcrumbsGenerator
         'protocole' => 'Protocole',
         'dashboard' => 'Tableau de bord',
     ];
+    const EDITABLE_PAGES = [
+        'a-propos',
+        'participer',
+        'protocole',
+        'resultats',
+        'outils-ressources',
+        'relais',
+    ];
 
     private $trails;
 
