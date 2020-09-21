@@ -98,7 +98,7 @@ class AdminController extends AbstractController
 
         return $this->render('admin/pages.html.twig', [
             'pages' => $pages,
-            'staticPagesList' => BreadcrumbsGenerator::MENU,
+            'staticPagesList' => BreadcrumbsGenerator::MENU + BreadcrumbsGenerator::OTHER_BREADCRUMBS,
         ]);
     }
 
@@ -111,7 +111,7 @@ class AdminController extends AbstractController
         Request $request,
         EntityManagerInterface $manager
     ) {
-        if (!array_key_exists($slug, BreadcrumbsGenerator::MENU)) {
+        if (!in_array($slug, BreadcrumbsGenerator::EDITABLE_PAGES)) {
             throw new \Exception('Slug is not part of the menu');
         }
 
@@ -124,7 +124,7 @@ class AdminController extends AbstractController
             $page->setContent('');
             $page->setAuthor($this->getUser());
             $page->setCategory(Post::CATEGORY_PAGE);
-            $page->setTitle(BreadcrumbsGenerator::MENU[$slug]);
+            $page->setTitle((BreadcrumbsGenerator::MENU + BreadcrumbsGenerator::OTHER_BREADCRUMBS)[$slug]);
             $page->setCreatedAt(new \DateTime());
             $page->setSlug($slug);
 
