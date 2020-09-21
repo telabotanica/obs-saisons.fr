@@ -1,7 +1,7 @@
 {
     "devDependencies": {
         "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
-        "@ckeditor/ckeditor5-build-classic": "^22.0.0",
+        "@telabotanica/ckeditor5-build-ods": "^22.0.0",
         "@symfony/webpack-encore": "^0.31.0",
         "core-js": "^3.6.5",
         "file-loader": "^6.1.0",
