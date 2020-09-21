@@ -590,10 +590,14 @@ function checkAberrationsObsDays() {
     ) {
         let species = $('.individual-option:selected', $individual).attr('speciesName')
         message = 'La date que vous venez de saisir sort de la période habituelle pour cet événement chez cette espèce ('+$selectedEvent.data('displayedStartDate')+' au '+$selectedEvent.data('displayedEndDate')+'). ' +
-            'Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/'+species+'" target="_blank">espèce</a>. ' +
-            'Si vous restez dans le doute, <a href="" target="_blank">contactez nous</a>.';
+            'Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/'+species+'" target="_blank" class="green-link small">espèce</a>. ' +
+            'Si vous restez dans le doute, <a href="" target="_blank" class="green-link small">contactez nous</a>.';
     }
-    $('.ods-form-warning').toggleClass('hidden', message === '').text(message);
+    $('.ods-form-warning')
+        .toggleClass('hidden', message === '')
+        .empty()
+        .append(message)
+    ;
 }
 
 // Create the map
@@ -611,30 +615,32 @@ function mapLocation() {
     if (!$('#map').hasClass('hidden')) {
         let mapInfo = mapInit(),
             marker = mapInfo.marker;
-        map = mapInfo.map;
+        var map = mapInfo.map;
 
         // interactions with map
         map.on('click', function (e) {
-            onPosition(e.latlng, marker);
+            onPosition(map, e.latlng, marker);
         });
         marker.on('dragend', function (e) {
-            onPosition(marker.getLatLng(), e.target);
+            onPosition(map, marker.getLatLng(), e.target);
         });
     } else {
         mapRemove();
     }
-    return marker;
+    return {marker: marker, map: map};
 }
 
 // Remove the map
 function mapRemove() {
     // reset map
-    map = L.DomUtil.get('map');
+    var map = L.DomUtil.get('map');
 
     if(map != null){
         map._leaflet_id = null;
     }
     $('#map').remove();
+    $('#open-map').removeClass('hidden');
+    $('#close-map').addClass('hidden');
     $('.map-container').append('<div id="map" class="hidden"></div>');
 }
 
@@ -650,11 +656,11 @@ function placesInit() {
     });
 }
 
-function placesLocation(marker) {
+function placesLocation(map, marker) {
     //Algolia places configuration
     let placesAutocomplete = placesInit();
     placesAutocomplete.on('change', function (e) {
-        onPosition(e.suggestion.latlng, marker);
+        onPosition(map, e.suggestion.latlng, marker);
     });
     // algolia places search
     $locality.on('blur',function () {
@@ -664,7 +670,7 @@ function placesLocation(marker) {
         }).then(function (results) {
             let hits = results.hits;
             if (hits[0]) {
-                onPosition(hits[0]._geoloc, marker);
+                onPosition(map, hits[0]._geoloc, marker);
             }
         });
     });
@@ -683,20 +689,22 @@ function placesRemove() {
 
 // Location events management
 function onLocation() {
-    let marker = mapLocation();
+    let mapInfo = mapLocation(),
+        marker = mapInfo.marker,
+        map = mapInfo.map;
     // location fields filled
     $('#station_latitude, #station_longitude').on('blur', function() {
         let latitude = parseFloat($latitude.val()),
             longitude = parseFloat($longitude.val());
         if(!isNaN(latitude) && !isNaN(longitude)) {
-            onPosition({'lat': latitude,'lng': longitude}, marker);
+            onPosition(map, {'lat': latitude,'lng': longitude}, marker);
         }
     });
-    placesLocation(marker);
+    placesLocation(map, marker);
 }
 
 // Fills location fields when information is available
-function onPosition(position, marker = null) {
+function onPosition(map, position, marker = null) {
     let transmittedLatitude = Number.parseFloat(position.lat).toFixed(4),
         transmittedLongitude = Number.parseFloat(position.lng).toFixed(5),
         $addLoadingClassElements = $('#station_locality,#station_inseeCode').siblings('label');
