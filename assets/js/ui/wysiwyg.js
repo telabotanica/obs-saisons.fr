@@ -2,15 +2,40 @@ $( document ).ready( () => {
     const wysiwygs = Array.from( document.querySelectorAll( '.wysiwyg-editor' ) );
 
     if ( wysiwygs.length > 0 ) {
-        import( /* webpackChunkName: "ckeditor" */ '@ckeditor/ckeditor5-build-classic' ).then( ( { default: ClassicEditor } ) => {
+        import( /* webpackChunkName: "ckeditor" */ '@telabotanica/ckeditor5-build-ods' ).then( ( { default: ClassicEditor } ) => {
             wysiwygs.forEach( ( wysiwyg ) => {
                 const textarea    = wysiwyg.querySelector( 'textarea' );
                 textarea.required = false;
 
-                let toolbar = [ 'heading', '|',
-                    'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                    'mediaEmbed', 'insertTable', '|',
-                    'undo', 'redo' ];
+                let toolbar = [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    'underline',
+                    'link',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'fontFamily',
+                    'fontSize',
+                    'fontColor',
+                    '|',
+                    'removeFormat',
+                    '|',
+                    'alignment',
+                    'indent',
+                    'outdent',
+                    '|',
+                    'CKFinder',
+                    'imageUpload',
+                    'blockQuote',
+                    'insertTable',
+                    'mediaEmbed',
+                    '|',
+                    'undo',
+                    'redo'
+                ];
 
                 let extraPlugins = [];
 
