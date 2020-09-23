@@ -104,6 +104,8 @@ class ObservationType extends AbstractType
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'attr' => [
+                    // On safari input type date renders input type text
+                    // in this case french user provided date format is dd/mm/yyyy
                     'pattern' => '(^(((0[1-9]|1[0-9]|2[0-8])[\/](0[1-9]|1[012]))|((29|30|31)[\/](0[13578]|1[02]))|((29|30)[\/](0[4,6,9]|11)))[\/](19|[2-9][0-9])\d\d$)|(^29[\/]02[\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)',
                     'placeholder' => 'jj/mm/aaaa',
                 ],
@@ -175,9 +177,12 @@ class ObservationType extends AbstractType
             $this->previousPicture,
             $isDeletePicture// removal requested
         );
+        // On safari input type date renders input type text
+        // in this case french user provided date format is dd/mm/yyyy
         if (preg_match('/^([\d]{2}\/){2}[\d]{4}$/', $observation['date'])) {
             $frDateArray = array_reverse(explode('/', $observation['date']));
             $observation['date'] = implode('-', $frDateArray);
+            // validation : see src/Entity/Observation.php date has Assert/Range Annotation
         }
         $observation['picture'] = $this->picture;
         $formEvent->setData($observation);

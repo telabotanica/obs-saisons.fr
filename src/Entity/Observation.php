@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
@@ -41,6 +42,11 @@ class Observation
     private $picture;
 
     /**
+     * @Assert\Range(
+     *      min = "2006-01-01",
+     *      max = "now"
+     * )
+     *
      * @ORM\Column(type="date")
      */
     private $date;

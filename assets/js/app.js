@@ -258,7 +258,7 @@ function closeOverlay($overlay) {
         }
         $form.get(0).reset();
 
-        $overlay.find('option').removeAttr('hidden');
+        $overlay.find('option').removeAttr('hidden disabled');
 
         if ($overlay.hasClass('individual')) {
             individualOvelayManageSpecies($('.open-individual-form-all-station').data().species.toString(), true);
@@ -346,15 +346,17 @@ function editObservationPreSetFields(dataAttrs) {
         $individual
             .removeClass('disabled')
             .find('.individual-option.individual-'+observation.individual.id)
-            .prop('selected', true).attr('selected', 'selected')
             .prop('hidden', false).removeAttr('hidden')
+            .prop('disabled', false).removeAttr('disabled')
+            .prop('selected', true).attr('selected', 'selected')
         ;
         $individual.trigger('change');
         if (valOk(observation.event.id)) {
             $event
                 .find('.event-option.event-'+observation.event.id)
-                .prop('selected', true).attr('selected', 'selected')
                 .prop('hidden', false).removeAttr('hidden')
+                .prop('disabled', false).removeAttr('disabled')
+                .prop('selected', true).attr('selected', 'selected')
             ;
         }
         if (valOk(observation.date)) {
@@ -410,8 +412,9 @@ function editIndividualPreSetFields(dataAttrs) {
         $species.removeClass('disabled');
         if (valOk(individual.species.id)) {
             $('.species-option.species-'+individual.species.id)
-                .prop('selected', true).attr('selected', 'selected')
                 .prop('hidden', false).removeAttr('hidden')
+                .prop('disabled', false).removeAttr('disabled')
+                .prop('selected', true).attr('selected', 'selected')
             ;
         }
     }
@@ -431,8 +434,11 @@ function updateSelectOptions($selectEl, itemsToMatch, sortOptions = true) {
 
     $selectEl
         .toggleClass('disabled',(1 >= itemsToMatch.length && sortOptions))
-        .find('option').removeAttr('hidden selected')
-        .closest('form').get(0).reset();
+        .find('option')
+            .prop('hidden', false).removeAttr('hidden')
+            .prop('disabled', false).removeAttr('disabled')
+            .prop('selected', false).removeAttr('selected')
+            .closest('form').get(0).reset();
 
     if(sortOptions) {
         $('.' + selectName + '-option', $selectEl).each(function (i, element) {
@@ -443,7 +449,10 @@ function updateSelectOptions($selectEl, itemsToMatch, sortOptions = true) {
                     $element.prop('selected', true).attr('selected', 'selected');
                 }
             } else {
-                $element.prop('hidden', true).attr('hidden', 'hidden');
+                $element
+                    .prop('hidden', true).attr('hidden', 'hidden')
+                    .prop('disabled', true).attr('disabled', 'disabled')
+                ;
             }
         });
         if(1 === itemsToMatch.length) {
@@ -457,8 +466,9 @@ function onChangeSetIndividual() {
         let $selectedIndividual = $('.individual-option:selected', this);
 
         $event.find('.event-option')
-            .prop('hidden',true).attr('hidden','hidden')
             .prop('selected', false).removeAttr('selected')
+            .prop('hidden', true).attr('hidden','hidden')
+            .prop('disabled', true).attr('disabled','disabled')
         ;
 
         if (valOk($selectedIndividual)) {
@@ -472,8 +482,9 @@ function onChangeSetIndividual() {
                 $event
                     .addClass('disabled')
                     .find('.event-option.event-'+availableEvents[0])
-                        .prop('selected', true).attr('selected','selected')
                         .prop('hidden', false).removeAttr('hidden')
+                        .prop('disabled', false).removeAttr('disabled')
+                        .prop('selected', true).attr('selected','selected')
                         .data('picture', '/media/species/' + speciesPicture + '.jpg')
                 ;
                 if(0 < aberrationsDays.length) {
@@ -490,6 +501,7 @@ function onChangeSetIndividual() {
 
                     $eventOption
                         .prop('hidden', false).removeAttr('hidden')
+                        .prop('disabled', false).removeAttr('disabled')
                         .data('picture','/media/species/'+speciesPicture+eventPictureSuffix+'.jpg')
                     ;
                     if(0 < aberrationsDays.length) {
@@ -532,7 +544,6 @@ function setEventAberrationDaysDataAttr(eventId, aberrationsDays) {
 function onChangeObsEvent() {
     $event.off('change').on('change', function () {
         let isValidEvent = valOk($(this).val());
-
         updateHelpInfos(isValidEvent);
         if (isValidEvent) {
             if (valOk($observationDate.val())) {
@@ -564,7 +575,40 @@ function updateHelpInfos(isValidEvent) {
 function onChangeObsDate() {
 
     $observationDate.off('change').on('change', function () {
-        if(valOk($(this).val()) && valOk($event.val())) {
+
+        // front validation for safari input type date to type text
+        let date = $(this).val(),
+            isDateValid = valOk(date);
+
+        if (isDateValid && /^([\d]{2}\/){2}[\d]{4}$/.test(date)) {
+            let dateArray = date.split('/'),
+                now = new Date(),
+                minDate = new Date('2006-01-01'),
+                jsDate = new Date(dateArray.reverse().join('-'));
+            if(minDate > jsDate || now < jsDate) {
+                let message ='';
+                if (minDate > jsDate) {
+                    message = 'Cette date est antérieure au programme ODS';
+                } else {
+                    message = 'Cette date est postérieure à aujourd’hui';
+                }
+                $(this)
+                    .val('')
+                    .after(
+                        '<p class="invalid-date field-help-text help-text" style="color:red;">' + message + '</p>'
+                    )
+                ;
+                setTimeout(function () {
+                    $('.invalid-date').hide(200, function () {
+                        $(this).remove();
+                    });
+                }, 3000);
+
+            }
+        }
+
+        // check aberration dates
+        if(isDateValid && valOk($event.val())) {
             checkAberrationsObsDays();
         }
     });
