@@ -8,57 +8,37 @@ $( document ).ready( () => {
                 textarea.required = false;
 
                 let toolbar = [
-                    'heading',
-                    '|',
-                    'bold',
-                    'italic',
-                    'underline',
-                    'link',
-                    'bulletedList',
-                    'numberedList',
-                    '|',
-                    'fontFamily',
-                    'fontSize',
-                    'fontColor',
-                    '|',
-                    'removeFormat',
-                    '|',
-                    'alignment',
-                    'indent',
-                    'outdent',
-                    '|',
-                    'CKFinder',
-                    'imageUpload',
-                    'blockQuote',
-                    'insertTable',
-                    'mediaEmbed',
-                    '|',
-                    'undo',
-                    'redo'
+                    'heading', '|',
+                    'bold', 'italic', 'underline', 'link', 'bulletedList', 'numberedList', '|',
+                    'fontFamily', 'fontSize', 'fontColor', '|',
+                    'removeFormat', '|',
+                    'alignment', 'indent', 'outdent', '|',
+                    'blockQuote', 'insertTable', 'mediaEmbed', '|',
+                    'undo', 'redo'
                 ];
 
-                let extraPlugins = [];
-
-                function UploadAdapterPlugin( editor ) {
-                    editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
-                        const uploadURL = wysiwyg.getAttribute( 'data-upload' );
-
-                        return new UploadAdapter( loader, uploadURL );
-                    };
-                }
+                let simpleUpload = {};
 
                 if ( wysiwyg.getAttribute( 'data-upload' ) ) {
-                    toolbar      = [ 'heading', '|',
-                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'imageUpload', 'mediaEmbed', 'insertTable', '|',
-                        'undo', 'redo' ];
-                    extraPlugins = [ UploadAdapterPlugin ];
+                    toolbar = [
+                        'heading', '|',
+                        'bold', 'italic', 'underline', 'link', 'bulletedList', 'numberedList', '|',
+                        'fontFamily', 'fontSize', 'fontColor', '|',
+                        'removeFormat', '|',
+                        'alignment', 'indent', 'outdent', '|',
+                        'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
+                        'undo', 'redo'
+                    ];
+
+                    simpleUpload = {
+                        uploadUrl: wysiwyg.getAttribute( 'data-upload' ),
+                    }
                 }
 
                 ClassicEditor
                     .create( textarea, {
                         toolbar:      toolbar,
-                        extraPlugins: extraPlugins,
+                        simpleUpload: simpleUpload,
                         height:       '500px',
                     } )
                     .then( editor => {

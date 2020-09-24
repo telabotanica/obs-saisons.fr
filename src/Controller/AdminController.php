@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AdminController extends AbstractController
 {
@@ -48,7 +49,8 @@ class AdminController extends AbstractController
         $mode,
         Request $request,
         EntityManagerInterface $manager,
-        SlugGenerator $slugGenerator
+        SlugGenerator $slugGenerator,
+        UrlGeneratorInterface $router
     ) {
         $species = $manager->getRepository(Species::class)->find($speciesId);
 
@@ -84,6 +86,7 @@ class AdminController extends AbstractController
             'species' => $species,
             'editMode' => $mode,
             'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
         ]);
     }
 
@@ -109,7 +112,8 @@ class AdminController extends AbstractController
         $slug,
         $mode,
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        UrlGeneratorInterface $router
     ) {
         if (!in_array($slug, BreadcrumbsGenerator::EDITABLE_PAGES)) {
             throw new \Exception('Slug is not part of the menu');
@@ -144,6 +148,7 @@ class AdminController extends AbstractController
             'page' => $page,
             'editMode' => $mode,
             'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
         ]);
     }
 
