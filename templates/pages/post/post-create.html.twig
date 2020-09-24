@@ -6,7 +6,8 @@
             <section class="group-form">
                 {% include 'forms/post/post-form.html.twig' with ({
                     'form':form,
-                    'form_submit':'Enregistrer l’article'
+                    'form_submit':'Enregistrer l’article',
+                    'upload':upload
                 }) %}
             </section>
 {% endblock %}

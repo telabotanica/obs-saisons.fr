@@ -8,7 +8,7 @@
         {{ form_label(form.title, 'Article') }}
         {{ form_widget(form.title, {'attr': {'placeholder': 'Entrez le titre de votre article ici…'}}) }}
     </div>
-    <div class="form-row form-row__field wysiwyg-editor">
+    <div class="form-row form-row__field wysiwyg-editor" data-upload="{{ upload }}">
         {{ form_label(form.content, 'Article') }}
         {{ form_widget(form.content, {'attr': {'placeholder': 'Saississez votre contenu ici…'}}) }}
     </div>

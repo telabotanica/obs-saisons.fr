@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class PostsController.
@@ -86,7 +87,8 @@ class PostsController extends AbstractController
     public function postNew(
         Request $request,
         EntityManagerInterface $manager,
-        SlugGenerator $slugGenerator
+        SlugGenerator $slugGenerator,
+        UrlGeneratorInterface $router
     ) {
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
@@ -111,6 +113,7 @@ class PostsController extends AbstractController
         return $this->render('pages/post/post-create.html.twig', [
             'post' => $post,
             'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
         ]);
     }
 
