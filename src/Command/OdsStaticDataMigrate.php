@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use App\Helper\ImportCommandTrait;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,12 +14,8 @@ class OdsStaticDataMigrate extends Command
 
     protected static $defaultName = 'ods:bootstrap:all-static-data';
 
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct()
     {
-        $this->em = $em;
-
         parent::__construct();
     }
 
