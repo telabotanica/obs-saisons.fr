@@ -144,7 +144,7 @@ class EntityJsonSerialize
         return $serializer->serialize($user, 'json', $context);
     }
 
-    public function entityObjectIdCallback($entityObject)
+    public function entityObjectIdCallback(object $entityObject)
     {
         return ['id' => $entityObject->getId()];
     }
