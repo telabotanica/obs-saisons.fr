@@ -9,8 +9,8 @@ class BreadcrumbsGenerator
 {
     const MENU = [
         'a-propos' => 'À propos',
-        'actualites' => 'Actualités',
-        'evenements' => 'Évènements',
+        'news_posts_list' => 'Actualités',
+        'event-posts-list' => 'Évènements',
         'especes' => 'Espèces à Observer',
         'participer' => 'Participer',
         'resultats' => 'Résultats',

@@ -177,13 +177,7 @@ class ObservationType extends AbstractType
             $this->previousPicture,
             $isDeletePicture// removal requested
         );
-        // On safari input type date renders input type text
-        // in this case french user provided date format is dd/mm/yyyy
-        if (preg_match('/^([\d]{2}\/){2}[\d]{4}$/', $observation['date'])) {
-            $frDateArray = array_reverse(explode('/', $observation['date']));
-            $observation['date'] = implode('-', $frDateArray);
-            // validation : see src/Entity/Observation.php date has Assert/Range Annotation
-        }
+        $observation['date'] = (new HandleDateTime())->browserSupportDate($observation['date']);
         $observation['picture'] = $this->picture;
         $formEvent->setData($observation);
     }

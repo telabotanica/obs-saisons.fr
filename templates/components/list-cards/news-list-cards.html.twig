@@ -1,22 +1,31 @@
-{#
-    *: required
+<div id="{{ newsPost.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
 
-    id*: int
-    article*: object (Post article)
-#}
-<div id="{{ article.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
+    <div class="list-card-img {{ newsPost.cover is not defined ? 'bg-default' }}" style="{{ newsPost.cover is defined ? "background-image: url(#{newsPost.cover})" }}"></div>
 
-    <div class="list-card-img {{ article.cover is not defined ? 'bg-default' }}" style="{{ article.cover is defined ? "background-image: url(#{article.cover})" }}"></div>
-
-    <a href="{{ path('actualites_show', {'slug': article.slug}) }}" class="item-name-block">
-        <div class="item-heading-dropdown ">{{ article.title|raw }}</div>
+    <a href="{{ path('news_post_single_show', {'slug': newsPost.slug}) }}" class="item-name-block">
+        <div class="item-heading-dropdown ">{{ newsPost.title|raw }}</div>
     </a>
 
     <div class="item-details">
         <div>
-            <a href="{{ path('user_profile',{userId:article.author.id}) }}" class="bolder">{{ article.author.displayName }}</a>
-            - {{ article.createdAt|date("j/m/Y") }}
+            <a href="{{ path('user_profile',{userId:newsPost.author.id}) }}" class="bolder">{{ newsPost.author.displayName }}</a>
+            - {{ newsPost.createdAt|date("j/m/Y") }}
         </div>
     </div>
-
+    {% if is_granted('ROLE_ADMIN') %}
+        {% include 'components/buttons/dual-squared-button.html.twig' with {
+            buttons: [
+                {
+                    'icon': 'edit-list',
+                    'label': 'Modifier',
+                    'url' : path('news_post_edit', {postId:newsPost.id})
+                },
+                {
+                    'icon': 'delete',
+                    'label': 'Supprimer',
+                    'url' : path('post_delete', {postId:newsPost.id})
+                }
+            ]
+        } %}
+    {% endif %}
 </div>

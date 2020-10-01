@@ -3,23 +3,29 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false, hardDelete=false)
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  */
 class Post
 {
+    public const STATUS_PENDING = 0;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_DELETED = 2;
+
     const CATEGORY_NEWS = 'news';
     const CATEGORY_SPECIES = 'species';
     const CATEGORY_EVENT = 'event';
     const CATEGORY_PAGE = 'page';
 
-    const CATEGORY_CHOICES = [
-        'Actualité' => self::CATEGORY_NEWS,
-        'Fiche espèce' => self::CATEGORY_SPECIES,
-        'Évènement' => self::CATEGORY_EVENT,
-        'Page' => self::CATEGORY_PAGE,
+    const CATEGORY_PARENT_ROUTE = [
+        self::CATEGORY_NEWS => 'news_posts_list',
+        self::CATEGORY_SPECIES => 'especes',
+        self::CATEGORY_EVENT => 'event-posts-list',
+        self::CATEGORY_PAGE => 'homepage',
     ];
 
     /**
@@ -50,11 +56,13 @@ class Post
     private $content;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
@@ -80,11 +88,19 @@ class Post
     private $location;
 
     /**
+     * @Assert\Range(
+     *      min = "2006-01-01"
+     * )
+     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $startDate;
 
     /**
+     * @Assert\Range(
+     *      min = "now"
+     * )
+     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $endDate;
@@ -98,6 +114,11 @@ class Post
      * )
      */
     private $pdfUrl;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $status;
 
     public function getId(): ?int
     {
@@ -114,7 +135,7 @@ class Post
      */
     public function setCategory(string $category): self
     {
-        if (!in_array($category, self::CATEGORY_CHOICES)) {
+        if (!array_key_exists($category, self::CATEGORY_PARENT_ROUTE)) {
             throw new \InvalidArgumentException(sprintf('Category "%s" in not allowed', $category));
         }
 
@@ -300,6 +321,18 @@ class Post
     public function setPdfUrl(?string $pdfUrl): self
     {
         $this->pdfUrl = $pdfUrl;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -105,6 +105,7 @@ class OdsImportSpeciesPostsCommand extends Command
                 $speciesPost->setTitle('Fiche espèce '.$species->getScientificName());
                 $speciesPost->setCreatedAt(new \DateTime());
                 $speciesPost->setSlug($this->slugGenerator->generateSlug($speciesPost->getTitle(), $speciesPost->getCreatedAt()));
+                $speciesPost->setStatus(Post::STATUS_ACTIVE);
                 $this->em->persist($speciesPost);
                 $species->setPost($speciesPost);
             }

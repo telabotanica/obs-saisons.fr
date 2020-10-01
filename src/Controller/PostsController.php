@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-use App\Form\PostType;
-use App\Security\Voter\UserVoter;
+use App\Entity\User;
+use App\Form\EventPostType;
+use App\Form\NewsPostType;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -21,26 +24,26 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PostsController extends AbstractController
 {
     /* ************************************************ *
-     * actualites
+     * news list
      * ************************************************ */
 
     /**
-     * @Route("/actualites/{page<\d+>}", name="actualites")
+     * @Route("/actualites/{page<\d+>}", name="news_posts_list")
      */
-    public function actualitesIndex(
+    public function newsPostsList(
         Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
     ) {
         $limit = 10;
-        $articleRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_NEWS);
-        $articles = $articleRepository->findAllPaginatedPosts($page, $limit);
-        $lastPage = ceil(count($articleRepository->findAll()) / $limit);
+        $newsPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_NEWS);
+        $newsPosts = $newsPostRepository->findAllPaginatedPosts($page, $limit);
+        $lastPage = ceil(count($newsPostRepository->findAll()) / $limit);
 
-        return $this->render('pages/actualites.html.twig', [
+        return $this->render('pages/post/news-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
-            'articles' => $articles,
+            'newsPosts' => $newsPosts,
             'pagination' => [
                 'currentPage' => $page,
                 'lastPage' => $lastPage,
@@ -49,163 +52,187 @@ class PostsController extends AbstractController
     }
 
     /* ************************************************ *
-     * article
+     * news
      * ************************************************ */
 
     /**
-     * @Route("/actualites/{slug<\d*\/\d*\/.+>}", name="actualites_show")
+     * @Route("/actualites/{slug<\d*\/\d*\/.+>}", name="news_post_single_show")
      */
-    public function articlePage(
+    public function newsPostSingle(
         Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
     ) {
-        $articleRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_NEWS);
-        $article = $articleRepository->findBySlug($slug);
-        if (null === $article) {
+        $newsPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_NEWS);
+        $newsPost = $newsPostRepository->findBySlug($slug);
+        if (null === $newsPost) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
         }
 
-        $nextPreviousArticles = $articleRepository->findNextPrevious($article->getId());
+        $nextPreviousNewsPosts = $newsPostRepository->findNextPrevious($newsPost->getId());
 
         $activePageBreadCrumb = [
             'slug' => $slug,
-            'title' => $article->getTitle(),
+            'title' => $newsPost->getTitle(),
         ];
 
-        return $this->render('pages/article.html.twig', [
+        return $this->render('pages/post/news-post-single.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
-            'article' => $article,
-            'nextPreviousArticles' => $nextPreviousArticles,
+            'post' => $newsPost,
+            'nextPreviousNewsPosts' => $nextPreviousNewsPosts,
         ]);
     }
 
     /**
-     * @Route("/actualites/new", name="post_create")
+     * @Route("/actualites/new", name="news_post_create")
+     *
+     * @return RedirectResponse|Response
      */
-    public function postNew(
+    public function newsPostNew(
         Request $request,
         EntityManagerInterface $manager,
         SlugGenerator $slugGenerator,
         UrlGeneratorInterface $router
     ) {
-        $this->denyAccessUnlessGranted(UserVoter::LOGGED);
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
-        $post = new Post();
+        $newsPost = new Post();
+        $newsPost->setCategory(Post::CATEGORY_NEWS);
 
-        $form = $this->createForm(PostType::class, $post);
+        $form = $this->createForm(NewsPostType::class, $newsPost);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $post->setAuthor($this->getUser());
-            $post->setCreatedAt(new \DateTime());
-            $post->setSlug($slugGenerator->generateSlug($post->getTitle(), $post->getCreatedAt()));
+            $newsPost->setSlug($slugGenerator->generateSlug($newsPost->getTitle(), $newsPost->getCreatedAt()));
 
-            $manager->persist($post);
+            $manager->persist($newsPost);
             $manager->flush();
 
             $this->addFlash('notice', 'L’article a été créé');
 
-            return $this->redirectToRoute('actualites');
+            return $this->redirectToRoute('news_post_preview', [
+                'postId' => $newsPost->getId(),
+            ]);
         }
 
-        return $this->render('pages/post/post-create.html.twig', [
-            'post' => $post,
+        return $this->render('pages/post/news-post-create.html.twig', [
+            'post' => $newsPost,
             'form' => $form->createView(),
             'upload' => $router->generate('image_create'),
         ]);
     }
 
     /**
-     * @Route("/actualites/{postId}/edit", name="post_edit")
+     * @Route("/actualites/{postId}/edit", name="news_post_edit")
      */
-    public function postEdit(
-        $postId,
+    public function newsPostEdit(
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        UrlGeneratorInterface $router,
+        int $postId
     ) {
-        $this->denyAccessUnlessGranted(UserVoter::LOGGED);
-
-        $post = $manager->getRepository(Post::class)
+        $newsPost = $manager->getRepository(Post::class)
             ->find($postId);
 
-        if (!$post) {
+        if (!$newsPost) {
             throw $this->createNotFoundException('L’article n’existe pas');
         }
 
-        $form = $this->createForm(PostType::class, $post);
+        $this->denyAccessUnlessGranted(
+            User::ROLE_ADMIN,
+            $newsPost,
+            'Vous n’êtes pas autorisé à modifier cet article'
+        );
+
+        if (Post::CATEGORY_NEWS !== $newsPost->getCategory()) {
+            throw $this->createAccessDeniedException('Votre demande d’édition ne correspond pas à un article.');
+        }
+
+        $form = $this->createForm(NewsPostType::class, $newsPost);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $post->setEditedAt(new \DateTime());
-
             $manager->flush();
 
             $this->addFlash('notice', 'L’article a été modifié');
 
-            return $this->redirectToRoute('actualites');
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'success' => true,
+                    'redirect' => $this->generateUrl('news_posts_list'),
+                ]);
+            }
+
+            return $this->redirectToRoute('news_post_preview', [
+                'postId' => $newsPost->getId(),
+            ]);
         }
 
-        return $this->render();
+        return $this->render('pages/post/news-post-create.html.twig', [
+            'post' => $newsPost,
+            'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
+        ]);
     }
 
     /**
-     * @Route("/actualites/{postId}/delete", name="post_delete")
+     * @Route("/actualites/{postId}/preview", name="news_post_preview")
      */
-    public function postDelete(
-        $postId,
-        Request $request,
-        EntityManagerInterface $manager
+    public function newsPostPreview(
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        int $postId
     ) {
-        $post = $manager->getRepository(Post::class)
+        $newsPost = $manager->getRepository(Post::class)
             ->find($postId);
 
-        if (!$post) {
-            throw $this->createNotFoundException('L’article n’existe pas');
+        if (null === $newsPost) {
+            throw new NotFoundHttpException('L’article demandé n’existe pas');
         }
 
-        $form = $this->createFormBuilder()
-            ->add('submit', SubmitType::class)
-            ->getForm();
-        $form->handleRequest($request);
+        $this->denyAccessUnlessGranted(
+            User::ROLE_ADMIN,
+            $newsPost,
+            'Vous n’êtes pas autorisé à publier cet article'
+        );
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $manager->remove($post);
-            $manager->flush();
+        $activePageBreadCrumb = [
+            'slug' => $newsPost->getSlug(),
+            'title' => $newsPost->getTitle(),
+        ];
 
-            $this->addFlash('notice', 'L’article a été supprimé');
-
-            return $this->redirectToRoute('actualites');
-        }
-
-        return $this->render('pages/confirm.html.twig', [
-            'form' => $form->createView(),
+        return $this->render('pages/post/news-post-preview.html.twig', [
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(
+                Post::CATEGORY_PARENT_ROUTE[$newsPost->getCategory()],
+                $activePageBreadCrumb
+            ),
+            'post' => $newsPost,
         ]);
     }
 
     /* ************************************************ *
-     * evenements
+     * events
      * ************************************************ */
 
     /**
-     * @Route("/evenements/{page<\d+>}", name="evenements")
+     * @Route("/evenements/{page<\d+>}", name="event-posts-list")
      */
-    public function evenementsIndex(
+    public function eventPostsList(
         Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
     ) {
         $limit = 10;
-        $eventRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_EVENT);
-        $events = $eventRepository->findAllPaginatedPosts($page, $limit);
-        $lastPage = ceil(count($eventRepository->findAll()) / $limit);
+        $eventPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_EVENT);
+        $eventPosts = $eventPostRepository->findAllPaginatedPosts($page, $limit);
+        $lastPage = ceil(count($eventPostRepository->findAll()) / $limit);
 
-        return $this->render('pages/evenements.html.twig', [
+        return $this->render('pages/post/event-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
-            'events' => $events,
+            'eventPosts' => $eventPosts,
             'pagination' => [
                 'currentPage' => $page,
                 'lastPage' => $lastPage,
@@ -218,31 +245,217 @@ class PostsController extends AbstractController
      * ************************************************ */
 
     /**
-     * @Route("/evenements/{slug<\d*\/?\d*\/?.+>}", name="evenements_show")
+     * @Route("/evenements/new", name="event_post_create")
      */
-    public function eventPage(
+    public function eventPostNew(
+        Request $request,
+        EntityManagerInterface $manager,
+        SlugGenerator $slugGenerator,
+        UrlGeneratorInterface $router
+    ) {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        $eventPost = new Post();
+        $eventPost->setCategory(Post::CATEGORY_EVENT);
+
+        $form = $this->createForm(EventPostType::class, $eventPost);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $eventPost->setSlug($slugGenerator->generateSlug($eventPost->getTitle(), $eventPost->getCreatedAt()));
+
+            $manager->persist($eventPost);
+            $manager->flush();
+
+            $this->addFlash('notice', 'L’évènement a été créé');
+
+            return $this->redirectToRoute('event_post_preview', [
+                'postId' => $eventPost->getId(),
+            ]);
+        }
+
+        return $this->render('pages/post/event-post-create.html.twig', [
+            'post' => $eventPost,
+            'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
+        ]);
+    }
+
+    /**
+     * @Route("/evenements/{postId}/edit", name="event_post_edit")
+     */
+    public function eventPostEdit(
+        Request $request,
+        EntityManagerInterface $manager,
+        UrlGeneratorInterface $router,
+        int $postId
+    ) {
+        $eventPost = $manager->getRepository(Post::class)
+            ->find($postId);
+
+        if (!$eventPost) {
+            throw $this->createNotFoundException('L’article n’existe pas');
+        }
+
+        $this->denyAccessUnlessGranted(
+            User::ROLE_ADMIN,
+            $eventPost,
+            'Vous n’êtes pas autorisé à modifier cet évènement'
+        );
+
+        if (Post::CATEGORY_EVENT !== $eventPost->getCategory()) {
+            throw $this->createAccessDeniedException('Votre demande d’édition ne correspond pas à un évènement.');
+        }
+
+        $form = $this->createForm(EventPostType::class, $eventPost);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->flush();
+
+            $this->addFlash('notice', 'L’évènement a été modifié');
+
+            return $this->redirectToRoute('event_post_preview', [
+                'postId' => $eventPost->getId(),
+            ]);
+        }
+
+        return $this->render('pages/post/event-post-create.html.twig', [
+            'post' => $eventPost,
+            'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
+        ]);
+    }
+
+    /**
+     * @Route("/evenements/{postId}/preview", name="event_post_preview")
+     */
+    public function eventPostPreview(
+        EntityManagerInterface $manager,
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        int $postId
+    ) {
+        $eventPost = $manager->getRepository(Post::class)
+            ->find($postId);
+
+        if (null === $eventPost) {
+            throw new NotFoundHttpException('L’évènement demandé n’existe pas');
+        }
+
+        $this->denyAccessUnlessGranted(
+            User::ROLE_ADMIN,
+            $eventPost,
+            'Vous n’êtes pas autorisé à publier cet évènement'
+        );
+
+        $activePageBreadCrumb = [
+            'slug' => $eventPost->getSlug(),
+            'title' => $eventPost->getTitle(),
+        ];
+
+        return $this->render('pages/post/event-post-preview.html.twig', [
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(
+                Post::CATEGORY_PARENT_ROUTE[$eventPost->getCategory()],
+                $activePageBreadCrumb,
+                ),
+            'post' => $eventPost,
+        ]);
+    }
+
+    /**
+     * @Route("/evenements/{slug<\d*\/?\d*\/?.+>}", name="event_post_single_show")
+     */
+    public function eventPostSingle(
         Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
     ) {
-        $eventRepository = $manager->getRepository(Post::class)->setPosts(Post::CATEGORY_EVENT);
-        $event = $eventRepository->findBySlug($slug);
-        if (null === $event) {
+        $eventPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_EVENT);
+        $eventPost = $eventPostRepository->findBySlug($slug);
+        if (null === $eventPost) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
         }
 
-        $nextPreviousEvents = $eventRepository->findNextPrevious($event->getId());
+        $nextPreviousEventsPosts = $eventPostRepository->findNextPrevious($eventPost->getId());
 
         $activePageBreadCrumb = [
             'slug' => $slug,
-            'title' => $event->getTitle(),
+            'title' => $eventPost->getTitle(),
         ];
 
-        return $this->render('pages/event.html.twig', [
+        return $this->render('pages/post/event-post-single.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
-            'event' => $event,
-            'nextPreviousEvents' => $nextPreviousEvents,
+            'post' => $eventPost,
+            'nextPreviousEventsPosts' => $nextPreviousEventsPosts,
         ]);
+    }
+
+    /* ************************************************ *
+     * delete post
+     * ************************************************ */
+
+    /**
+     * @Route("/publications/{postId}/delete", name="post_delete")
+     */
+    public function postDelete(
+        EntityManagerInterface $manager,
+        int $postId
+    ) {
+        $post = $manager->getRepository(Post::class)
+            ->find($postId);
+
+        if (!$post) {
+            throw $this->createNotFoundException('La publication n’existe pas');
+        }
+
+        $this->denyAccessUnlessGranted(
+            User::ROLE_ADMIN,
+            $post,
+            'Vous n’êtes pas autorisé à supprimer cette publication'
+        );
+        $post->setStatus(Post::STATUS_DELETED);
+        $manager->remove($post);
+        $manager->flush();
+
+        $this->addFlash('notice', 'La publication a été supprimée');
+
+        return $this->redirectToRoute(
+            Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]
+        );
+    }
+
+    /* ************************************************ *
+     * activate post
+     * ************************************************ */
+
+    /**
+     * @Route("/publications/{postId}/publish", name="post_publish")
+     */
+    public function postPublish(
+        EntityManagerInterface $manager,
+        int $postId
+    ) {
+        $post = $manager->getRepository(Post::class)
+            ->find($postId);
+
+        if (!$post) {
+            throw $this->createNotFoundException('La publication n’existe pas');
+        }
+
+        $this->denyAccessUnlessGranted(
+            User::ROLE_ADMIN,
+            $post,
+            'Vous n’êtes pas autorisé à activer cette publication'
+        );
+        $post->setStatus(Post::STATUS_ACTIVE);
+        $manager->flush();
+
+        $this->addFlash('notice', 'La publication a été activée');
+
+        return $this->redirectToRoute(
+            Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]
+        );
     }
 }

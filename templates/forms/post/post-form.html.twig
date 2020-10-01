@@ -1,22 +1,43 @@
-{{ form_start(form) }}
-<div class="form-row__mandatory">Champs obligatoires *</div>
-    <div class="form-row form-row__field">
-        {{ form_label(form.category, 'Catégorie') }}
-        {{ form_widget(form.category) }}
-    </div>
-    <div class="form-row form-row__field">
-        {{ form_label(form.title, 'Article') }}
-        {{ form_widget(form.title, {'attr': {'placeholder': 'Entrez le titre de votre article ici…'}}) }}
-    </div>
-    <div class="form-row form-row__field wysiwyg-editor" data-upload="{{ upload }}">
-        {{ form_label(form.content, 'Article') }}
-        {{ form_widget(form.content, {'attr': {'placeholder': 'Saississez votre contenu ici…'}}) }}
-    </div>
+{% extends 'forms/base.html.twig' %}
+{% block form_title%}
+    {{ title|default }}
+{% endblock %}
 
-<div class="form-row form-row__submit">
-    {{ form_widget(form.submit, {'label': form_submit}) }}
-    {% if (delete is defined) and (delete) and is_granted(constant('App\\Security\\GroupArticleVoter::DELETE'), article) %}
-        <a class="cta__inverted" href="{{ path('post_delete', {'groupSlug':group.slug, 'articleSlug':article.slug}) }}">Supprimer</a>
+{% block form %}
+
+    {% block post_fields %}{% endblock %}
+
+    {{ form_row(form.post_fields.title, {
+        'row_attr': {'class': 'form-col'},
+        'label': 'Titre *',
+        'attr': {
+            'class': 'text-field ods-input',
+            'max': '100',
+            'data-name': 'title',
+            'placeholder': 'Entrez le titre de votre article ici…'
+        }
+    }) }}
+    {{ form_row(form.post_fields.content, {
+        'row_attr': {
+            'class': 'form-col wysiwyg-editor',
+            'data-upload': upload
+        },
+        'label': 'Contenu *',
+        'attr': {
+            'class': 'textarea-field text-field ods-input',
+            'data-name': 'content',
+            'placeholder': 'Saississez le contenu de l’article ici…'
+        }
+    }) }}
+
+{% endblock %}
+{% block form_footer %}
+    {% if post.id is not null and is_granted('ROLE_ADMIN') %}
+        <a class="button bt-form bt-supprimer delete-button" href="{{ path('post_delete', {postId:post.id}) }}">Supprimer</a>
     {% endif %}
-</div>
-{{ form_end(form) }}
+    <a href="{{ path(constant('App\\Entity\\Post::CATEGORY_PARENT_ROUTE')[post.category]) }}" class="button bt-form bt-annuler">Annuler</a>
+    <input type="hidden" name="action" value="{{ action }}">
+    <button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
+        Enregistrer
+    </button>
+{% endblock %}

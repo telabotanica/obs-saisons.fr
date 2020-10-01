@@ -36,6 +36,7 @@
 		max-height: none;
 		border-radius: unset;
 		padding-bottom: 0;
+		overflow: unset;
 
 		.saisie-footer {
 			position: static;
@@ -201,7 +202,7 @@
 	z-index: 1001 !important;
 }
 
-#search {
+.ods-places {
 	padding-right: 31px;
 }
 

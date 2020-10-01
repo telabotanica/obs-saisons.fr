@@ -1,34 +1,42 @@
-{#
-    *: required
-    [int..int]: array indexes ([...] if no precise length defined)
-
-    id*: int
-    event*: object (Post event)
-
-#}
-{% set event_dates = [event.startDate] %}
-{% if event.endDate != event.startDate %}
-    {% set event_dates = event_dates|merge([event.endDate]) %}
+{% set eventPostDates = [eventPost.startDate] %}
+{% if eventPost.endDate != eventPost.startDate %}
+    {% set eventPostDates = eventPostDates|merge([eventPost.endDate]) %}
 {% endif %}
-<div id="{{ event.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
+<div id="{{ eventPost.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
     <div class="dual-blocks-container">
-        {% for date in event_dates %}
+        {% for date in eventPostDates %}
             <div class="event-date {{ loop.index == 2 ? 'last' }}">
                 {{ date|date("j") }}<br>{{ date|date("M") }}
             </div>
         {% endfor %}
     </div>
 
-    <a href="{{ path('evenements_show', {'slug': event.slug}) }}" class="item-name-block">
-        <div class="item-heading-dropdown ">{{ event.title|raw }}</div>
-        <div class="item-name pointer-orange-icon">{{ event.location }}</div>
+    <a href="{{ path('event_post_single_show', {'slug': eventPost.slug}) }}" class="item-name-block">
+        <div class="item-heading-dropdown ">{{ eventPost.title|raw }}</div>
+        <div class="item-name pointer-orange-icon">{{ eventPost.location }}</div>
     </a>
 
     <div class="item-details">
         <div>
-            <a href="" class="bolder">{{ event.author.getDisplayName() }}</a>
-            - {{ event.createdAt|date("j/m/Y") }}
+            <a href="" class="bolder">{{ eventPost.author.getDisplayName() }}</a>
+            - {{ eventPost.createdAt|date("j/m/Y") }}
         </div>
     </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        {% include 'components/buttons/dual-squared-button.html.twig' with {
+            buttons: [
+                {
+                    'icon': 'edit-list',
+                    'label': 'Modifier',
+                    'url' : path('event_post_edit', {postId:eventPost.id})
+                },
+                {
+                    'icon': 'delete',
+                    'label': 'Supprimer',
+                    'url' : path('post_delete', {postId:eventPost.id})
+                }
+            ]
+        } %}
+    {% endif %}
 
 </div>

@@ -1,0 +1,10 @@
+<div class="linked-post">
+    {% if newsPost is not empty %}
+        <a href="{{ path('news_post_single_show', {'slug':newsPost.slug}) }}" class="linked-post-title"><h4>{{ newsPost.title }}</h4></a>
+        <div class="linked-post-date">
+            Le {{ newsPost.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}
+        </div>
+    {% else %}
+        <a href="{{ path('news_posts_list') }}" class="linked-post-title">Revenir aux <h4>Actualités</h4></a>
+    {% endif %}
+</div>

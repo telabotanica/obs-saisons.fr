@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block content %}
-	{% if lastArticles[0] %}
+	{% if lastNewsPosts[0] %}
 		<div class="actus-une">
-			{% for lastArticle in lastArticles %}
-				<div class="actus-une-img {{ not loop.first ? 'hidden' }}" style="background-image: url({{ lastArticle.cover }});"></div>
+			{% for lastNewsPost in lastNewsPosts %}
+				<div class="actus-une-img {{ not loop.first ? 'hidden' }}" style="background-image: url({{ lastNewsPost.cover }});"></div>
 			{% endfor %}
 			<div class="actus-une-content">
 				<div class="content-narrow-header bottom-div">
@@ -13,19 +13,19 @@
 						'directions': ['prev', 'next'],
 					}} %}
 				</div>
-				{% for lastArticle in lastArticles %}
-					<a href="{{ path("actualites_show", {'slug': lastArticle.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
-						<h4 class="actus-une-title">{{ lastArticle.title }}</h4>
-						<div class="actus-une-date">{{ lastArticle.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
+				{% for lastNewsPost in lastNewsPosts %}
+					<a href="{{ path("news_post_single_show", {'slug': lastNewsPost.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
+						<h4 class="actus-une-title">{{ lastNewsPost.title }}</h4>
+						<div class="actus-une-date">{{ lastNewsPost.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
 					</a>
 				{% endfor %}
-				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'actualites', button_label: 'toutes les actualités'} %}
+				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'news_posts_list', button_label: 'toutes les actualités'} %}
 			</div>
 		</div>
 	{% endif %}
 
 	<div class="content home">
-		<div class="content-une-block" {{ false == lastEvents[0] ? 'style=width:100%;'}}>
+		<div class="content-une-block" {{ false == lastEventPosts[0] ? 'style=width:100%;'}}>
 			<img src="{{ asset('media/layout/Fichier 3.svg') }}" alt="" class="content-block-img" height="50">
 			<div class="content-block-infos">
 				<h3 class="content-narrow-title dark">Comment participer ?</h3>
@@ -36,7 +36,7 @@
 				</a>
 			</div>
 		</div>
-		{% if lastEvents[0] %}
+		{% if lastEventPosts[0] %}
 			<div class="next-event">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title orange">Évènements</h4>
@@ -47,16 +47,16 @@
 						'borders': 'light'
 					}} %}
 				</div>
-				{% for lastEvent in lastEvents %}
-					<a href="{{ path("evenements_show", {'slug': lastEvent.slug}) }}" class="next-event-container {{ not loop.first ? 'hidden' }}">
-						<div class="next-event-descr">{{ lastEvent.title }}</div>
+				{% for lastEventPost in lastEventPosts %}
+					<a href="{{ path("event_post_single_show", {'slug': lastEventPost.slug}) }}" class="next-event-container {{ not loop.first ? 'hidden' }}">
+						<div class="next-event-descr">{{ lastEventPost.title }}</div>
 						<div>
-							<h5 class="next-event-title">{{ eventDatesDisplay(lastEvent.startDate,lastEvent.endDate) }}</h5>
-							<div class="next-event-city">{{ lastEvent.location }}</div>
+							<h5 class="next-event-title">{{ eventDatesDisplay(lastEventPost.startDate,lastEventPost.endDate) }}</h5>
+							<div class="next-event-city">{{ lastEventPost.location }}</div>
 						</div>
 					</a>
 				{% endfor %}
-				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'evenements', button_label: 'tous les évènements', button_color: 'orange'} %}
+				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'event-posts-list', button_label: 'tous les évènements', button_color: 'orange'} %}
 			</div>
 		{% endif %}
 	</div>

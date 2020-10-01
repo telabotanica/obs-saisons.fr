@@ -24,4 +24,14 @@ class HandleDateTime
             $pattern
         );
     }
+
+    public function browserSupportDate(string $date)
+    {
+        if (preg_match('/^([\d]{2}\/){2}[\d]{4}$/', $date)) {
+            $frDateArray = array_reverse(explode('/', $date));
+            $date = implode('-', $frDateArray);
+        }
+
+        return $date;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Exception;
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -36,18 +37,21 @@ class PostRepository extends ServiceEntityRepository
     /**
      * @return $this
      */
-    public function setPosts(string $category): self
+    public function setCategory(string $category, bool $filterActivePosts = true): self
     {
-        if (!in_array($category, Post::CATEGORY_CHOICES)) {
+        if (!array_key_exists($category, Post::CATEGORY_PARENT_ROUTE)) {
             throw new InvalidArgumentException(sprintf('Category "%s" in not allowed', $category));
         }
         $this->category = $category;
 
         $queryParameterSet = $this->createQueryBuilder('p')
-            ->andWhere('p.category = :val')
-            ->setParameter('val', $category)
-        ;
-        if ('event' === $category) {
+            ->andWhere('p.category = :val');
+        if ($filterActivePosts) {
+            $queryParameterSet->andWhere('p.status = :status');
+            $queryParameterSet->setParameter('status', Post::STATUS_ACTIVE);
+        }
+        $queryParameterSet->setParameter('val', $category);
+        if (Post::CATEGORY_EVENT === $category) {
             $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'ASC')
                 ->addOrderBy('p.endDate', 'ASC');
         } else {
@@ -57,7 +61,7 @@ class PostRepository extends ServiceEntityRepository
         $this->posts = $queryOrdered->getQuery()->getResult();
 
         // uncomment to filter outdated events
-        if ('event' === $this->category) {
+        if (Post::CATEGORY_EVENT === $this->category) {
             $this->posts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
         }
 
@@ -73,8 +77,6 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $page
-     * @param int $limit
      * @return Post[]
      */
     public function findAllPaginatedPosts(int $page = 1, int $limit = 10): array
@@ -86,6 +88,7 @@ class PostRepository extends ServiceEntityRepository
             throw new InvalidArgumentException('La valeur de l’argument $limit est incorrecte (valeur : '.$limit.').');
         }
         $firstResult = ($page - 1) * $limit;
+
         if (!isset($this->posts[$firstResult]) && 1 != $page) {
             throw new NotFoundHttpException('La page demandée n’existe pas.'); // page 404, sauf pour la première page
         }
@@ -172,12 +175,16 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function filterOutdatedEventscallback(Post $post): bool
     {
-        $validPost = ($post->getEndDate() >= (new \DateTime('now')));
+        if ($post->getEndDate()) {
+            $isValidPost = ($post->getEndDate() >= (new \DateTime('now')));
+        } else {
+            $isValidPost = ($post->getstartDate() >= (new \DateTime('now')));
+        }
 
-        return $validPost;
+        return $isValidPost;
     }
 }

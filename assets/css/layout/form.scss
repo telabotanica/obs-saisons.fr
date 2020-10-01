@@ -7,10 +7,9 @@
 
 ._2-col-form {
 	@extend %display-flex-column;
-	margin-bottom: 20px;
 
 	&.field-group {
-		margin-bottom: 5px;
+		@include margin-v(5px);
 	}
 
 	@include media(md) {
@@ -30,6 +29,7 @@
 
 .form-col {
 	@extend %flex-1;
+	@include margin-v(10px);
 
 	&.small {
 		@extend %flex-none;
