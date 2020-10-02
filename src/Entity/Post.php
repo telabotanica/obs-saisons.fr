@@ -24,7 +24,7 @@ class Post
     const CATEGORY_PARENT_ROUTE = [
         self::CATEGORY_NEWS => 'news_posts_list',
         self::CATEGORY_SPECIES => 'especes',
-        self::CATEGORY_EVENT => 'event-posts-list',
+        self::CATEGORY_EVENT => 'event_posts_list',
         self::CATEGORY_PAGE => 'homepage',
     ];
 

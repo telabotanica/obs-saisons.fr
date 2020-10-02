@@ -217,7 +217,7 @@ class PostsController extends AbstractController
      * ************************************************ */
 
     /**
-     * @Route("/evenements/{page<\d+>}", name="event-posts-list")
+     * @Route("/evenements/{page<\d+>}", name="event_posts_list")
      */
     public function eventPostsList(
         Request $request,
