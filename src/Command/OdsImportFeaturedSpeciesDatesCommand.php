@@ -106,7 +106,7 @@ class OdsImportFeaturedSpeciesDatesCommand extends Command
                 ;
             } else {
                 $event = $this->em->getRepository(Event::class)
-                    ->findOneBy(['stade_bbch' => $featured['stade']])
+                    ->findOneBy(['bbch_code' => $featured['stade']])
                 ;
             }
             if (!$event) {

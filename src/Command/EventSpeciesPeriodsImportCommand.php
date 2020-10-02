@@ -87,7 +87,7 @@ class EventSpeciesPeriodsImportCommand extends Command
                 // animals doesn't have BBCH code
                 $event = $eventRepository->findOneBy(['name' => '1ère apparition']);
             } else {
-                $event = $eventRepository->findOneBy(['stade_bbch' => $singleSpeciesPeriods['bbch_code']]);
+                $event = $eventRepository->findOneBy(['bbch_code' => $singleSpeciesPeriods['bbch_code']]);
             }
             if (!$event) {
                 $output->writeln(sprintf("<error>\n  event %d not found\n</error>", $singleSpeciesPeriods['bbch_code']));

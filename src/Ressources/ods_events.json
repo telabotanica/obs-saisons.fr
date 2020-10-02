@@ -1,48 +1,48 @@
 [
 	{
-		"stade_bbch":11,
+		"bbch_code":11,
 		"name":"feuillaison",
 		"description":"Environ 10% des feuilles épanouies",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":15,
+		"bbch_code":15,
 		"name":"feuillaison",
 		"description":"Environ 50% des feuilles épanouies",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":61,
+		"bbch_code":61,
 		"name":"floraison",
 		"description":"Environ 10% des fleurs épanouies",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":65,
+		"bbch_code":65,
 		"name":"floraison",
 		"description":"Environ 50% des fleurs épanouies",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":85,
+		"bbch_code":85,
 		"name":"fructification",
 		"description":"Au moins 50% des fruits sont matures",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":91,
+		"bbch_code":91,
 		"name":"sénescence",
 		"description":"Au moins 10% des feuilles sont jaunes",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":95,
+		"bbch_code":95,
 		"name":"sénescence",
 		"description":"Au moins 50% des feuilles sont jaunes",
 		"is_observable":1
 	},
 	{
-		"stade_bbch":null,
+		"bbch_code":null,
 		"name":"1ère apparition",
 		"description":"1ere apparition de l'invididu",
 		"is_observable":1
