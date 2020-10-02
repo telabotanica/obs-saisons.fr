@@ -46,5 +46,7 @@
     {% endif %}
 
     <div class="privacy-status">Station {{ station.isPrivate ? 'personnelle' : 'publique' }}</div>
-    <a href="" class="button hero-header-button bt-add edit open" data-open="station" data-station="{{ station|getJsonSerializedEditStation }}">modifier la station</a>
+    {% if app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
+        <a href="" class="button hero-header-button bt-add edit open" data-open="station" data-station="{{ station|getJsonSerializedEditStation }}">modifier la station</a>
+    {% endif %}
 </div>
