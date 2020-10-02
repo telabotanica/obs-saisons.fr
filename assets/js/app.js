@@ -436,9 +436,11 @@ function updateSelectOptions($selectEl, itemsToMatch, sortOptions = true) {
         .toggleClass('disabled',(1 >= itemsToMatch.length && sortOptions))
         .find('option')
             .prop('hidden', false).removeAttr('hidden')
-            .prop('disabled', false).removeAttr('disabled')
             .prop('selected', false).removeAttr('selected')
             .closest('form').get(0).reset();
+
+    $selectEl.find('option:not(.exists-in-station.animal)')
+        .prop('disabled', false).removeAttr('disabled');
 
     if(sortOptions) {
         $('.' + selectName + '-option', $selectEl).each(function (i, element) {

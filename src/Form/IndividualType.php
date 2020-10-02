@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Individual;
 use App\Entity\Species;
 use App\Entity\Station;
+use App\Entity\TypeSpecies;
 use App\Service\UploadService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -64,8 +65,9 @@ class IndividualType extends AbstractType
                     if (in_array($species, $this->stationAllSpecies)) {
                         $choiceAttr['class'] .= ' exists-in-station';
 
-                        if ('plantes' !== $species->getType()->getReign()) {
+                        if (TypeSpecies::REIGN_ANIMALS === $species->getType()->getReign()) {
                             $choiceAttr['disabled'] = 'disabled';
+                            $choiceAttr['class'] .= ' animal';
                         }
                     }
 
