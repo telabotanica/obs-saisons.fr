@@ -17,8 +17,8 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
         $faker = Faker\Factory::create('fr_FR');
         $speciesRepository = $manager->getRepository(Species::class);
         $typeSpeciesRepository = $manager->getRepository(TypeSpecies::class);
-        $plants = $typeSpeciesRepository->findByReign('plantes');
-        $animals = $typeSpeciesRepository->findByReign('animaux');
+        $plants = $typeSpeciesRepository->findByReign(TypeSpecies::REIGN_PLANTS);
+        $animals = $typeSpeciesRepository->findByReign(TypeSpecies::REIGN_ANIMALS);
 
         for ($i = 0; $i < 76; ++$i) {
             $individual = new Individual();

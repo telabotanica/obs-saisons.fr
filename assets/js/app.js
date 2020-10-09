@@ -436,9 +436,11 @@ function updateSelectOptions($selectEl, itemsToMatch, sortOptions = true) {
         .toggleClass('disabled',(1 >= itemsToMatch.length && sortOptions))
         .find('option')
             .prop('hidden', false).removeAttr('hidden')
-            .prop('disabled', false).removeAttr('disabled')
             .prop('selected', false).removeAttr('selected')
             .closest('form').get(0).reset();
+
+    $selectEl.find('option:not(.exists-in-station.animal)')
+        .prop('disabled', false).removeAttr('disabled');
 
     if(sortOptions) {
         $('.' + selectName + '-option', $selectEl).each(function (i, element) {
@@ -634,8 +636,8 @@ function checkAberrationsObsDays() {
     ) {
         let species = $('.individual-option:selected', $individual).attr('speciesName')
         message = 'La date que vous venez de saisir sort de la période habituelle pour cet événement chez cette espèce ('+$selectedEvent.data('displayedStartDate')+' au '+$selectedEvent.data('displayedEndDate')+'). ' +
-            'Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/'+species+'" target="_blank" class="green-link small">espèce</a>. ' +
-            'Si vous restez dans le doute, <a href="" target="_blank" class="green-link small">contactez nous</a>.';
+            'Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/'+species+'" target="_blank" class="deep-green-link small">espèce</a>. ' +
+            'Si vous restez dans le doute, <a href="" target="_blank" class="deep-green-link small">contactez nous</a>.';
     }
     $('.ods-form-warning')
         .toggleClass('hidden', message === '')
