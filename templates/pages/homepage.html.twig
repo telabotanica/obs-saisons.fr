@@ -22,10 +22,20 @@
 				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'actualites', button_label: 'toutes les actualités'} %}
 			</div>
 		</div>
+	{% else %}
+		<div class="actus-une">
+			<div class="actus-une-img" style="background-image: url({{ asset('media/layout/planet-grid-leaf.svg') }});background-position: 50% 50%;background-size: 50%"></div>
+			<div class="actus-une-content">
+				<div class="content-narrow-header bottom-div">
+					<h4 class="content-narrow-title">Actualités</h4>
+					<h4 class="actus-une-title">Pas encore d'actualités</h4>
+				</div>
+			</div>
+		</div>
 	{% endif %}
 
 	<div class="content home">
-		<div class="content-une-block" {{ false == lastEvents[0] ? 'style=width:100%;'}}>
+		<div class="content-une-block">
 			<img src="{{ asset('media/layout/Fichier 3.svg') }}" alt="" class="content-block-img" height="50">
 			<div class="content-block-infos">
 				<h3 class="content-narrow-title dark">Comment participer ?</h3>
@@ -58,12 +68,31 @@
 				{% endfor %}
 				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'evenements', button_label: 'tous les évènements', button_color: 'orange'} %}
 			</div>
+		{% else %}
+			<div class="next-event">
+				<div class="content-narrow-header bottom-div">
+					<h4 class="content-narrow-title orange">Évènements</h4>
+				</div>
+				<div class="next-event-descr">Pas d'évènements annoncés en ce moment</div>
+			</div>
+
 		{% endif %}
 	</div>
 	<div class="content home">
-		{% for id,eventSpecies in featuredSpecies %}
-			{% include 'components/featuredSpecies.twig' %}
-		{% endfor %}
+		{% if featuredSpecies is not empty %}
+			{% for id,eventSpecies in featuredSpecies %}
+				{% include 'components/featuredSpecies.html.twig' %}
+			{% endfor %}
+		{% else %}
+			<div class="now featured-species species" style="background-image: url({{ asset('/media/layout/winter.svg')}});">
+				<div class="content-block-infos horiz">
+					<div class="infos-insert">
+						<h3 class="content-narrow-title">à Observer en ce moment</h3>
+						<h4 class="content-blocks-title small">Bientôt de nouvelles espèces à observer</h4>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 		<div class="recent-obs">
 			<div class="content-narrow-header obs">
 				<h4 class="content-narrow-title dark">Observations récentes</h4>

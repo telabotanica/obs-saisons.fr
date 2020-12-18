@@ -30,9 +30,9 @@
 
 	border-right: 1px none #000;
 
-	@include background-image("default", 50% 50%);
-
-	background-color: $green715560;
+	@include background-image("default", (0 0, 0 0, 50% 50%));
+	background-color: $blue;
+	background-size: contain;
 }
 
 .actu-une-container,
@@ -352,7 +352,8 @@
 	min-height: 670px;
 	padding: 0 20px;
 	@include background-image("default", (0 0, 0 0, 50% 50%));
-	background-color: grey(68);
+	background-color: $grey306092;
+	background-size: contain;
 	color: #fff;
 
 	@include media(sm) {
