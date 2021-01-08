@@ -1,0 +1,7 @@
+{% extends 'forms/post/post-form.html.twig' %}
+
+{% block post_fields %}
+    <div class="form-col" data-image="{{ post.cover|default }}">
+        {% include 'forms/components/upload-block.html.twig' with { formField: form.cover } %}
+    </div>
+{% endblock %}

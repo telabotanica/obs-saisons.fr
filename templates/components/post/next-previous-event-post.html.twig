@@ -1,0 +1,10 @@
+<div class="linked-post">
+    {% if eventPost is not empty %}
+        <a href="{{ path('event_post_single_show', {'slug':eventPost.slug}) }}" class="linked-post-title"><h4>{{ eventPost.title }}</h4></a>
+        <div class="linked-post-date">
+            {{ eventPost.startDate == eventPost.endDate ? 'Évènement ' }}du {{ eventDatesDisplay(eventPost.startDate, eventPost.endDate, 'au') }}
+        </div>
+    {% else %}
+        <a href="{{ path('event_posts_list') }}" class="linked-post-title">Revenir aux <h4>Évènements</h4></a>
+    {% endif %}
+</div>

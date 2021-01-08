@@ -89,6 +89,7 @@ class OdsImportNewsCommand extends Command
             $news->setCover($cover);
             $news->setCreatedAt($date);
             $news->setAuthor($user);
+            $news->setStatus(Post::STATUS_ACTIVE);
 
             $this->em->persist($news);
             ++$count;

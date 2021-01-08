@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% set titleAction = post.id is not null ? 'Modifier un' : 'Créer un nouvel' %}
+
+{% block title "#{titleAction} article | Observatoire des saisons" %}
+
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
+        'title': "#{titleAction} article",
+        'subtitle': null
+    }) %}
+
+    {% include 'forms/post/news-post-form.html.twig' with {
+        action:'post',
+        form: form,
+        isPage: true,
+        upload: upload,
+        post: post
+    } %}
+
+{% endblock %}

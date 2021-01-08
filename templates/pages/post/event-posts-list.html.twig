@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% set isPostAdmin = is_granted('ROLE_ADMIN') %}
+
+{% block main_content %}
+
+	{% include 'layout/header.html.twig' with ({
+		'title': 'Évènements',
+		'subtitle': 'Vos <strong>évènements</strong> de l’Observatoire des saisons.'
+	}) %}
+
+	{% for id, eventPost in eventPosts %}
+		{% include 'components/list-cards/events-list-cards.html.twig' with {eventPost:eventPost} %}
+		{% set addListCardId = loop.last ? id + 1 %}
+	{% endfor %}
+	{% if isPostAdmin %}
+		<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
+			<div class="add-list-card">
+				<div class="icon-add-list-card add-square-orange-icon"></div>
+				<div class="add-card-text">Vous souhaitez proposer un évènement ?</div>
+				<a href="{{ path('event_post_create') }}" class="button bt-add orange">Saisir un évènement</a>
+			</div>
+		</div>
+	{% endif %}
+
+	{% include 'components/pagination.html.twig' with {routePath: path('event_posts_list')} %}
+
+{% endblock %}
+
+{% block bottom_content %}
+	{% if isPostAdmin %}
+		<a href="{{ path('event_post_create') }}" class="button bt-open-form">Saisir un évènement</a>
+	{% endif %}
+{% endblock %}

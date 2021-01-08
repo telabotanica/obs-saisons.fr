@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% set isPostAdmin = is_granted('ROLE_ADMIN') %}
+
+{% block main_content %}
+
+	{% include 'layout/header.html.twig' with ({
+		'title': 'Actualités',
+		'subtitle': 'Vos <strong>actualités</strong> de l’Observatoire des saisons.'
+	}) %}
+
+	{% for id, newsPost in newsPosts %}
+		{% include 'components/list-cards/news-list-cards.html.twig' with {newsPost:newsPost}  %}
+		{% set addListCardId = loop.last ? id + 1 %}
+	{% endfor %}
+	{% if isPostAdmin %}
+        <div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
+            <div class="add-list-card">
+                <div class="icon-add-list-card add-square-icon"></div>
+                <div class="add-card-text">Vous souhaitez nous faire partager une actualité ?</div>
+                <a href="{{ path('news_post_create') }}" class="button bt-add ">Saisir une actualité</a>
+            </div>
+        </div>
+	{% endif %}
+
+	{% include 'components/pagination.html.twig' with {routePath: path('news_posts_list')} %}
+
+{% endblock %}
+
+{% block bottom_content %}
+    {% if isPostAdmin %}
+	    <a href="{{ path('news_post_create') }}" class="button bt-open-form">Saisir une actualité</a>
+    {% endif %}
+{% endblock %}

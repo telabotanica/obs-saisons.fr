@@ -63,6 +63,7 @@ class AdminController extends AbstractController
             $speciesPost->setTitle('Fiche espèce '.$species->getScientificName());
             $speciesPost->setCreatedAt(new \DateTime());
             $speciesPost->setSlug($slugGenerator->generateSlug($speciesPost->getTitle(), $speciesPost->getCreatedAt()));
+            $speciesPost->setStatus(Post::STATUS_ACTIVE);
 
             $manager->persist($speciesPost);
         }
@@ -131,6 +132,7 @@ class AdminController extends AbstractController
             $page->setTitle((BreadcrumbsGenerator::MENU + BreadcrumbsGenerator::OTHER_BREADCRUMBS)[$slug]);
             $page->setCreatedAt(new \DateTime());
             $page->setSlug($slug);
+            $page->setStatus(Post::STATUS_ACTIVE);
 
             $manager->persist($page);
         }

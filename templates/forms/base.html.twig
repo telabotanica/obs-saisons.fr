@@ -1,4 +1,4 @@
-<div class="saisie-container{{ isPage|default(false)? ' page' }}">
+<section class="saisie-container{{ isPage|default(false)? ' page' }}">
 	<h3 class="saisie-header">
 		{% block form_title%}{% endblock %}
 	</h3>
@@ -22,22 +22,19 @@
 					{{ form_errors(form) }}
 					{{ form_widget(form._token) }}
 					<div class="saisie-footer">
-						{% if 'profile' != action  %}
-							<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer show-on-edit delete-button">supprimer</a>
-						{% endif %}
-						<a href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-annuler">Annuler</a>
-						<input type="hidden" name="action" value="{{ action }}">
-						<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
-							Valider
-						</button>
+						{% block form_footer %}
+							{% if 'profile' != action  %}
+								<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer show-on-edit delete-button">supprimer</a>
+							{% endif %}
+							<a href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-annuler">Annuler</a>
+							<input type="hidden" name="action" value="{{ action }}">
+							<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
+								Valider
+							</button>
+						{% endblock %}
 					</div>
 				{% endblock %}
 			{% endblock %}
 		{{ form_end(form, {'render_rest': false}) }}
 	</div>
-</div>
-
-{# JS #}
-{% block form_javascript %}
-	{# upload pictures #}
-{% endblock %}
+</section>

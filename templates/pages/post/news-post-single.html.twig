@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+	<div class="content page posts">
+		{% block post_header %}{% endblock %}
+		<div class="publication-date">Le {{ post.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <a href="{{ path('user_profile',{userId:post.author.id}) }}"><strong>{{ post.author.displayName }}</strong></a></div>
+		<div class="rich-text-block">
+			<h2>{{ post.title|raw }}</h2>
+			{{ post.content|raw }}
+		</div>
+		{% block post_footer %}
+			{% if nextPreviousNewsPosts is defined %}
+				<div class="other-posts">
+					{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.previous} %}
+					{% if nextPreviousNewsPosts.previous is not null or nextPreviousNewsPosts.next is not null %}
+						{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.next} %}
+					{% endif %}
+				</div>
+			{% endif %}
+		{% endblock %}
+	</div>
+{% endblock %}

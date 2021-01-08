@@ -1,0 +1,26 @@
+{% extends 'pages/post/event-post-single.html.twig' %}
+
+{% block post_header %}
+	<div class="post-header">
+		{% include 'layout/header.html.twig' with ({
+			'title': 'Prévisulisation de votre évènement',
+			'subtitle': 'Après avoir relu votre évènement vous pouvez le publier, le modifier ou le supprimer'
+		}) %}
+	</div>
+{% endblock %}
+
+{% block post_footer %}
+	<div class="post-footer">
+		<a class="button bt-form bt-supprimer delete-button" href="{{ path('post_delete', {postId:post.id}) }}">
+			Supprimer
+		</a>
+		<a href="{{ path('event_post_edit', {postId:post.id}) }}" class="button bt-form bt-annuler">
+			Modifier
+		</a>
+		<a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
+			Publier
+		</a>
+	</div>
+{% endblock %}
+
+

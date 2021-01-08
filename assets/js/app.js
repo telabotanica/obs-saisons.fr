@@ -68,6 +68,11 @@ $( document ).ready( function() {
     stationMapDisplay();
     hideFlashMessages();
     stationSearchFormSubmit();
+    if (0 < $('.ods-places').length) {
+        let placesAutocomplete = placesInit();
+    }
+    validateEventPostDates();
+    initFormEditPage();
 });
 
 // open overlay
@@ -97,7 +102,7 @@ function onOpenOverlay() {
                 let $form = $('form', $overlay);
                 $form.get(0).reset();
                 if ($thisLink.hasClass('edit')) {
-                    dataAttrs = setEditForm($overlay, $form, $thisLink, dataAttrs);
+                    dataAttrs = setEditOverlayForm($overlay, $form, $thisLink, dataAttrs);
                 }
             }
 
@@ -134,7 +139,7 @@ function onOpenOverlay() {
     });
 }
 
-function setEditForm($overlay, $form, $thisLink, dataAttrs) {
+function setEditOverlayForm($overlay, $form, $thisLink, dataAttrs) {
     let formActionReset = '/'+dataAttrs.open+'/new',
         editionPath = '/'+dataAttrs.open;
 
@@ -594,18 +599,7 @@ function onChangeObsDate() {
                 } else {
                     message = 'Cette date est postérieure à aujourd’hui';
                 }
-                $(this)
-                    .val('')
-                    .after(
-                        '<p class="invalid-date field-help-text help-text" style="color:red;">' + message + '</p>'
-                    )
-                ;
-                setTimeout(function () {
-                    $('.invalid-date').hide(200, function () {
-                        $(this).remove();
-                    });
-                }, 3000);
-
+                displayDateError($(this), message);
             }
         }
 
@@ -696,15 +690,14 @@ function placesInit() {
     return places({
         appId: PLACES_CONFIG.appId,
         apiKey: PLACES_CONFIG.apiKey,
-        container: '#search',
+        container: '.ods-places',
         language: 'fr',
         countries: ['fr']
     });
 }
 
-function placesLocation(map, marker) {
+function stationPlacesLocation(placesAutocomplete, map, marker) {
     //Algolia places configuration
-    let placesAutocomplete = placesInit();
     placesAutocomplete.on('change', function (e) {
         onPosition(map, e.suggestion.latlng, marker);
     });
@@ -717,6 +710,7 @@ function placesLocation(map, marker) {
             let hits = results.hits;
             if (hits[0]) {
                 onPosition(map, hits[0]._geoloc, marker);
+                placesRemove();
             }
         });
     });
@@ -724,13 +718,7 @@ function placesLocation(map, marker) {
 
 // remove places
 function placesRemove() {
-    $('.search-container')
-        .empty()
-        .append(
-            '<label for="search" class="search-label">Localisez votre station</label>' +
-            '<input id="search" type="search" placeholder="Entrez une adresse ici">'
-        )
-    ;
+    $('.ap-icon-clear').trigger('click');
 }
 
 // Location events management
@@ -746,7 +734,7 @@ function onLocation() {
             onPosition(map, {'lat': latitude,'lng': longitude}, marker);
         }
     });
-    placesLocation(map, marker);
+    stationPlacesLocation(placesAutocomplete, map, marker);
 }
 
 // Fills location fields when information is available
@@ -1198,6 +1186,118 @@ function onDeleteButton(subject) {
             event.preventDefault();
         }
     });
+}
+
+function validateEventPostDates() {
+    let $postEventsStartDate = $('#post_events_startDate'),
+        $postEventsEndDate = $('#post_events_endDate'),
+        errorMessage = '',
+        todayDate = generateComparableFormatedDate(new Date());
+
+    $postEventsStartDate.on('change', function () {
+        let hasStartDate = valOk($(this).val()),
+            hasEndDate = valOk($postEventsEndDate.val()),
+            isInvalidStartDate = !hasStartDate;
+
+        errorMessage = 'Vous devez entrer une date de début valide';
+
+        if (hasStartDate && hasEndDate) {
+            let startDate = generateComparableFormatedDate($(this).val()),
+                endDate = generateComparableFormatedDate($postEventsEndDate.val()),
+                minDate =  generateComparableFormatedDate(new Date('2006-01-01')),
+                isBeforeBeginningOfTime = minDate > startDate,
+                isTimeTrip = endDate < startDate;
+
+            isInvalidStartDate = isBeforeBeginningOfTime || isTimeTrip;
+
+            if (isBeforeBeginningOfTime) {
+                errorMessage = 'Cette date est antérieure à ODS';
+            } else if (isTimeTrip) {
+                errorMessage = 'Votre date de fin précède votre date de début.';
+            }
+        }
+
+        if (isInvalidStartDate) {
+            displayDateError($(this), errorMessage);
+        }
+    });
+
+    $postEventsEndDate.on('change', function () {
+        let hasEndDate = valOk($(this).val()),
+            hasStartDate = valOk($postEventsStartDate.val()),
+            isInvalidEndDate = !hasEndDate;
+
+        errorMessage = 'Vous devez entrer une date de fin valide';
+
+        if(hasEndDate) {
+            let endDate = generateComparableFormatedDate($(this).val());
+
+            if(todayDate > endDate) {
+                isInvalidEndDate = true;
+                errorMessage = 'Nous ne publions pas les évènements terminés'
+
+            } else if(hasStartDate) {
+                let startDate = generateComparableFormatedDate($postEventsStartDate.val());
+
+                if(startDate > endDate) {
+                    isInvalidEndDate = true;
+                    errorMessage = 'Votre date de fin précède votre date de début.';
+                }
+            }
+        }
+
+        if(isInvalidEndDate) {
+            displayDateError($(this), errorMessage);
+        }
+    });
+}
+
+function generateComparableFormatedDate(dateData) {
+    if (/^([\d]{2}\/){2}[\d]{4}$/.test(dateData)) {
+        dateData = dateData.split('/').reverse();
+    } else if(/^[\d]{4}(-[\d]{2}){2}$/.test(dateData)) {
+        dateData = dateData.split('-');
+    } else {
+         dateData = dateData
+            .toISOString()
+            .substr(0, 10)
+            .split('-');
+    }
+
+    return dateData.join('');
+}
+
+function displayDateError($field, errorMessage)
+{
+    $field
+        .val('')
+        .after(
+            '<p class="invalid-date field-help-text help-text" style="color:red;">' + errorMessage + '</p>'
+        )
+    ;
+    setTimeout(function () {
+        $('.invalid-date').hide(200, function () {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
+function initFormEditPage() {
+    let $uploadInput = $('.upload-input'),
+        isPageForm = $uploadInput.closest('.saisie-container').hasClass('page'),
+        image = $uploadInput.closest('.form-col').data('image');
+
+    if (isPageForm && valOk(image) && '' !== image) {
+        $('.upload-zone-placeholder').addClass('hidden');
+        $('img.placeholder-img').addClass('obj').attr('src', image);
+    }
+
+    let $places = $('.ods-places');
+
+    if (0 < $places.length && valOk($places.val())) {
+        $places.siblings('button.ap-input-icon').toggle();
+    }
+
 }
 
 // trigger search field submit

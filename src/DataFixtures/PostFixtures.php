@@ -16,8 +16,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $articles = [];
-        $events = [];
+        $newsPosts = [];
+        $eventsPosts = [];
 
         $faker = Faker\Factory::create('fr_FR');
 
@@ -38,19 +38,21 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                 <p>'.$faker->paragraph(5, true).' <a href="">'.substr($faker->sentence(3, false), 0, -1).'</a>, '.$faker->paragraph(3, true).'</p>
             ';
 
-            $article = new Post();
-            $article->setCategory(Post::CATEGORY_NEWS);
-            $article->setCreatedAt($dateCreatedAt);
-            $article->setContent($content);
-            $article->setTitle($title);
-            $article->setAuthor($this->getReference('user-'.$faker->randomDigit));
-            $article->setSlug($slugGenerator->generateSlug($title, $dateCreatedAt));
-            $article->setCover($cover);
-            $articles[] = $article;
+            $newsPost = new Post();
+            $newsPost->setCategory(Post::CATEGORY_NEWS);
+            $newsPost->setCreatedAt($dateCreatedAt);
+            $newsPost->setContent($content);
+            $newsPost->setTitle($title);
+            $newsPost->setAuthor($this->getReference('user-'.$faker->randomDigit));
+            $newsPost->setSlug($slugGenerator->generateSlug($title, $dateCreatedAt));
+            $newsPost->setCover($cover);
+            $newsPost->setStatus(Post::STATUS_ACTIVE);
+
+            $newsPosts[] = $newsPost;
         }
 
-        foreach ($articles as $article) {
-            $manager->persist($article);
+        foreach ($newsPosts as $newsPost) {
+            $manager->persist($newsPost);
         }
 
         for ($i = 0; $i < 27; ++$i) {
@@ -64,24 +66,25 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                 <p>'.$faker->paragraph(5, true).' <a href="">'.substr($faker->sentence(3, false), 0, -1).'</a> '.$faker->paragraph(3, true).'</p>
             ';
 
-            $event = new Post();
-            $event->setCategory(Post::CATEGORY_EVENT);
-            $event->setCreatedAt($dateCreatedAt);
-            $event->setContent($content);
-            $event->setTitle($title);
-            $event->setAuthor($this->getReference('user-'.$faker->randomDigit));
-            $event->setSlug($slugGenerator->slugify($title));
-            $event->setLocation($faker->city.' ('.$faker->departmentNumber.')');
-            $event->setStartDate($startDateEvent);
+            $eventPost = new Post();
+            $eventPost->setCategory(Post::CATEGORY_EVENT);
+            $eventPost->setCreatedAt($dateCreatedAt);
+            $eventPost->setContent($content);
+            $eventPost->setTitle($title);
+            $eventPost->setAuthor($this->getReference('user-'.$faker->randomDigit));
+            $eventPost->setSlug($slugGenerator->slugify($title));
+            $eventPost->setLocation($faker->city.' ('.$faker->departmentNumber.')');
+            $eventPost->setStartDate($startDateEvent);
             // not too much events with no end dates
             if (2 < $faker->randomDigit) {
-                $event->setEndDate($faker->dateTimeInInterval($startDateEvent, '+ 1 year', 'Europe/Paris'));
+                $eventPost->setEndDate($faker->dateTimeInInterval($startDateEvent, '+ 1 year', 'Europe/Paris'));
             }
-            $events[] = $event;
+            $eventPost->setStatus(Post::STATUS_ACTIVE);
+            $eventsPosts[] = $eventPost;
         }
 
-        foreach ($events as $event) {
-            $manager->persist($event);
+        foreach ($eventsPosts as $eventPost) {
+            $manager->persist($eventPost);
         }
 
         $manager->flush();
