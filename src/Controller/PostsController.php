@@ -415,7 +415,6 @@ class PostsController extends AbstractController
             $post,
             'Vous n’êtes pas autorisé à supprimer cette publication'
         );
-        $post->setStatus(Post::STATUS_DELETED);
         $manager->remove($post);
         $manager->flush();
 

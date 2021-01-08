@@ -14,7 +14,6 @@ class Post
 {
     public const STATUS_PENDING = 0;
     public const STATUS_ACTIVE = 1;
-    public const STATUS_DELETED = 2;
 
     const CATEGORY_NEWS = 'news';
     const CATEGORY_SPECIES = 'species';
