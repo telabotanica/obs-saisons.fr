@@ -26,12 +26,9 @@
 		{% block post_footer %}
 			{% if nextPreviousEventsPosts is defined %}
 				<div class="other-posts">
-					{% if nextPreviousEventsPosts.previous is null and nextPreviousEventsPosts.next is null %}
-						{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:null} %}
-					{% else %}
-						{% for eventPost in nextPreviousEventsPosts %}
-							{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:eventPost} %}
-						{% endfor %}
+					{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:nextPreviousEventsPosts.previous} %}
+					{% if nextPreviousEventsPosts.previous is not null or nextPreviousEventsPosts.next is not null %}
+						{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:nextPreviousEventsPosts.next} %}
 					{% endif %}
 				</div>
 			{% endif %}

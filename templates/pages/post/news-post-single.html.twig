@@ -11,12 +11,9 @@
 		{% block post_footer %}
 			{% if nextPreviousNewsPosts is defined %}
 				<div class="other-posts">
-					{% if nextPreviousNewsPosts.previous is null and nextPreviousNewsPosts.next is null %}
-						{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:null} %}
-					{% else %}
-						{% for newsPost in nextPreviousNewsPosts %}
-							{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:newsPost} %}
-						{% endfor %}
+					{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.previous} %}
+					{% if nextPreviousNewsPosts.previous is not null or nextPreviousNewsPosts.next is not null %}
+						{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.next} %}
 					{% endif %}
 				</div>
 			{% endif %}
