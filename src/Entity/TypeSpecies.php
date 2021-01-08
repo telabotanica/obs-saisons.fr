@@ -9,20 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TypeSpecies
 {
-    const REIGN = ['animaux', 'plantes'];
-
-    const TYPES_REIGNS = [
-        'plantes' => ['arbres', 'herbacées'],
-        'animaux' => ['oiseaux', 'insectes', 'amphibiens', 'resptiles'],
-    ];
-
-    const PLURAL_TYPES = [
-        'arbres' => 'arbre',
-        'herbacées' => 'herbacée',
-        'oiseaux' => 'oiseau',
-        'insectes' => 'insecte',
-        'amphibiens' => 'amphibien',
-        'reptiles' => 'reptile',
+    const REIGN_ANIMALS = 'animaux';
+    const REIGN_PLANTS = 'plantes';
+    const REIGN = [
+        self::REIGN_ANIMALS,
+        self::REIGN_PLANTS,
     ];
 
     /**
@@ -67,7 +58,7 @@ class TypeSpecies
     public function setReign(string $reign): self
     {
         if (!in_array($reign, self::REIGN)) {
-            throw new \InvalidArgumentException("\"Reign\" invalide (valeurs possibles: \"animaux\", \"plantes\")");
+            throw new \InvalidArgumentException("\"Reign\" invalide (valeurs possibles: \"".self::REIGN_ANIMALS."\", \"".self::REIGN_PLANTS."\")");
         }
         $this->reign = $reign;
 
