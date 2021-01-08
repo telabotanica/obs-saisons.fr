@@ -351,9 +351,8 @@
 	height: 380px;
 	min-height: 670px;
 	padding: 0 20px;
-	@include background-image("default", (0 0, 0 0, 50% 50%));
+	@include background-image("default");
 	background-color: $grey306092;
-	background-size: contain;
 	color: #fff;
 
 	@include media(sm) {

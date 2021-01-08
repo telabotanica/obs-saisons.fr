@@ -28,8 +28,8 @@
 			<div class="actus-une-content">
 				<div class="content-narrow-header bottom-div">
 					<h4 class="content-narrow-title">Actualités</h4>
-					<h4 class="actus-une-title">Pas encore d'actualités</h4>
 				</div>
+				<div class="actus-une-title">Pas encore d'actualités</div>
 			</div>
 		</div>
 	{% endif %}
@@ -84,7 +84,7 @@
 				{% include 'components/featuredSpecies.html.twig' %}
 			{% endfor %}
 		{% else %}
-			<div class="now featured-species species" style="background-image: url({{ asset('/media/layout/winter.svg')}});">
+			<div class="now featured-species species" style="background-image: url({{ asset('/media/layout/winter.svg')}});background-size: contain;">
 				<div class="content-block-infos horiz">
 					<div class="infos-insert">
 						<h3 class="content-narrow-title">à Observer en ce moment</h3>
