@@ -11,9 +11,13 @@
 		{% block post_footer %}
 			{% if nextPreviousNewsPosts is defined %}
 				<div class="other-posts">
-					{% for newsPost in nextPreviousNewsPosts %}
-						{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:newsPost} %}
-					{% endfor %}
+					{% if nextPreviousNewsPosts.previous is null and nextPreviousNewsPosts.next is null %}
+						{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:null} %}
+					{% else %}
+						{% for newsPost in nextPreviousNewsPosts %}
+							{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:newsPost} %}
+						{% endfor %}
+					{% endif %}
 				</div>
 			{% endif %}
 		{% endblock %}

@@ -5,6 +5,6 @@
             {{ eventPost.startDate == eventPost.endDate ? 'Évènement ' }}du {{ eventDatesDisplay(eventPost.startDate, eventPost.endDate, 'au') }}
         </div>
     {% else %}
-        <a href="{{ path('evenements') }}" class="linked-post-title">Revenir aux <h4>Évènements</h4></a>
+        <a href="{{ path('event_posts_list') }}" class="linked-post-title">Revenir aux <h4>Évènements</h4></a>
     {% endif %}
 </div>

@@ -78,7 +78,7 @@ class PostsController extends AbstractController
         ];
 
         return $this->render('pages/post/news-post-single.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('news_posts_list', $activePageBreadCrumb),
             'post' => $newsPost,
             'nextPreviousNewsPosts' => $nextPreviousNewsPosts,
         ]);
@@ -386,7 +386,7 @@ class PostsController extends AbstractController
         ];
 
         return $this->render('pages/post/event-post-single.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('event_posts_list', $activePageBreadCrumb),
             'post' => $eventPost,
             'nextPreviousEventsPosts' => $nextPreviousEventsPosts,
         ]);
