@@ -159,9 +159,14 @@ class EntityJsonSerialize
 
     public function speciesCallBack(Species $species)
     {
+        $type = $species->getType();
+
         return [
             'id' => $species->getId(),
             'displayName' => $species->getVernacularName(),
+            'scientificName' => $species->getScientificName(),
+            'typeName' => $type->getName(),
+            'typeReign' => $type->getReign(),
         ];
     }
 
@@ -192,6 +197,7 @@ class EntityJsonSerialize
     {
         return [
             'id' => $individual->getId(),
+            'name' => $individual->getName(),
             'species' => $this->speciesCallBack($individual->getSpecies()),
             'station' => $this->stationCallback($individual->getStation()),
         ];
@@ -212,9 +218,11 @@ class EntityJsonSerialize
         return [
             'id' => $station->getId(),
             'locality' => $station->getLocality(),
+            'inseeCode' => $station->getInseeCode(),
             'habitat' => $station->getHabitat(),
             'lat' => $station->getLatitude(),
             'lon' => $station->getLongitude(),
+            'altitude' => $station->getAltitude(),
             'slug' => $station->getSlug(),
         ];
     }
