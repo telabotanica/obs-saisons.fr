@@ -2,14 +2,15 @@
 
 {% block title %}Hello AdminController!{% endblock %}
 
-{% block content %}
-<div class="example-wrapper">
-    <h1>Coucou, tu veux faire quoi ?</h1>
+{% block main_content %}
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Coucou, tu veux faire quoi ?',
+        'subtitle': ''
+    }) %}
 
     <ul>
         <li><a href="{{ path('admin_species_list') }}">Modifier une fiche espèce ?</a></li>
         <li><a href="{{ path('admin_pages_list') }}">Modifier une page statique ?</a></li>
-        <li><a href="{#{ path('admin_species_list') }#}">Modifier un profil utilisateur ?</a></li>
+        <li><a href="{{ path('admin_users_list') }}">Modifier un profil utilisateur ?</a></li>
     </ul>
-</div>
 {% endblock %}

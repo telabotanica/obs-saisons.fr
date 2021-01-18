@@ -36,6 +36,7 @@ const $locality = $('#station_locality');
 const $observationDate = $('#observation_date');
 const $stationSearchField = $('#station-search-field');
 const $stationSearchForm = $('#station-search-form');
+const $adminDeleteUser = $('#admin-delete-user');
 const imageType = /^image\//;
 
 //map configuration
@@ -55,7 +56,12 @@ const PLACES_CONFIG = {
 $( document ).ready( function() {
     addModsTouchClass();
     toggleMenuSmallDevices();
-    onOpenOverlay();
+    let placesAutocomplete = {};
+    if (0 < $('.ods-places').length) {
+        placesAutocomplete = placesInit();
+    }
+
+    onOpenOverlay(placesAutocomplete);
     onFileEvent();
     onCloseOverlay();
     switchToNextOnHomepage();
@@ -68,15 +74,15 @@ $( document ).ready( function() {
     stationMapDisplay();
     hideFlashMessages();
     stationSearchFormSubmit();
-    if (0 < $('.ods-places').length) {
-        let placesAutocomplete = placesInit();
-    }
     validateEventPostDates();
     initFormEditPage();
+    if(0 < $adminDeleteUser.length) {
+        userDeleteAdminConfirm();
+    }
 });
 
 // open overlay
-function onOpenOverlay() {
+function onOpenOverlay(placesAutocomplete) {
     $('a.open').off('click').on('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -108,11 +114,15 @@ function onOpenOverlay() {
 
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
+                case 'admin-user':
+                    editProfilePreSetFields(dataAttrs);
+                    openDetailsField();
+                    break;
                 case 'obs-infos':
                     onObsInfo($thisLink, dataAttrs);
                     break;
                 case 'station':
-                    onLocation();
+                    onLocation(placesAutocomplete);
                     toggleMap();
                     editStationPreSetFields(dataAttrs);
                     break;
@@ -140,10 +150,18 @@ function onOpenOverlay() {
 }
 
 function setEditOverlayForm($overlay, $form, $thisLink, dataAttrs) {
-    let formActionReset = '/'+dataAttrs.open+'/new',
-        editionPath = '/'+dataAttrs.open;
+    let formActionReset = '/',
+        editionPath = '/';
 
-    if (0 <= $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
+    if ('admin-user' === dataAttrs.open) {
+        let adminUserProfileFormAction = 'admin/user/';
+
+        formActionReset += adminUserProfileFormAction+'new';
+        editionPath += adminUserProfileFormAction + dataAttrs['user']['id'];
+    } else if (0 <= $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
+        formActionReset += dataAttrs.open+'/new';
+        editionPath += dataAttrs.open;
+
         if ('station' !== dataAttrs.open) {
             let stationId;
 
@@ -697,6 +715,11 @@ function placesInit() {
 }
 
 function stationPlacesLocation(placesAutocomplete, map, marker) {
+    let $places = $('.ods-places');
+    if (0 < $places.length && valOk($places.val())) {
+        $places.siblings('button.ap-input-icon').toggle();
+    }
+
     //Algolia places configuration
     placesAutocomplete.on('change', function (e) {
         onPosition(map, e.suggestion.latlng, marker);
@@ -722,7 +745,7 @@ function placesRemove() {
 }
 
 // Location events management
-function onLocation() {
+function onLocation(placesAutocomplete) {
     let mapInfo = mapLocation(),
         marker = mapInfo.marker,
         map = mapInfo.map;
@@ -734,6 +757,11 @@ function onLocation() {
             onPosition(map, {'lat': latitude,'lng': longitude}, marker);
         }
     });
+
+    if (!valOk(placesAutocomplete)) {
+        let placesAutocomplete = placesInit();
+    }
+
     stationPlacesLocation(placesAutocomplete, map, marker);
 }
 
@@ -1153,7 +1181,7 @@ function mapDisplay(
 function editProfilePreSetFields(dataAttrs) {
     let user = dataAttrs.user;
 
-    if ($('.overlay.profile').hasClass('edit')) {
+    if ($('.overlay.'+dataAttrs.open).hasClass('edit')) {
         if (valOk(user.avatar) && '' !== user.avatar) {
             $('.upload-zone-placeholder').addClass('hidden');
             $('img.placeholder-img').addClass('obj').attr('src', user.avatar);
@@ -1317,6 +1345,14 @@ function stationSearchFormSubmit() {
 
 function hideFlashMessages() {
     $('.app-flashes').delay(5000).slideUp(300);
+}
+
+function userDeleteAdminConfirm() {
+    $adminDeleteUser.on('click', function (event) {
+        if(!confirm('Confirmer la suppression du compte')) {
+            event.preventDefault();
+        }
+    });
 }
 
 function valOk(value, comparisonDirection = true, compareTo = null) {

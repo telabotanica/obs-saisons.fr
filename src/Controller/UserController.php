@@ -6,6 +6,7 @@ use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\ProfileType;
+use App\Form\StationType;
 use App\Form\UserDeleteType;
 use App\Form\UserEmailType;
 use App\Form\UserPasswordType;
@@ -309,6 +310,12 @@ class UserController extends AbstractController
 
         $stations = $manager->getRepository(Station::class)
             ->findAllOrderedByLastActive($user);
+
+        $station = new Station();
+        $stationForm = $this->createForm(StationType::class, $station, [
+            'action' => $this->generateUrl('stations_new'),
+        ]);
+
         $observations = $manager->getRepository(Observation::class)
             ->findBy(['user' => $user]);
         foreach ($observations as $observation) {
@@ -321,6 +328,7 @@ class UserController extends AbstractController
         return $this->render('pages/user/dashboard.html.twig', [
             'user' => $user,
             'stations' => $stations,
+            'stationForm' => $stationForm->createView(),
             'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
             'profileForm' => $form->createView(),
@@ -606,7 +614,7 @@ class UserController extends AbstractController
                     } else {
                         $user->setDeletedAt(new DateTime());
                         $user->setIsNewsletterSubscriber(false);
-                        $user->setIsNewsletterSubscriber(false);
+                        $user->setIsMailsSubscriber(false);
                         $user->setStatus(User::STATUS_DELETED);
 
                         $manager->flush();

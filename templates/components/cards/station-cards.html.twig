@@ -9,7 +9,9 @@
     contributorsCount*: int
 #}
 <div class="card">
-    {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
+    {% if canAdminStation is not defined %}
+        {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
+    {% endif %}
     {% if canAdminStation %}
         <a
             href=""

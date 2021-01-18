@@ -1,73 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% set isPrivateDashboard = user == app.user %}
-
 {% block main_content %}
-	{% if isPrivateDashboard %}
-		{% set subtitle =
-			"Bonjour #{app.user.displayName}, bienvenue !<br>
-			Retrouvez les informations principales de votre profil et vos activités de l’observatoire des saisons"
-		%}
-	{% endif %}
-	{% set title = isPrivateDashboard ? 'Votre profil' : "Profil de #{user.displayName}" %}
-
-
-
 	{% include 'layout/header.html.twig' with ({
-		'title': title,
-		'subtitle': subtitle|default
+		'title': "Profil de #{user.displayName}",
+		'subtitle': ''
 	}) %}
 
 
 	<div class="dashboard-container">
 		<div class="member-avatar" style="background-image: url({{ user.avatar ?? '/media/layout/icons/member_default.png' }})"></div>
-		{% if isPrivateDashboard %}
-			<h3>Mes informations</h3>
+			<h3>Informations</h3>
 			<ul>
 				<li><span class="bolder">Pseudo : </span>{{ user.displayName }}</li>
 				<li><span class="bolder">Nom complet : </span>{{ user.name }}</li>
+				<li><span class="bolder">Email : </span>{{ user.email }}</li>
 				<li><span class="bolder">Commune : </span>{{ user.locality }}</li>
 				<li><span class="bolder">Code postal : </span>{{ user.postCode }}</li>
 				<li><span class="bolder">Pays : </span>{{ user.country }}</li>
 				<li><span class="bolder">Type de profil : </span>{{ user.profileType }}</li>
-
-				<li><span class="bolder">Vous {{ user.isNewsletterSubscriber ? 'recevez' : 'ne recevez pas' }} notre lettre d'actualités</span></li>
-				<li><span class="bolder">Vous {{ user.isMailsSubscriber ? 'acceptez' : 'n’acceptez pas'}} d'être contacté(e) par mail</span></li>
+				<li><span class="bolder">{{ user.isNewsletterSubscriber ? 'Reçoit' : 'Ne reçoit pas' }} notre lettre d'actualités</span></li>
+				<li><span class="bolder">{{ user.isMailsSubscriber ? 'Accepte' : 'N’accepte pas'}} d'être contacté(e) par mail</span></li>
 			</ul>
-			<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profil</a>
 
-			<ul>
-				<li><span class="bolder">Votre email : </span>{{ user.email }}</li>
-			</ul>
-			<a href="{{ path('user_parameters_edit') }}" class="button bt-add">Modifier mes paramètres</a>
-			<p>Modifier votre e-mail et/ou votre mot de passe</p>
+		<a href="" class="button bt-add edit open" data-open="admin-user" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier ses paramètres</a>
+        <a href="{{ path('admin_user_password_edit', {userId:user.id}) }}" class="button bt-add">Modifier son mot de passe</a>
 
-		{% endif %}
-		<h3>{{ isPrivateDashboard ? 'mes stations' : 'ses dernières contributions aux stations'}}</h3>
-		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
+		<h3>ses dernières contributions aux stations</h3>
+		<div class="dashboard-text">Les stations auxquelles {{user.displayName}} a contribué ou qu’il a créées :</div>
 		<div class="cards-grid-container">
 			{% set cards = setStationCards(stations) %}
 			{%  for card in cards %}
 				{% include 'components/cards/station-cards.html.twig' with {
 					station: card.station,
 					observations: card.observations,
-					canAdminStation:isPrivateDashboard,
+					canAdminStation: true
 				} %}
 			{% endfor %}
-			{% if isPrivateDashboard %}
-			<div class="card add">
-				<div class="card add">
-					<div class="add-card-content">
-						<div class="add-pointer-icon add-card-marker"></div>
-						<a href="" class="button bt-add open" data-open="station">
-							Créer une station
-						</a>
-					</div>
-				</div>
-			</div>
-			{% endif %}
 		</div>
-		<h3>{{ isPrivateDashboard ? 'mes observations' : 'ses dernières observations' }}</h3>
+		<h3>ses dernières observations</h3>
 		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 		{% set pictureUrl = '' %}
 		<div class="dashboard-obs-info-container">
@@ -110,13 +80,15 @@
 	</div>
 {% endblock %}
 {% block bottom_content %}
-	{% if isPrivateDashboard %}
-		<a href="{{ path('user_delete') }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer mon compte</a>
-		<div class="overlay hidden profile edit">
-			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez votre profil'} %}
-		</div>
-		<div class="overlay hidden station">
-			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
-		</div>
+	{% if not user.status == constant('App\\Entity\\User::STATUS_DELETED') %}
+		<a id='admin-delete-user' href="{{ path('admin_user_delete', {userId: user.id}) }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer son compte</a>
+	{% else %}
+		<a id='admin-cancel-delete-user' href="{{ path('admin_user_cancel_delete', {userId: user.id}) }}" class="button bt-form bt-valider" style="margin: 0;border-radius: 0;">Annuler la suppression de ce compte</a>
 	{% endif %}
+	<div class="overlay hidden admin-user edit">
+		{% include 'admin/edit-user.html.twig' with {action:'profile', form: userForm, title: 'Modifiez son profil'} %}
+	</div>
+    <div class="overlay hidden station">
+        {% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
+    </div>
 {% endblock %}
