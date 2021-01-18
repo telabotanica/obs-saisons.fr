@@ -122,7 +122,7 @@
 			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
 		</div>
 	{% elseif isUserDashboardAdmin %}
-		{% if not user.status == constant('App\\Entity\\User::STATUS_DELETED') %}
+		{% if user.status != constant('App\\Entity\\User::STATUS_DELETED') %}
 			<a id='admin-delete-user' href="{{ path('admin_user_delete', {userId: user.id}) }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer son compte</a>
 		{% else %}
 			<a id='admin-cancel-delete-user' href="{{ path('admin_user_cancel_delete', {userId: user.id}) }}" class="button bt-form bt-valider" style="margin: 0;border-radius: 0;">Annuler la suppression de ce compte</a>
