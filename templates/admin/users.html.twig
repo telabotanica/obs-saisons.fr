@@ -2,10 +2,11 @@
 
 {% block main_content %}
     <ul>
+        <li>email (pseudo : nom)</li>
         {% for user in users %}
             <li>
                 <a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">
-                    {{ user.name }}
+                    {{ user.email }} ({{ user.displayName}} : {{ user.name }})
                 </a>
             </li>
         {% else %}
