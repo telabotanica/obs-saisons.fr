@@ -85,10 +85,10 @@ class EntityJsonSerialize
                 'date' => Closure::fromCallable('self::dateCallbackDetails'),
                 'event' => Closure::fromCallable('self::eventCallback'),
                 'individual' => Closure::fromCallable('self::individualDetailedCallback'),
+                'updatedAt' => Closure::fromCallable('self::timestampableCallback')
             ],
             AbstractNormalizer::IGNORED_ATTRIBUTES => [
                 'createdAt',
-                'updatedAt',
                 'deletedAt',
             ],
         ];
@@ -182,6 +182,10 @@ class EntityJsonSerialize
             'displayDate' => $date->format('d/m/Y'),
             'dayOfYear' => ((int) $date->format('z')) + 1,
         ];
+    }
+
+    public function timestampableCallback(\DateTimeInterface $date) {
+        return $date->format('c');
     }
 
     public function individualCallBack(Individual $individual)
