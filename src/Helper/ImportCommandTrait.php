@@ -69,12 +69,9 @@ trait ImportCommandTrait
      */
     private function runCommand(
         Command $command,
-        /*string $commandName,*/
         InputInterface $input,
         OutputInterface $output
     ) {
-        /*;
-        $output->writeln($commandName);*/
         try {
             return $command->run($input, $output);
         } catch (\Exception $e) {

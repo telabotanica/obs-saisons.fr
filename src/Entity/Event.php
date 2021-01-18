@@ -20,10 +20,8 @@ class Event
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @TODO: rename to code_bbch/bbch_code
      */
-    private $stade_bbch;
+    private $bbch_code;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -65,12 +63,12 @@ class Event
 
     public function getStadeBbch(): ?int
     {
-        return $this->stade_bbch;
+        return $this->bbch_code;
     }
 
-    public function setStadeBbch(?int $stade_bbch): self
+    public function setStadeBbch(?int $bbch_code): self
     {
-        $this->stade_bbch = $stade_bbch;
+        $this->bbch_code = $bbch_code;
 
         return $this;
     }

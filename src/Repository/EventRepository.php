@@ -25,7 +25,7 @@ class EventRepository extends ServiceEntityRepository
     public function findAllWithBbch()
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.stade_bbch IS NOT NULL')
+            ->andWhere('e.bbch_code IS NOT NULL')
             ->getQuery()
             ->getResult()
             ;
@@ -34,7 +34,7 @@ class EventRepository extends ServiceEntityRepository
     public function findAllWithoutBbch()
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.stade_bbch IS NULL')
+            ->andWhere('e.bbch_code IS NULL')
             ->getQuery()
             ->getResult()
             ;

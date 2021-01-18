@@ -20,7 +20,6 @@ class OdsImportIndividualsCommand extends Command
     private $em;
     private $managerRegistry;
     private $userRepository;
-    private $admin;
     private $io;
 
     public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $em)
@@ -28,7 +27,6 @@ class OdsImportIndividualsCommand extends Command
         $this->em = $em;
         $this->managerRegistry = $managerRegistry;
         $this->userRepository = $this->em->getRepository(User::class);
-        $this->admin = $this->userRepository->findOneBy(['email' => 'contact@obs-saisons.fr']);
 
         parent::__construct();
     }

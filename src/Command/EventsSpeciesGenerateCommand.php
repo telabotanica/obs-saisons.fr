@@ -65,7 +65,7 @@ class EventsSpeciesGenerateCommand extends Command
                 if (null == $stadeBbch) {
                     $event = $eventRepository->findOneBy(['name' => '1ère apparition']);
                 } else {
-                    $event = $eventRepository->findOneBy(['stade_bbch' => $stadeBbch]);
+                    $event = $eventRepository->findOneBy(['bbch_code' => $stadeBbch]);
                 }
 
                 if (!$event) {

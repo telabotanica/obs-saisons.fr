@@ -253,7 +253,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('i.species', 'sp')
             ->select('YEAR(o.date) as year, AVG(DAYOFYEAR(o.date)) as dayOfYear')
             ->addSelect('MAKEDATE(YEAR(o.date), AVG(DAYOFYEAR(o.date))) as date, COUNT(o.date) as date_count')
-            ->addSelect('CONCAT(e.name, \' \', e.stade_bbch) as event')
+            ->addSelect('CONCAT(e.name, \' \', e.bbch_code) as event')
             ->andWhere($qb->expr()->eq('sp.id', ':species'))
             ->setParameter(':species', $species)
             ->andWhere($qb->expr()->in('e.id', ':event'))

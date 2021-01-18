@@ -62,10 +62,10 @@ class EventsImportCommand extends Command
         $eventsData = json_decode(file_get_contents('src/Ressources/ods_events.json'));
 
         foreach ($eventsData as $eventData) {
-            $this->io->section('Creating : '.$eventData->name.' stade '.$eventData->stade_bbch);
+            $this->io->section('Creating : '.$eventData->name.' stade '.$eventData->bbch_code);
 
             $event = new Event();
-            $event->setStadeBbch($eventData->stade_bbch);
+            $event->setStadeBbch($eventData->bbch_code);
             $event->setName($eventData->name);
             $event->setDescription($eventData->description);
             $event->setIsObservable($eventData->is_observable);
@@ -136,7 +136,7 @@ class EventsImportCommand extends Command
             $event = null;
             if ($observationEventBackup['stadeBbch']) {
                 $event = $eventRepository->findOneBy([
-                    'stade_bbch' => $observationEventBackup['stadeBbch'],
+                    'bbch_code' => $observationEventBackup['stadeBbch'],
                 ]);
             } else {
                 $event = $eventRepository->findOneByName('1ère apparition');

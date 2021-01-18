@@ -14,7 +14,6 @@ use App\Service\EntityJsonSerialize;
 use App\Service\HandleDateTime;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -24,12 +23,10 @@ use Twig\TwigFunction;
  */
 class AppExtension extends AbstractExtension
 {
-    private $security;
     private $manager;
 
-    public function __construct(Security $security, EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $manager)
     {
-        $this->security = $security;
         $this->manager = $manager;
     }
 

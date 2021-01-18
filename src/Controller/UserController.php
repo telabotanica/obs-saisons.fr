@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-// use App\Entity\LogEvent;
 use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
@@ -120,16 +119,6 @@ class UserController extends AbstractController
             $user->setResetToken($token);
 
             $manager->persist($user);
-
-            // // Log Event
-
-            // $log = new LogEvent();
-            // $log->setType( LogEvent::USER_REGISTER );
-            // $log->setUser( $user );
-            // $log->setCreatedAt( new \DateTime() );
-            // $manager->persist( $log );
-
-            // --
 
             $manager->flush();
 
