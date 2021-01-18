@@ -317,9 +317,6 @@ class AdminController extends AbstractController
         }
 
         $user->setDeletedAt(new DateTime());
-        $user->setIsNewsletterSubscriber(false);
-        $user->setIsMailsSubscriber(false);
-        $user->setStatus(User::STATUS_DELETED);
 
         $manager->flush();
 

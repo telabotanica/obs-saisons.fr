@@ -349,7 +349,7 @@ class UserController extends AbstractController
         if (!$userForProfile) {
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
-        if (User::STATUS_DELETED === $userForProfile->getStatus()) {
+        if ($userForProfile->getDeletedAt()) {
             throw $this->createNotFoundException('L’utilisateur a été supprimé');
         }
 
@@ -613,9 +613,6 @@ class UserController extends AbstractController
                         $this->addFlash('error', 'Mot de passe incorrect');
                     } else {
                         $user->setDeletedAt(new DateTime());
-                        $user->setIsNewsletterSubscriber(false);
-                        $user->setIsMailsSubscriber(false);
-                        $user->setStatus(User::STATUS_DELETED);
 
                         $manager->flush();
 

@@ -14,7 +14,6 @@ class User implements UserInterface
     public const STATUS_DISABLED = 0;
     public const STATUS_ACTIVE = 1;
     public const STATUS_PENDING = 2;
-    public const STATUS_DELETED = 3;
 
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -234,7 +233,7 @@ class User implements UserInterface
 
     public function getName(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return 'Utilisateur supprimé';
         }
 
@@ -250,7 +249,7 @@ class User implements UserInterface
 
     public function getDisplayName(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return 'Utilisateur supprimé';
         }
 
@@ -322,7 +321,7 @@ class User implements UserInterface
 
     public function getAvatar(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return null;
         }
         return $this->avatar;
@@ -344,7 +343,7 @@ class User implements UserInterface
 
     public function getLocality(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return null;
         }
         return $this->locality;
@@ -359,7 +358,7 @@ class User implements UserInterface
 
     public function getCountry(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return null;
         }
         return $this->country;
@@ -374,7 +373,7 @@ class User implements UserInterface
 
     public function getPostCode(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return null;
         }
         return $this->postCode;
@@ -389,7 +388,7 @@ class User implements UserInterface
 
     public function getProfileType(): ?string
     {
-        if (User::STATUS_DELETED === $this->status) {
+        if ($this->deletedAt) {
             return null;
         }
         return $this->profileType;
