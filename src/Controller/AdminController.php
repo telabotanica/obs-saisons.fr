@@ -210,7 +210,8 @@ class AdminController extends AbstractController
             }
         }
 
-        return $this->render('admin/dashboard.html.twig', [
+        return $this->render('pages/user/dashboard.html.twig', [
+            'isUserDashboardAdmin' => true,
             'user' => $user,
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
@@ -258,9 +259,7 @@ class AdminController extends AbstractController
             $this->addFlash('error', 'Les paramètres de l’utilisateur n’ont pas pu être modifiés');
         }
 
-        return $this->redirectToRoute('admin_user_dashboard', [
-            'userId' => $userId,
-        ]);
+        return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
     }
 
     /**
@@ -293,9 +292,7 @@ class AdminController extends AbstractController
 
                 $this->addFlash('notice', 'Le mot de passe de l’utilisateur a été mis à jour.');
 
-                return $this->redirectToRoute('admin_user_dashboard', [
-                    'userId' => $userId,
-                ]);
+                return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
             }
         }
 

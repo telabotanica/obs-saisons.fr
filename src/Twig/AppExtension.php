@@ -52,6 +52,10 @@ class AppExtension extends AbstractExtension
                 $this,
                 'setStationCards',
             ]),
+            new TwigFunction('displayImageToObservation', [
+                $this,
+                'displayImageToObservation',
+            ]),
             new TwigFunction('setSpeciesDisplayData', [
                 $this,
                 'setSpeciesDisplayData',
@@ -183,6 +187,23 @@ class AppExtension extends AbstractExtension
         }
 
         return $transDateTime->dateTransFormat($pattern, $startDate).' '.$separator.' '.$displayedEndDate;
+    }
+
+    public function displayImageToObservation(Observation $observation): string
+    {
+        if ($observation->getIsMissing()) {
+            return '/media/layout/icons/eye-crossed.svg';
+        } else {
+            if ($observation->getPicture()) {
+                return $observation->getPicture();
+            } else {
+                $pictureName = $observation->getIndividual()->getSpecies()->getPicture();
+                if ('arbres' === $observation->getIndividual()->getSpecies()->getType()->getName()) {
+                    $pictureName .= '_'.substr($observation->getEvent()->getStadeBbch(), 0, 1);
+                }
+                return '/media/species/'.$pictureName.'.jpg';
+            }
+        }
     }
 
     public function setStationCards(array $stations): array
