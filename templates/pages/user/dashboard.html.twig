@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set isPrivateDashboard = user == app.user %}
-{% set isUserDashboardAdmin = isUserDashboardAdmin is defined ? isUserDashboardAdmin : false %}
-
+{% set isUserDashboardAdmin = isUserDashboardAdmin ?? false %}
 {% block main_content %}
 	{% if isPrivateDashboard %}
 		{% set subtitle =
