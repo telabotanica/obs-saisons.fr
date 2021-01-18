@@ -167,7 +167,7 @@ class AdminController extends AbstractController
     {
         // find all users ordered by name
         $users = $manager->getRepository(User::class)
-            ->findBy([], ['name' => 'ASC'])
+            ->findBy([], ['email' => 'ASC'])
         ;
 
         return $this->render('admin/users.html.twig', [
