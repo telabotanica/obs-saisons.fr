@@ -23,7 +23,7 @@ class UserChecker implements UserCheckerInterface
             throw new CustomUserMessageAuthenticationException('Cet utilisateur n’a pas encore été activé.');
         }
 
-        if (User::STATUS_DELETED === $user->getStatus()) {
+        if ($user->getDeletedAt()) {
             throw new CustomUserMessageAuthenticationException('Cet utilisateur a été supprimé.');
         }
     }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    <ul>
+        {% for user in users %}
+            <li>
+                <a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">
+                    {{ user.name }}
+                </a>
+            </li>
+        {% else %}
+            <li>Pas d'utilisateurs</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

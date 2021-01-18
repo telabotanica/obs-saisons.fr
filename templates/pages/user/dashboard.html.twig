@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set isPrivateDashboard = user == app.user %}
-
+{% set isUserDashboardAdmin = isUserDashboardAdmin ?? false %}
 {% block main_content %}
 	{% if isPrivateDashboard %}
 		{% set subtitle =
@@ -21,8 +21,8 @@
 
 	<div class="dashboard-container">
 		<div class="member-avatar" style="background-image: url({{ user.avatar ?? '/media/layout/icons/member_default.png' }})"></div>
-		{% if isPrivateDashboard %}
-			<h3>Mes informations</h3>
+		{% if isPrivateDashboard or isUserDashboardAdmin %}
+			<h3>{{ isPrivateDashboard ? 'mes ' : ''  }}informations</h3>
 			<ul>
 				<li><span class="bolder">Pseudo : </span>{{ user.displayName }}</li>
 				<li><span class="bolder">Nom complet : </span>{{ user.name }}</li>
@@ -30,6 +30,8 @@
 				<li><span class="bolder">Code postal : </span>{{ user.postCode }}</li>
 				<li><span class="bolder">Pays : </span>{{ user.country }}</li>
 				<li><span class="bolder">Type de profil : </span>{{ user.profileType }}</li>
+
+			{% if isPrivateDashboard %}
 
 				<li><span class="bolder">Vous {{ user.isNewsletterSubscriber ? 'recevez' : 'ne recevez pas' }} notre lettre d'actualités</span></li>
 				<li><span class="bolder">Vous {{ user.isMailsSubscriber ? 'acceptez' : 'n’acceptez pas'}} d'être contacté(e) par mail</span></li>
@@ -42,48 +44,55 @@
 			<a href="{{ path('user_parameters_edit') }}" class="button bt-add">Modifier mes paramètres</a>
 			<p>Modifier votre e-mail et/ou votre mot de passe</p>
 
+			{% elseif isUserDashboardAdmin %}
+
+				<li><span class="bolder">{{ user.isNewsletterSubscriber ? 'Reçoit' : 'Ne reçoit pas' }} notre lettre d'actualités</span></li>
+				<li><span class="bolder">{{ user.isMailsSubscriber ? 'Accepte' : 'N’accepte pas' }} d’être contacté(e) par mail</span></li>
+				<li><span class="bolder">Email : </span>{{ user.email }}</li>
+			</ul>
+
+			<a href="" class="button bt-add edit open" data-open="admin-user" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier ses paramètres</a>
+			<a href="{{ path('admin_user_password_edit', {userId:user.id}) }}" class="button bt-add">Modifier son mot de passe</a>
+
+			{% endif %}
+
 		{% endif %}
+
 		<h3>{{ isPrivateDashboard ? 'mes stations' : 'ses dernières contributions aux stations'}}</h3>
-		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou a" }} créées :</div>
+		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou qu’il a" }} créées :</div>
 		<div class="cards-grid-container">
 			{% set cards = setStationCards(stations) %}
 			{%  for card in cards %}
 				{% include 'components/cards/station-cards.html.twig' with {
 					station: card.station,
 					observations: card.observations,
-					canAdminStation: false
+					canAdminStation: isPrivateDashboard or isUserDashboardAdmin,
 				} %}
 			{% endfor %}
+			{% if isPrivateDashboard %}
 			<div class="card add">
-				<div class="add-card-content">
-					<div class="add-pointer-icon add-card-marker"></div>
-					<div class="add-card-text">Vous souhaitez explorer ou créer votre propre station?</div>
-					<a href="{{ path('stations') }}" class="green-link">
-						Rendez-vous sur la page des stations
-					</a>
+				<div class="card add">
+					<div class="add-card-content">
+						<div class="add-pointer-icon add-card-marker"></div>
+						<a href="" class="button bt-add open" data-open="station">
+							Créer une station
+						</a>
+					</div>
 				</div>
 			</div>
+			{% endif %}
 		</div>
 		<h3>{{ isPrivateDashboard ? 'mes observations' : 'ses dernières observations' }}</h3>
 		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
-		{% set pictureUrl = '' %}
 		<div class="dashboard-obs-info-container">
 			{% for observation in observations %}
-				{% if observation.isMissing == 0 %}
-					{% if observation.picture is not null %}
-						{% set pictureUrl = observation.picture %}
-					{% else %}
-						{% set pictureName = observation.individual.species.picture %}
-						{% if observation.individual.species.type.name == 'arbres' %}
-							{% set pictureName = "#{pictureName}_#{observation.event.stadeBbch|first}" %}
-						{% endif %}
-						{% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
-					{% endif %}
-				{% else %}
-					{% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
-				{% endif %}
+				{% set pictureUrl = displayImageToObservation(observation)|default %}
 				<div class="list-cards-item obs">
-					<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }})" target="_blank"></a>
+					{% if observation.picture is not null %}
+						<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }});border:3px dotted #ababab;" title="Image d’observation" target="_blank"></a>
+					{% else %}
+						<div class="list-card-img" style="background-image:url({{ pictureUrl }})"></div>
+					{% endif %}
 					<div class="item-name-block">
 						<div class="item-name">{{ observation.user.displayName }}</div>
 						<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
@@ -107,6 +116,21 @@
 		<a href="{{ path('user_delete') }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer mon compte</a>
 		<div class="overlay hidden profile edit">
 			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez votre profil'} %}
+		</div>
+		<div class="overlay hidden station">
+			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
+		</div>
+	{% elseif isUserDashboardAdmin %}
+		{% if user.deletedAt is null %}
+			<a id='admin-delete-user' href="{{ path('admin_user_delete', {userId: user.id}) }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer son compte</a>
+		{% else %}
+			<a id='admin-cancel-delete-user' href="{{ path('admin_user_cancel_delete', {userId: user.id}) }}" class="button bt-form bt-valider" style="margin: 0;border-radius: 0;">Annuler la suppression de ce compte</a>
+		{% endif %}
+		<div class="overlay hidden admin-user edit">
+			{% include 'admin/edit-user.html.twig' with {action:'profile', form: userForm, title: 'Modifiez son profil'} %}
+		</div>
+		<div class="overlay hidden station">
+			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
 		</div>
 	{% endif %}
 {% endblock %}

@@ -9,7 +9,9 @@
     contributorsCount*: int
 #}
 <div class="card">
-    {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
+    {% if canAdminStation is not defined %}
+        {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
+    {% endif %}
     {% if canAdminStation %}
         <a
             href=""
@@ -41,19 +43,7 @@
         <div class="card-footer-item">
 
             {% for observation in observations|slice(0,4) %}
-                {% set image = '' %}
-                {% if observation.isMissing %}
-                    {% set image = '/media/layout/icons/eye-crossed.svg' %}
-                {% elseif observation.picture is not empty%}
-                    {% set image = observation.picture %}
-                {% else %}
-                    {% set pictureName = observation.individual.species.picture %}
-                    {% if observation.individual.species.type.name == 'arbres' %}
-                        {% set pictureName = "#{pictureName}_#{observation.event.stadeBbch|first}" %}
-                    {% endif %}
-                    {% set image = "/media/species/#{pictureName}.jpg" %}
-                {% endif %}
-                <div class="species-sm" style="background-image: url({{ image }})"></div>
+                <div class="species-sm" style="background-image: url({{ displayImageToObservation(observation)|default }})"></div>
             {% endfor %}
 
             {% if observations|length > 4 %}
