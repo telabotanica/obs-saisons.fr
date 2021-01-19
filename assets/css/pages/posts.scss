@@ -145,7 +145,7 @@
     }
 
     a {
-        color: $green;
+       @extend .green-link;
     }
 
     .event-dates-container {

@@ -25,7 +25,7 @@
 		{% if isPrivateDashboard or isUserDashboardAdmin %}
 
 			<h3>{{ isPrivateDashboard ? 'mes ' : ''  }}informations</h3>
-			<ul>
+			<ul class="ods-list-unstyled">
 				<li><span class="bolder">Pseudo :</span> {{ user.displayName }}</li>
 				<li><span class="bolder">Nom complet :</span> {{ user.name }}</li>
 				<li><span class="bolder">Commune :</span> {{ user.locality }}</li>
@@ -44,7 +44,7 @@
 			{% else %}
 				<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profil</a>
 			{% endif %}
-			<ul>
+			<ul class="ods-list-unstyled">
 				<li><span class="bolder">{{ isPrivateDashboard ? 'votre ' : ''  }}email :</span> {{ user.email }}</li>
 			</ul>
 			<a href="{{ isUserDashboardAdmin ? path('admin_user_parameters_edit', {userId:user.id}) : path('user_parameters_edit')  }}" class="button bt-add">Modifier {{ isPrivateDashboard ? 'm' : 's'  }}es paramètres</a>

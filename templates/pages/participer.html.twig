@@ -3,13 +3,16 @@
 {% block main_content %}
 
     {% include 'layout/header.html.twig' with ({
-        'title': 'Participer',
+        'title': page.title,
         'subtitle':
         "Participez au programme de l’<strong>Observatoire des saisons</strong>.<br>
             Accéder aux <a href=#{path('stations')}>stations d’observation</a>.<br>
             Accéder au <a href=#{path('protocole')}>Protocole</a>."
     }) %}
 
-    {{ page.content|default|raw }}
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
+
 
 {% endblock %}

@@ -42,5 +42,9 @@
     strong {
         font-weight: 600;
     }
+
+    a {
+        @extend .green-link;
+    }
 }
 
