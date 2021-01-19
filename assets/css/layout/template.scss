@@ -18,7 +18,8 @@
     @include flex-1;
     overflow: hidden;
     margin-left: 0;
-    display: block;
+    display: flex;
+    min-height: 100vh;
     box-shadow: 1px 1px 3px 0 rgba(#000, 0.1);
 
     &.home {
@@ -32,6 +33,7 @@
 
 .content.page {
     background-color: $grey303394;
+    flex-grow: 1;
 
     @include media(lg) {
         @include border((top, left), $grey306092);

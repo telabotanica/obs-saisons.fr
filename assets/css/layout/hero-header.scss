@@ -3,7 +3,6 @@
 
     @extend %display-flex-column;
     @extend %align-items-center;
-    @include order(1);
 
     min-height: 340px;
     background-color: $grey303394;
