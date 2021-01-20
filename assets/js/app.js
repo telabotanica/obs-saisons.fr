@@ -20,6 +20,7 @@ import './ui/textarea-auto-resize';
 import './ui/create-map';
 import './ui/results-charts';
 import './ui/results-map';
+import './ui/oembed-to-iframe';
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
