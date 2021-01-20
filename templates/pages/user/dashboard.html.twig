@@ -106,22 +106,18 @@
 	</div>
 {% endblock %}
 {% block bottom_content %}
-	{% if isPrivateDashboard %}
-		<a href="{{ path('user_delete') }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer mon compte</a>
-		<div class="overlay hidden profile edit">
-			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez votre profil'} %}
-		</div>
-		<div class="overlay hidden station">
-			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
-		</div>
-	{% elseif isUserDashboardAdmin %}
-		{% if user.deletedAt is null %}
-			<a id='admin-delete-user' href="{{ path('admin_user_delete', {userId: user.id}) }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer son compte</a>
-		{% else %}
-			<a id='admin-cancel-delete-user' href="{{ path('admin_user_cancel_delete', {userId: user.id}) }}" class="button bt-form bt-valider" style="margin: 0;border-radius: 0;">Annuler la suppression de ce compte</a>
-		{% endif %}
-		<div class="overlay hidden admin-profile edit">
-			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez son profil'} %}
+    {% if isPrivateDashboard or isUserDashboardAdmin %}
+        {% if isPrivateDashboard %}
+            <a href="{{ path('user_delete') }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer mon compte</a>
+        {% elseif isUserDashboardAdmin %}
+            {% if user.deletedAt is null %}
+                <a id='admin-delete-user' href="{{ path('admin_user_delete', {userId: user.id}) }}" class="button bt-form bt-supprimer" style="margin: 0;border-radius: 0;">Supprimer son compte</a>
+            {% else %}
+                <a id='admin-cancel-delete-user' href="{{ path('admin_user_cancel_delete', {userId: user.id}) }}" class="button bt-form bt-valider" style="margin: 0;border-radius: 0;">Annuler la suppression de ce compte</a>
+            {% endif %}
+        {% endif %}
+		<div class="overlay hidden {{ isUserDashboardAdmin ? 'admin-' : '' }}profile edit">
+			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: "Modifiez #{ isUserDashboardAdmin ? 'son' : 'votre' } profil" } %}
 		</div>
 		<div class="overlay hidden station">
 			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}
