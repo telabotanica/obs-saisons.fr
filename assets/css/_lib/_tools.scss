@@ -260,3 +260,14 @@ $third-pc: 100/3;
 %member-avatar-md {
 	@include member-avatar(50px);
 }
+
+/**************************************************
+* FONT SIZE TOOLS
+**************************************************/
+
+@function rem($target, $context: $base_font_size) {
+	@if $target == 0 {
+		@return 0
+	}
+	@return $target / $context + 0rem;
+}

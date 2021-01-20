@@ -7,6 +7,8 @@
         'subtitle': 'Participez au programme de <strong>l’ODS</strong>.'
     }) %}
 
-    {{ page.content|default|raw }}
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
 
 {% endblock %}
