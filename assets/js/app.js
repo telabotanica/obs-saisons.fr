@@ -114,9 +114,8 @@ function onOpenOverlay(placesAutocomplete) {
 
             $('body').css('overflow', 'hidden');
             switch(dataAttrs.open) {
-                case 'admin-user':
+                case 'admin-profile':
                     editProfilePreSetFields(dataAttrs);
-                    openDetailsField();
                     break;
                 case 'obs-infos':
                     onObsInfo($thisLink, dataAttrs);
@@ -150,44 +149,40 @@ function onOpenOverlay(placesAutocomplete) {
 }
 
 function setEditOverlayForm($overlay, $form, $thisLink, dataAttrs) {
-    let formActionReset = '/',
-        editionPath = '/';
+    if ('admin-profile' === dataAttrs.open) {
+        $form.attr('action', dataAttrs.editionPath);
+    } else {
+        let formActionReset = '/'+dataAttrs.open+'/new',
+            editionPath = '/'+dataAttrs.open;
 
-    if ('admin-user' === dataAttrs.open) {
-        let adminUserProfileFormAction = 'admin/user/';
+        if (0 <= $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
+            if ('station' !== dataAttrs.open) {
+                let stationId;
 
-        formActionReset += adminUserProfileFormAction+'new';
-        editionPath += adminUserProfileFormAction + dataAttrs['user']['id'];
-    } else if (0 <= $.inArray(dataAttrs.open, ['station', 'individual', 'observation'])) {
-        formActionReset += dataAttrs.open+'/new';
-        editionPath += dataAttrs.open;
+                if ('observation' === dataAttrs.open) {
+                    let $observation = $('.stage-marker.observation-' + dataAttrs.observationId);
+                    // close obs-infos overlay
+                    $thisLink.closest('.overlay').addClass('hidden');
 
-        if ('station' !== dataAttrs.open) {
-            let stationId;
+                    dataAttrs.observation = $observation.data('observation');
+                    dataAttrs.individualsIds = $observation.data('individualsIds');
+                    dataAttrs.speciesName = dataAttrs.observation.individual.species.vernacularName;
 
-            if ('observation' === dataAttrs.open) {
-                let $observation = $('.stage-marker.observation-' + dataAttrs.observationId);
-                // close obs-infos overlay
-                $thisLink.closest('.overlay').addClass('hidden');
-
-                dataAttrs.observation = $observation.data('observation');
-                dataAttrs.individualsIds = $observation.data('individualsIds');
-                dataAttrs.speciesName = dataAttrs.observation.individual.species.vernacularName;
-
-                stationId = dataAttrs.observation.individual.station.id;
-            } else {
-                stationId = dataAttrs.individual.station.id;
+                    stationId = dataAttrs.observation.individual.station.id;
+                } else {
+                    stationId = dataAttrs.individual.station.id;
+                }
+                formActionReset = '/station/' + stationId + formActionReset;
             }
-            formActionReset = '/station/' + stationId + formActionReset;
+            editionPath += '/' + dataAttrs[dataAttrs.open]['id'];
+            $('.show-on-edit', $overlay).attr('href', editionPath + '/delete');
         }
-        editionPath += '/'+dataAttrs[dataAttrs.open]['id'];
-        $('.show-on-edit', $overlay).attr('href', editionPath+'/delete');
+        $overlay.addClass('edit');
+        $form
+            .attr('action', editionPath+'/edit')
+            .data('formActionReset', formActionReset)
+        ;
     }
-    $overlay.addClass('edit');
-    $form
-        .attr('action', editionPath+'/edit')
-        .data('formActionReset', formActionReset)
-    ;
 
     return dataAttrs;
 }

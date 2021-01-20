@@ -8,9 +8,10 @@ use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\PagePostType;
+use App\Form\ProfileType;
 use App\Form\SpeciesPostType;
 use App\Form\StationType;
-use App\Form\UserEditAdminType;
+use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\SlugGenerator;
@@ -189,7 +190,7 @@ class AdminController extends AbstractController
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
 
-        $userForm = $this->createForm(UserEditAdminType::class, $user);
+        $profileForm = $this->createForm(ProfileType::class, $user);
 
         $stations = $manager->getRepository(Station::class)
             ->findAllOrderedByLastActive($user);
@@ -216,14 +217,14 @@ class AdminController extends AbstractController
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
             'observations' => $observations,
-            'userForm' => $userForm->createView(),
+            'profileForm' => $profileForm->createView(),
         ]);
     }
 
     /**
      * @throws \Exception
      *
-     * @Route("/admin/user/{userId}/edit", name="admin_user_profile_edit", methods={"POST"})
+     * @Route("/admin/user/{userId}/profile/edit", name="admin_user_profile_edit", methods={"POST"})
      */
     public function adminProfileEdit(
         $userId,
@@ -237,35 +238,24 @@ class AdminController extends AbstractController
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
 
-        $form = $this->createForm(UserEditAdminType::class, $user);
-        $vars = $request->request->get('user_edit_admin');
+        $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            //change email
-            if (!empty($vars['email_new'])) {
-                try {
-                    $user->setEmail($vars['email_new']);
-                    $user->setEmailToken(null);
-                } catch (\Exception $e) {
-                    $this->addFlash('warning', $e->getMessage());
-                }
-            }
-
             $manager->flush();
 
-            $this->addFlash('success', 'Vos changements dans les paramètres de l’utilisateur ont été pris en compte');
+            $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
         } else {
-            $this->addFlash('error', 'Les paramètres de l’utilisateur n’ont pas pu être modifiés');
+            $this->addFlash('error', 'Le profile de l’utilisateur n’a pas pu être modifié');
         }
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
     }
 
     /**
-     * @Route("/admin/user/{userId}/password/edit", name="admin_user_password_edit")
+     * @Route("/admin/user/{userId}/parameters/edit", name="admin_user_parameters_edit")
      */
-    public function adminUserPasswordEdit(
+    public function adminUserParametersEdit(
         $userId,
         Request $request,
         EntityManagerInterface $manager,
@@ -277,12 +267,39 @@ class AdminController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
-        $form = $this->createForm(UserPasswordEditAdminType::class, $user);
 
-        $form->handleRequest($request);
+        //change email
+        $emailForm = $this->createForm(UserEmailEditAdminType::class, $user);
+        $userEmailFieldValue = $request->request->get('user_email_edit_admin');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userPasswordFieldValue = $request->request->get('user_password_edit_admin')['password'];
+        if (!empty($userEmailFieldValue['email_new'])) {
+            $emailForm->handleRequest($request);
+        }
+
+        if ($emailForm->isSubmitted() && $emailForm->isValid()) {
+            try {
+                $user->setEmail($userEmailFieldValue['email_new']);
+                $user->setEmailToken(null);
+                $manager->flush();
+                $this->addFlash('notice', 'L’email de l’utilisateur a été mis à jour.');
+            } catch (\Exception $e) {
+                $this->addFlash('warning', $e->getMessage());
+            }
+
+            return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
+        }
+
+        //change password
+        $passwordForm = $this->createForm(UserPasswordEditAdminType::class, $user);
+
+        $userPasswordFieldValues = $request->request->get('user_password_edit_admin');
+
+        if (!empty($userPasswordFieldValues['password']) && !empty($userPasswordFieldValues['password']['first'])) {
+            $passwordForm->handleRequest($request);
+        }
+
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+            $userPasswordFieldValue = $userPasswordFieldValues['password'];
             if ($userPasswordFieldValue['first'] !== $userPasswordFieldValue['second']) {
                 $this->addFlash('error', 'Le mot de passe et sa confirmation doivent être identiques');
             } else {
@@ -296,8 +313,9 @@ class AdminController extends AbstractController
             }
         }
 
-        return $this->render('admin/edit-user-password-page.html.twig', [
-            'form' => $form->createView(),
+        return $this->render('admin/edit-user-parameters-page.html.twig', [
+            'passwordForm' => $passwordForm->createView(),
+            'emailForm' => $emailForm->createView(),
             'user' => $user,
         ]);
     }

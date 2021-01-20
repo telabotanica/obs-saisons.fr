@@ -3,11 +3,17 @@
 {% block main_content %}
 
     {% include 'layout/header.html.twig' with ({
-        'title': 'Modifier le mot de passe de cet utilisateur',
+        'title': 'Modifier le mot de passe ou l’email de cet utilisateur',
         'subtitle': null
     }) %}
+    {% include 'admin/edit-user-email.html.twig' with ({
+        'form':emailForm,
+        'action': 'user_email_edit_admin',
+        'isPage': true,
+        'user':user
+    }) %}
     {% include 'admin/edit-user-password.html.twig' with ({
-        'form':form,
+        'form':passwordForm,
         'action': 'user_password_edit_admin',
         'isPage': true,
         'user':user

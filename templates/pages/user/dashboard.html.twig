@@ -21,40 +21,34 @@
 
 	<div class="dashboard-container">
 		<div class="member-avatar" style="background-image: url({{ user.avatar ?? '/media/layout/icons/member_default.png' }})"></div>
+
 		{% if isPrivateDashboard or isUserDashboardAdmin %}
+
 			<h3>{{ isPrivateDashboard ? 'mes ' : ''  }}informations</h3>
 			<ul>
-				<li><span class="bolder">Pseudo : </span>{{ user.displayName }}</li>
-				<li><span class="bolder">Nom complet : </span>{{ user.name }}</li>
-				<li><span class="bolder">Commune : </span>{{ user.locality }}</li>
-				<li><span class="bolder">Code postal : </span>{{ user.postCode }}</li>
-				<li><span class="bolder">Pays : </span>{{ user.country }}</li>
-				<li><span class="bolder">Type de profil : </span>{{ user.profileType }}</li>
+				<li><span class="bolder">Pseudo :</span> {{ user.displayName }}</li>
+				<li><span class="bolder">Nom complet :</span> {{ user.name }}</li>
+				<li><span class="bolder">Commune :</span> {{ user.locality }}</li>
+				<li><span class="bolder">Code postal :</span> {{ user.postCode }}</li>
+				<li><span class="bolder">Pays :</span> {{ user.country }}</li>
+				<li><span class="bolder">Type de profil :</span> {{ user.profileType }}</li>
 
-			{% if isPrivateDashboard %}
-
-				<li><span class="bolder">Vous {{ user.isNewsletterSubscriber ? 'recevez' : 'ne recevez pas' }} notre lettre d'actualités</span></li>
-				<li><span class="bolder">Vous {{ user.isMailsSubscriber ? 'acceptez' : 'n’acceptez pas'}} d'être contacté(e) par mail</span></li>
-			</ul>
-			<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profil</a>
-
-			<ul>
-				<li><span class="bolder">Votre email : </span>{{ user.email }}</li>
-			</ul>
-			<a href="{{ path('user_parameters_edit') }}" class="button bt-add">Modifier mes paramètres</a>
-			<p>Modifier votre e-mail et/ou votre mot de passe</p>
-
-			{% elseif isUserDashboardAdmin %}
-
-				<li><span class="bolder">{{ user.isNewsletterSubscriber ? 'Reçoit' : 'Ne reçoit pas' }} notre lettre d'actualités</span></li>
-				<li><span class="bolder">{{ user.isMailsSubscriber ? 'Accepte' : 'N’accepte pas' }} d’être contacté(e) par mail</span></li>
-				<li><span class="bolder">Email : </span>{{ user.email }}</li>
+				{% set recieves = isPrivateDashboard ? 'recevez' : 'reçoit' %}
+				{% set accepts =  isPrivateDashboard ? 'acceptez' : 'accepte' %}
+				<li><span class="bolder">{{ isPrivateDashboard ? 'vous ' : ''  }}{{ user.isNewsletterSubscriber ? recieves : "ne #{recieves} pas" }} notre lettre d'actualités</span></li>
+				<li><span class="bolder">{{ isPrivateDashboard ? 'vous ' : ''  }}{{ user.isMailsSubscriber ? accepts : "n’#{accepts} pas"}} d'être contacté(e) par mail</span></li>
 			</ul>
 
-			<a href="" class="button bt-add edit open" data-open="admin-user" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier ses paramètres</a>
-			<a href="{{ path('admin_user_password_edit', {userId:user.id}) }}" class="button bt-add">Modifier son mot de passe</a>
-
+			{% if isUserDashboardAdmin %}
+				<a href="" class="button bt-add edit open" data-open="admin-profile" data-user="{{ user|getJsonSerializedEditUserProfile }}" data-edition-path="{{ path('admin_user_profile_edit', {userId:user.id}) }}">Modifier son profil</a>
+			{% else %}
+				<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profil</a>
 			{% endif %}
+			<ul>
+				<li><span class="bolder">{{ isPrivateDashboard ? 'Votre e' : 'E'  }}mail :</span> {{ user.email }}</li>
+			</ul>
+			<a href="{{ isUserDashboardAdmin ? path('admin_user_parameters_edit', {userId:user.id}) : path('user_parameters_edit')  }}" class="button bt-add">Modifier {{ isPrivateDashboard ? 'm' : 's'  }}es paramètres</a>
+			<p>Modifier {{ isPrivateDashboard ? 'votre' : 'son'  }} e-mail et/ou {{ isPrivateDashboard ? 'votre' : 'son'  }} mot de passe</p>
 
 		{% endif %}
 
@@ -126,8 +120,8 @@
 		{% else %}
 			<a id='admin-cancel-delete-user' href="{{ path('admin_user_cancel_delete', {userId: user.id}) }}" class="button bt-form bt-valider" style="margin: 0;border-radius: 0;">Annuler la suppression de ce compte</a>
 		{% endif %}
-		<div class="overlay hidden admin-user edit">
-			{% include 'admin/edit-user.html.twig' with {action:'profile', form: userForm, title: 'Modifiez son profil'} %}
+		<div class="overlay hidden admin-profile edit">
+			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: 'Modifiez son profil'} %}
 		</div>
 		<div class="overlay hidden station">
 			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}

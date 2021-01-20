@@ -8,16 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserEmailType extends AbstractType
 {
-    public function __construct()
-    {
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
