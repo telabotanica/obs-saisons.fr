@@ -45,7 +45,7 @@
 				<a href="" class="button bt-add edit open" data-open="profile" data-user="{{ user|getJsonSerializedEditUserProfile }}">Modifier mon profil</a>
 			{% endif %}
 			<ul>
-				<li><span class="bolder">{{ isPrivateDashboard ? 'Votre e' : 'E'  }}mail :</span> {{ user.email }}</li>
+				<li><span class="bolder">{{ isPrivateDashboard ? 'votre ' : ''  }}email :</span> {{ user.email }}</li>
 			</ul>
 			<a href="{{ isUserDashboardAdmin ? path('admin_user_parameters_edit', {userId:user.id}) : path('user_parameters_edit')  }}" class="button bt-add">Modifier {{ isPrivateDashboard ? 'm' : 's'  }}es paramètres</a>
 			<p>Modifier {{ isPrivateDashboard ? 'votre' : 'son'  }} e-mail et/ou {{ isPrivateDashboard ? 'votre' : 'son'  }} mot de passe</p>
