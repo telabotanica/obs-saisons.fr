@@ -16,8 +16,13 @@
     }
 
     .bolder {
+        display: inline-block;
         color: $grey131117;
         @include font_default_semi_bold;
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
     }
 
     ul {
