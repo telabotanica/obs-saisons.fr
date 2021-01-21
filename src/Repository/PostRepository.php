@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use InvalidArgumentException;
@@ -106,6 +107,21 @@ class PostRepository extends ServiceEntityRepository
         }
 
         return $ret;
+    }
+
+    /**
+     * @return Post[]
+     */
+    public function findByAuthor(User $user): array
+    {
+        $userPosts = [];
+        foreach ($this->posts as $post) {
+            if ($user === $post->getAuthor()) {
+                $userPosts[] = $post;
+            }
+        }
+
+        return $userPosts;
     }
 
     public function findLastFeaturedPosts(int $limit = 3): array

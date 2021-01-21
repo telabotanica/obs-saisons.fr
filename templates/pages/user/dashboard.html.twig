@@ -52,17 +52,20 @@
 
 		{% endif %}
 
+
 		<h3>{{ isPrivateDashboard ? 'mes stations' : 'ses dernières contributions aux stations'}}</h3>
 		<div class="dashboard-text">Les stations auxquelles {{ isPrivateDashboard ? 'vous avez contribué ou que vous avez' : "#{user.displayName} a contribué ou qu’il a" }} créées :</div>
 		<div class="cards-grid-container">
-			{% set cards = setStationCards(stations) %}
-			{%  for card in cards %}
-				{% include 'components/cards/station-cards.html.twig' with {
-					station: card.station,
-					observations: card.observations,
-					canAdminStation: isPrivateDashboard or isUserDashboardAdmin,
-				} %}
-			{% endfor %}
+			{% if stations is not empty %}
+				{% set cards = setStationCards(stations) %}
+				{%  for card in cards %}
+					{% include 'components/cards/station-cards.html.twig' with {
+						station: card.station,
+						observations: card.observations,
+						canAdminStation: isPrivateDashboard or isUserDashboardAdmin,
+					} %}
+				{% endfor %}
+			{% endif %}
 			{% if isPrivateDashboard %}
 			<div class="card add">
 				<div class="card add">
@@ -76,35 +79,77 @@
 			</div>
 			{% endif %}
 		</div>
-		<h3>{{ isPrivateDashboard ? 'mes observations' : 'ses dernières observations' }}</h3>
-		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
-		<div class="dashboard-obs-info-container">
-			{% for observation in observations %}
-				{% set pictureUrl = displayImageToObservation(observation)|default %}
-				<div class="list-cards-item obs">
-					{% if observation.picture is not null %}
-						<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }});border:3px dotted #ababab;" title="Image d’observation" target="_blank"></a>
-					{% else %}
-						<div class="list-card-img" style="background-image:url({{ pictureUrl }})"></div>
-					{% endif %}
-					<div class="item-name-block">
-						<div class="item-name">{{ observation.user.displayName }}</div>
-						<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
-						<div class="item-heading-dropdown">{{ observation.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}</div>
-					</div>
-					<div class="item-details">
-						<div class="grey">{{ observation.individual.species.vernacularName }}</div>
-						<div>Station :
-							<a href="{{ path("stations_show", {'slug': observation.individual.station.slug}) }}" class="bolder">
-								{{ observation.individual.station.name }}
-							</a>
+
+
+		{% if observations is not empty %}
+			<h3>{{ isPrivateDashboard ? 'mes' : 'ses dernières' }} observations</h3>
+			{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
+			<div class="dashboard-obs-info-container">
+				{% for observation in observations %}
+					{% set pictureUrl = displayImageToObservation(observation)|default %}
+					<div class="list-cards-item obs">
+						{% if observation.picture is not null %}
+							<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }});border:3px dotted #ababab;" title="Image d’observation" target="_blank"></a>
+						{% else %}
+							<div class="list-card-img" style="background-image:url({{ pictureUrl }})"></div>
+						{% endif %}
+						<div class="item-name-block">
+							<div class="item-name">{{ observation.user.displayName }}</div>
+							<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
+							<div class="item-heading-dropdown">{{ observation.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}</div>
+						</div>
+						<div class="item-details">
+							<div class="grey">{{ observation.individual.species.vernacularName }}</div>
+							<div>Station :
+								<a href="{{ path("stations_show", {'slug': observation.individual.station.slug}) }}" class="bolder">
+									{{ observation.individual.station.name }}
+								</a>
+							</div>
 						</div>
 					</div>
-				</div>
-			{% endfor %}
-		</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		{% if (isPrivateDashboard or isUserDashboardAdmin) and categorizedPosts is not empty %}
+			<h3>{{ isPrivateDashboard ? 'm' : 's' }}es publications</h3>
+			<div class="dashboard-posts-info-container">
+				{% for category, posts in categorizedPosts %}
+					<h4>
+						{{
+							constant('App\\Service\\BreadcrumbsGenerator::MENU')[
+								constant('App\\Entity\\Post::CATEGORY_PARENT_ROUTE')[category]
+							]|default('Pages')
+						}}
+					</h4>
+
+					{% if constant('App\\Entity\\Post::CATEGORY_NEWS') == category %}
+						{% for id, newsPost in posts %}
+							{% include 'components/list-cards/news-list-cards.html.twig' with {newsPost:newsPost}  %}
+						{% endfor %}
+
+					{% elseif constant('App\\Entity\\Post::CATEGORY_EVENT') == category %}
+						{% for id, eventPost in posts %}
+							{% include 'components/list-cards/events-list-cards.html.twig' with {eventPost:eventPost} %}
+						{% endfor %}
+
+					{% elseif constant('App\\Entity\\Post::CATEGORY_PAGE') == category and is_granted('ROLE_ADMIN') %}
+						{% for page in posts %}
+							{% include 'components/list-cards/post-pages-list-cards.html.twig' with {page:page} %}
+						{% endfor %}
+
+					{% elseif constant('App\\Entity\\Post::CATEGORY_SPECIES') == category and is_granted('ROLE_ADMIN') %}
+						{% for species in posts %}
+							{% include 'components/list-cards/post-species-list-cards.html.twig' with {species:species} %}
+						{% endfor %}
+
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% endif %}
 	</div>
 {% endblock %}
+
 {% block bottom_content %}
     {% if isPrivateDashboard or isUserDashboardAdmin %}
         {% if isPrivateDashboard %}

@@ -14,6 +14,7 @@ use App\Form\StationType;
 use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EditablePosts;
 use App\Service\SlugGenerator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -182,7 +183,8 @@ class AdminController extends AbstractController
      */
     public function adminUserDashboard(
         $userId,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        EditablePosts $editablePosts
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
@@ -212,9 +214,12 @@ class AdminController extends AbstractController
             }
         }
 
+        $categorizedPosts = $editablePosts->getFilteredPosts($user);
+
         return $this->render('pages/user/dashboard.html.twig', [
             'isUserDashboardAdmin' => true,
             'user' => $user,
+            'categorizedPosts' => $categorizedPosts,
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
             'observations' => $observations,

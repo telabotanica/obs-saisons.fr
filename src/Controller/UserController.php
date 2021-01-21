@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Observation;
+use App\Entity\Post;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\ProfileType;
@@ -12,6 +13,7 @@ use App\Form\UserEmailType;
 use App\Form\UserPasswordType;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EditablePosts;
 use App\Service\EmailSender;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -300,7 +302,8 @@ class UserController extends AbstractController
      */
     public function userDashboard(
         EntityManagerInterface $manager,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EditablePosts $editablePosts
     ) {
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
@@ -325,10 +328,13 @@ class UserController extends AbstractController
             }
         }
 
+        $categorizedPosts = $editablePosts->getFilteredPosts($user, $this->isGranted(User::ROLE_ADMIN));
+
         return $this->render('pages/user/dashboard.html.twig', [
             'user' => $user,
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
+            'categorizedPosts' => $categorizedPosts,
             'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('user_dashboard'),
             'profileForm' => $form->createView(),
