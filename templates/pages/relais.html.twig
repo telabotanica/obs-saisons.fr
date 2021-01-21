@@ -7,6 +7,8 @@
         'subtitle': 'Tous les relais du programme <strong>Observatoire des saisons</strong> près de chez vous.'
     }) %}
 
-    {{ page.content|default|raw }}
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
 
 {% endblock %}

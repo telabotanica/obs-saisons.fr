@@ -7,7 +7,9 @@
         'subtitle': 'Tous les outils et ressources du programme <strong>Observatoire des saisons</strong>.'
     }) %}
 
-    {{ page.content|default|raw }}
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
 
 {% endblock %}
 

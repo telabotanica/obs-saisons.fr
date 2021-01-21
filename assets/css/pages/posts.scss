@@ -26,17 +26,21 @@
 
 .rich-text-block {
     @extend %publication-date-style;
+    zoom: 1;
 
     &::after {
-        clear: both;
+        content: "";
+        display: block;
+        height:  0;
+        clear:   both;
     }
 
-    &::before,
-    &::after {
-        content: " ";
-        display: table;
-        @include grid-column(1, 2);
-        @include grid-row(1, 2);
+    @include media(md) {
+        .image-style-side {
+            float:         right;
+            margin-left:   rem(50px);
+            margin-bottom: rem(50px);
+        }
     }
 
     &.page-content {
@@ -88,8 +92,6 @@
     figure {
         position: relative;
         display: block;
-        width: 100%;
-        max-width: 100%;
 
         @include gap(margin, "h", auto);
 
@@ -145,7 +147,7 @@
     }
 
     a {
-        color: $green;
+       @extend .green-link;
     }
 
     .event-dates-container {

@@ -10,6 +10,9 @@
             Accéder au <a href=#{path('protocole')}>Protocole</a>."
     }) %}
 
-    {{ page.content|default|raw }}
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
+
 
 {% endblock %}
