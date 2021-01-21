@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Observation;
-use App\Entity\Post;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\ProfileType;
