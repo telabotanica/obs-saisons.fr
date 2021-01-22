@@ -6,7 +6,6 @@
 			<h2 class="site-title">Contribuez à la recherche sur le changement climatique !</h2>
 		{% endif %}
 		<div class="right-links">
-			<a href="{{ path('participer') }}" class="topbar-link">Comment ça marche&nbsp;?</a>
 			{% if not is_granted(constant('App\\Security\\Voter\\UserVoter::LOGGED')) %}
 				<a href="{{ path('user_login') }}" class="topbar-link">Connexion</a>
 			{% else %}
