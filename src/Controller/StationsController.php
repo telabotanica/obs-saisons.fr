@@ -62,6 +62,10 @@ class StationsController extends AbstractController
         EntityManagerInterface $manager,
         int $page = 1
     ) {
+        if (!$this->isGranted(UserVoter::LOGGED)) {
+            return $this->redirectToRoute('user_login');
+        }
+
         $limit = 11;
         $station = new Station();
         $form = $this->createForm(StationType::class, $station, [

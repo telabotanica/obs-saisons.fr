@@ -10,9 +10,11 @@
 		</a>
 
 		{% for menuItem, menuItemTitle in constant('App\\Service\\BreadcrumbsGenerator::MENU') %}
-			<a href="{{ path(menuItem) }}" class="nav-item{{ activeMenuItem == menuItem ? ' active' }}">
-				<div>{{ menuItemTitle }}</div>
-			</a>
+			{% if 'my_stations' != menuItem or app.user %}
+				<a href="{{ path(menuItem) }}" class="nav-item{{ activeMenuItem == menuItem ? ' active' }}{{ 'my_stations' == menuItem ? ' featured'  }}">
+					<div class="">{{ menuItemTitle }}</div>
+				</a>
+			{% endif %}
 		{% endfor %}
 
 		{% if not is_granted(constant('App\\Security\\Voter\\UserVoter::LOGGED')) %}

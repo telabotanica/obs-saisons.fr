@@ -366,6 +366,8 @@ class AppExtension extends AbstractExtension
         foreach ($slugs as $slug) {
             if (in_array($slug, $menuSlugs)) {
                 return $slug;
+            } elseif ('stations' === $slug) {
+                return 'my_stations';
             }
         }
 
