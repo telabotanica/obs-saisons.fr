@@ -109,11 +109,12 @@ class AdminController extends AbstractController
 
         return $this->render('admin/pages.html.twig', [
             'pages' => $pages,
-            'staticPagesList' => BreadcrumbsGenerator::MENU + BreadcrumbsGenerator::OTHER_BREADCRUMBS,
+            'staticPagesList' => array_merge(BreadcrumbsGenerator::MENU, BreadcrumbsGenerator::OTHER_BREADCRUMBS),
         ]);
     }
 
     /**
+     * @throws \Exception
      * @Route("/admin/page/{slug}/edit/{mode}", defaults={"mode"="wysiwyg"}, name="admin_static_page_edit")
      */
     public function editStaticPage(
@@ -136,7 +137,7 @@ class AdminController extends AbstractController
             $page->setContent('');
             $page->setAuthor($this->getUser());
             $page->setCategory(Post::CATEGORY_PAGE);
-            $page->setTitle((BreadcrumbsGenerator::MENU + BreadcrumbsGenerator::OTHER_BREADCRUMBS)[$slug]);
+            $page->setTitle(array_merge(BreadcrumbsGenerator::MENU, BreadcrumbsGenerator::OTHER_BREADCRUMBS)[$slug]);
             $page->setCreatedAt(new \DateTime());
             $page->setSlug($slug);
             $page->setStatus(Post::STATUS_ACTIVE);

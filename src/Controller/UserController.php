@@ -330,7 +330,7 @@ class UserController extends AbstractController
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
             'observations' => $observations,
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('user_dashboard'),
             'profileForm' => $form->createView(),
         ]);
     }
@@ -368,7 +368,7 @@ class UserController extends AbstractController
             'user' => $userForProfile,
             'stations' => $stations,
             'observations' => $observations,
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('/dashboard'),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('user_profile'),
         ]);
     }
 

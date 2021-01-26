@@ -2,7 +2,9 @@
     <a href="{{ path('stations') }}" class="station-tab {{ app.request.get('_route') != 'stations' ? 'not' }}">
        Toutes les stations
     </a>
-    <a href="{{ path('my_stations') }}" class="station-tab {{ app.request.get('_route') != 'my_stations' ? 'not' }}">
-        Mes stations
-    </a>
+    {% if app.user %}
+        <a href="{{ path('my_stations') }}" class="station-tab {{ app.request.get('_route') != 'my_stations' ? 'not' }}">
+            Mes stations
+        </a>
+    {% endif %}
 </div>

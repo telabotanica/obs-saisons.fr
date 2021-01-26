@@ -10,6 +10,7 @@ use App\Entity\Observation;
 use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\User;
+use App\Service\BreadcrumbsGenerator;
 use App\Service\EntityJsonSerialize;
 use App\Service\HandleDateTime;
 use App\Service\SlugGenerator;
@@ -67,6 +68,10 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getEventsSpeciesForSpecies', [
                 $this,
                 'getEventsSpeciesForSpecies',
+            ]),
+            new TwigFunction('getActiveMenuItem', [
+                $this,
+                'getActiveMenuItem',
             ]),
         ];
     }
@@ -201,6 +206,7 @@ class AppExtension extends AbstractExtension
                 if ('arbres' === $observation->getIndividual()->getSpecies()->getType()->getName()) {
                     $pictureName .= '_'.substr($observation->getEvent()->getStadeBbch(), 0, 1);
                 }
+
                 return '/media/species/'.$pictureName.'.jpg';
             }
         }
@@ -346,5 +352,25 @@ class AppExtension extends AbstractExtension
         }
 
         return $speciesDisplayData;
+    }
+
+    public function getActiveMenuItem(array $breadcrumbs = [])
+    {
+        if (empty($breadcrumbs)) {
+            return 'homepage';
+        }
+
+        $slugs = array_reverse(array_keys($breadcrumbs)); //look for the deepest match in path
+        $menuSlugs = array_keys(BreadcrumbsGenerator::MENU);
+
+        foreach ($slugs as $slug) {
+            if (in_array($slug, $menuSlugs)) {
+                return $slug;
+            } elseif ('stations' === $slug) {
+                return 'my_stations';
+            }
+        }
+
+        return null;
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Entity\Species;
 use App\Service\BreadcrumbsGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SpeciesController extends AbstractController
@@ -19,13 +19,12 @@ class SpeciesController extends AbstractController
      * @Route("/especes", name="especes")
      */
     public function species(
-        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator
     ) {
         return $this->render('pages/species/species-list.html.twig', [
             'allSpecies' => $manager->getRepository(Species::class)->findAll(),
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
         ]);
     }
 
@@ -33,7 +32,6 @@ class SpeciesController extends AbstractController
      * @Route("/especes/{vernacularName}", name="species_single_show")
      */
     public function showSpecy(
-        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $vernacularName
@@ -48,15 +46,11 @@ class SpeciesController extends AbstractController
             $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
-        $activePageBreadCrumb = [
-            'slug' => $vernacularName,
-            'title' => $vernacularName,
-        ];
-
         return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
             'post' => $post,
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($vernacularName)
+                ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]),
         ]);
     }
 }

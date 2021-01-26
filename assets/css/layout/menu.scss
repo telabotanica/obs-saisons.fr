@@ -90,6 +90,11 @@
 		border-left: 4px solid grey(53);
 	}
 
+	&.featured {
+		color: $green;
+		font-weight: 900;
+	}
+
 	&.home {
 		@include display-flex;
 		border-top-style: none;
