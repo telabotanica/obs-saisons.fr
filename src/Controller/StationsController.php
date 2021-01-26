@@ -23,16 +23,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class StationsController extends AbstractController
 {
-
     /* ************************************************ *
      * Stations
      * ************************************************ */
 
     /**
-     * @Route("/participer/stations/{page<\d+>}", name="stations", methods={"GET"})
+     * @Route("/stations/{page<\d+>}", name="stations", methods={"GET"})
      */
     public function stations(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $manager,
         int $page = 1
@@ -47,7 +45,7 @@ class StationsController extends AbstractController
 
         return $this->render('pages/stations.html.twig', [
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit),
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'stationForm' => $form->createView(),
             'pagination' => [
                 'currentPage' => $page,
@@ -57,10 +55,9 @@ class StationsController extends AbstractController
     }
 
     /**
-     * @Route("/participer/stations/mes-stations/{page<\d+>}", name="my_stations", methods={"GET"})
+     * @Route("/stations/mes-stations/{page<\d+>}", name="my_stations", methods={"GET"})
      */
     public function myStations(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $manager,
         int $page = 1
@@ -77,7 +74,9 @@ class StationsController extends AbstractController
         return $this->render('pages/stations.html.twig', [
             'title' => 'Mes stations d’observation',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)
+                ->setActiveTrail()
+                ->getBreadcrumbs('stations'),
             'stationForm' => $form->createView(),
             'pagination' => [
                 'currentPage' => $page,
@@ -87,7 +86,7 @@ class StationsController extends AbstractController
     }
 
     /**
-     * @Route("/participer/stations/recherche", name="stations_search")
+     * @Route("/stations/recherche", name="stations_search")
      */
     public function stationsSearch(
         Request $request,
@@ -103,7 +102,8 @@ class StationsController extends AbstractController
         return $this->render('pages/stations-search.html.twig', [
             'stationsArray' => $searchService->stationsSearch($searchTerm),
             'search' => $searchTerm,
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail()
+                ->getBreadcrumbs('stations'),
         ]);
     }
 
@@ -181,13 +181,11 @@ class StationsController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
-
             return new JsonResponse([
                 'success' => true,
                 'redirect' => $this->generateUrl('my_stations'),
             ]);
         }
-
 
         return $this->redirectToRoute('my_stations');
     }
@@ -244,10 +242,9 @@ class StationsController extends AbstractController
      * ************************************************ */
 
     /**
-     * @Route("/participer/stations/{slug}", name="stations_show", methods={"GET"})
+     * @Route("/stations/{slug}", name="stations_show", methods={"GET"})
      */
     public function stationPage(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $manager,
         string $slug
@@ -286,11 +283,6 @@ class StationsController extends AbstractController
 
         $observations = $manager->getRepository(Observation::class)->findAllObservationsInStation($station, $individuals);
 
-        $breadcrumbs = $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo(), [
-            'slug' => $slug,
-            'title' => $station->getName(),
-        ]);
-
         return $this->render('pages/station-page.html.twig', [
             'station' => $station,
             'individuals' => $individuals,
@@ -298,7 +290,8 @@ class StationsController extends AbstractController
             'stationForm' => $stationForm->createView(),
             'individualForm' => $individualForm->createView(),
             'observationForm' => $observationForm->createView(),
-            'breadcrumbs' => $breadcrumbs,
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($slug, $station->getName())
+                ->getBreadcrumbs('stations'),
         ]);
     }
 

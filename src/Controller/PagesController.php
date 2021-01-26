@@ -10,7 +10,6 @@ use App\Service\BreadcrumbsGenerator;
 use App\Service\FeaturedSpecies;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -44,7 +43,6 @@ class PagesController extends AbstractController
      * @Route("/a-propos", name="a-propos")
      */
     public function aPropos(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $em
     ) {
@@ -53,7 +51,7 @@ class PagesController extends AbstractController
         );
 
         return $this->render('pages/a-propos.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
         ]);
     }
@@ -62,7 +60,6 @@ class PagesController extends AbstractController
      * @Route("/participer", name="participer")
      */
     public function participer(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $em
     ) {
@@ -71,7 +68,7 @@ class PagesController extends AbstractController
         );
 
         return $this->render('pages/participer.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
         ]);
     }
@@ -80,7 +77,6 @@ class PagesController extends AbstractController
      * @Route("/participer/protocole", name="protocole")
      */
     public function protocole(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $em
     ) {
@@ -89,7 +85,7 @@ class PagesController extends AbstractController
         );
 
         return $this->render('pages/protocole.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
         ]);
     }
@@ -98,7 +94,6 @@ class PagesController extends AbstractController
      * @Route("/outils-ressources", name="outils-ressources")
      */
     public function outilsRessources(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $em
     ) {
@@ -107,7 +102,7 @@ class PagesController extends AbstractController
         );
 
         return $this->render('pages/outils-ressources.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
         ]);
     }
@@ -116,7 +111,6 @@ class PagesController extends AbstractController
      * @Route("/relais", name="relais")
      */
     public function relais(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $em
     ) {
@@ -125,7 +119,7 @@ class PagesController extends AbstractController
         );
 
         return $this->render('pages/relais.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
         ]);
     }

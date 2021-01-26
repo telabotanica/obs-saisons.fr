@@ -1,4 +1,4 @@
-{% set activeMenuItem = breadcrumbs is defined ? breadcrumbs|keys|first : 'homepage' %}
+{% set activeMenuItem = getActiveMenuItem(breadcrumbs|default([])) %}
 <div class="menu">
 	<a href="/" class="site-name">
 		<img src="{{ asset('media/layout/logoodstexte.png') }}" alt="" class="logo">

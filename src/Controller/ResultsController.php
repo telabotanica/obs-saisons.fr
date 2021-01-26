@@ -11,7 +11,6 @@ use App\Entity\TypeSpecies;
 use App\Service\BreadcrumbsGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ResultsController extends AbstractController
@@ -20,7 +19,6 @@ class ResultsController extends AbstractController
      * @Route("/resultats", name="resultats")
      */
     public function results(
-        Request $request,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         EntityManagerInterface $em
     ) {
@@ -46,7 +44,7 @@ class ResultsController extends AbstractController
         }
 
         return $this->render('pages/resultats.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs($request->getPathInfo()),
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'allTypeSpecies' => $typeSpecies,
             'allSpecies' => $species,
             'minYear' => $minYear,

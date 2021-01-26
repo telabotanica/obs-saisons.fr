@@ -31,7 +31,6 @@ class PostsController extends AbstractController
      * @Route("/actualites/{page<\d+>}", name="news_posts_list")
      */
     public function newsPostsList(
-        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
@@ -42,7 +41,7 @@ class PostsController extends AbstractController
         $lastPage = ceil(count($newsPostRepository->findAll()) / $limit);
 
         return $this->render('pages/post/news-posts-list.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
+            'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'newsPosts' => $newsPosts,
             'pagination' => [
                 'currentPage' => $page,
@@ -59,7 +58,6 @@ class PostsController extends AbstractController
      * @Route("/actualites/{slug<\d*\/\d*\/.+>}", name="news_post_single_show")
      */
     public function newsPostSingle(
-        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
@@ -72,13 +70,9 @@ class PostsController extends AbstractController
 
         $nextPreviousNewsPosts = $newsPostRepository->findNextPrevious($newsPost->getId());
 
-        $activePageBreadCrumb = [
-            'slug' => $slug,
-            'title' => $newsPost->getTitle(),
-        ];
-
         return $this->render('pages/post/news-post-single.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('news_posts_list', $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($slug, $newsPost->getTitle())
+                ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$newsPost->getCategory()]),
             'post' => $newsPost,
             'nextPreviousNewsPosts' => $nextPreviousNewsPosts,
         ]);
@@ -198,16 +192,9 @@ class PostsController extends AbstractController
             'Vous n’êtes pas autorisé à publier cet article'
         );
 
-        $activePageBreadCrumb = [
-            'slug' => $newsPost->getSlug(),
-            'title' => $newsPost->getTitle(),
-        ];
-
         return $this->render('pages/post/news-post-preview.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(
-                Post::CATEGORY_PARENT_ROUTE[$newsPost->getCategory()],
-                $activePageBreadCrumb
-            ),
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($newsPost->getSlug(), $newsPost->getTitle())
+                ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$newsPost->getCategory()]),
             'post' => $newsPost,
         ]);
     }
@@ -220,7 +207,6 @@ class PostsController extends AbstractController
      * @Route("/evenements/{page<\d+>}", name="event_posts_list")
      */
     public function eventPostsList(
-        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
@@ -231,7 +217,7 @@ class PostsController extends AbstractController
         $lastPage = ceil(count($eventPostRepository->findAll()) / $limit);
 
         return $this->render('pages/post/event-posts-list.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(str_replace('/'.$page, '', $request->getPathInfo())),
+            'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'eventPosts' => $eventPosts,
             'pagination' => [
                 'currentPage' => $page,
@@ -349,16 +335,9 @@ class PostsController extends AbstractController
             'Vous n’êtes pas autorisé à publier cet évènement'
         );
 
-        $activePageBreadCrumb = [
-            'slug' => $eventPost->getSlug(),
-            'title' => $eventPost->getTitle(),
-        ];
-
         return $this->render('pages/post/event-post-preview.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(
-                Post::CATEGORY_PARENT_ROUTE[$eventPost->getCategory()],
-                $activePageBreadCrumb,
-                ),
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($eventPost->getSlug(), $eventPost->getTitle())
+                ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$eventPost->getCategory()]),
             'post' => $eventPost,
         ]);
     }
@@ -367,7 +346,6 @@ class PostsController extends AbstractController
      * @Route("/evenements/{slug<\d*\/?\d*\/?.+>}", name="event_post_single_show")
      */
     public function eventPostSingle(
-        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         string $slug
@@ -380,13 +358,9 @@ class PostsController extends AbstractController
 
         $nextPreviousEventsPosts = $eventPostRepository->findNextPrevious($eventPost->getId());
 
-        $activePageBreadCrumb = [
-            'slug' => $slug,
-            'title' => $eventPost->getTitle(),
-        ];
-
         return $this->render('pages/post/event-post-single.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('event_posts_list', $activePageBreadCrumb),
+            'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($slug, $eventPost->getTitle())
+                ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$eventPost->getCategory()]),
             'post' => $eventPost,
             'nextPreviousEventsPosts' => $nextPreviousEventsPosts,
         ]);
