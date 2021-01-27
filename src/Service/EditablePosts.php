@@ -46,13 +46,11 @@ class EditablePosts
                 if (Post::CATEGORY_SPECIES !== $category) {
                     $categorizedPosts[$category] = $posts;
                 } else {
-                    if (!empty($posts)) {
-                        foreach ($posts as $post) {
-                            $species = $this->em->getRepository(Species::class)
-                                ->findOneBy(['post' => $post]);
-                            if (!empty($species)) {
-                                $categorizedPosts[$category][] = $species;
-                            }
+                    foreach ($posts as $post) {
+                        $species = $this->em->getRepository(Species::class)
+                            ->findOneBy(['post' => $post]);
+                        if (!empty($species)) {
+                            $categorizedPosts[$category][] = $species;
                         }
                     }
                 }
