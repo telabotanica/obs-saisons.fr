@@ -1,0 +1,12 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block title %}Message envoyé via Contactez-nous, Observatoire des Saisons{% endblock %}
+
+{% block preheader %}Message d'un utilisateur{% endblock %}
+
+{% block body %}
+    <h1>Message de {{ userEmail }}</h1>
+    <p>Objet : {{ subject }}</p>
+    <p>Message :<p>
+    <p>{{ message }}</p>
+{% endblock %}

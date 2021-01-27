@@ -1,7 +1,5 @@
 <?php
 
-// src/Controller/PagesController.php
-
 namespace App\Controller;
 
 use App\Entity\Observation;
