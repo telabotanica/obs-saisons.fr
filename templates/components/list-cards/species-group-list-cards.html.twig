@@ -1,0 +1,15 @@
+<div id="{{ speciesGroupName|slugify }}" class="list-cards-item" data-id="{{ id }}">
+
+    <div class="list-card-img" style="background-image:url({{ "/media/species/#{speciesGroup[0].picture}.jpg" }})"></div>
+
+    <a href="{{ path('species_single_show', {'vernacularName': speciesGroup[0].vernacularName}) }}" class="item-name-block">
+        <div class="item-heading-dropdown">{{ speciesGroupName|capitalize }}s</div>
+    </a>
+
+    {% for species in speciesGroup %}
+        <div class="item-details species">
+            <span class="bolder">{{ species.vernacularName }}</span> <span class="scientific-name">{{ species.scientificName }}</span>
+        </div>
+    {% endfor %}
+
+</div>

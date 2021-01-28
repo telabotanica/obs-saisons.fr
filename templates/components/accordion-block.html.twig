@@ -1,29 +1,16 @@
-{#
-    #: optionnal,
-    *: required,
-    |: default
-    [int..int]: array indexes ([...] if no precise length defined)
-
-    id#: string
-    accordion*: object
-        title*: string
-        contents*: array
-            [...](content) object
-                type#: string ('include', 'html') | 'include'
-(if 'include')  include_uri*: string (template uri)
-                include_object_name*: string
-                data*: object (data to transmit to template)
-(else)          html*: string (html)
-
-
-
-#}
 <div class="accordion-block" data-id="{{ id }}" data-tab="{{ type.reign }}">
     <h4><a href="" class="accordion-title-dropdown right-arrow-orange-icon">{{ type.name|capitalize }}</a></h4>
 
     <div class="accordion-content" style="display: none">
-        {% for species in typeSpecies %}
-                {% include 'components/list-cards/species-list-cards.html.twig' %}
+        {% for speciesGroupName, speciesGroup in speciesGroups(typeSpecies) %}
+            {% if 1 == speciesGroup|length or 'arbres' != type.name %}
+                {% include 'components/list-cards/species-list-cards.html.twig' with {species:speciesGroup[0]} %}
+            {% else %}
+                {% include 'components/list-cards/species-group-list-cards.html.twig' with {
+                    speciesGroup:speciesGroup,
+                    speciesGroupName:speciesGroupName
+                } %}
+            {% endif %}
         {% endfor %}
     </div>
 </div>
