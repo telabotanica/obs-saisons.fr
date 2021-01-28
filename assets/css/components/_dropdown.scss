@@ -1,0 +1,106 @@
+@mixin ods-dropdowns {
+    position: relative;
+    @include gap(margin, "h", auto);
+    color: grey(13);
+    text-align: left;
+    vertical-align: top;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/******************************************/
+
+.dropdown {
+    position: relative;
+    z-index: 900;
+    @include display-flex-center;
+    @include flex-direction-column;
+    @include gap(padding, "v", 5px);
+    background-color: #fff;
+    border-top: 1px solid grey(87);
+    color: grey(33);
+    font-size: 14px;
+    letter-spacing: 2px;
+
+    @include media(sm) {
+        background-color: transparent;
+    }
+
+    @include media(md) {
+        display: inline-block;
+        @include grid-align-self(stretch);
+        @include grid-justify-self(stretch);
+        width: 100%;
+        @include gap(padding, "v", 0);
+        @include gap(margin, "h", auto);
+        text-align: left;
+        border-top: none;
+    }
+}
+
+.dropdown-toggle {
+    @include ods-dropdowns;
+    @include display-flex-center;
+    height: 100%;
+    border-radius: 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+
+    @include media(md) {
+        @include gap(padding, "v", 8px);
+        @include gap(padding, "h", 15px);
+        font-size: 18px;
+        line-height: 20px;
+    }
+
+    &.calendar-dropdown {
+        @include media(md) {
+            border-right: 1px solid grey(87);
+        }
+    }
+
+    .active-year {
+        @include background-image(null, 100% 50%, 10px);
+        padding-right: 20px;
+
+        @include media(md) {
+            background-size: 12px;
+        }
+    }
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    min-width: 50%;
+    min-height: 50px;
+    max-height: 180px;
+    background-color: #fdfaf7;
+    border-top: 1px solid $grey301486;
+    box-shadow: 0 1px 3px 0 rgba(#000, 0.1);
+
+    @include media(md) {
+        min-width: 100%;
+    }
+
+    &.profile-menu {
+        right: 0;
+    }
+}
+
+.dropdown-link {
+    @include ods-dropdowns;
+    display: block;
+    padding: 10px 20px;
+    background: $grey303394;
+    text-align: center;
+    opacity: 0.7;
+
+    &:nth-child(odd) {
+        background: #fff;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}

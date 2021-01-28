@@ -31,7 +31,7 @@
         <div class="grid top">
             {# Display years dropdown menu #}
             <div class="grid_1-3_1-2 dropdown">
-                <div class="dropdown-toggle" style="{{ years|length > 1 ? 'cursor: pointer;' }}">
+                <div class="dropdown-toggle calendar-dropdown" style="{{ years|length > 1 ? 'cursor: pointer;' }}">
                     <div class="active-year {{ years|length > 1 ? 'down-arrow-icon' }}">{{ first_year }}</div>
                 </div>
                 {% if years|length > 1 %}
