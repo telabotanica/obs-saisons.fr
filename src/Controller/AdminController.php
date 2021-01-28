@@ -191,6 +191,7 @@ class AdminController extends AbstractController
      */
     public function adminUserDashboard(
         $userId,
+        Request $request,
         EntityManagerInterface $manager,
         EditablePosts $editablePosts
     ) {
@@ -223,6 +224,7 @@ class AdminController extends AbstractController
         }
 
         $categorizedPosts = $editablePosts->getFilteredPosts($user);
+        $this->setOrigin($request->getPathInfo());
 
         return $this->render('pages/user/dashboard.html.twig', [
             'isUserDashboardAdmin' => true,
