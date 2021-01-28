@@ -9,7 +9,7 @@
         'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
     }) %}
 
-    <a href="{{ path('admin_species_list') }}">Retour à la liste des espèces</a>
+    <a href="{{ origin ?? path('admin_species_list') }}">Retour</a>
     <br>
     <a href="{{ path('species_single_show', {vernacularName: species.vernacularName}) }}">Voir la fiche</a>
 

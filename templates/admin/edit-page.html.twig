@@ -10,7 +10,7 @@
         'subtitle': 'Édition de la page statique',
     }) %}
 
-    <a href="{{ path('admin_pages_list') }}">Retour à la liste des pages</a>
+    <a href="{{ origin ?? path('admin_pages_list') }}">Retour</a>
     <br>
     <a href="{{ path(page.slug) }}">Voir la page</a>
 
