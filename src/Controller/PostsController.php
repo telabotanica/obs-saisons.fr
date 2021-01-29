@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\EventPostType;
 use App\Form\NewsPostType;
+use App\Helper\OriginPageTrait;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PostsController extends AbstractController
 {
+    use OriginPageTrait;
     /* ************************************************ *
      * news list
      * ************************************************ */
@@ -31,6 +33,7 @@ class PostsController extends AbstractController
      * @Route("/actualites/{page<\d+>}", name="news_posts_list")
      */
     public function newsPostsList(
+        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
@@ -39,6 +42,8 @@ class PostsController extends AbstractController
         $newsPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_NEWS);
         $newsPosts = $newsPostRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($newsPostRepository->findAll()) / $limit);
+
+        $this->setOrigin($request->getPathInfo());
 
         return $this->render('pages/post/news-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
@@ -105,6 +110,8 @@ class PostsController extends AbstractController
 
             $this->addFlash('notice', 'L’article a été créé');
 
+            $this->setOrigin($this->generateUrl('news_posts_list'));
+
             return $this->redirectToRoute('news_post_preview', [
                 'postId' => $newsPost->getId(),
             ]);
@@ -155,7 +162,9 @@ class PostsController extends AbstractController
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => true,
-                    'redirect' => $this->generateUrl('news_posts_list'),
+                    'redirect' => $this->generateUrl('news_post_preview', [
+                        'postId' => $newsPost->getId(),
+                    ]),
                 ]);
             }
 
@@ -168,6 +177,7 @@ class PostsController extends AbstractController
             'post' => $newsPost,
             'form' => $form->createView(),
             'upload' => $router->generate('image_create'),
+            'origin' => $this->getOrigin(),
         ]);
     }
 
@@ -196,6 +206,7 @@ class PostsController extends AbstractController
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($newsPost->getSlug(), $newsPost->getTitle())
                 ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$newsPost->getCategory()]),
             'post' => $newsPost,
+            'origin' => $this->getOrigin(),
         ]);
     }
 
@@ -207,6 +218,7 @@ class PostsController extends AbstractController
      * @Route("/evenements/{page<\d+>}", name="event_posts_list")
      */
     public function eventPostsList(
+        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
@@ -215,6 +227,8 @@ class PostsController extends AbstractController
         $eventPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_EVENT);
         $eventPosts = $eventPostRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($eventPostRepository->findAll()) / $limit);
+
+        $this->setOrigin($request->getPathInfo());
 
         return $this->render('pages/post/event-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
@@ -254,6 +268,8 @@ class PostsController extends AbstractController
             $manager->flush();
 
             $this->addFlash('notice', 'L’évènement a été créé');
+
+            $this->setOrigin($this->generateUrl('news_posts_list'));
 
             return $this->redirectToRoute('event_post_preview', [
                 'postId' => $eventPost->getId(),
@@ -311,6 +327,7 @@ class PostsController extends AbstractController
             'post' => $eventPost,
             'form' => $form->createView(),
             'upload' => $router->generate('image_create'),
+            'origin' => $this->getOrigin(),
         ]);
     }
 
@@ -339,6 +356,7 @@ class PostsController extends AbstractController
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($eventPost->getSlug(), $eventPost->getTitle())
                 ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$eventPost->getCategory()]),
             'post' => $eventPost,
+            'origin' => $this->getOrigin(),
         ]);
     }
 
@@ -394,8 +412,8 @@ class PostsController extends AbstractController
 
         $this->addFlash('notice', 'La publication a été supprimée');
 
-        return $this->redirectToRoute(
-            Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]
+        return $this->redirect(
+            $this->generateOriginUrl(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()])
         );
     }
 
@@ -427,8 +445,8 @@ class PostsController extends AbstractController
 
         $this->addFlash('notice', 'La publication a été activée');
 
-        return $this->redirectToRoute(
-            Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]
+        return $this->redirect(
+            $this->generateOriginUrl(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()])
         );
     }
 }

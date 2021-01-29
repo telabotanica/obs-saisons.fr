@@ -13,7 +13,9 @@ use App\Form\SpeciesPostType;
 use App\Form\StationType;
 use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
+use App\Helper\OriginPageTrait;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EditablePosts;
 use App\Service\SlugGenerator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +27,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AdminController extends AbstractController
 {
+    use OriginPageTrait;
     /**
      * @Route("/admin", name="home_admin")
      */
@@ -42,6 +45,8 @@ class AdminController extends AbstractController
     {
         $species = $manager->getRepository(Species::class)
             ->findAllOrderedByTypeAndVernacularName();
+
+        $this->setOrigin($this->generateUrl('news_posts_list'));
 
         return $this->render('admin/species.html.twig', [
             'speciesList' => $species,
@@ -95,6 +100,7 @@ class AdminController extends AbstractController
             'editMode' => $mode,
             'form' => $form->createView(),
             'upload' => $router->generate('image_create'),
+            'origin' => $this->getOrigin(),
         ]);
     }
 
@@ -106,6 +112,8 @@ class AdminController extends AbstractController
         $pages = $manager->getRepository(Post::class)
             ->findBy(['category' => Post::CATEGORY_PAGE])
         ;
+
+        $this->setOrigin($this->generateUrl('news_posts_list'));
 
         return $this->render('admin/pages.html.twig', [
             'pages' => $pages,
@@ -159,6 +167,7 @@ class AdminController extends AbstractController
             'editMode' => $mode,
             'form' => $form->createView(),
             'upload' => $router->generate('image_create'),
+            'origin' => $this->getOrigin(),
         ]);
     }
 
@@ -182,7 +191,9 @@ class AdminController extends AbstractController
      */
     public function adminUserDashboard(
         $userId,
-        EntityManagerInterface $manager
+        Request $request,
+        EntityManagerInterface $manager,
+        EditablePosts $editablePosts
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
@@ -212,9 +223,13 @@ class AdminController extends AbstractController
             }
         }
 
+        $categorizedPosts = $editablePosts->getFilteredPosts($user);
+        $this->setOrigin($request->getPathInfo());
+
         return $this->render('pages/user/dashboard.html.twig', [
             'isUserDashboardAdmin' => true,
             'user' => $user,
+            'categorizedPosts' => $categorizedPosts,
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
             'observations' => $observations,

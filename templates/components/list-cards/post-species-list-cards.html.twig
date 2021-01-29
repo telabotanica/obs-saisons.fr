@@ -1,0 +1,34 @@
+{#
+    *: required
+
+    id*: int
+    species*: object
+
+#}
+<div id="{{ species.vernacularName|slugify }}" class="list-cards-item">
+
+    <div class="list-card-img" style="background-image:url({{ "/media/species/#{species.picture}.jpg" }})"></div>
+
+    <a href="{{ path('species_single_show', {'vernacularName': species.vernacularName}) }}" class="item-name-block">
+        <div class="item-heading-dropdown">{{ species.vernacularName|capitalize }}</div>
+        <div class="item-name scientific-name">{{ species.scientificName }}</div>
+        {% if constant('App\\Entity\\Post::STATUS_PENDING') == species.post.status %}
+            <div class="item-name warning-content">En attente de publication</div>
+        {% endif %}
+    </a>
+    {% include 'components/buttons/dual-squared-button.html.twig' with {
+        buttons: [
+            {
+                'icon': 'edit-list',
+                'label': 'Modifier',
+                'url' : path('admin_species_page_edit', {speciesId:species.id})
+            },
+            {
+                'icon': 'delete',
+                'label': 'Supprimer',
+                'url' : path('post_delete', {postId:species.post.id})
+            }
+        ]
+    } %}
+
+</div>

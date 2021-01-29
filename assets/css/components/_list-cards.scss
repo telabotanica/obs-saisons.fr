@@ -143,6 +143,10 @@
         display: block;
     }
 
+    &.warning-content {
+        color: $orange;
+    }
+
     &.pointer-orange-icon {
         @include background-image(null, 0 50%, 12px);
         padding-left: 18px;

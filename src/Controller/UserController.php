@@ -10,8 +10,10 @@ use App\Form\StationType;
 use App\Form\UserDeleteType;
 use App\Form\UserEmailType;
 use App\Form\UserPasswordType;
+use App\Helper\OriginPageTrait;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EditablePosts;
 use App\Service\EmailSender;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +35,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class UserController extends AbstractController
 {
     use TargetPathTrait;
+    use OriginPageTrait;
 
     /**
      * Login form can be embed in pages.
@@ -299,8 +302,10 @@ class UserController extends AbstractController
      * @Route("/user/dashboard", name="user_dashboard", methods={"GET"})
      */
     public function userDashboard(
+        Request $request,
         EntityManagerInterface $manager,
-        BreadcrumbsGenerator $breadcrumbsGenerator
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EditablePosts $editablePosts
     ) {
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
@@ -325,10 +330,14 @@ class UserController extends AbstractController
             }
         }
 
+        $categorizedPosts = $editablePosts->getFilteredPosts($user, $this->isGranted(User::ROLE_ADMIN));
+        $this->setOrigin($request->getPathInfo());
+
         return $this->render('pages/user/dashboard.html.twig', [
             'user' => $user,
             'stations' => $stations,
             'stationForm' => $stationForm->createView(),
+            'categorizedPosts' => $categorizedPosts,
             'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs('user_dashboard'),
             'profileForm' => $form->createView(),

@@ -1,0 +1,31 @@
+{#
+    *: required
+
+    id*: int
+    page*: object
+
+#}
+<div id="{{ page.slug }}" class="list-cards-item">
+
+    <a href="{{ path(page.slug) }}" class="item-name-block">
+        <div class="item-heading-dropdown">{{ page.title|capitalize }}</div>
+        {% if constant('App\\Entity\\Post::STATUS_PENDING') == page.status %}
+            <div class="item-name warning-content">En attente de publication</div>
+        {% endif %}
+    </a>
+    {% include 'components/buttons/dual-squared-button.html.twig' with {
+        buttons: [
+            {
+                'icon': 'edit-list',
+                'label': 'Modifier',
+                'url' : path('admin_static_page_edit', {slug:page.slug})
+            },
+            {
+                'icon': 'delete',
+                'label': 'Supprimer',
+                'url' : path('post_delete', {postId:page.id})
+            }
+        ]
+    } %}
+
+</div>
