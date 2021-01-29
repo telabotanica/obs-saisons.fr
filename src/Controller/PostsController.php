@@ -33,6 +33,7 @@ class PostsController extends AbstractController
      * @Route("/actualites/{page<\d+>}", name="news_posts_list")
      */
     public function newsPostsList(
+        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
@@ -41,6 +42,8 @@ class PostsController extends AbstractController
         $newsPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_NEWS);
         $newsPosts = $newsPostRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($newsPostRepository->findAll()) / $limit);
+
+        $this->setOrigin($request->getPathInfo());
 
         return $this->render('pages/post/news-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
@@ -215,6 +218,7 @@ class PostsController extends AbstractController
      * @Route("/evenements/{page<\d+>}", name="event_posts_list")
      */
     public function eventPostsList(
+        Request $request,
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
         int $page = 1
@@ -223,6 +227,8 @@ class PostsController extends AbstractController
         $eventPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_EVENT);
         $eventPosts = $eventPostRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($eventPostRepository->findAll()) / $limit);
+
+        $this->setOrigin($request->getPathInfo());
 
         return $this->render('pages/post/event-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),

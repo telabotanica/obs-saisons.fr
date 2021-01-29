@@ -2,20 +2,20 @@
 
 namespace App\Helper;
 
-use Symfony\Component\HttpFoundation\Session\Session;
+
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 trait OriginPageTrait
 {
-    public Session $session;
+    public SessionInterface $session;
     public UrlGeneratorInterface $router;
 
     public function __construct(
         SessionInterface $session,
         UrlGeneratorInterface $router
     ) {
-        $this->session = $session ?? new Session();
+        $this->session = $session;
         $this->router = $router;
     }
 

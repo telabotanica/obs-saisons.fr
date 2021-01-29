@@ -80,38 +80,37 @@
 			{% endif %}
 		</div>
 
-
-		{% if observations is not empty %}
-			<h3>{{ isPrivateDashboard ? 'mes' : 'ses dernières' }} observations</h3>
-			{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
-			<div class="dashboard-obs-info-container">
-				{% for observation in observations %}
-					{% set pictureUrl = displayImageToObservation(observation)|default %}
-					<div class="list-cards-item obs">
-						{% if observation.picture is not null %}
-							<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }});border:3px dotted #ababab;" title="Image d’observation" target="_blank"></a>
-						{% else %}
-							<div class="list-card-img" style="background-image:url({{ pictureUrl }})"></div>
-						{% endif %}
-						<div class="item-name-block">
-							<div class="item-name">{{ observation.user.displayName }}</div>
-							<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
-							<div class="item-heading-dropdown">{{ observation.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}</div>
-						</div>
-						<div class="item-details">
-							<div class="grey">{{ observation.individual.species.vernacularName }}</div>
-							<div>Station :
-								<a href="{{ path("stations_show", {'slug': observation.individual.station.slug}) }}" class="bolder">
-									{{ observation.individual.station.name }}
-								</a>
-							</div>
+		<h3>{{ isPrivateDashboard ? 'mes' : 'ses dernières' }} observations</h3>
+		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
+		<div class="dashboard-obs-info-container">
+			{% for observation in observations %}
+				{% set pictureUrl = displayImageToObservation(observation)|default %}
+				<div class="list-cards-item obs">
+					{% if observation.picture is not null %}
+						<a href="{{ pictureUrl }}" class="list-card-img" style="background-image:url({{ pictureUrl }});border:3px dotted #ababab;" title="Image d’observation" target="_blank"></a>
+					{% else %}
+						<div class="list-card-img" style="background-image:url({{ pictureUrl }})"></div>
+					{% endif %}
+					<div class="item-name-block">
+						<div class="item-name">{{ observation.user.displayName }}</div>
+						<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
+						<div class="item-heading-dropdown">{{ observation.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}</div>
+					</div>
+					<div class="item-details">
+						<div class="grey">{{ observation.individual.species.vernacularName }}</div>
+						<div>Station :
+							<a href="{{ path("stations_show", {'slug': observation.individual.station.slug}) }}" class="bolder">
+								{{ observation.individual.station.name }}
+							</a>
 						</div>
 					</div>
-				{% endfor %}
-			</div>
-		{% endif %}
+				</div>
+			{% else %}
+				<p>{{ isPrivateDashboard ? 'vous n’avez' : 'L’utilisateur n’a' }} pas encore d’observations</p>
+			{% endfor %}
+		</div>
 
-		{% if (isPrivateDashboard or isUserDashboardAdmin) and categorizedPosts is not empty %}
+		{% if (isPrivateDashboard or isUserDashboardAdmin) %}
 			<h3>{{ isPrivateDashboard ? 'm' : 's' }}es publications</h3>
 			<div class="dashboard-posts-info-container">
 				{% for category, posts in categorizedPosts %}
@@ -144,6 +143,8 @@
 						{% endfor %}
 
 					{% endif %}
+				{% else %}
+					<p>{{ isPrivateDashboard ? 'vous n’avez' : 'L’utilisateur n’a' }} pas encore de publications</p>
 				{% endfor %}
 			</div>
 		{% endif %}

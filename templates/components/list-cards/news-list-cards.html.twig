@@ -4,8 +4,8 @@
 
     <a href="{{ path('news_post_single_show', {'slug': newsPost.slug}) }}" class="item-name-block">
         <div class="item-heading-dropdown ">{{ newsPost.title|raw }}</div>
-        {% if newsPost.status == 0 %}
-            <div class="item-name" style="color: #FF7F2A">En attente de publication</div>
+        {% if constant('App\\Entity\\Post::STATUS_PENDING') == newsPost.status %}
+            <div class="item-name warning-content">En attente de publication</div>
         {% endif %}
     </a>
 

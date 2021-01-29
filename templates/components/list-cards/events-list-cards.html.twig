@@ -14,8 +14,8 @@
     <a href="{{ path('event_post_single_show', {'slug': eventPost.slug}) }}" class="item-name-block">
         <div class="item-heading-dropdown ">{{ eventPost.title|raw }}</div>
         <div class="item-name pointer-orange-icon">{{ eventPost.location }}</div>
-        {% if eventPost.status == 0 %}
-            <div class="item-name" style="color: #FF7F2A">En attente de publication</div>
+        {% if constant('App\\Entity\\Post::STATUS_PENDING') == eventPost.status %}
+            <div class="item-name warning-content">En attente de publication</div>
         {% endif %}
     </a>
 

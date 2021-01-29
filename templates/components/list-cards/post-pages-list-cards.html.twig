@@ -9,8 +9,8 @@
 
     <a href="{{ path(page.slug) }}" class="item-name-block">
         <div class="item-heading-dropdown">{{ page.title|capitalize }}</div>
-        {% if page.status == 0 %}
-            <div class="item-name" style="color: #FF7F2A">En attente de publication</div>
+        {% if constant('App\\Entity\\Post::STATUS_PENDING') == page.status %}
+            <div class="item-name warning-content">En attente de publication</div>
         {% endif %}
     </a>
     {% include 'components/buttons/dual-squared-button.html.twig' with {
