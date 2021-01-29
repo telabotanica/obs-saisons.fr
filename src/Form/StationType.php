@@ -59,13 +59,7 @@ class StationType extends AbstractType
             ])
             ->add('altitude', HiddenType::class)
             ->add('habitat', ChoiceType::class, [
-                'choices' => [
-                    'Ville' => 'Ville',
-                    'Jardin/parc' => 'Jardin/parc',
-                    'Forêt' => 'Forêt',
-                    'Champ/prairie' => 'Champ/prairie',
-                    'Village' => 'Village',
-                ],
+                'choices' => $this->getHabitats(),
                 'required' => true,
             ])
             ->add('isPrivate', CheckboxType::class, ['required' => false])
@@ -147,6 +141,16 @@ class StationType extends AbstractType
         }
 
         $formEvent->setData($station);
+    }
+
+    private function getHabitats(): array
+    {
+        $choices = [];
+        foreach (Station::HABITATS as $habitat) {
+            $choices[ucfirst($habitat)] = $habitat;
+        }
+
+        return $choices;
     }
 
     public function configureOptions(OptionsResolver $resolver)

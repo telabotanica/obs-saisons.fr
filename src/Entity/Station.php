@@ -12,6 +12,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Station
 {
+    const HABITATS = [
+        'ville',
+        'jardin/parc',
+        'forêt',
+        'champ/prairie',
+        'village',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
