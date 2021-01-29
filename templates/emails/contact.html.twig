@@ -5,7 +5,7 @@
 {% block preheader %}Message d'un utilisateur{% endblock %}
 
 {% block body %}
-    <h1>Message de {{ userEmail }}</h1>
+    <h1>Message de <a href="mailto:{{ userEmail }}" title="répondre à l'utilisateur">{{ userEmail }}</a></h1>
     <p>Objet : {{ subject }}</p>
     <p>Message :<p>
     <p>{{ message }}</p>

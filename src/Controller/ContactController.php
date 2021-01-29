@@ -19,7 +19,6 @@ class ContactController extends AbstractController
      */
     public function contact(
         Request $request,
-        BreadcrumbsGenerator $breadcrumbsGenerator,
         EmailSender $mailer
     ) {
         $form = $this->createForm(ContactType::class);
@@ -36,7 +35,7 @@ class ContactController extends AbstractController
                 ]);
 
                 $mailer->send(
-                    'ods-site@obs-saisons.fr',
+                    $vars['email'],
                     'contact@obs-saisons.fr',
                     $mailer->getSubjectFromTitle($message),
                     $message
