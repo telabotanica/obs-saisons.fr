@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Contactez-nous',
+        'subtitle': 'Vous pouvez nous contacter à l’adresse <a href="mailto:contact@obs-saisons.fr">contact@obs-saisons.fr</a> ou via le formulaire ci-dessous :'
+    }) %}
+
+    {% include 'forms/contact/contact-form.html.twig' with ({
+        'form':form,
+        'action': 'contact',
+        'isPage': true,
+        'user':app.user
+    }) %}
+
+{% endblock %}

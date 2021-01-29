@@ -73,6 +73,10 @@ class AppExtension extends AbstractExtension
                 $this,
                 'getActiveMenuItem',
             ]),
+            new TwigFunction('speciesGroups', [
+                $this,
+                'speciesGroups',
+            ]),
         ];
     }
 
@@ -352,6 +356,22 @@ class AppExtension extends AbstractExtension
         }
 
         return $speciesDisplayData;
+    }
+
+    public function speciesGroups(array $typeSpecies)
+    {
+        $groups = [];
+        foreach ($typeSpecies as $species) {
+            $vernacularNameParts = explode(' ', $species->getVernacularName());
+            $groupName = $vernacularNameParts[0];
+
+            if (empty($groups[$groupName])) {
+                $groups[$groupName] = [];
+            }
+            $groups[$groupName][] = $species;
+        }
+
+        return $groups;
     }
 
     public function getActiveMenuItem(array $breadcrumbs = [])

@@ -193,6 +193,7 @@ function onObsInfo($thisLink, dataAttrs) {
         theseObservations = $(
             '.stage-marker' +
             '[data-stage="'+dataAttrs.stage+'"]' +
+            '[data-individual-id="'+dataAttrs.individualId+'"]' +
             '[data-year="'+dataAttrs.year+'"]' +
             '[data-month="'+dataAttrs.month+'"]' +
             ':visible',

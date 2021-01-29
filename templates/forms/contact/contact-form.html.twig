@@ -1,0 +1,53 @@
+{% extends 'forms/base.html.twig' %}
+{% block form_title%}Votre message{% endblock %}
+{% block form %}
+    <div class="_2-col-form">
+        {{ form_row(form.email, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Votre email *',
+            'attr': {
+                'class': 'text-field ods-input',
+                'max': '255',
+                'data-name': 'email',
+                'value': (app.user ? app.user.email : '')
+            },
+            'help': 'Veuillez renseigner votre e-mail afin que nous puissions vous recontacter. Si vous êtes connecté ce champ est pré-rempli.',
+            'help_attr': {'class': 'field-help-text'}
+        }) }}
+    </div>
+    <div class="_2-col-form">
+        {{ form_row(form.subject, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Objet de votre message',
+            'attr': {
+                'class': 'text-field ods-input',
+                'maxlength': '255',
+                'data-name': 'subject'
+            },
+            'help': '255 caractères max.',
+            'help_attr': {'class': 'field-help-text'}
+        }) }}
+    </div>
+    <div class="_2-col-form">
+        {{ form_row(form.message, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Votre message *',
+            'attr': {
+                'class': 'textarea-field text-field ods-input',
+                'maxlength': '3000',
+                'data-name': 'message'
+            },
+            'help': '3000 caractères max.',
+            'help_attr': {'class': 'field-help-text'}
+        }) }}
+    </div>
+{% endblock %}
+{% block form_footer %}
+    <a href="{{ path('homepage') }}" class="button bt-form bt-annuler">Annuler</a>
+    <input type="hidden" name="action" value="{{ action }}">
+    <button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
+        Envoyer
+    </button>
+{% endblock %}
+
+{% block form_javascript %}{% endblock %}
