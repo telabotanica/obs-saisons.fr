@@ -84,6 +84,7 @@
             data-year="{{ obs.date|date("Y") }}"
             {# selecting observations for obs-infos list cards #}
             data-month="{{ obs.date|date("n") }}"
+            data-individual-id="{{ obs.individual.id }}"
             {# selecting and displaying observations for obs-infos list cards #}
             data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
             {# displaying obs-infos list cards #}
