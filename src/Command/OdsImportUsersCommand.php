@@ -198,7 +198,7 @@ class OdsImportUsersCommand extends Command
                  */
                 $importedUser->setResetToken($token);
 
-                $message = $this->twig->render('emails/forgotten-password.html.twig', [
+                $message = $this->twig->render('emails/reset-password.html.twig', [
                     'user' => $importedUser,
                     'url' => $this->router->generate('user_reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]);
