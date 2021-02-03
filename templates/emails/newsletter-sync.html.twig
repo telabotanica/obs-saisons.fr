@@ -1,0 +1,11 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block title %}{{ not isSubsciption ? 'dés ' : '' }}inscription de {{ user.email }} {{ isSubsciption ? 'à' : 'de' }} la lettre d'actualités, Observatoire des Saisons{% endblock %}
+
+{% block preheader %}{{ not isSubsciption ? 'dés ' : '' }}inscription {{ isSubsciption ? 'à' : 'de' }} la newsletter{% endblock %}
+
+{% block body %}
+    <h1><a href="{{ absolute_url(path('admin_user_dashboard', {userId:user.id})) }}" title="tableau de bord de l'utilisateur">{{ user.name }}</a> souhaite être {{ not isSubsciption ? 'dés' : '' }}inscrit</h1>
+    <p>{{ isSubsciption ? 'L’ ' : 'La dés' }}insription automatique de cet utilisateur ne s'est pas faite correctement.</p>
+    <p>Email : {{ user.email }}</p>
+{% endblock %}

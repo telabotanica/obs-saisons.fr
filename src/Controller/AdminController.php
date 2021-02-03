@@ -16,6 +16,7 @@ use App\Form\UserPasswordEditAdminType;
 use App\Helper\OriginPageTrait;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
+use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -245,7 +246,8 @@ class AdminController extends AbstractController
     public function adminProfileEdit(
         $userId,
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
@@ -254,10 +256,18 @@ class AdminController extends AbstractController
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
 
+        $userWasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
+
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$userWasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
+                $mailchimpSyncContact->subscribe($user);
+            } elseif ($userWasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
+                $mailchimpSyncContact->unsubscribe($user);
+            }
+
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
@@ -341,13 +351,18 @@ class AdminController extends AbstractController
      */
     public function adminUserDelete(
         $userId,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
 
         if (!$user) {
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
+        }
+
+        if ($user->getIsNewsletterSubscriber()) {
+            $mailchimpSyncContact->unsubscribe($user);
         }
 
         $user->setDeletedAt(new DateTime());
@@ -364,7 +379,8 @@ class AdminController extends AbstractController
      */
     public function adminUserCancelDelete(
         $userId,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
@@ -374,6 +390,11 @@ class AdminController extends AbstractController
         }
 
         $user->setDeletedAt(null);
+
+        if ($user->getIsNewsletterSubscriber()) {
+            $mailchimpSyncContact->subscribe($user);
+        }
+
         $user->setStatus(User::STATUS_ACTIVE);
 
         $manager->flush();
