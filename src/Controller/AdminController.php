@@ -20,6 +20,7 @@ use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,6 +30,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AdminController extends AbstractController
 {
     use OriginPageTrait;
+
     /**
      * @Route("/admin", name="home_admin")
      */
@@ -402,5 +404,34 @@ class AdminController extends AbstractController
         $this->addFlash('notice', 'La suppression de ce compte a bien été annulée');
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
+    }
+
+    /**
+     * @Route("/admin/user/sync-mailchimp-contact/{listId}", name="admin_sync_mailchimp_contact", methods={"POST"})
+     */
+    public function syncMailchimpContactsWebhook(
+        int $listId,
+        Request $request,
+        EntityManagerInterface $manager,
+        LoggerInterface $logger
+    ) {
+        if ($this->getParameter('mailchimp.list_id') === $listId) {
+            $type = $request->request->get('type');
+            $data = $request->request->get('data');
+            if ($type && $data && $data['email']) {
+                /**
+                 * @var User $user
+                 */
+                $user = $manager->getRepository(User::class)
+                    ->findByEmail($data['email']);
+
+                if (!$user) {
+                    $logger->alert('unsubscribed user not found, check mailchimp audience');
+                } else {
+                    $isNewsLetterSubscriber = MailchimpSyncContact::STATUS_SUBSCRIBED === $type;
+                    $user->setIsNewsLetterSubscriber($isNewsLetterSubscriber);
+                }
+            }
+        }
     }
 }

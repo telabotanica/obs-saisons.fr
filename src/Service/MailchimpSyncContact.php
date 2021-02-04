@@ -11,11 +11,14 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 use Twig\Environment;
 
 class MailchimpSyncContact
 {
+    const STATUS_ADDED = 'added';
+    const STATUS_SUBSCRIBED = 'subscribed';
+    const STATUS_UNSUBSCRIBED = 'unsubscribed';
+
     private $logger;
     private $container;
     private $httpClient;
@@ -51,137 +54,113 @@ class MailchimpSyncContact
 
         if (!$subscriptionStatus || 404 === $subscriptionStatus) {
             $isAdded = $this->requestApi(
+                $user,
                 'POST',
                 $this->container->getParameter('mailchimp.api_url'),
                 [
                     'email_address' => $user->getEmail(),
-                    'status' => 'subscribed',
+                    'status' => self::STATUS_SUBSCRIBED,
                     'merge_fields' => [
                         'FNAME' => $user->getName(),
                         'LNAME' => $user->getName(),
                     ],
                 ]
             );
-
-            if (!$isAdded) {
-                $this->manageSyncFail($user, true);
-            }
-        } else {
-            $this->subscribe($user, $subscriptionStatus);
         }
     }
 
-    public function subscribe(User $user, $subscriptionStatus = null)
+    public function subscribe(User $user)
     {
-        $subscriptionStatus = $subscriptionStatus ?? $this->checkSubscriptionStatus($user);
-        $isSubscribed = $subscriptionStatus && 'subscribed' === $subscriptionStatus;
-
-        if (!$isSubscribed) {
-            $isSubscribed = $this->requestApi(
-                'PUT',
-                $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail())),
-                ['status' => 'subscribed']
-            );
-        }
-
-        if (!$isSubscribed) {
-            $this->manageSyncFail($user, true);
-        }
+        $this->requestApi(
+            $user,
+            'PUT',
+            $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail())),
+            ['status' => self::STATUS_SUBSCRIBED]
+        );
     }
 
     public function unsubscribe(User $user)
     {
-        $subscriptionStatus = $this->checkSubscriptionStatus($user);
-        $isUnubscribed = $subscriptionStatus && 'unsubscribed' === $subscriptionStatus;
-
-        if (!$isUnubscribed) {
-            $isUnubscribed = $this->requestApi(
-                'PUT',
-                $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail())),
-                ['status' => 'unsubscribed']
-            );
-        }
-
-        if (!$isUnubscribed) {
-            $this->manageSyncFail($user, false);
-        }
+        $this->requestApi(
+            $user,
+            'PUT',
+            $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail())),
+            ['status' => self::STATUS_UNSUBSCRIBED]
+        );
     }
 
     public function checkSubscriptionStatus(User $user)
     {
-        if (!empty($this->httpClient)) {
-            try {
-                $jsonContent = $this->httpClient->request(
-                    'GET',
-                    $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail()))
-                )
+        return $this->requestApi(
+            $user,
+            'GET',
+            $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail()))
+        );
+    }
+
+    private function requestApi(
+        User $user,
+        string $method,
+        string $url,
+        array $data = null,
+        bool $isNewContact = false
+    ) {
+        $options = [];
+        $expectedStatus = null;
+        if ($data) {
+            $options = ['body' => json_encode($data)];
+            if ($data['status']) {
+                $expectedStatus = $isNewContact ? self::STATUS_ADDED : $data['status'];
+            }
+        }
+
+        try {
+            $jsonContent = $this->httpClient->request(
+                $method,
+                $url,
+                $options
+            )
                 ->getContent();
 
-                $content = json_decode($jsonContent);
-                if (!empty($content) && !empty($content['status'])) {
-                    return $content['status'];
-                }
-            } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
-                $this->logger->error($e);
+            $content = json_decode($jsonContent);
+            if (!empty($content) && !empty($content['status'])) {
+                return $content['status'];
             }
+        } catch (TransportExceptionInterface | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+            $this->logger->error($e);
+        }
+
+        if ($expectedStatus) {
+            $this->manageSyncFail($user, $expectedStatus);
         }
 
         return null;
     }
 
-    private function requestApi(string $method, string $url, array $data)
+    private function manageSyncFail(User $user, string $type)
     {
-        if (!empty($this->httpClient)) {
-            try {
-                $response = $this->httpClient->request(
-                    $method,
-                    $url,
-                    [
-                        'body' => json_encode($data),
-                    ]
-                );
-            } catch (TransportExceptionInterface $e) {
-                $this->logger->error($e);
-            }
-        }
-
-        return !empty($response) ? $this->checkResponse($response) : false;
-    }
-
-    private function checkResponse(ResponseInterface $response)
-    {
-        try {
-            $statusCode = $response->getStatusCode();
-            if (200 === $statusCode) {
-                return true;
-            } else {
-                $this->logger->error($statusCode.':'.$response->getInfo());
-            }
-        } catch (TransportExceptionInterface $e) {
-            $this->logger->error($e);
-        }
-
-        return false;
-    }
-
-    private function manageSyncFail(User $user, bool $isSubscription = true)
-    {
+        $isSubscription = self::STATUS_UNSUBSCRIBED !== $type;
         $action = $isSubscription ? 'inscrire à' : 'désincrire de';
 
-        $flashMessage = 'Nous ne sommes pas parvenus à vous '.$action.' notre lettre d’actualités.<br>Un message a été envoyé à l’administrateur du site afin de régler le problème';
-        $this->flashBag->add('error', $flashMessage);
+        $this->flashBag->add(
+            'error',
+            'Nous ne sommes pas parvenus à vous '.$action.' notre lettre d’actualités.<br>'.
+            'Un message a été envoyé à l’administrateur du site afin de régler le problème'
+        );
 
         $mailMessage = $this->twig->render('emails/newsletter-sync.html.twig', [
             'user' => $user,
+            'type' => $type,
         ]);
 
         $this->mailer->send(
             $user->getEmail(),
-            'contact@obs-saisons.fr',
+            //'contact@obs-saisons.fr',
+            'idir.alliche.tb@gmail.com',
             $this->mailer->getSubjectFromTitle($mailMessage),
             $mailMessage
         );
 
-        $user->setIsNewsletterSubscriber(!$isSubscription);
+        $user->setIsNewsletterSubscriber($isSubscription);
     }
 }
