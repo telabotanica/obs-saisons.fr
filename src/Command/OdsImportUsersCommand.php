@@ -198,7 +198,7 @@ class OdsImportUsersCommand extends Command
                  */
                 $importedUser->setResetToken($token);
 
-                $message = $this->twig->render('emails/forgotten-password.html.twig', [
+                $message = $this->twig->render('emails/reset-password.html.twig', [
                     'user' => $importedUser,
                     'url' => $this->router->generate('user_reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
                 ]);
@@ -207,21 +207,20 @@ class OdsImportUsersCommand extends Command
 
                 $this->mailer->send(
                     'contact@obs-saisons.fr',
-                    'killian.stefanini.tb@gmail.com',
-//                    $importedUser->getEmail(),
-                    'Merci de réinitialiser votre mot de passe',
+                    $importedUser->getEmail(),
+                    'Merci de réinitialiser votre mot de passe - obs-saisons.fr',
                     $message
                 );
 
-                $io->text('...Ok.');
+                $io->text('...Ok. Sleeping for few seconds');
+
+                sleep(3);
 
                 // flushing each time to avoid sending mail and lost tokens in case of crash
                 $this->em->flush();
-
-                return 0;
             }
 
-            $io->success('Done sending emails!');
+            $io->success('Done sending emails! Users imported \o/');
         }
 
         return 0;
