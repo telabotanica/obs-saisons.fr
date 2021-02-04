@@ -433,15 +433,15 @@ class UserController extends AbstractController
         }
 
         $user = $this->getUser();
-        $userWasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
+        $wasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
 
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$userWasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
+            if (!$wasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
                 $mailchimpSyncContact->subscribe($user);
-            } elseif ($userWasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
+            } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
                 $mailchimpSyncContact->unsubscribe($user);
             }
 
