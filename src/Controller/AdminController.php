@@ -426,7 +426,7 @@ class AdminController extends AbstractController
                     ->findByEmail($data['email']);
 
                 if (!$user) {
-                    $logger->alert('unsubscribed user not found, check mailchimp audience');
+                    $logger->alert(sprintf('unsubscribed user with email %s not found, check mailchimp audience', $data['email']));
                 } else {
                     $isNewsLetterSubscriber = MailchimpSyncContact::STATUS_SUBSCRIBED === $type;
                     $user->setIsNewsLetterSubscriber($isNewsLetterSubscriber);

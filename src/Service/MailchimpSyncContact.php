@@ -126,7 +126,7 @@ class MailchimpSyncContact
             if (!empty($content) && !empty($content['status'])) {
                 return $content['status'];
             }
-        } catch (TransportExceptionInterface | ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+        } catch (Exception $e) {
             $this->logger->error($e);
         }
 
@@ -154,13 +154,12 @@ class MailchimpSyncContact
         ]);
 
         $this->mailer->send(
-            $user->getEmail(),
-            //'contact@obs-saisons.fr',
-            'idir.alliche.tb@gmail.com',
+            'contact@obs-saisons.fr',
+            ['contact@obs-saisons.fr', $user->getEmail()],
             $this->mailer->getSubjectFromTitle($mailMessage),
             $mailMessage
         );
 
-        $user->setIsNewsletterSubscriber($isSubscription);
+        $user->setIsNewsletterSubscriber(!$isSubscription);
     }
 }
