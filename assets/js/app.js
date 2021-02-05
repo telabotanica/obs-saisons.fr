@@ -43,6 +43,7 @@ import './ui/calendar-toggle-date-selection';
 import './ui/calendar-toggle';
 import './ui/calendar-hide-legend';
 import './ui/accordion-block-toggle';
+import './ui/station-search-form-submit';
 
 
 const $event = $('#observation_event');
@@ -52,8 +53,6 @@ const $latitude = $('#station_latitude');
 const $longitude = $('#station_longitude');
 const $locality = $('#station_locality');
 const $observationDate = $('#observation_date');
-const $stationSearchField = $('#station-search-field');
-const $stationSearchForm = $('#station-search-form');
 const $adminDeleteUser = $('#admin-delete-user');
 
 const places = require('places.js');
@@ -81,7 +80,6 @@ $( document ).ready( function() {
     onOpenOverlay(placesAutocomplete);
     onCloseOverlay();
     stationMapDisplay();
-    stationSearchFormSubmit();
     validateEventPostDates();
     initFormEditPage();
     if(0 < $adminDeleteUser.length) {
@@ -1009,21 +1007,6 @@ function initFormEditPage() {
         $places.siblings('button.ap-input-icon').toggle();
     }
 
-}
-
-// trigger search field submit
-function stationSearchFormSubmit() {
-    // submitting form without submit button
-    $stationSearchField.on('blur', function () {
-        $stationSearchForm.trigger('submit');
-    });
-    // form is being submitted on blur or on enter key press
-    $stationSearchForm.on('submit', function (event) {
-        // avoid submitting empty strings
-        if(!valOk($.trim($stationSearchField.val()))) {
-            event.preventDefault();
-        }
-    });
 }
 
 function userDeleteAdminConfirm() {
