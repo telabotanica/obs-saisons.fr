@@ -24,6 +24,7 @@ import L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
 //
+import './ui/check-value-valid';
 import './ui/mod-touch';
 import './ui/toggle-menu-small-device';
 import './ui/handle-file-uploads';
@@ -1205,35 +1206,4 @@ function userDeleteAdminConfirm() {
             event.preventDefault();
         }
     });
-}
-
-function valOk(value, comparisonDirection = true, compareTo = null) {
-    var result = true;
-    if ('boolean' !== typeof value) {
-        switch(typeof value) {
-            case 'string' :
-                result = ('' !== value);
-                break;
-            case 'number' :
-                result = (!isNaN(value));
-                break;
-            case 'object' :
-                result = (null !== value && undefined !== value && !$.isEmptyObject(value));
-                if (null !== value && undefined !== value.length) {
-                    result = (result && 0 < value.length);
-                }
-                break;
-            case 'undefined' :
-            default :
-                result = false;
-        }
-        if (result && compareTo !== null) {
-            var comparisonResult = (compareTo === value);
-            result = (comparisonDirection) ? comparisonResult : !comparisonResult;
-        }
-        return result;
-    } else {
-        // Boolean is valid value
-        return true;
-    }
 }
