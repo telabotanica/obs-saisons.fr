@@ -1,5 +1,7 @@
 import domready from 'mf-js/modules/dom/ready';
 
+import {displayError} from '../error-display'
+
 export const generateComparableFormatedDate = (dateData) => {
     if (/^([\d]{2}\/){2}[\d]{4}$/.test(dateData)) {
         dateData = dateData.split('/').reverse();
@@ -45,7 +47,7 @@ domready(() => {
         }
 
         if (isInvalidStartDate) {
-            displayDateError($(this), errorMessage);
+            displayError($(this), errorMessage, 'invalid-date');
         }
     });
 
@@ -74,7 +76,7 @@ domready(() => {
         }
 
         if(isInvalidEndDate) {
-            displayDateError($(this), errorMessage);
+            displayError($(this), errorMessage, 'invalid-date');
         }
     });
 });

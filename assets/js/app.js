@@ -20,7 +20,7 @@ import 'core-js/features/promise';
 //
 import './ui/provide-jquery';
 import './ui/check-value-valid';
-import './ui/date-error-display';
+import './ui/error-display';
 //
 /**************************************************
  * LEAFLET
@@ -34,27 +34,43 @@ import 'leaflet.markercluster';
  * COMPONENTS
  **************************************************/
 //
-import './ui/wysiwyg';
-import './ui/scientific-name';
-import './ui/textarea-auto-resize';
-import './ui/create-map';
-import './ui/results-charts';
-import './ui/results-map';
-import './ui/oembed-to-iframe';
 import './ui/mod-touch';
 import './ui/hide-flash-messages';
 import './ui/toggle-menu-small-device';
+import './ui/wysiwyg';
+import './ui/textarea-auto-resize';
+import './ui/oembed-to-iframe';
+import './ui/switch-tabs';
+import './ui/scientific-name';
+import './ui/accordion-block-toggle';
+import './ui/create-map';
+import './ui/results-charts';
+import './ui/results-map';
 import './ui/handle-file-uploads';
 import './ui/switch-to-next-post';
-import './ui/switch-tabs';
-import './ui/calendar-switch-date';
-import './ui/calendar-toggle-date-selection';
-import './ui/calendar-toggle';
-import './ui/calendar-hide-legend';
-import './ui/accordion-block-toggle';
-import './ui/station-search-form-submit';
-import './ui/event-post-dates-validate';
 import './ui/user-delete-admin-confirm';
+//
+/**************************************************
+ * OVERLAY
+ **************************************************/
+//
+//import '.ui//overlay/overlay-open';
+//
+/**************************************************
+ * CALENDAR
+ **************************************************/
+//
+import './ui/calendar/calendar-switch-date';
+import './ui/calendar/calendar-toggle-date-selection';
+import './ui/calendar/calendar-toggle';
+import './ui/calendar/calendar-hide-legend';
+//
+/**************************************************
+ * STATION/OBSERVATION
+ **************************************************/
+//
+import './ui/stations-observations/station-search-form-submit';
+import './ui/stations-observations/event-post-dates-validate';
 
 
 
@@ -626,7 +642,7 @@ function onChangeObsDate() {
                 } else {
                     message = 'Cette date est postérieure à aujourd’hui';
                 }
-                displayDateError($(this), message);
+                displayError($(this), message);
             }
         }
 
