@@ -18,12 +18,13 @@ import 'core-js/features/promise';
  * COMPONENTS
  **************************************************/
 //
-import './ui/mod-touch';
+import './ui/provide-jquery';
 //
 import L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
 //
+import './ui/mod-touch';
 import './ui/wysiwyg';
 import './ui/scientific-name';
 import './ui/textarea-auto-resize';
@@ -32,11 +33,7 @@ import './ui/results-charts';
 import './ui/results-map';
 import './ui/oembed-to-iframe';
 
-// Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
-const $ = require('jquery');
 
-// create global $ and jQuery variables
-global.$ = global.jQuery = $;
 
 const $event = $('#observation_event');
 const $individual = $('#observation_individual');
