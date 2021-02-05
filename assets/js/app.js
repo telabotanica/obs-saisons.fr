@@ -37,7 +37,11 @@ import './ui/toggle-menu-small-device';
 import './ui/handle-file-uploads';
 import './ui/switch-to-next-post';
 import './ui/switch-tabs';
-import './ui/calendar-switch-date'
+import './ui/calendar-switch-date';
+import './ui/calendar-toggle-date-selection';
+import './ui/calendar-toggle';
+import './ui/calendar-hide-legend';
+
 
 const $event = $('#observation_event');
 const $individual = $('#observation_individual');
@@ -74,9 +78,6 @@ $( document ).ready( function() {
 
     onOpenOverlay(placesAutocomplete);
     onCloseOverlay();
-    toggleCalendar();
-    toggleDateSelection();
-    hideCalendarLegend();
     toggleAccodionBlock();
     stationMapDisplay();
     hideFlashMessages();
@@ -814,43 +815,6 @@ function openDetailsField() {
 
         $(this).closest('.button-form-container').addClass('hidden');
         $('.details-container').removeClass('hidden');
-    })
-}
-
-// Open/close calendar
-function toggleCalendar() {
-    $('a.item-heading-dropdown').off('click').on('click', function (event) {
-        event.preventDefault();
-
-        let id = $(this).closest('.list-cards-item').data('id');
-
-        $(this).toggleClass('right-arrow-orange-icon down-arrow-icon');
-        $('.periods-calendar[data-id="' + id + '"]').toggle(200);
-    });
-
-    $('.table-mask-button').off('click').on('click', function (event) {
-        event.preventDefault();
-
-        let id = $(this).closest('.periods-calendar').data('id');
-
-        $('.list-cards-item[data-id="' + id + '"] a.item-heading-dropdown').trigger('click');
-    });
-}
-
-// open/close date selection
-function toggleDateSelection() {
-    $('.dropdown-toggle').off('click').on('click', function (event) {
-        event.preventDefault();
-
-        $(this).siblings('.dropdown-list').toggleClass('hidden');
-    })
-}
-
-function hideCalendarLegend () {
-    $('.helper-legend .hide-button').click(function (event) {
-        event.preventDefault();
-
-        $('.pages-container').find('.helper-legend').hide(200);
     })
 }
 

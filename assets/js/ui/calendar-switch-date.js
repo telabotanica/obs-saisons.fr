@@ -2,7 +2,6 @@ import domready from 'mf-js/modules/dom/ready';
 import {resetTabMatchingElements} from './switch-tabs';
 import {observationsToggleCombinedConditions} from './switch-tabs';
 
-// switch between tabs
 domready(() => {
     $('.periods-calendar .dropdown-link').off('click').on('click', function (event) {
         event.preventDefault();
