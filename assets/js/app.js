@@ -25,6 +25,7 @@ import 'leaflet-draw';
 import 'leaflet.markercluster';
 //
 import './ui/mod-touch';
+import './ui/toggle-menu-small-device';
 import './ui/wysiwyg';
 import './ui/scientific-name';
 import './ui/textarea-auto-resize';
@@ -63,7 +64,6 @@ const PLACES_CONFIG = {
 };
 
 $( document ).ready( function() {
-    toggleMenuSmallDevices();
     let placesAutocomplete = {};
     if (0 < $('.ods-places').length) {
         placesAutocomplete = placesInit();
@@ -951,17 +951,6 @@ function openDetailsField() {
         $(this).closest('.button-form-container').addClass('hidden');
         $('.details-container').removeClass('hidden');
     })
-}
-
-// open/close menu on small devices
-function toggleMenuSmallDevices(){
-    $('.menu-img, .close-menu-img').on('click', function() {
-        let menuTanslateX = ( /close/.test(this.className) ? '-' : '' ) + '280px';
-
-        $('.menu').animate({
-            right: menuTanslateX
-        }, 200);
-    });
 }
 
 // switch between tabs
