@@ -41,6 +41,7 @@ import './ui/calendar-switch-date';
 import './ui/calendar-toggle-date-selection';
 import './ui/calendar-toggle';
 import './ui/calendar-hide-legend';
+import './ui/accordion-block-toggle';
 
 
 const $event = $('#observation_event');
@@ -78,7 +79,6 @@ $( document ).ready( function() {
 
     onOpenOverlay(placesAutocomplete);
     onCloseOverlay();
-    toggleAccodionBlock();
     stationMapDisplay();
     hideFlashMessages();
     stationSearchFormSubmit();
@@ -816,17 +816,6 @@ function openDetailsField() {
         $(this).closest('.button-form-container').addClass('hidden');
         $('.details-container').removeClass('hidden');
     })
-}
-
-function toggleAccodionBlock() {
-    $('a.accordion-title-dropdown').off('click').on('click', function (event) {
-        event.preventDefault();
-
-        let $thisBlock = $(this).closest('.accordion-block');
-
-        $(this).toggleClass('right-arrow-orange-icon down-arrow-icon');
-        $('.accordion-content', $thisBlock).toggle(200);
-    });
 }
 
 function stationMapDisplay() {
