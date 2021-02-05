@@ -16,9 +16,11 @@ use App\Form\UserPasswordEditAdminType;
 use App\Helper\OriginPageTrait;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
+use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +30,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AdminController extends AbstractController
 {
     use OriginPageTrait;
+
     /**
      * @Route("/admin", name="home_admin")
      */
@@ -245,7 +248,8 @@ class AdminController extends AbstractController
     public function adminProfileEdit(
         $userId,
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
@@ -254,10 +258,18 @@ class AdminController extends AbstractController
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
         }
 
+        $wasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
+
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$wasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
+                $mailchimpSyncContact->subscribe($user);
+            } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
+                $mailchimpSyncContact->unsubscribe($user);
+            }
+
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
@@ -341,13 +353,18 @@ class AdminController extends AbstractController
      */
     public function adminUserDelete(
         $userId,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
 
         if (!$user) {
             throw $this->createNotFoundException('L’utilisateur n’existe pas');
+        }
+
+        if ($user->getIsNewsletterSubscriber()) {
+            $mailchimpSyncContact->unsubscribe($user);
         }
 
         $user->setDeletedAt(new DateTime());
@@ -364,7 +381,8 @@ class AdminController extends AbstractController
      */
     public function adminUserCancelDelete(
         $userId,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         $user = $manager->getRepository(User::class)
             ->find($userId);
@@ -374,6 +392,11 @@ class AdminController extends AbstractController
         }
 
         $user->setDeletedAt(null);
+
+        if ($user->getIsNewsletterSubscriber()) {
+            $mailchimpSyncContact->subscribe($user);
+        }
+
         $user->setStatus(User::STATUS_ACTIVE);
 
         $manager->flush();
@@ -381,5 +404,34 @@ class AdminController extends AbstractController
         $this->addFlash('notice', 'La suppression de ce compte a bien été annulée');
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
+    }
+
+    /**
+     * @Route("/admin/user/sync-mailchimp-contact/{listId}", name="admin_sync_mailchimp_contact", methods={"POST"})
+     */
+    public function syncMailchimpContactsWebhook(
+        int $listId,
+        Request $request,
+        EntityManagerInterface $manager,
+        LoggerInterface $logger
+    ) {
+        if ($this->getParameter('mailchimp.list_id') === $listId) {
+            $type = $request->request->get('type');
+            $data = $request->request->get('data');
+            if ($type && $data && $data['email']) {
+                /**
+                 * @var User $user
+                 */
+                $user = $manager->getRepository(User::class)
+                    ->findByEmail($data['email']);
+
+                if (!$user) {
+                    $logger->alert(sprintf('unsubscribed user with email %s not found, check mailchimp audience', $data['email']));
+                } else {
+                    $isNewsLetterSubscriber = MailchimpSyncContact::STATUS_SUBSCRIBED === $type;
+                    $user->setIsNewsLetterSubscriber($isNewsLetterSubscriber);
+                }
+            }
+        }
     }
 }

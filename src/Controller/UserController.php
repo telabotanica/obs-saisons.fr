@@ -15,6 +15,7 @@ use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
 use App\Service\EmailSender;
+use App\Service\MailchimpSyncContact;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -148,8 +149,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/{token}", name="user_activate")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function activate(
             Request $request,
@@ -386,7 +385,8 @@ class UserController extends AbstractController
      */
     public function profileCreate(
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -397,8 +397,14 @@ class UserController extends AbstractController
         $form = $this->createForm(ProfileType::class, $user);
 
         if ($request->isMethod('POST')) {
+
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+
+                if ($user->getIsNewsletterSubscriber()) {
+                    $mailchimpSyncContact->addContact($user);
+                }
+
                 $manager->flush();
 
                 $this->addFlash('success', 'Votre profil a été créé');
@@ -419,18 +425,26 @@ class UserController extends AbstractController
      */
     public function profileEdit(
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
         }
 
         $user = $this->getUser();
+        $wasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
 
         $form = $this->createForm(ProfileType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$wasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
+                $mailchimpSyncContact->subscribe($user);
+            } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
+                $mailchimpSyncContact->unsubscribe($user);
+            }
+
             $manager->flush();
 
             $this->addFlash('success', 'Votre profil a été modifié');
@@ -594,7 +608,8 @@ class UserController extends AbstractController
     public function userDelete(
         Request $request,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder,
+        MailchimpSyncContact $mailchimpSyncContact
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -621,6 +636,10 @@ class UserController extends AbstractController
                     if (!$passwordEncoder->isPasswordValid($user, $passwordUserSubmitted->getPassword())) {
                         $this->addFlash('error', 'Mot de passe incorrect');
                     } else {
+                        if ($user->getIsNewsletterSubscriber()) {
+                            $mailchimpSyncContact->unsubscribe($user);
+                        }
+
                         $user->setDeletedAt(new DateTime());
 
                         $manager->flush();

@@ -5,6 +5,10 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fr'
+    mailchimp.list_id: '%env(MAILCHIMP_LIST_ID)%'
+    mailchimp.api_key: '%env(MAILCHIMP_API_KEY)%'
+    mailchimp.api_url: '%env(MAILCHIMP_API_URL)%/lists/%env(MAILCHIMP_LIST_ID)%/members'
+
 
 services:
     # default configuration for services in *this* file
