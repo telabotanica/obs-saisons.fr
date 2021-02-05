@@ -7,7 +7,8 @@ parameters:
     locale: 'fr'
     mailchimp.list_id: '%env(MAILCHIMP_LIST_ID)%'
     mailchimp.api_key: '%env(MAILCHIMP_API_KEY)%'
-    mailchimp.api_url: '%env(MAILCHIMP_API_URL)%/lists/%env(MAILCHIMP_LIST_ID)%/members'
+    mailchimp.api_base_uri: '%env(MAILCHIMP_API_BASE_URI)%'
+    mailchimp.api_url: '%env(MAILCHIMP_API_BASE_URI)%/3.0/lists/%env(MAILCHIMP_LIST_ID)%/members'
 
 
 services:
