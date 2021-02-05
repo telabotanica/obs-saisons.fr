@@ -4,13 +4,9 @@ namespace App\Service;
 
 use App\Entity\User;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Twig\Environment;
 
 class MailchimpSyncContact
@@ -20,7 +16,7 @@ class MailchimpSyncContact
     const STATUS_UNSUBSCRIBED = 'unsubscribed';
 
     private $logger;
-    private $container;
+    private $params;
     private $httpClient;
     private $flashBag;
     private $mailer;
@@ -28,18 +24,18 @@ class MailchimpSyncContact
 
     public function __construct(
         LoggerInterface $logger,
-        ContainerInterface $container,
+        ParameterBagInterface $params,
         FlashBagInterface $flashBag,
         EmailSender $mailer,
         Environment $twig
     ) {
         $this->logger = $logger;
-        $this->container = $container;
+        $this->params = $params;
         $this->httpClient = HttpClient::create([
             'headers' => [
                 'Content-type' => 'application/json',
                 'Authorization' => [
-                    'Basic' => base64_encode(sprintf('key:%d', $this->container->getParameter('mailchimp.api_key'))),
+                    'Basic' => base64_encode(sprintf('key:%d', $this->params->get('mailchimp.api_key'))),
                 ],
             ],
         ]);
@@ -48,15 +44,25 @@ class MailchimpSyncContact
         $this->twig = $twig;
     }
 
+    private function generateUrl(User $user = null)
+    {
+        $url = $this->params->get('mailchimp.api_url');
+        if ($user) {
+            $url .= '/'.md5(strtolower($user->getEmail()));
+        }
+
+        return $url;
+    }
+
     public function addContact(User $user)
     {
         $subscriptionStatus = $this->checkSubscriptionStatus($user);
 
         if (!$subscriptionStatus || 404 === $subscriptionStatus) {
-            $isAdded = $this->requestApi(
+            $this->requestApi(
                 $user,
                 'POST',
-                $this->container->getParameter('mailchimp.api_url'),
+                $this->generateUrl(),//no user email info in url
                 [
                     'email_address' => $user->getEmail(),
                     'status' => self::STATUS_SUBSCRIBED,
@@ -74,7 +80,7 @@ class MailchimpSyncContact
         $this->requestApi(
             $user,
             'PUT',
-            $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail())),
+            $this->generateUrl($user),
             ['status' => self::STATUS_SUBSCRIBED]
         );
     }
@@ -84,7 +90,7 @@ class MailchimpSyncContact
         $this->requestApi(
             $user,
             'PUT',
-            $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail())),
+            $this->generateUrl($user),
             ['status' => self::STATUS_UNSUBSCRIBED]
         );
     }
@@ -94,7 +100,7 @@ class MailchimpSyncContact
         return $this->requestApi(
             $user,
             'GET',
-            $this->container->getParameter('mailchimp.api_url').'/'.md5(strtolower($user->getEmail()))
+            $this->generateUrl($user),
         );
     }
 
@@ -126,7 +132,7 @@ class MailchimpSyncContact
             if (!empty($content) && !empty($content['status'])) {
                 return $content['status'];
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error($e);
         }
 
