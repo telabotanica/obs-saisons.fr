@@ -21,6 +21,7 @@ class MailchimpSyncContact
     private $flashBag;
     private $mailer;
     private $twig;
+    private $headers;
 
     public function __construct(
         LoggerInterface $logger,
@@ -31,12 +32,10 @@ class MailchimpSyncContact
     ) {
         $this->logger = $logger;
         $this->params = $params;
-        $this->httpClient = HttpClient::create([
+        $this->httpClient = HttpClient::createForBaseUri($this->params->get('mailchimp.api_base_uri'), [
+            'auth_basic' => 'key:'.$this->params->get('mailchimp.api_key'),
             'headers' => [
-                'Content-type' => 'application/json',
-                'Authorization' => [
-                    'Basic' => base64_encode(sprintf('key:%d', $this->params->get('mailchimp.api_key'))),
-                ],
+                'Content-Type' => 'application/json',
             ],
         ]);
         $this->flashBag = $flashBag;
@@ -125,8 +124,7 @@ class MailchimpSyncContact
                 $method,
                 $url,
                 $options
-            )
-                ->getContent();
+            )->getStatusCode();
 
             $content = json_decode($jsonContent);
             if (!empty($content) && !empty($content['status'])) {
