@@ -1,19 +1,29 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
-
-// any CSS you require will output into a single css file (app.css in this case)
+/**************************************************
+ * CSS
+ **************************************************/
+//
 import '../css/app.scss';
-const places = require('places.js');
-const algoliasearch = require('algoliasearch');
+//
+/**************************************************
+ * POLYFILLS
+ **************************************************/
+//
+import 'core-js/features/object/assign';
+import 'core-js/features/object/values';
+import 'core-js/features/array/from';
+import 'core-js/features/array/for-each';
+import 'core-js/features/promise';
+//
+/**************************************************
+ * COMPONENTS
+ **************************************************/
+//
+import './ui/mod-touch';
+//
 import L from 'leaflet';
-import {off} from "leaflet/src/dom/DomEvent";
 import 'leaflet-draw';
 import 'leaflet.markercluster';
-
+//
 import './ui/wysiwyg';
 import './ui/scientific-name';
 import './ui/textarea-auto-resize';
@@ -39,7 +49,8 @@ const $stationSearchField = $('#station-search-field');
 const $stationSearchForm = $('#station-search-form');
 const $adminDeleteUser = $('#admin-delete-user');
 const imageType = /^image\//;
-
+const places = require('places.js');
+const algoliasearch = require('algoliasearch');
 //map configuration
 const MARKER_ICON = L.Icon.extend({
     options: {
@@ -55,7 +66,6 @@ const PLACES_CONFIG = {
 };
 
 $( document ).ready( function() {
-    addModsTouchClass();
     toggleMenuSmallDevices();
     let placesAutocomplete = {};
     if (0 < $('.ods-places').length) {
@@ -944,12 +954,6 @@ function openDetailsField() {
         $(this).closest('.button-form-container').addClass('hidden');
         $('.details-container').removeClass('hidden');
     })
-}
-
-//touch or desktop device
-function addModsTouchClass() {
-    $('html').toggleClass('ods-mod-touch', window.matchMedia('(max-width: 991px)').matches);
-    $(window).off('resize').on('resize', addModsTouchClass);
 }
 
 // open/close menu on small devices
