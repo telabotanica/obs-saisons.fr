@@ -33,6 +33,7 @@ import './ui/results-charts';
 import './ui/results-map';
 import './ui/oembed-to-iframe';
 import './ui/mod-touch';
+import './ui/hide-flash-messages';
 import './ui/toggle-menu-small-device';
 import './ui/handle-file-uploads';
 import './ui/switch-to-next-post';
@@ -80,7 +81,6 @@ $( document ).ready( function() {
     onOpenOverlay(placesAutocomplete);
     onCloseOverlay();
     stationMapDisplay();
-    hideFlashMessages();
     stationSearchFormSubmit();
     validateEventPostDates();
     initFormEditPage();
@@ -1024,10 +1024,6 @@ function stationSearchFormSubmit() {
             event.preventDefault();
         }
     });
-}
-
-function hideFlashMessages() {
-    $('.app-flashes').delay(5000).slideUp(300);
 }
 
 function userDeleteAdminConfirm() {
