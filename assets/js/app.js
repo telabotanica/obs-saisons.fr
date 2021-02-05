@@ -36,6 +36,8 @@ import './ui/mod-touch';
 import './ui/toggle-menu-small-device';
 import './ui/handle-file-uploads';
 import './ui/switch-to-next-post';
+import './ui/switch-tabs';
+import './ui/calendar-switch-date'
 
 const $event = $('#observation_event');
 const $individual = $('#observation_individual');
@@ -72,10 +74,8 @@ $( document ).ready( function() {
 
     onOpenOverlay(placesAutocomplete);
     onCloseOverlay();
-    switchTabs();
     toggleCalendar();
     toggleDateSelection();
-    calendarSwitchDate();
     hideCalendarLegend();
     toggleAccodionBlock();
     stationMapDisplay();
@@ -817,51 +817,6 @@ function openDetailsField() {
     })
 }
 
-// switch between tabs
-function switchTabs() {
-    let $tabsHolder = $('.tabs-holder:not(.stations)');
-    resetTabMatchingElements($tabsHolder);
-
-    $('.tab').off('click').on('click', function (event) {
-        event.preventDefault();
-
-        let activeTab = $(this).data('tab');
-        $tabsHolder.data('active', activeTab).attr('data-active', activeTab);
-        $('[data-tab]').each(function (i, element) {
-            let $element = $(element);
-
-            if ($element.hasClass('tab')) {
-                $element.toggleClass('not',(activeTab !== $element.data('tab')));
-            } else {
-                let toggleElement = ('all' === activeTab || $element.data('tab') === activeTab);
-                // for the case of observations
-                if (valOk($element.data('year'))) {
-                    let activeDate = $element.closest('.table-container').find('.active-year').text();
-
-                    toggleElement = observationsToggleCombinedConditions($element, activeDate, toggleElement);
-                }
-                if(toggleElement) {
-                    $element.show(200);
-                } else {
-                    $element.hide(200);
-                }
-            }
-        });
-    });
-}
-
-function resetTabMatchingElements($tabsHolder) {
-    let activeTab = $tabsHolder.data('active');
-
-    if(activeTab !== 'all') {
-        $('[data-tab]:not(.tab)').each(function () {
-            if(activeTab !== $(this).data('tab')) {
-                $(this).hide();
-            }
-        });
-    }
-}
-
 // Open/close calendar
 function toggleCalendar() {
     $('a.item-heading-dropdown').off('click').on('click', function (event) {
@@ -889,41 +844,6 @@ function toggleDateSelection() {
 
         $(this).siblings('.dropdown-list').toggleClass('hidden');
     })
-}
-
-// select new date and show/hide observations
-function calendarSwitchDate() {
-    $('.periods-calendar .dropdown-link').off('click').on('click', function (event) {
-        event.preventDefault();
-
-        let $thisCalendar = $(this).closest('.periods-calendar'),
-            activeDate = $(this).text();
-
-        $('.active-year', $thisCalendar).text(activeDate);
-        $('.dropdown-link.hidden', $thisCalendar).removeClass('hidden');
-        $(this).addClass('hidden');
-        $('.dropdown-list', $thisCalendar).addClass('hidden');
-        // show/hide observations
-        $('.stage-marker', $thisCalendar).each( function () {
-            let $element = $(this);
-
-            if(observationsToggleCombinedConditions($element, activeDate)) {
-                $element.show(200);
-            } else {
-                $element.hide(200);
-            }
-            resetTabMatchingElements($('.tabs-holder:not(.stations)'));
-        });
-    });
-}
-
-function observationsToggleCombinedConditions ($element, activeDate, matchsTab = null) {
-    let showObs = $element.data('year').toString() === activeDate;
-
-    if (null !== matchsTab) {// if matchsTab is defined it is boolean
-        showObs &= matchsTab;
-    }
-    return showObs;
 }
 
 function hideCalendarLegend () {
