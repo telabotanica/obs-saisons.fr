@@ -15,16 +15,25 @@ import 'core-js/features/array/for-each';
 import 'core-js/features/promise';
 //
 /**************************************************
- * COMPONENTS
+ * GLOBALS
  **************************************************/
 //
 import './ui/provide-jquery';
+import './ui/check-value-valid';
+import './ui/date-error-display';
+//
+/**************************************************
+ * LEAFLET
+ **************************************************/
 //
 import L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
 //
-import './ui/check-value-valid';
+/**************************************************
+ * COMPONENTS
+ **************************************************/
+//
 import './ui/wysiwyg';
 import './ui/scientific-name';
 import './ui/textarea-auto-resize';
@@ -974,21 +983,6 @@ function generateComparableFormatedDate(dateData) {
     }
 
     return dateData.join('');
-}
-
-function displayDateError($field, errorMessage)
-{
-    $field
-        .val('')
-        .after(
-            '<p class="invalid-date field-help-text help-text" style="color:red;">' + errorMessage + '</p>'
-        )
-    ;
-    setTimeout(function () {
-        $('.invalid-date').hide(200, function () {
-            $(this).remove();
-        });
-    }, 3000);
 }
 
 function initFormEditPage() {
