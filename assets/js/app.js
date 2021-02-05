@@ -54,6 +54,8 @@ import './ui/calendar-hide-legend';
 import './ui/accordion-block-toggle';
 import './ui/station-search-form-submit';
 import './ui/event-post-dates-validate';
+import './ui/user-delete-admin-confirm';
+
 
 
 const $event = $('#observation_event');
@@ -63,7 +65,7 @@ const $latitude = $('#station_latitude');
 const $longitude = $('#station_longitude');
 const $locality = $('#station_locality');
 const $observationDate = $('#observation_date');
-const $adminDeleteUser = $('#admin-delete-user');
+
 
 const places = require('places.js');
 const algoliasearch = require('algoliasearch');
@@ -90,9 +92,6 @@ $( document ).ready( function() {
     onOpenOverlay(placesAutocomplete);
     onCloseOverlay();
     stationMapDisplay();
-    if(0 < $adminDeleteUser.length) {
-        userDeleteAdminConfirm();
-    }
 });
 
 // open overlay
@@ -900,14 +899,6 @@ function onDeleteButton(subject) {
         question += '?';
 
         if(!confirm(question)) {
-            event.preventDefault();
-        }
-    });
-}
-
-function userDeleteAdminConfirm() {
-    $adminDeleteUser.on('click', function (event) {
-        if(!confirm('Confirmer la suppression du compte')) {
             event.preventDefault();
         }
     });
