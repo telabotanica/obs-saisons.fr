@@ -21,7 +21,6 @@ class MailchimpSyncContact
     private $flashBag;
     private $mailer;
     private $twig;
-    private $headers;
 
     public function __construct(
         LoggerInterface $logger,
@@ -99,7 +98,7 @@ class MailchimpSyncContact
         return $this->requestApi(
             $user,
             'GET',
-            $this->generateUrl($user),
+            $this->generateUrl($user)
         );
     }
 
@@ -124,11 +123,11 @@ class MailchimpSyncContact
                 $method,
                 $url,
                 $options
-            )->getStatusCode();
+            )->getContent();
 
             $content = json_decode($jsonContent);
-            if (!empty($content) && !empty($content['status'])) {
-                return $content['status'];
+            if (!empty($content) && !empty($content->status)) {
+                return $content->status;
             }
         } catch (\Exception $e) {
             $this->logger->error($e);
