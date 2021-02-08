@@ -400,11 +400,6 @@ class UserController extends AbstractController
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-
-                if ($user->getIsNewsletterSubscriber()) {
-                    $mailchimpSyncContact->addContact($user);
-                }
-
                 $manager->flush();
 
                 $this->addFlash('success', 'Votre profil a été créé');

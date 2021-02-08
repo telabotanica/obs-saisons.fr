@@ -53,34 +53,37 @@ class MailchimpSyncContact
         return $url;
     }
 
-    public function addContact(User $user)
+    public function subscribe(User $user)
     {
+        //Profile creation
         $subscriptionStatus = $this->checkSubscriptionStatus($user);
-
         if (!$subscriptionStatus || 404 === $subscriptionStatus) {
+            $this->addContact($user);
+        } else {
+            //edition
             $this->requestApi(
                 $user,
-                'POST',
-                $this->generateUrl(),//no user email info in url
-                [
-                    'email_address' => $user->getEmail(),
-                    'status' => self::STATUS_SUBSCRIBED,
-                    'merge_fields' => [
-                        'FNAME' => $user->getName(),
-                        'LNAME' => $user->getName(),
-                    ],
-                ]
+                'PUT',
+                $this->generateUrl($user),
+                ['status' => self::STATUS_SUBSCRIBED]
             );
         }
     }
 
-    public function subscribe(User $user)
+    private function addContact(User $user)
     {
         $this->requestApi(
             $user,
-            'PUT',
-            $this->generateUrl($user),
-            ['status' => self::STATUS_SUBSCRIBED]
+            'POST',
+            $this->generateUrl(),//no user email info in url
+            [
+                'email_address' => $user->getEmail(),
+                'status' => self::STATUS_SUBSCRIBED,
+                'merge_fields' => [
+                    'FNAME' => $user->getName(),
+                    'LNAME' => $user->getName(),
+                ],
+            ]
         );
     }
 
@@ -134,6 +137,7 @@ class MailchimpSyncContact
             $this->logger->error($e);
         }
 
+        //not fired on check status
         if ($expectedStatus) {
             $this->manageSyncFail($user, $expectedStatus);
         }
