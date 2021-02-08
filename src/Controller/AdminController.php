@@ -405,33 +405,4 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
     }
-
-    /**
-     * @Route("/admin/user/sync-mailchimp-contact/{listId}", name="admin_sync_mailchimp_contact", methods={"POST"})
-     */
-    public function syncMailchimpContactsWebhook(
-        int $listId,
-        Request $request,
-        EntityManagerInterface $manager,
-        LoggerInterface $logger
-    ) {
-        if ($this->getParameter('mailchimp.list_id') === $listId) {
-            $type = $request->request->get('type');
-            $data = $request->request->get('data');
-            if ($type && $data && $data['email']) {
-                /**
-                 * @var User $user
-                 */
-                $user = $manager->getRepository(User::class)
-                    ->findByEmail($data['email']);
-
-                if (!$user) {
-                    $logger->alert(sprintf('unsubscribed user with email %s not found, check mailchimp audience', $data['email']));
-                } else {
-                    $isNewsLetterSubscriber = MailchimpSyncContact::STATUS_SUBSCRIBED === $type;
-                    $user->setIsNewsLetterSubscriber($isNewsLetterSubscriber);
-                }
-            }
-        }
-    }
 }

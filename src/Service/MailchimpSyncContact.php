@@ -14,6 +14,7 @@ class MailchimpSyncContact
     const STATUS_ADDED = 'added';
     const STATUS_SUBSCRIBED = 'subscribed';
     const STATUS_UNSUBSCRIBED = 'unsubscribed';
+    const WEBHOOK_RESPONSE_TYPE_SUBSCRIBE = 'subscribe';
 
     private $logger;
     private $params;
