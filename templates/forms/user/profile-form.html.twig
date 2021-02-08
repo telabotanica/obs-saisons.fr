@@ -79,19 +79,6 @@
                 'help_attr': {'class': 'field-help-text'}
             }) }}
         </div>
-        <div class="form-col check ml">
-            {{ form_row(profileForm.isMailsSubscriber, {
-                'row_attr': {'class': 'ods-checkbox'},
-                'label': 'Accepter d’être contacté par mail',
-                'label_attr': {'class': 'checkbox-label ods-form-label'},
-                'attr': {
-                    'class': 'ods-checkbox-input',
-                    'data-name': 'isMailsSubscriber'
-                },
-                'help': 'Vous donnez la possibilité à l’équipe de l’ODS de vous contacter directement par mail en cochant cette case.',
-                'help_attr': {'class': 'field-help-text'}
-            }) }}
-        </div>
     </div>
     {% include 'forms/components/upload-block.html.twig' with { formField: profileForm.avatar } %}
 {% endblock %}

@@ -111,11 +111,6 @@ class User implements UserInterface
     private $isNewsletterSubscriber;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isMailsSubscriber;
-
-    /**
      * @ORM\Column(type="string", length=180, nullable=true)
      */
     private $emailNew;
@@ -133,7 +128,6 @@ class User implements UserInterface
     public function __construct()
     {
         $this->isNewsletterSubscriber = false;
-        $this->isMailsSubscriber = false;
     }
 
     public function getId(): ?int
@@ -404,18 +398,6 @@ class User implements UserInterface
     public function getIsNewsletterSubscriber(): ?bool
     {
         return $this->isNewsletterSubscriber;
-    }
-
-    public function setIsMailsSubscriber(?bool $isMailsSubscriber): self
-    {
-        $this->isMailsSubscriber = $isMailsSubscriber;
-
-        return $this;
-    }
-
-    public function getIsMailsSubscriber(): ?bool
-    {
-        return $this->isMailsSubscriber;
     }
 
     public function getEmailNew(): ?string

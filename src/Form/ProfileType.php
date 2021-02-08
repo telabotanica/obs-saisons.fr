@@ -50,7 +50,6 @@ class ProfileType extends AbstractType
                 'required' => false,
             ])
             ->add('isNewsletterSubscriber', CheckboxType::class, ['required' => false])
-            ->add('isMailsSubscriber', CheckboxType::class, ['required' => false])
             ->add('avatar', FileType::class, [
                 'data_class' => null,
                 'constraints' => [
@@ -123,7 +122,6 @@ class ProfileType extends AbstractType
 
         $user->setAvatar($this->avatar);
         $user->setIsNewsletterSubscriber(!empty($user->getIsNewsletterSubscriber()));
-        $user->setIsMailsSubscriber(!empty($user->getIsMailsSubscriber()));
 
         $formEvent->setData($user);
     }
