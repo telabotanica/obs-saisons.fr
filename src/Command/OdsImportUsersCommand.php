@@ -105,7 +105,6 @@ class OdsImportUsersCommand extends Command
             $user->setLocality($legacyUser['locality']);
             $user->setProfileType($legacyUser['profile_type']);
             $user->setIsNewsletterSubscriber($legacyUser['is_newsletter_subscriber'] ?? '0');
-            $user->setIsMailsSubscriber(false);
             $user->setCreatedAt((new \DateTime())->setTimestamp($legacyUser['created_at']));
             $user->setResetToken('tok3nha5toBR3s3tedElMe0w');
             $user->setLegacyId($legacyUser['uid']);

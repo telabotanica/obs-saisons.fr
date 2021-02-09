@@ -137,7 +137,6 @@ class EntityJsonSerialize
                 'postCode',
                 'profileType',
                 'isNewsletterSubscriber',
-                'isMailsSubscriber',
             ],
         ];
 

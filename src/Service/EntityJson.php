@@ -57,7 +57,6 @@ class EntityJson extends EntityJsonSerialize
             'postCode' => $user->getPostCode(),
             'profileType' => $user->getProfileType(),
             'isNewsletterSubscriber' => $user->getIsNewsletterSubscriber(),
-            'isMailsSubscriber' => $user->getIsMailsSubscriber(),
         ];
 
         return json_encode($userProfileArray);
