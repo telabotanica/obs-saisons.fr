@@ -392,6 +392,9 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_login');
         }
 
+        /**
+         * @var User $user
+         */
         $user = $this->getUser();
 
         $form = $this->createForm(ProfileType::class, $user);
@@ -400,11 +403,9 @@ class UserController extends AbstractController
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-
                 if ($user->getIsNewsletterSubscriber()) {
-                    $mailchimpSyncContact->addContact($user);
+                    $mailchimpSyncContact->subscribe($user);
                 }
-
                 $manager->flush();
 
                 $this->addFlash('success', 'Votre profil a été créé');
