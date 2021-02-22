@@ -1,0 +1,74 @@
+.profile-menu-container {
+    @extend .dropdown;
+
+    & .hr {
+        display: none;
+        height: 0;
+        width: 0;
+        opacity: 0;
+        margin: 0 auto;
+    }
+
+    &:hover .profile-menu {
+        right: 0;
+        height: 95px;
+        min-height: 50px;
+        max-height: 180px;
+        border-top: 1px solid $grey301486;
+        box-shadow: 0 1px 3px 0 rgba(#000, 0.1);
+        border-radius: 2px;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out ;
+        padding: 0 3px;
+
+        & .hr {
+            display: block;
+            width: 80%;
+            height: 2px;
+            background-color: $grey281146;
+            opacity: 0.7;
+        }
+
+        & .profile-menu-link {
+            padding: 10px 20px;
+            height: auto;
+            opacity: 0.7;
+            outline: 0 !important;
+            -webkit-transition: all 0.1s ease-in-out;
+            transition: all 0.1s ease-in-out;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.profile-menu-button {
+    @extend .dropdown-toggle;
+    cursor: pointer;
+}
+
+.profile-menu {
+    position: absolute;
+    top: 100%;
+    min-width: 50%;
+    height: 0;
+    min-height: 0;
+    border-width: 0;
+    background-color: #fff;
+
+    @include media(md) {
+        min-width: 100%;
+    }
+}
+
+.profile-menu-link {
+    @include ods-dropdowns;
+    display: block;
+    text-align: center;
+    height: 0;
+    padding: 0;
+    background-color: #fff;
+    opacity: 0;
+}
