@@ -527,8 +527,11 @@ export const onOpenOverlay = () => {
             $overlay
                 .removeClass('hidden')
                 // triggers onCloseOverlay() when clicking out of container
-                .on('click', function(event) {
-                    if(!$(event.target).closest('.saisie-container, .obs-info-container').length) {
+                .off('click').on('click', function(event) {
+                    if(
+                        !$(event.target).closest('.saisie-container, .obs-info-container').length
+                        && null !== event.target.parentElement
+                    ) {
                         $('a.bt-annuler').trigger('click');
                     }
                 })

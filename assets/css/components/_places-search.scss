@@ -1,0 +1,145 @@
+/************************************************
+	ODS PLACES STYLING
+ ************************************************/
+/** Ods places search block **/
+
+.search-container {
+  position: relative;
+}
+
+/** Ods places input search **/
+
+.input-search-container {
+  display: flex;
+  width: 100%;
+  border: 1px solid $green725760;
+  border-radius: 3px;
+}
+
+.ods-places {
+  width: 100%;
+  height: 25px;
+  padding: 10px 20px;
+  float: left;
+  background: $grey303394;
+  border:0;
+  box-shadow: none;
+  border-radius: 3px 0 0 3px;
+
+  &:focus {
+    outline: 0;
+    background: #fff;
+  }
+
+  &::-webkit-input-placeholder {
+    color: #999;
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  &:-moz-placeholder {
+    color: #999;
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  &:-ms-input-placeholder {
+    color: #999;
+    font-weight: normal;
+    font-style: italic;
+  }
+}
+
+
+
+.input-search-container button {
+  overflow: visible;
+  position: relative;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  height: 45px;
+  width: 60px;
+  border-radius: 0 3px 3px 0;
+
+  /** Ods places search buttons **/
+  &:active,
+  &:focus {
+    outline: 0;
+  }
+
+  &:before { /* left arrow */
+    content: '';
+    position: absolute;
+    border-width: 10px 10px 10px 0;
+    border-style: solid solid solid none;
+    top: 14px;
+    left: -7px;
+}
+
+  &::-moz-focus-inner { /* remove extra button spacing for Mozilla Firefox */
+    border: 0;
+    padding: 0;
+  }
+}
+
+.ods-places-launch {
+  @include background-image(image-url('search-green'), 15px 50%, 20px);
+  background-color: $green725760;
+
+  &:before {
+    border-color: transparent $green725760 transparent;
+  }
+}
+
+.ods-places-close {
+  @include background-image(image-url('cross-white'), 7px 50%, 35px);
+  background-color: $grey131117;
+
+  &:before {
+    border-color: transparent $grey131117 transparent;
+  }
+
+}
+
+/** Ods places search  results **/
+
+.ods-places-results-container {
+  position: absolute;
+  top: 103%;
+  z-index: 1001 !important;
+  width: 99%;
+  background-color: $grey303394;
+  height: 200px;
+  padding: 0;
+  margin-left: 2px;
+  border-radius: 1px;
+  overflow: auto;
+  box-shadow: 2px 2px 4px $grey281146;
+}
+
+.ods-places-results {
+  @include position(relative, 0);
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: $grey303394;
+  color: $grey181217;
+  font-weight: 600;
+
+  .ods-places-suggestion {
+    width: 100%;
+    padding: 5px 0 5px 20px;
+    background-color: $grey303394;
+    list-style-type: none;
+    cursor: pointer;
+    margin: 0;
+
+    &:hover,
+    &:focus {
+      background-color: #fff;
+    }
+  }
+}
+
+/*******************************************************/

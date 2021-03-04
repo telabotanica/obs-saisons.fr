@@ -76,4 +76,8 @@ import './ui/overlay/overlay-open';
 import './ui/overlay/overlay-close';
 //
 
+/**************************************************
+ * POST-EVENT
+ **************************************************/
+import './ui/locate-post-event';
 

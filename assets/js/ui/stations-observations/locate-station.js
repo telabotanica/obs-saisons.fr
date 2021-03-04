@@ -11,7 +11,7 @@ const $longitude = $('#station_longitude');
 /**************************************************
  * MAP
  **************************************************/
-import {initSearchLocality, onLocalityField} from "../location/locality";
+import {OdsPlaces} from "../location/locality";
 import {Location} from "../location/location";
 
 /***************************************************/
@@ -23,8 +23,7 @@ StationLocation.prototype = new Location();
 StationLocation.prototype.init = function() {
     this.handleCoordinates();
     this.onCoordinates();
-    onLocalityField('station_locality');
-    initSearchLocality();
+    this.initSearchLocality();
     this.onLocation();
     this.toggleMap();
 };
@@ -43,6 +42,24 @@ StationLocation.prototype.onCoordinates = function() {
         this.handleCoordinates();
     }.bind(this));
 };
+
+StationLocation.prototype.initSearchLocality = function() {
+    this.odsPlaces = new OdsPlaces(this.odsPlacesCallback.bind(this));
+    this.odsPlaces.init();
+};
+
+StationLocation.prototype.odsPlacesCallback = function(localityData) {
+    let addressData = localityData.address,
+        locationNameType = ['village', 'city', 'locality', 'municipality', 'county'].find(locationNameType => addressData[locationNameType] !== undefined);
+    if(valOk(locationNameType)) {
+        $('#station_locality').val(addressData[locationNameType]);
+        this.handleNewLocation({
+            'lat' : localityData.lat,
+            'lng' : localityData.lon
+        });
+    }
+};
+
 
 StationLocation.prototype.onLocation = function() {
     $('#map').on('location', function () {

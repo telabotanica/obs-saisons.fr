@@ -1,7 +1,7 @@
 import domready from 'mf-js/modules/dom/ready';
 import {stationLocation, individualOvelayManageSpecies, observationOvelayManageIndividualAndEvents} from "./overlay-open";
 
-export const closeOverlay = ($overlay) => {
+export const closeOverlay = $overlay => {
     $('body').css('overflow', 'auto');
     $overlay.addClass('hidden');
 
@@ -24,6 +24,7 @@ export const closeOverlay = ($overlay) => {
                 $('.ods-form-warning').addClass('hidden').text('');
             } else if($overlay.hasClass('station')) {
                 stationLocation.removeMap();
+                stationLocation.odsPlaces.resetPlacesSearch();
                 $('.ap-icon-clear').trigger('click');
             }
             $('.delete-file').trigger('click');
@@ -33,7 +34,7 @@ export const closeOverlay = ($overlay) => {
     } else if ($overlay.hasClass('obs-infos')) {
         $('.saisie-container').find('.obs-info').text('');
     }
-}
+};
 
 // open overlay
 domready(() => {
@@ -44,7 +45,13 @@ domready(() => {
     });
     $('body').on('keydown', function (event) {
         const ESC_KEY_STRING = /^Esc(ape)?/;
-        if (27 === event.keyCode || ESC_KEY_STRING.test(event.key)) {
+        let isEscapeKey = 27 === event.keyCode || ESC_KEY_STRING.test(event.key),
+            $target = $(event.target),
+            isSuggestion = $target.hasClass('ods-places-suggestion'),
+            isOdsSearchInput = $target.hasClass('ods-places'),
+            isOdsPlacesControls = isSuggestion || isOdsSearchInput;
+
+        if (isEscapeKey && !isOdsPlacesControls) {
             closeOverlay($('.overlay:not(.hidden)'));
         }
     });

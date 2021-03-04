@@ -26,11 +26,8 @@
         }) }}
     </div>
     <div class="_2-col-form field-group">
-        <div class="form-col search-container">
-            <label for="search" >Localisez votre station</label>
-            <input id="search" class="ods-places" type="search" placeholder="Entrez une adresse ici">
-        </div>
-        <div class="form-col small button-form-container">
+        {% include 'forms/components/ods-places-search.html.twig' with {label:'Localisez votre station'} %}
+        <div class="form-col small ml button-form-container">
             <label for=""></label>
             <a href="" class="button bt-add open-map-button">
                 <span id="open-map" class="">Utiliser la carte</span>

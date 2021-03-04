@@ -10,7 +10,7 @@ domready(() => {
         $('img.placeholder-img').addClass('obj').attr('src', image);
     }
 
-    let $places = $('.ods-places');
+    let $places = $('#ods-places');
 
     if (0 < $places.length && valOk($places.val())) {
         $places.siblings('button.ap-input-icon').toggle();
