@@ -51,7 +51,7 @@ class PagesController extends AbstractController
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'title' => 'À propos de l’Observatoire des saisons',
-            'subtitle' => 'Participez au programme de <strong>l’ODS</strong>.',
+            'subtitle' => 'L’Observatoire des Saisons, présentation du programme et de l’équipe, historique et financeurs',
             'page' => $page,
         ]);
     }
@@ -101,10 +101,8 @@ class PagesController extends AbstractController
             ['category' => Post::CATEGORY_PAGE, 'slug' => 'outils-ressources']
         );
 
-        return $this->render('pages/static-page.html.twig', [
+        return $this->render('pages/static/outils-ressources.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Outils & Ressources',
-            'subtitle' => 'Tous les outils et ressources du programme <strong>Observatoire des saisons</strong>.',
             'page' => $page,
         ]);
     }
@@ -196,6 +194,7 @@ class PagesController extends AbstractController
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'title' => 'Résultats scientifiques',
+            'subtitle' => 'Les avancées scientifiques grâce à toutes vos observations !',
             'page' => $page,
         ]);
     }
@@ -214,6 +213,7 @@ class PagesController extends AbstractController
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'title' => 'Lettres de printemps',
+            'subtitle' => 'Chaque année, nous faisons le bilan ! Découvrez les bilans annuels de l’Observatoire des Saisons : les lettres de printemps.',
             'page' => $page,
         ]);
     }
@@ -230,9 +230,8 @@ class PagesController extends AbstractController
             ['category' => Post::CATEGORY_PAGE, 'slug' => 'resultats']
         );
 
-        return $this->render('pages/static-page.html.twig', [
+        return $this->render('pages/static/resultats.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Résultats',
             'page' => $page,
         ]);
     }

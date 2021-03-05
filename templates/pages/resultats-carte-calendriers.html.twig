@@ -7,7 +7,10 @@
     </div>
 
     {% include 'layout/header.html.twig' with ({
-        'title': 'Carte des résultats'
+        'title': 'Carte des résultats',
+        'subtitle': "Cartes et graphiques dynamiques qui vous permettent d’explorer et visualiser les données en temps réel de l’Observatoire des Saisons.<br>
+                     <a href=#{path('explorer-les-donnees')}#export>Exportez les données de l’Observatoire des saisons</a>."
+
     }) %}
 
     <div class="criteria-container">

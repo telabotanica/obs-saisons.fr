@@ -1,0 +1,9 @@
+{% extends 'pages/static-page.html.twig' %}
+
+{% set title = 'Résultats' %}
+{% set subtitle =
+    "Les scientifiques ont besoin de temps pour analyser vos données, en attendant, vous pouvez <a href=#{path('explorer-les-donnees')}>explorer et visualiser toutes les données</a> à l’aide de cartes et de graphiques dynamiques.<br>
+    <a href=#{path('explorer-les-donnees')}#export>Exportez les données de l’Observatoire des saisons</a>.<br>
+    Accédez aux <a href=#{path('lettres-de-printemps')}>lettres de printemps</a> pour consulter les bilans annuels de l’Observatoire.<br>
+    Accédez aux <a href=#{path('resultats-scientifiques')}>résultats scientifiques</a> pour trouver les articles scientifiques et vulgarisés issus de vos observations."
+%}

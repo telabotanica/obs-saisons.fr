@@ -6,7 +6,7 @@
 
 	{% include 'layout/header.html.twig' with ({
 		'title': 'Évènements',
-		'subtitle': 'Vos <strong>évènements</strong> de l’Observatoire des saisons.'
+		'subtitle': "Les évènements autour de l’Observatoire des Saisons.<br><a href=#{path('contact')}>Contactez-nous</a> pour ajouter vos évènements."
 	}) %}
 
 	{% for id, eventPost in eventPosts %}
