@@ -2,9 +2,12 @@
 
 {% block main_content %}
 
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
+
     {% include 'layout/header.html.twig' with ({
-        'title': 'Carte des résultats',
-        'subtitle': 'Tous les résultats du programme <strong>Observatoire des saisons</strong>.'
+        'title': 'Carte des résultats'
     }) %}
 
     <div class="criteria-container">
