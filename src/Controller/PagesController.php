@@ -67,7 +67,7 @@ class PagesController extends AbstractController
             ['category' => Post::CATEGORY_PAGE, 'slug' => 'participer']
         );
 
-        return $this->render('pages/participer.html.twig', [
+        return $this->render('pages/static/participer.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
         ]);
