@@ -304,7 +304,7 @@ class PagesController extends AbstractController
 
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Devenir relais de l’Observatoire des Saisons',
+            'title' => 'Devenir relais de l’Observatoire des saisons',
             'page' => $page,
         ]);
     }
@@ -340,7 +340,7 @@ class PagesController extends AbstractController
 
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Les relais de l’Observatoire des Saisons',
+            'title' => 'Les relais de l’Observatoire des saisons',
             'page' => $page,
         ]);
     }

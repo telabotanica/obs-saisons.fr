@@ -35,7 +35,7 @@
 
 				{% set recieves = isPrivateDashboard ? 'recevez' : 'reçoit' %}
 				{% set accepts =  isPrivateDashboard ? 'acceptez' : 'accepte' %}
-				<li><span class="bolder">{{ isPrivateDashboard ? 'vous ' : ''  }}{{ user.isNewsletterSubscriber ? recieves : "ne #{recieves} pas" }} notre lettre d'actualités</span></li>
+				<li><span class="bolder">{{ isPrivateDashboard ? 'vous ' : ''  }}{{ user.isNewsletterSubscriber ? recieves : "ne #{recieves} pas" }} notre lettre d’actualités</span></li>
 			</ul>
 
 			{% if isUserDashboardAdmin %}

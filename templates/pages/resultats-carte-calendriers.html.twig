@@ -12,7 +12,7 @@
 
     <div class="criteria-container">
         <select name="type-species" id="type-species" class="criteria-list">
-            <option value="0" selected class="default-criteria">Tous les types d'espèces</option>
+            <option value="0" selected class="default-criteria">Tous les types d’espèces</option>
             {% for typeSpecies in allTypeSpecies %}
                 <option value="{{ typeSpecies.id }}">{{ typeSpecies.name|capitalize }}</option>
             {% endfor %}
