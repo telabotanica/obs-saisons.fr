@@ -74,23 +74,6 @@ class PagesController extends AbstractController
     }
 
     /**
-     * @Route("/participer/protocole", name="protocole")
-     */
-    public function protocole(
-        BreadcrumbsGenerator $breadcrumbsGenerator,
-        EntityManagerInterface $em
-    ) {
-        $page = $em->getRepository(Post::class)->findOneBy(
-            ['category' => Post::CATEGORY_PAGE, 'slug' => 'protocole']
-        );
-
-        return $this->render('pages/protocole.html.twig', [
-            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'page' => $page,
-        ]);
-    }
-
-    /**
      * @Route("/outils-ressources", name="outils-ressources")
      */
     public function outilsRessources(
