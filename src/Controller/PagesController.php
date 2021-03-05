@@ -50,7 +50,7 @@ class PagesController extends AbstractController
 
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'À propos de l’Observatoire des saisons',
+            'title' => 'À propos de l’Observatoire des Saisons',
             'subtitle' => 'L’Observatoire des Saisons, présentation du programme et de l’équipe, historique et financeurs',
             'page' => $page,
         ]);
@@ -104,7 +104,7 @@ class PagesController extends AbstractController
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'title' => 'Contactez les relais ODS de votre région',
-            'subtitle' => 'Tous les relais du programme <strong>Observatoire des saisons</strong> près de chez vous.',
+            'subtitle' => 'Tous les relais du programme <strong>Observatoire des Saisons</strong> près de chez vous.',
             'page' => $page,
         ]);
     }
@@ -286,7 +286,7 @@ class PagesController extends AbstractController
 
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Devenir relais de l’Observatoire des saisons',
+            'title' => 'Devenir relais de l’Observatoire des Saisons',
             'page' => $page,
         ]);
     }
@@ -322,7 +322,7 @@ class PagesController extends AbstractController
 
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Les relais de l’Observatoire des saisons',
+            'title' => 'Les relais de l’Observatoire des Saisons',
             'page' => $page,
         ]);
     }

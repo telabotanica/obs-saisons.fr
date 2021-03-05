@@ -35,7 +35,7 @@ class BreadcrumbsGenerator
         'outils' => 'Outils',
         'ressources-pedagogiques' => 'Ressources pédagogiques',
         'transmettre' => 'Transmettre',
-        'devenir-relais' => 'Devenire relais',
+        'devenir-relais' => 'Devenir relais',
         'se-former' => 'Se former',
         'les-relais-ods' => 'Les relais de l\'ODS',
         'ods-provence' => 'ODS Provence',
