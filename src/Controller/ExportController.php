@@ -28,22 +28,6 @@ class ExportController extends AbstractController
     }
 
     /**
-     * @Route("/export/retro", name="export_retro")
-     */
-    public function exportRetro(EntityManagerInterface $em)
-    {
-        $data = $em->getRepository(Station::class)->findAllForExport();
-
-        $serializer = new EntityJsonSerialize();
-
-        return new Response(
-            $serializer->jsonSerializeObservationForExport($data),
-            Response::HTTP_OK,
-            ['content-type' => 'application/json']
-        );
-    }
-
-    /**
      * @Route("/export/station/{slug}", name="export_station")
      */
     public function exportStation(EntityManagerInterface $em, string $slug)
