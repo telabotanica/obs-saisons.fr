@@ -2,14 +2,20 @@
 
 {% block main_content %}
 
+    <div class="rich-text-block page-content">
+        {{ page.content|default|raw }}
+    </div>
+
     {% include 'layout/header.html.twig' with ({
         'title': 'Carte des résultats',
-        'subtitle': 'Tous les résultats du programme <strong>Observatoire des saisons</strong>.'
+        'subtitle': "Cartes et graphiques dynamiques qui vous permettent d’explorer et visualiser les données en temps réel de l’Observatoire des Saisons.<br>
+                     <a href=#{path('explorer-les-donnees')}#export>Exportez les données de l’Observatoire des Saisons</a>."
+
     }) %}
 
     <div class="criteria-container">
         <select name="type-species" id="type-species" class="criteria-list">
-            <option value="0" selected class="default-criteria">Tous les types d'espèces</option>
+            <option value="0" selected class="default-criteria">Tous les types d’espèces</option>
             {% for typeSpecies in allTypeSpecies %}
                 <option value="{{ typeSpecies.id }}">{{ typeSpecies.name|capitalize }}</option>
             {% endfor %}

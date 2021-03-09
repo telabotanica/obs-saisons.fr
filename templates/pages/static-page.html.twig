@@ -3,8 +3,8 @@
 {% block main_content %}
 
 	{% include 'layout/header.html.twig' with ({
-        'title': 'À propos de l’Observatoire des saisons',
-        'subtitle': 'Participez au programme de <strong>l’ODS</strong>.'
+        'title': title,
+        'subtitle': subtitle|default
     }) %}
 
     <div class="rich-text-block page-content">

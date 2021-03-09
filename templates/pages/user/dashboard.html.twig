@@ -6,7 +6,7 @@
 	{% if isPrivateDashboard %}
 		{% set subtitle =
 			"Bonjour #{app.user.displayName}, bienvenue !<br>
-			Retrouvez les informations principales de votre profil et vos activités de l’observatoire des saisons"
+			Retrouvez les informations principales de votre profil et vos activités de l’observatoire des Saisons"
 		%}
 	{% endif %}
 	{% set title = isPrivateDashboard ? 'Votre profil' : "Profil de #{user.displayName}" %}
@@ -35,7 +35,7 @@
 
 				{% set recieves = isPrivateDashboard ? 'recevez' : 'reçoit' %}
 				{% set accepts =  isPrivateDashboard ? 'acceptez' : 'accepte' %}
-				<li><span class="bolder">{{ isPrivateDashboard ? 'vous ' : ''  }}{{ user.isNewsletterSubscriber ? recieves : "ne #{recieves} pas" }} notre lettre d'actualités</span></li>
+				<li><span class="bolder">{{ isPrivateDashboard ? 'vous ' : ''  }}{{ user.isNewsletterSubscriber ? recieves : "ne #{recieves} pas" }} notre lettre d’actualités</span></li>
 			</ul>
 
 			{% if isUserDashboardAdmin %}

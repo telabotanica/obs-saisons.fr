@@ -3,7 +3,7 @@
 {% block main_content %}
 	{% include 'layout/header.html.twig' with ({
 		'title': title|default('Stations d’observation'),
-		'subtitle': 'Les <strong>stations d’observation</strong> sont les zones où se trouvent les plantes ou animaux que vous souhaitez observer. <br>Vous pouvez rejoindre une station existante ou en créer une nouvelle.'
+		'subtitle': 'Voici les stations d’observations dans lesquelles vous pouvez saisir vos observations.<br>Cherchez d’abord si vous trouvez une station publique près de chez vous dans laquelle vous pourrez contribuer, sinon créez une station (en bas de la liste) ou accéder à vos stations (dans l’onglet “Mes stations”).'
 	}) %}
 	{% include 'components/actionbar.html.twig' with {
 		actionbar: {

@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\EventSpecies;
 use App\Entity\FrenchRegions;
 use App\Entity\Observation;
+use App\Entity\Post;
 use App\Entity\Species;
 use App\Entity\TypeSpecies;
 use App\Service\BreadcrumbsGenerator;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ResultsController extends AbstractController
 {
     /**
-     * @Route("/resultats", name="resultats")
+     * @Route("/explorer-les-donnees", name="explorer-les-donnees")
      */
     public function results(
         BreadcrumbsGenerator $breadcrumbsGenerator,
@@ -43,7 +44,12 @@ class ResultsController extends AbstractController
             $eventsIds[$event->getName()][] = $event->getId();
         }
 
-        return $this->render('pages/resultats.html.twig', [
+        // text content
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'explorer-les-donnees']
+        );
+
+        return $this->render('pages/resultats-carte-calendriers.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'allTypeSpecies' => $typeSpecies,
             'allSpecies' => $species,
@@ -53,6 +59,7 @@ class ResultsController extends AbstractController
             'speciesEvents' => $speciesEvents,
             'regions' => FrenchRegions::getRegionsList(),
             'departments' => FrenchRegions::getDepartmentsList(),
+            'page' => $page,
         ]);
     }
 }
