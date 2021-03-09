@@ -14,15 +14,37 @@ class PagesControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $pages = array_keys(BreadcrumbsGenerator::MENU);
+        $pages = [
+            '/actualites',
+            '/evenements',
+            '/especes',
+            '/a-propos',
+            '/aide',
+            '/faq',
+            '/glossaire',
+            '/participer',
+            '/resultats',
+            '/resultats-scientifiques',
+            '/lettres-de-printemps',
+            '/explorer-les-donnees',
+            '/outils-ressources',
+            '/outils',
+            '/ressources-pedagogiques',
+            '/transmettre',
+            '/relais',
+            '/devenir-relais',
+            '/se-former',
+            '/les-relais-ods',
+            '/ods-provence',
+            '/mentions-legales',
+        ];
         foreach ($pages as $page) {
-            $url = '/'.$page;
-            $crawler = $client->request('GET', $url);
+            $crawler = $client->request('GET', $page);
 
             $this->assertEquals(
                 200,
                 $client->getResponse()->getStatusCode(),
-                sprintf('Assert page %s (%d) is StatusCode 200', $page, $url)
+                sprintf('Assert page %s is StatusCode 200', $page)
             );
         }
 

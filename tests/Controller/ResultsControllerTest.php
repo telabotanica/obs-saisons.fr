@@ -13,13 +13,7 @@ class ResultsControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/resultats');
-
-        $this->assertEquals(
-            200,
-            $client->getResponse()->getStatusCode(),
-            'Assert results page is StatusCode 200'
-        );
+        $crawler = $client->request('GET', '/explorer-les-donnees');
 
         $this->assertGreaterThan(
             0,

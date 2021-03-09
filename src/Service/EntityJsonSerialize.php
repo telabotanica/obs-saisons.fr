@@ -85,7 +85,7 @@ class EntityJsonSerialize
                 'date' => Closure::fromCallable('self::dateCallbackDetails'),
                 'event' => Closure::fromCallable('self::eventCallback'),
                 'individual' => Closure::fromCallable('self::individualDetailedCallback'),
-                'updatedAt' => Closure::fromCallable('self::timestampableCallback')
+                'updatedAt' => Closure::fromCallable('self::timestampableCallback'),
             ],
             AbstractNormalizer::IGNORED_ATTRIBUTES => [
                 'createdAt',
