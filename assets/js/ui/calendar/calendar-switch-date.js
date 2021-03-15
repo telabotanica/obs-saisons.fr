@@ -4,35 +4,27 @@ import {observationsToggleCombinedConditions} from '../switch-tabs';
 import {toggleVisibility} from "../../lib/toggle-element-visibility";
 
 domready(() => {
-    const calendars = document.getElementsByClassName('periods-calendar');
+    document.getElementsByClassName('periods-calendar').forEach(calendar => {
+        calendar.querySelectorAll('.dropdown-link').forEach(dropdownLink => {
+            dropdownLink.addEventListener('click', evt => {
+                evt.preventDefault();
 
-    if (calendars) {
-        calendars.forEach(calendar => {
-            const dropdownLinks = calendar.querySelectorAll('.dropdown-link');
+                const activeDate = dropdownLink.textContent;
 
-            if (dropdownLinks) {
-                dropdownLinks.forEach(dropdownLink => {
-                    dropdownLink.addEventListener('click', evt => {
-                        evt.preventDefault();
-
-                        const activeDate = dropdownLink.textContent;
-
-                        calendar.querySelector('.active-year').textContent = activeDate;
-                        calendar.querySelectorAll('.dropdown-link.hidden').forEach(hiddenYear => hiddenYear.classList.remove('hidden'));
-                        dropdownLink.classList.add('hidden');
-                        calendar.querySelector('.dropdown-list').classList.add('hidden');
-                        // show/hide observations
-                        calendar.querySelectorAll('.stage-marker').forEach( observation => {
-                            const tabsHolder = document.querySelector('.tabs-holder:not(.stations)');
-                            toggleVisibility(
-                                observation,
-                                observationsToggleCombinedConditions(observation, activeDate)
-                            );
-                            resetTabMatchingElements(tabsHolder);
-                        });
-                    });
+                calendar.querySelector('.active-year').textContent = activeDate;
+                calendar.querySelectorAll('.dropdown-link.hidden').forEach(hiddenYear => hiddenYear.classList.remove('hidden'));
+                dropdownLink.classList.add('hidden');
+                calendar.querySelector('.dropdown-list').classList.add('hidden');
+                // show/hide observations
+                calendar.querySelectorAll('.stage-marker').forEach( observation => {
+                    const tabsHolder = document.querySelector('.tabs-holder:not(.stations)');
+                    toggleVisibility(
+                        observation,
+                        observationsToggleCombinedConditions(observation, activeDate)
+                    );
+                    resetTabMatchingElements(tabsHolder);
                 });
-            }
+            });
         });
-    }
+    });
 });
