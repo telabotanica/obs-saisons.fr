@@ -104,6 +104,10 @@
 	}
 }
 
+.saisie-title {
+	text-transform: capitalize;
+}
+
 .saisie-title-action {
 	@extend %hide;
 
@@ -170,10 +174,10 @@
 	position: relative;
 
 	.upload-input {
+		@include position(absolute, 0, 0, 0, 0, 1000);
 		width: 100%;
 		opacity: 0;
-		@include position(absolute, 0, 0, 0, 0, 1000);
-		cursor: pointer;
+		@include pointer;
 	}
 
 	img.obj {
@@ -191,19 +195,6 @@
 	&.out {
 		height:0;
 	}
-}
-
-.algolia-places {
-	padding-right: 50px;
-	margin-bottom: 5px;
-}
-
-.ap-dropdown-menu {
-	z-index: 1001 !important;
-}
-
-.ods-places {
-	padding-right: 31px;
 }
 
 .loading::after {

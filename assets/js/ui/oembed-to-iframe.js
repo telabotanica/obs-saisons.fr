@@ -1,4 +1,4 @@
-import domready from 'mf-js/modules/dom/ready';
+import domready from "mf-js/modules/dom/ready";
 
 export const parseVideo = ( url ) => {
 	// - Supported YouTube URL formats:
@@ -26,21 +26,21 @@ export const parseVideo = ( url ) => {
 	};
 };
 
-domready( () => Array.from( document.querySelectorAll( 'oembed' ) ).forEach( ( oembed ) => {
-	const VIMEO_URL_ORIGIN = 'https://player.vimeo.com/video/';
-	const YOUTUBE_URL_ORIGIN = 'https://www.youtube.com/embed/';
-	const attributes = {
-		width: 640,
-		height: 360,
-		frameborder: 0,
-		allow: 'autoplay; fullscreen;',
-		allowfullscreen: '',
-	};
+domready(() => Array.from( document.querySelectorAll( 'oembed' ) ).forEach( oembed => {
+	const VIMEO_URL_ORIGIN = 'https://player.vimeo.com/video/',
+		YOUTUBE_URL_ORIGIN = 'https://www.youtube.com/embed/',
+		attributes = {
+			width: 640,
+			height: 360,
+			frameborder: 0,
+			allow: 'autoplay; fullscreen;',
+			allowfullscreen: '',
+		};
 
-	let iframe = document.createElement( 'iframe' ),
+	const iframe = document.createElement( 'iframe' ),
 		url = oembed.getAttribute( 'url' ),
-		src = url,
 		videoData = parseVideo( url );
+	let src;
 
 	switch ( videoData.type ) {
 		case 'vimeo':
@@ -51,10 +51,11 @@ domready( () => Array.from( document.querySelectorAll( 'oembed' ) ).forEach( ( o
 			attributes.allow += ' accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture;';
 			break;
 		default:
+			src = url;
 			break;
 	}
 
-	iframe.setAttribute( 'src', src )
+	iframe.setAttribute( 'src', src );
 
 	for ( const attribute in attributes ) {
 		iframe.setAttribute( attribute, attributes[attribute] );

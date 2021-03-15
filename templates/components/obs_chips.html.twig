@@ -77,7 +77,7 @@
         {% endfor %}
         <a
             href=""
-            class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}"
+            class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}{{ hide? ' hide'}}"
             {# matching tabs #}
             data-tab="{{ obs.user.id }}"
             {# matching calendar years menu and selecting observations for obs-infos list cards #}
@@ -101,7 +101,6 @@
                     "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};
                     grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};"
                 }}
-                {{ hide ? 'display:none;' }}
             "
         >
             <div class="stage-marker-text {{ loop.index == observations|length or break? 'last' }}">

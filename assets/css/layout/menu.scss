@@ -1,5 +1,5 @@
 .menu {
-	@include position(fixed, 0, 0, 0, auto, 2000);
+	@include position(fixed, 0, -280px, 0, auto, 2000);
 	@extend %display-flex-column;
 	@include flex-initial;
 	overflow: auto;
@@ -9,6 +9,7 @@
 	padding-top: 80px;
 	background-color: #fff;
 	box-shadow: 0 0 20px 0 grey(0, 0.15);
+	transition: right 0.2s ease;
 
 	@include media(md) {
 		height: 100vh;
@@ -23,6 +24,11 @@
 		@include gap(margin, "h");
 		padding-top: 0;
 		box-shadow: unset;
+	}
+
+	&.open {
+		right: 280px;
+		transition: right 0.2s ease;
 	}
 }
 
@@ -56,6 +62,7 @@
 	height: 40px;
 	margin-top: 20px;
 	margin-right: 30px;
+	@include pointer;
 
 	@include media(lg) {
 		display: none;

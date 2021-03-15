@@ -24,13 +24,16 @@
             }
         }) }}
     </div>
-    {{ form_row(form.location, {
-        'row_attr': {'class': 'form-col search-container'},
-        'label': 'Localisez votre évènement *',
-        'attr': {
-            'class': 'ods-places',
-            'data-name': 'location',
-            'placeholder': 'Entrez une adresse ici...'
-        }
-    }) }}
+    <div class="_2-col-form">
+        {% include 'forms/components/ods-places-search.html.twig' with {label:'Rechercher une adresse'} %}
+        {{ form_row(form.location, {
+            'row_attr': {'class': 'form-col ml'},
+            'label': 'Localisation de votre évènement *',
+            'attr': {
+                'class': 'text-field ods-input',
+                'data-name': 'location',
+                'placeholder': 'Entrez une adresse ici...'
+            }
+        }) }}
+    </div>
 {% endblock %}

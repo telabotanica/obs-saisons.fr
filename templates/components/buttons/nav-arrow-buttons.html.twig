@@ -1,15 +1,17 @@
 {#
     *: required
+    |: default
 
     arrows#: object
         target*: string
         direction*: string ('next'||'prev')
         arrow_color#: string | 'green'
         borders#: string (if defined: 'light'||'no-border')
+        isInactive: bool | false
 #}
 <div class="nav-arrow-buttons" data-target="{{ arrows.target }}">
     {% for direction in arrows.directions %}
-        <a href="" class="nav-arrow {{ direction }} {{ arrows.borders|default }}"  data-direction="{{ direction }}">
+        <a href="" class="nav-arrow{{ ' '~direction }}{{ ' '~arrows.borders|default }}{{ isInactive|default(0) ? ' inactive' : '' }}"  data-direction="{{ direction }}">
             <img src="/media/layout/icons/{{ direction == 'next' ? 'right-arrow' : 'left-arrow' }}-{{ arrows.arrow_color|default('green') }}.svg" alt="{{ direction == 'next' ? 'suivant' : 'précédent' }}" class="" width="15" height="15">
         </a>
     {% endfor %}
