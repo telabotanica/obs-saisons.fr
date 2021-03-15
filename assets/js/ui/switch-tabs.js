@@ -1,56 +1,65 @@
 import domready from 'mf-js/modules/dom/ready';
+import {toggleVisibility} from "../lib/toggle-element-visibility";
 
-export const resetTabMatchingElements = ($tabsHolder) => {
-    let activeTab = $tabsHolder.data('active');
+export const resetTabMatchingElements = (tabsHolder) => {
+    const activeTab = tabsHolder.dataset.active,
+        targets =  document.querySelectorAll('[data-tab]:not(.tab)');
 
-    if(activeTab !== 'all') {
-        $('[data-tab]:not(.tab)').each(function () {
-            if(activeTab !== $(this).data('tab')) {
-                $(this).hide();
+    if(activeTab !== 'all' && targets) {
+        targets.forEach(target => {
+            if(activeTab !== target.dataset.tab) {
+                target.classList.add('hide');
             }
         });
     }
 };
 
-export const observationsToggleCombinedConditions = ($element, activeDate, matchsTab = null) => {
-    let showObs = $element.data('year').toString() === activeDate;
+export const observationsToggleCombinedConditions = (
+    element,
+    activeDate,
+    matchesTab = null
+) => {
+    let showObs = element.dataset.year.toString() === activeDate;
 
-    if (null !== matchsTab) {// if matchsTab is defined it is boolean
-        showObs &= matchsTab;
+    if (null !== matchesTab) {// if matchesTab is defined it is boolean
+        showObs &= matchesTab;
     }
+
     return showObs;
 };
 
 // switch between tabs
 domready(() => {
-    let $tabsHolder = $('.tabs-holder:not(.stations)');
-    resetTabMatchingElements($tabsHolder);
+    const tabsHolder = document.querySelector('.tabs-holder:not(.stations)');
 
-    $('.tab').off('click').on('click', function (event) {
-        event.preventDefault();
+    if (tabsHolder) {
+        const tabElements = tabsHolder.getElementsByClassName('tab'),
+            elementsWithDataTab = document.querySelectorAll('[data-tab]');
 
-        let activeTab = $(this).data('tab');
+        resetTabMatchingElements(tabsHolder);
 
-        $tabsHolder.data('active', activeTab).attr('data-active', activeTab);
-        $('[data-tab]').each(function (i, element) {
-            let $element = $(element);
+        tabElements.forEach(tab => {
+            tab.addEventListener('click', evt => {
+                const activeTab = tab.dataset.tab;
 
-            if ($element.hasClass('tab')) {
-                $element.toggleClass('not',(activeTab !== $element.data('tab')));
-            } else {
-                let toggleElement = ('all' === activeTab || $element.data('tab') === activeTab);
-                // for the case of observations
-                if (valOk($element.data('year'))) {
-                    let activeDate = $element.closest('.table-container').find('.active-year').text();
+                evt.preventDefault();
 
-                    toggleElement = observationsToggleCombinedConditions($element, activeDate, toggleElement);
-                }
-                if(toggleElement) {
-                    $element.show(200);
-                } else {
-                    $element.hide(200);
-                }
-            }
+                tabsHolder.dataset.active = activeTab;
+                elementsWithDataTab.forEach(elementWithDataTab => {
+                    if (elementWithDataTab.classList.contains('tab')) {
+                        elementWithDataTab.classList.toggle('not', (activeTab !== elementWithDataTab.dataset.tab));
+                    } else {
+                        let matchesTab = ('all' === activeTab || elementWithDataTab.dataset.tab === activeTab);
+                        // for the case of observations
+                        if (!!elementWithDataTab.dataset.year) {
+                            let activeDate = elementWithDataTab.closest('.table-container').querySelector('.active-year').textContent;
+
+                            matchesTab = observationsToggleCombinedConditions(elementWithDataTab, activeDate, matchesTab);
+                        }
+                        toggleVisibility(elementWithDataTab, matchesTab);
+                    }
+                });
+            })
         });
-    });
+    }
 });

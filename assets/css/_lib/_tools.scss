@@ -271,3 +271,23 @@ $third-pc: 100/3;
 	}
 	@return $target / $context + 0rem;
 }
+
+/*************************************************
+ * TOGGLE ELEMENT
+ *************************************************/
+.hide,
+.hide * {
+	opacity: 0 !important;
+	width: 0 !important;
+	height: 0 !important;
+	min-height: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: 0 !important;
+	color: transparent;
+}
+
+.toggle-visibility,
+.toggle-visibility * {
+	transition: 0.2s width, 0.2s height, 0.2s padding, 0.2s margin, 0.2s border;
+}

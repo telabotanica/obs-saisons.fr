@@ -1,18 +1,18 @@
 import domready from "mf-js/modules/dom/ready";
 import {Location, DEFAULT_CITY_ZOOM} from "../location/location";
 
-const stationHeaderMap = new Location();
-
 domready(() => {
-    let $headerMap = $('#headerMap');
-    if (valOk($headerMap) && $headerMap.hasClass('show-map')) {
+    const stationHeaderMap = new Location(),
+        headerMap = document.getElementById('header-map');
+
+    if (headerMap && headerMap.classList.contains('show-map')) {
         stationHeaderMap.createLocationMap(
             {
-                lat: $headerMap.data('latitude'),
-                lng: $headerMap.data('longitude'),
+                lat: headerMap.dataset.latitude,
+                lng: headerMap.dataset.longitude,
             },
             DEFAULT_CITY_ZOOM,
-            'headerMap',
+            'header-map',
             false,
             false,
         );

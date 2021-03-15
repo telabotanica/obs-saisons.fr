@@ -104,6 +104,10 @@
 	}
 }
 
+.saisie-title {
+	text-transform: capitalize;
+}
+
 .saisie-title-action {
 	@extend %hide;
 
@@ -173,7 +177,7 @@
 		@include position(absolute, 0, 0, 0, 0, 1000);
 		width: 100%;
 		opacity: 0;
-		cursor: pointer;
+		@include pointer;
 	}
 
 	img.obj {

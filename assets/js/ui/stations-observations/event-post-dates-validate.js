@@ -1,82 +1,68 @@
 import domready from 'mf-js/modules/dom/ready';
-
-import {displayError} from '../error-display'
-
-export const generateComparableFormatedDate = (dateData) => {
-    if (/^([\d]{2}\/){2}[\d]{4}$/.test(dateData)) {
-        dateData = dateData.split('/').reverse();
-    } else if(/^[\d]{4}(-[\d]{2}){2}$/.test(dateData)) {
-        dateData = dateData.split('-');
-    } else {
-        dateData = dateData
-            .toISOString()
-            .substr(0, 10)
-            .split('-');
-    }
-
-    return dateData.join('');
-};
+import {handleErrorMessages} from '../error-display'
+import {generateComparableFormatedDate} from "../date-format";
 
 domready(() => {
-    let $postEventsStartDate = $('#post_events_startDate'),
-        $postEventsEndDate = $('#post_events_endDate'),
-        errorMessage = '',
-        todayDate = generateComparableFormatedDate(new Date());
+    const postEventsStartDateEl = document.getElementById('event_post_startDate'),
+        postEventsEndDateEl = document.getElementById('event_post_endDate'),
+        todayDate = generateComparableFormatedDate(new Date()),
+        invalidDateClassAttr = 'invalid-date';
+    let errorMessage;
 
-    $postEventsStartDate.on('change', function () {
-        let hasStartDate = valOk($(this).val()),
-            hasEndDate = valOk($postEventsEndDate.val()),
-            isInvalidStartDate = !hasStartDate;
+    if(!!postEventsStartDateEl && !!postEventsEndDateEl) {
+        postEventsStartDateEl.addEventListener('blur', function () {
+            const startDateValue = postEventsStartDateEl.value,
+                endDateValue = postEventsEndDateEl.value;
 
-        errorMessage = 'Vous devez entrer une date de début valide';
+            errorMessage = '';
+            if(!!startDateValue) {
+                const startDate = generateComparableFormatedDate(startDateValue),
+                    minDate = generateComparableFormatedDate(new Date('2006-01-01'));
 
-        if (hasStartDate && hasEndDate) {
-            let startDate = generateComparableFormatedDate($(this).val()),
-                endDate = generateComparableFormatedDate($postEventsEndDate.val()),
-                minDate =  generateComparableFormatedDate(new Date('2006-01-01')),
-                isBeforeBeginningOfTime = minDate > startDate,
-                isTimeTrip = endDate < startDate;
+                if (minDate > startDate) {
+                    errorMessage = 'Cette date est antérieure à ODS';
+                }
+                if (!!endDateValue && !errorMessage) {
+                    const endDate = generateComparableFormatedDate(endDateValue);
 
-            isInvalidStartDate = isBeforeBeginningOfTime || isTimeTrip;
-
-            if (isBeforeBeginningOfTime) {
-                errorMessage = 'Cette date est antérieure à ODS';
-            } else if (isTimeTrip) {
-                errorMessage = 'Votre date de fin précède votre date de début.';
+                    if (endDate < startDate) {
+                        errorMessage = 'Votre date de fin précède votre date de début.';
+                    }
+                }
+            } else {
+                errorMessage = 'Vous devez entrer une date de début valide';
             }
-        }
+            handleErrorMessages(
+                postEventsStartDateEl,
+                errorMessage,
+                invalidDateClassAttr
+            );
+        });
 
-        if (isInvalidStartDate) {
-            displayError($(this), errorMessage, 'invalid-date');
-        }
-    });
+        postEventsEndDateEl.addEventListener('blur', function () {
+            const endDateValue = postEventsEndDateEl.value,
+                startDateValue = postEventsStartDateEl.value;
 
-    $postEventsEndDate.on('change', function () {
-        let hasEndDate = valOk($(this).val()),
-            hasStartDate = valOk($postEventsStartDate.val()),
-            isInvalidEndDate = !hasEndDate;
+            errorMessage = '';
+            if (!!endDateValue) {
+                const endDate = generateComparableFormatedDate(endDateValue);
 
-        errorMessage = 'Vous devez entrer une date de fin valide';
+                if (todayDate > endDate) {
+                    errorMessage = 'Nous ne publions pas les évènements terminés'
+                } else if (!!startDateValue) {
+                    const startDate = generateComparableFormatedDate(startDateValue);
 
-        if(hasEndDate) {
-            let endDate = generateComparableFormatedDate($(this).val());
-
-            if(todayDate > endDate) {
-                isInvalidEndDate = true;
-                errorMessage = 'Nous ne publions pas les évènements terminés'
-
-            } else if(hasStartDate) {
-                let startDate = generateComparableFormatedDate($postEventsStartDate.val());
-
-                if(startDate > endDate) {
-                    isInvalidEndDate = true;
-                    errorMessage = 'Votre date de fin précède votre date de début.';
+                    if (startDate > endDate) {
+                        errorMessage = 'Votre date de fin précède votre date de début.';
+                    }
                 }
             }
-        }
 
-        if(isInvalidEndDate) {
-            displayError($(this), errorMessage, 'invalid-date');
-        }
-    });
+            handleErrorMessages(
+                postEventsEndDateEl,
+                errorMessage,
+                invalidDateClassAttr
+            );
+        });
+    }
 });

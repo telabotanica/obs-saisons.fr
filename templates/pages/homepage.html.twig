@@ -11,6 +11,7 @@
 					{% include 'components/buttons/nav-arrow-buttons.html.twig' with {arrows:{
 						'target': 'actu-une-container',
 						'directions': ['prev', 'next'],
+						'isInactive': 2 > lastNewsPosts|length
 					}} %}
 				</div>
 				{% for lastNewsPost in lastNewsPosts %}
@@ -55,7 +56,8 @@
 						'target': 'next-event-container',
 						'directions':['prev','next'],
 						'arrow_color': 'orange',
-						'borders': 'light'
+						'borders': 'light',
+						'isInactive': 2 > lastNewsPosts|length
 					}} %}
 				</div>
 				{% for lastEventPost in lastEventPosts %}

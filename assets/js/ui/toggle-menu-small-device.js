@@ -1,14 +1,16 @@
 import domready from 'mf-js/modules/dom/ready';
 
 // open/close menu on small devices
-export function toggleMenuSmallDevices(){
-    $('.menu-img, .close-menu-img').on('click', function() {
-        let menuTanslateX = ( /close/.test(this.className) ? '-' : '' ) + '280px';
+domready(() => {
+    const menuOpenButton = document.querySelector('.menu-img'),
+        menuCloseButton = document.querySelector('.close-menu-img'),
+        menu = document.querySelector('.menu');
 
-        $('.menu').animate({
-            right: menuTanslateX
-        }, 200);
-    });
-}
-
-domready(toggleMenuSmallDevices);
+    if (menu) {
+        [menuOpenButton, menuCloseButton].forEach(menuControl =>{
+            menuControl.addEventListener('click', () => {
+                menu.classList.toggle('open', menuControl.classList.contains('menu-img'));
+            });
+        });
+    }
+});

@@ -1,42 +1,66 @@
 import domready from 'mf-js/modules/dom/ready';
 
-export function findNextTarget($element, targetClass, direction) {
-    let $nextDisplayedElement = $element.next(targetClass).length ? $element.next(targetClass) : $(targetClass).first();
-    if('prev' === direction) {
-        $nextDisplayedElement = $element.prev(targetClass).length ? $element.prev(targetClass) : $(targetClass).last();
+function getNodeNextElement(nodeList, element, direction) {
+    const elementNodeIndex =  Array.from(nodeList).indexOf(element),
+        lastNodeListIndex = nodeList.length -1;
+    let index;
+
+    if ('next' === direction) {
+        index = lastNodeListIndex > elementNodeIndex ? (elementNodeIndex + 1) : 0;
+    } else {
+        index = 0 < elementNodeIndex ? (elementNodeIndex - 1) : lastNodeListIndex;
     }
-    return $nextDisplayedElement;
+
+    return  nodeList[index];
 }
 
 domready(() => {
-    $('.nav-arrow').off('click').on('click', function (event) {
-        event.preventDefault();
+    document.getElementsByClassName('nav-arrow').forEach(
+        navArrow => navArrow.addEventListener('click', function (evt) {
+            evt.preventDefault();
 
-        let $thisBlock = $(this).closest('.nav-arrow-buttons'),
-            targetClass = '.'+$thisBlock.data('target'),
-            $visibleTargetPost = $(targetClass).not('.hidden'),
-            isActuUne = (targetClass === '.actu-une-container'),
-            direction = $(this).data('direction');
+            const arrowsContainer = navArrow.closest('.nav-arrow-buttons'),
+                targetClass = arrowsContainer.dataset.target,
+                targetNodeList = document.getElementsByClassName(targetClass),
+                visibleTargetPost = document.querySelector('.'+targetClass+':not(.hidden)'),
+                direction = navArrow.dataset.direction;
 
-        $visibleTargetPost.addClass('hidden');
-        $thisBlock.find('.nav-arrow.inactive').removeClass('inactive');
-
-        let $newTargetPost = findNextTarget($visibleTargetPost, targetClass, direction);
-
-        if ($newTargetPost) {
-            if (!findNextTarget($newTargetPost, targetClass, direction)) {
-                $thisBlock.find('.nav-arrow.'+direction).addClass('inactive');
+            if(2 > targetNodeList.length) {
+                arrowsContainer.getElementsByClassName('nav-arrow').forEach(
+                    arrow => arrow.classList.add('inactive')
+                );
             }
-            $newTargetPost.removeClass('hidden');
-            if (isActuUne) {
-                let imageClass = '.actus-une-img',
-                    $visibleTargetImage = $(imageClass).not('.hidden');
-                $visibleTargetImage.addClass('hidden');
-                let $newTargetImage = findNextTarget($visibleTargetImage, imageClass, direction);
-                if ($newTargetImage) {
-                    $newTargetImage.removeClass('hidden');
+
+            if(!!visibleTargetPost && !!targetNodeList && 1 < targetNodeList.length) {
+                visibleTargetPost.classList.add('hidden');
+                arrowsContainer.querySelectorAll('.nav-arrow.inactive').forEach(
+                    arrow => arrow.classList.remove('inactive')
+                );
+
+                const newTargetPost = getNodeNextElement(
+                    targetNodeList,
+                    visibleTargetPost,
+                    direction
+                );
+
+                newTargetPost.classList.remove('hidden');
+                if ('actu-une-container' === targetClass) {
+                    const imageClass = 'actus-une-img',
+                        visibleTargetImage = document.querySelector('.'+imageClass+':not(.hidden)'),
+                        imagesNodeList = document.getElementsByClassName(imageClass),
+                        newTargetImage = getNodeNextElement(
+                            imagesNodeList,
+                            visibleTargetImage,
+                            direction
+                        );
+
+                    visibleTargetImage.classList.add('hidden');
+                    if(!!newTargetImage) {
+                        newTargetImage.classList.remove('hidden');
+                    }
                 }
+
             }
-        }
-    });
+        })
+    );
 });

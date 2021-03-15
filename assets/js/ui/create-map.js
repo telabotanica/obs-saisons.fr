@@ -35,7 +35,7 @@ export function createMap(
 
     map.addLayer(new L.FeatureGroup());
 
-    let options = {draggable: isDraggable};
+    const options = {draggable: isDraggable};
 
     if (hasUniqueMarker) {
         options.icon = new MARKER_ICON();

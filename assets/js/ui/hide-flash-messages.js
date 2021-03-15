@@ -1,5 +1,14 @@
 import domready from 'mf-js/modules/dom/ready';
+import {slideUp} from "../lib/slide";
 
 domready(() => {
-    $('.app-flashes').delay(5000).slideUp(300);
+    const flashMessagesEl = document.getElementsByClassName('app-flashes');
+
+    if (flashMessagesEl) {
+        flashMessagesEl.forEach(flashMessage => {
+            setTimeout(() => {
+                slideUp(flashMessage);
+            }, 5000);
+        });
+    }
 });

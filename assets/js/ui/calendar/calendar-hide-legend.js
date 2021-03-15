@@ -1,9 +1,19 @@
 import domready from 'mf-js/modules/dom/ready';
 
 domready(() => {
-    $('.helper-legend .hide-button').click(function (event) {
-        event.preventDefault();
+    const legendElements =  document.querySelectorAll('.helper-legend');
+    let hideButton;
+    if(legendElements.length) {
+        legendElements.forEach(legendEl => {
+                hideButton = legendEl.querySelector('.hide-button');
+                if(hideButton) {
+                    hideButton.addEventListener('click', evt => {
+                        evt.preventDefault();
 
-        $('.pages-container').find('.helper-legend').hide(200);
-    })
+                        legendElements.forEach(legend => legend.classList.add('hide'));
+                    })
+                }
+            }
+        );
+    }
 });

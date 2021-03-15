@@ -1,21 +1,21 @@
 $( document ).ready( () => {
-    const charts = Array.from( document.querySelectorAll( '.chart' ) );
-    if ( charts.length > 0 ) {
-        import( /* webpackChunkName: "plotly" */ 'plotly.js-dist' ).then( ( { default: Plotly } ) => {
+    const charts = Array.from(document.getElementsByClassName('chart'));
+    if (charts.length > 0) {
+        import(/* webpackChunkName: "plotly" */ 'plotly.js-dist' ).then(({default: Plotly}) => {
 
             // choose both region and department is not allowed
-            $( '#region-phenological-chart' ).on( 'change', function() {
-                $( '#department-phenological-chart' ).val( 0 );
-            } );
-            $( '#department-phenological-chart' ).on( 'change', function() {
-                $( '#region-phenological-chart' ).val( 0 );
-            } );
-            $( '#region-evolution-chart' ).on( 'change', function() {
-                $( '#department-evolution-chart' ).val( 0 );
-            } );
-            $( '#department-evolution-chart' ).on( 'change', function() {
-                $( '#region-evolution-chart' ).val( 0 );
-            } );
+            $('#region-phenological-chart').on('change', function() {
+                $('#department-phenological-chart').val(0);
+            });
+            $('#department-phenological-chart').on('change',function() {
+                $('#region-phenological-chart').val(0);
+            });
+            $('#region-evolution-chart').on('change', function() {
+                $('#department-evolution-chart').val(0);
+            });
+            $('#department-evolution-chart').on('change', function() {
+                $('#region-evolution-chart').val(0);
+            });
 
             // binding all select with obs retrieval
             $( '#phenological-chart-container > select' ).on( 'change', function() {

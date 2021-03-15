@@ -29,13 +29,13 @@
         {% include 'forms/components/ods-places-search.html.twig' with {label:'Localisez votre station'} %}
         <div class="form-col small ml button-form-container">
             <label for=""></label>
-            <a href="" class="button bt-add open-map-button">
+            <a id="map-buttons" href="" class="button bt-add open-map-button">
                 <span id="open-map" class="">Utiliser la carte</span>
                 <span id="close-map" class="hidden">Fermer la carte</span>
             </a>
         </div>
     </div>
-    <div class="form-col map-container">
+    <div id="map-container" class="form-col">
         <div id="map" class="hidden"></div>
     </div>
     <div class="_2-col-form field-group">

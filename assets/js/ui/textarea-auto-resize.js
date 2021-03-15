@@ -1,6 +1,17 @@
-$( document ).ready( () => {
-    $('.html-editor > textarea').keyup(function (e) {
-        let rows = $(this).val().split("\n");
-        $(this).prop('rows', rows.length);
-    }).keyup();
+import domready from "mf-js/modules/dom/ready";
+
+domready(() => {
+    const htmlEditor = document.querySelector('.html-editor');
+
+    if (htmlEditor) {
+        const htmlEditorTextarea = htmlEditor.querySelector('textarea');
+
+        htmlEditorTextarea.addEventListener('keyup', () => {
+            const rows = htmlEditorTextarea.value.split("\n");
+
+            htmlEditorTextarea.rows = rows.length;
+        });
+
+        htmlEditorTextarea.dispatchEvent(new Event('keyup'));
+    }
 });

@@ -1,9 +1,3 @@
-import {closeOverlay} from "../overlay/overlay-close";
-
-/**************************************************
- * NOMINATIM
- **************************************************/
-//
 const NOMINATIM_OSM_URL = 'https://nominatim.openstreetmap.org/search';
 const NOMINATIM_OSM_DEFAULT_PARAMS = {
     'format': 'json',
@@ -11,20 +5,7 @@ const NOMINATIM_OSM_DEFAULT_PARAMS = {
     'addressdetails': 1,
     'limit': 10
 };
-//
-/**************************************************
- * DOM
- **************************************************/
-//
-const $places = $('#ods-places');
-const $placeLabel = $places.siblings('label');
-const $placesResults = $('.ods-places-results');
-const $placesResultsContainer = $('.ods-places-results-container');
-const $placesLaunchButton = $('.ods-places-launch');
-const $placesCloseButton = $('.ods-places-close');
-//
 const ESC_KEY_STRING = /^Esc(ape)?/;
-/***************************************************/
 
 export function OdsPlaces(clientCallback) {
 
@@ -40,38 +21,51 @@ export function OdsPlaces(clientCallback) {
 }
 
 OdsPlaces.prototype.init = function() {
-    if (0 < $places.length) {
+    this.initForm();
+    this.initEvts();
+};
+
+OdsPlaces.prototype.initForm = function() {
+    this.places = $('#ods-places');
+    this.placeLabel = this.places.siblings('label');
+    this.placesResults = $('.ods-places-results');
+    this.placesResultsContainer = $('.ods-places-results-container');
+    this.placesLaunchButton = $('.ods-places-launch');
+    this.placesCloseButton = $('.ods-places-close');
+};
+
+OdsPlaces.prototype.initEvts = function() {
+    if (0 < this.places.length) {
 
         this.toggleSearchButton();
-
-        $placesLaunchButton.off('click').on('click', this.launchSearch.bind(this) );
-        $places.off('blur change DOMAutoComplete keydown').on('blur change DOMAutoComplete keydown', this.launchSearch.bind(this) );
+        this.placesLaunchButton.off('click').on('click', this.launchSearch.bind(this) );
+        this.places.off('blur change DOMAutoComplete keydown').on('blur change DOMAutoComplete keydown', this.launchSearch.bind(this) );
     }
 };
 
 OdsPlaces.prototype.launchSearch = function (event) {
-    let isValidSearch = valOk($places.val());
+    let isValidSearch = !!this.places.val();
     if('keydown' === event.type) {
         if (27 === event.keyCode || ESC_KEY_STRING.test(event.key)) {
-            $placesCloseButton.trigger('click');
-            $places.focus();
+            this.placesCloseButton.trigger('click');
+            this.places.focus();
         } else {
             isValidSearch = isValidSearch && (13 === event.keyCode || 'Enter' === event.key);
         }
     }
     if (isValidSearch) {
         event.preventDefault();
-        let params = {'q': $places.val()};
 
-        $placeLabel.addClass('loading');
+        const params = {'q':  this.places.val()};
 
+        this.placeLabel.addClass('loading');
         $.ajax({
             method: "GET",
             url: NOMINATIM_OSM_URL,
             data: {...NOMINATIM_OSM_DEFAULT_PARAMS, ...params},
             success: this.nominatimOsmResponseCallback.bind(this),
             error: () => {
-                $placeLabel.removeClass('loading');
+                this.placeLabel.removeClass('loading');
                 this.resetPlacesSearch();
             }
         });
@@ -80,7 +74,7 @@ OdsPlaces.prototype.launchSearch = function (event) {
 
 OdsPlaces.prototype.nominatimOsmResponseCallback = function(data) {
     this.resetPlacesSearch();
-    $places.siblings('label').removeClass('loading');
+    this.places.siblings('label').removeClass('loading');
     if (0 < data.length) {
         this.searchResults = data;
         this.setSuggestions();
@@ -91,15 +85,15 @@ OdsPlaces.prototype.nominatimOsmResponseCallback = function(data) {
 };
 
 OdsPlaces.prototype.setSuggestions = function() {
-    const lthis = this;
-    let acceptedSuggestions = [];
+    const lthis = this,
+        acceptedSuggestions = [];
 
     this.searchResults.forEach(function(suggestion) {
         if(lthis.validateSuggestionData(suggestion)) {
-            let locality = suggestion['display_name'];
+            const locality = suggestion['display_name'];
             if (locality && !acceptedSuggestions.includes(locality)) {
                 acceptedSuggestions.push(locality);
-                $placesResults.append(
+                lthis.placesResults.append(
                     '<li class="ods-places-suggestion" data-place-id="'+suggestion['place_id']+'" tabindex="-1">' +
                         locality +
                     '</li>'
@@ -107,12 +101,12 @@ OdsPlaces.prototype.setSuggestions = function() {
             }
         }
     });
-    $placesResultsContainer.removeClass('hidden');
+    this.placesResultsContainer.removeClass('hidden');
     $('.ods-places-suggestion').first().focus();
 };
 
 OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
-    let validGeometry = undefined !== suggestion.lat && undefined !== suggestion.lon,
+    const validGeometry = undefined !== suggestion.lat && undefined !== suggestion.lon,
         validAddressData = undefined !== suggestion.address,
         validDisplayName = undefined !== suggestion['display_name'];
 
@@ -121,51 +115,56 @@ OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
 
 OdsPlaces.prototype.onSuggestionSelected = function() {
     const lthis = this;
-    $('.ods-places-suggestion').off('click').on('click', function () {
-        let $thisSuggestion = $(this),
+
+    $('.ods-places-suggestion').off('click').on('click', function (evt) {
+        const $thisSuggestion = $(this),
             suggestion = lthis.searchResults.find(suggestion => suggestion['place_id'] === $thisSuggestion.data('placeId'));
 
-        $places.val($thisSuggestion.text());
+        evt.preventDefault();
+
+        lthis.places.val($thisSuggestion.text());
         lthis.clientCallback(suggestion);
-        $placesCloseButton.trigger('click');
-    }).off('keydown').on('keydown', function (event) {
-        event.preventDefault();
+        lthis.placesCloseButton.trigger('click');
 
-        let $thisSuggestion = $(this);
+    }).off('keydown').on('keydown', function (evt) {
+        evt.preventDefault();
 
-        if (13 === event.keyCode || 'Enter' === event.key) {
+        const $thisSuggestion = $(this);
+
+        if (13 === evt.keyCode || 'Enter' === evt.key) {
             $thisSuggestion.trigger('click');
-        } else if (38 === event.keyCode || 'ArrowUp'=== event.key) {
+        } else if (38 === evt.keyCode || 'ArrowUp'=== evt.key) {
             if(0 < $thisSuggestion.prev().length) {
                 $thisSuggestion.prev().focus();
             } else {
-                $places.focus();
+                lthis.places.focus();
             }
-        } else if((40 === event.keyCode || 'ArrowDown' === event.key) && 0 < $thisSuggestion.next().length) {
+        } else if((40 === evt.keyCode || 'ArrowDown' === evt.key) && 0 < $thisSuggestion.next().length) {
             $thisSuggestion.next().focus();
-        } else if (27 === event.keyCode || ESC_KEY_STRING.test(event.key)) {
-            $placesCloseButton.trigger('click');
-            $places.focus();
+        } else if (27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+            lthis.placesCloseButton.trigger('click');
+            lthis.places.focus();
         }
     });
 };
 
 OdsPlaces.prototype.resetOnClick = function () {
     const lthis = this;
-    $placesCloseButton.off('click').on('click', function (event) {
+
+    this.placesCloseButton.off('click').on('click', function (event) {
         event.preventDefault();
         lthis.resetPlacesSearch();
     });
 };
 
 OdsPlaces.prototype.toggleSearchButton = function(isShow = true) {
-    $placesLaunchButton.toggleClass('hidden',!isShow );
-    $placesCloseButton.toggleClass('hidden', isShow);
+    this.placesLaunchButton.toggleClass('hidden',!isShow );
+    this.placesCloseButton.toggleClass('hidden', isShow);
 };
 
 OdsPlaces.prototype.resetPlacesSearch = function() {
-    $places.val('');
+    this.places.val('');
     this.toggleSearchButton();
-    $placesResultsContainer.addClass('hidden');
-    $placesResults.empty();
+    this.placesResultsContainer.addClass('hidden');
+    this.placesResults.empty();
 };

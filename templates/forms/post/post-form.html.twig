@@ -35,7 +35,7 @@
     {% if post.id is not null and is_granted('ROLE_ADMIN') %}
         <a class="button bt-form bt-supprimer delete-button" href="{{ path('post_delete', {postId:post.id}) }}">Supprimer</a>
     {% endif %}
-    <a href="{{ origin ?? path(constant('App\\Entity\\Post::CATEGORY_PARENT_ROUTE')[post.category]) }}" class="button bt-form bt-annuler">Annuler</a>
+    <a href="{{ origin ?? path(constant('App\\Entity\\Post::CATEGORY_PARENT_ROUTE')[post.category]) }}" class="button bt-form bt-cancel">Annuler</a>
     <input type="hidden" name="action" value="{{ action }}">
     <button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
         Enregistrer

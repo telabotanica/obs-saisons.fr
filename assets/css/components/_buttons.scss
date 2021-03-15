@@ -91,7 +91,7 @@ $button-color-map: (
       @include gap(padding, "v", 12px);
     }
 
-    &.bt-annuler {
+    &.bt-cancel {
       @include flex(0, 1, 35%);
 
       @include button-colors(cancel);

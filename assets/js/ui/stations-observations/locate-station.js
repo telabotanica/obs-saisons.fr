@@ -1,26 +1,23 @@
-/**************************************************
- * ODS LOCATION INFO SERVICE
- **************************************************/
-const ODS_LOCATION_INFO_SERVICE_URL = 'https://www.obs-saisons.fr/applications/jrest/OdsCommune/informationsPourCoordonnees';
-
-/**************************************************
- * DOM ELEMENTS
- **************************************************/
-const $latitude = $('#station_latitude');
-const $longitude = $('#station_longitude');
-/**************************************************
- * MAP
- **************************************************/
 import {OdsPlaces} from "../location/locality";
 import {Location} from "../location/location";
 
-/***************************************************/
+const ODS_LOCATION_INFO_SERVICE_URL = 'https://www.obs-saisons.fr/applications/jrest/OdsCommune/informationsPourCoordonnees';
 
 export function StationLocation() {}
 
 StationLocation.prototype = new Location();
 
 StationLocation.prototype.init = function() {
+    this.initForm();
+    this.initEvts();
+};
+
+StationLocation.prototype.initForm = function() {
+    this.latitudeEl = document.getElementById('station_latitude');
+    this.longitudeEl = document.getElementById('station_longitude');
+};
+
+StationLocation.prototype.initEvts = function() {
     this.handleCoordinates();
     this.onCoordinates();
     this.initSearchLocality();
@@ -29,10 +26,10 @@ StationLocation.prototype.init = function() {
 };
 
 StationLocation.prototype.handleCoordinates = function() {
-    if (valOk($latitude.val()) && valOk($longitude.val())) {
+    if (!!this.latitudeEl.value && !!this.longitudeEl.value) {
         this.handleNewLocation({
-            'lat': $latitude.val(),
-            'lng': $longitude.val()
+            'lat': this.latitudeEl.value,
+            'lng': this.longitudeEl.value
         });
     }
 };
@@ -49,10 +46,10 @@ StationLocation.prototype.initSearchLocality = function() {
 };
 
 StationLocation.prototype.odsPlacesCallback = function(localityData) {
-    let addressData = localityData.address,
+    const addressData = localityData.address,
         locationNameType = ['village', 'city', 'locality', 'municipality', 'county'].find(locationNameType => addressData[locationNameType] !== undefined);
-    if(valOk(locationNameType)) {
-        $('#station_locality').val(addressData[locationNameType]);
+    if(!!locationNameType) {
+        document.getElementById('station_locality').value = addressData[locationNameType];
         this.handleNewLocation({
             'lat' : localityData.lat,
             'lng' : localityData.lon
@@ -70,16 +67,25 @@ StationLocation.prototype.onLocation = function() {
 
 StationLocation.prototype.updateCoordinatesFields = function() {
     //updates coordinates fields
-    $latitude.val(this.coordinates.lat);
-    $longitude.val(this.coordinates.lng);
+    this.latitudeEl.value = this.coordinates.lat;
+    this.longitudeEl.value = this.coordinates.lng;
 };
 
 StationLocation.prototype.loadLocationInfosFromOdsService = function() {
-    let $label = $('#station_locality,#station_inseeCode').siblings('label'),
-        query = {'lat': this.coordinates.lat, 'lon': this.coordinates.lng};
+    const locality = document.getElementById('station_locality'),
+        inseeCode = document.getElementById('station_inseeCode'),
+        altitude = document.getElementById('station_altitude'),
+        labels = [
+            locality.parentElement.querySelector('label'),
+            inseeCode.parentElement.querySelector('label')
+        ],
+        query = {
+            'lat': this.coordinates.lat,
+            'lon': this.coordinates.lng
+        };
 
     // displays loading gif
-    $label.addClass('loading');
+    labels.forEach(label => label.classList.add('loading'));
 
     $.ajax({
         method: "GET",
@@ -88,14 +94,16 @@ StationLocation.prototype.loadLocationInfosFromOdsService = function() {
         success: function (data) {
             let locationInformations = JSON.parse(data);
             // updates location informations fields
-            $('#station_locality').val(locationInformations.commune);
-            $('#station_inseeCode').val(locationInformations.code_insee);
-            $('#station_altitude').val(locationInformations.alt);
+            locality.value = locationInformations.commune;
+            inseeCode.value = locationInformations.code_insee;
+            altitude.value = locationInformations.alt;
             // stops displaying loading gif
-            $label.removeClass('loading');
+            labels.forEach(label => label.classList.remove('loading'));
         },
         error: function () {
-            $label.removeClass('loading');
+            labels.forEach(label => label.classList.remove('loading'));
         }
     });
 };
+
+

@@ -1,12 +1,16 @@
 import domready from 'mf-js/modules/dom/ready';
+import {toggleVisibility} from "../lib/toggle-element-visibility";
+import {animateDropdownArrow} from "./animate-dropdown-arrow";
 
 domready(() => {
-    $('a.accordion-title-dropdown').off('click').on('click', function (event) {
-        event.preventDefault();
+    document.querySelectorAll('a.accordion-title-dropdown').forEach(
+        dropdown => dropdown.addEventListener('click',event => {
+            event.preventDefault();
 
-        let $thisBlock = $(this).closest('.accordion-block');
+            const accordionContent = dropdown.closest('.accordion-block').querySelector('.accordion-content');
 
-        $(this).toggleClass('right-arrow-orange-icon down-arrow-icon');
-        $('.accordion-content', $thisBlock).toggle(200);
-    });
+            animateDropdownArrow(dropdown);
+            toggleVisibility(accordionContent);
+        })
+    );
 });

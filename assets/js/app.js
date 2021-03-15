@@ -1,32 +1,28 @@
-/**************************************************
- * CSS
- **************************************************/
-//
+/* *** *
+ * SCSS *
+ * *** */
 import '../css/app.scss';
-//
-/**************************************************
- * POLYFILLS
- **************************************************/
-//
+/* ********* *
+ * POLYFILLS *
+ * ********* */
 import 'core-js/features/object/assign';
 import 'core-js/features/object/values';
 import 'core-js/features/array/from';
 import 'core-js/features/array/for-each';
 import 'core-js/features/promise';
-//
-/**************************************************
- * GLOBALS
- **************************************************/
-//
-import './ui/provide-jquery';
-import './ui/check-value-valid';
+/* ****** *
+ * JQUERY *
+ * ****** */
+export const $ = require('jquery');
+global.$ = global.jQuery = $;
+/* ******* *
+ * GLOBALS *
+ * ******* */
+import './lib/html-entities-decode';
 import './ui/error-display';
-//
-
-/**************************************************
- * COMPONENTS
- **************************************************/
-//
+/* ********** *
+ * COMPONENTS *
+ * ********** */
 import './ui/mod-touch';
 import './ui/hide-flash-messages';
 import './ui/toggle-menu-small-device';
@@ -36,48 +32,27 @@ import './ui/oembed-to-iframe';
 import './ui/switch-tabs';
 import './ui/scientific-name';
 import './ui/accordion-block-toggle';
-import './ui/create-map';
 import './ui/results-charts';
 import './ui/results-map';
-import './ui/handle-file-uploads';
 import './ui/switch-to-next-post';
 import './ui/user-delete-admin-confirm';
-//
-/**************************************************
- * LOCATION
- **************************************************/
-//
-import './ui/location/location';
-import './ui/location/locality';
-//
-/**************************************************
- * CALENDAR
- **************************************************/
-//
+import './ui/full-page-form-init';
+/* ******** *
+ * CALENDAR *
+ * ******** */
 import './ui/calendar/calendar-switch-date';
 import './ui/calendar/calendar-toggle-date-selection';
 import './ui/calendar/calendar-toggle';
 import './ui/calendar/calendar-hide-legend';
-//
-/**************************************************
- * STATION/OBSERVATION
- **************************************************/
-//
+/* ******************* *
+ * STATION/OBSERVATION *
+ * ******************* */
 import './ui/stations-observations/station-search-form-submit';
 import './ui/stations-observations/event-post-dates-validate';
 import './ui/stations-observations/station-page-header-map';
-import './ui/stations-observations/locate-station';
-//
-/**************************************************
- * OVERLAY
- **************************************************/
-//
+/* ******* *
+ * OVERLAY *
+ * ******* */
 import './ui/overlay/overlay-open';
 import './ui/overlay/overlay-close';
-//
-
-/**************************************************
- * POST-EVENT
- **************************************************/
-import './ui/locate-post-event';
 

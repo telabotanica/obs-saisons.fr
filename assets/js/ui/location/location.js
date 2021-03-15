@@ -1,15 +1,6 @@
-/**************************************************
- * LEAFLET
- **************************************************/
-//
 import L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
-//
-
-/**************************************************
- * CREATE MAP
- **************************************************/
 //
 import {createMap, DEFAULT_POSITION, DEFAULT_ZOOM} from "../create-map";
 export const DEFAULT_CITY_ZOOM = 12;
@@ -41,7 +32,8 @@ Location.prototype.setDefaultMapData = function () {
  */
 Location.prototype.handleNewLocation = function (coordinates) {
     coordinates = this.formatCoordinates(coordinates);
-    if(valOk(coordinates)) {
+
+    if(!!coordinates && !!coordinates.lat && coordinates.lng) {
         this.coordinates = coordinates;
         this.zoom = DEFAULT_CITY_ZOOM;
         this.setMapPosition();
@@ -50,7 +42,7 @@ Location.prototype.handleNewLocation = function (coordinates) {
 };
 
 Location.prototype.formatCoordinates = function (coordinates) {
-    let lat = Number.parseFloat(coordinates.lat),
+    const lat = Number.parseFloat(coordinates.lat),
         lng = Number.parseFloat(coordinates.lng);
 
     if(Number.isNaN(lat) || Number.isNaN(lng)) {
@@ -64,13 +56,13 @@ Location.prototype.formatCoordinates = function (coordinates) {
 };
 
 Location.prototype.triggerLocationEvent = function () {
-    let locationEvent = $.Event('location');
+    const locationEvent = $.Event('location');
     this.$mapEl.trigger(locationEvent);
 };
 
 Location.prototype.setMapPosition = function () {
     if(undefined !== this.map.marker) {
-        let latLng = new L.LatLng(this.coordinates.lat, this.coordinates.lng);
+        const latLng = new L.LatLng(this.coordinates.lat, this.coordinates.lng);
         // updates map
         this.map.setView(latLng);
         this.map.marker.setLatLng(latLng, {draggable: 'true'});
@@ -80,7 +72,7 @@ Location.prototype.setMapPosition = function () {
 Location.prototype.toggleMap = function () {
     const lthis = this;
 
-    $('.open-map-button').off('click').on('click', function (event) {
+    $('#map-buttons').off('click').on('click', function (event) {
         event.preventDefault();
         $(this).find('span').toggleClass('hidden');
         lthis.$mapEl.toggleClass('hidden');

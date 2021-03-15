@@ -1,28 +1,38 @@
 import domready from 'mf-js/modules/dom/ready';
 import {resetTabMatchingElements} from '../switch-tabs';
 import {observationsToggleCombinedConditions} from '../switch-tabs';
+import {toggleVisibility} from "../../lib/toggle-element-visibility";
 
 domready(() => {
-    $('.periods-calendar .dropdown-link').off('click').on('click', function (event) {
-        event.preventDefault();
+    const calendars = document.getElementsByClassName('periods-calendar');
 
-        let $thisCalendar = $(this).closest('.periods-calendar'),
-            activeDate = $(this).text();
+    if (calendars) {
+        calendars.forEach(calendar => {
+            const dropdownLinks = calendar.querySelectorAll('.dropdown-link');
 
-        $('.active-year', $thisCalendar).text(activeDate);
-        $('.dropdown-link.hidden', $thisCalendar).removeClass('hidden');
-        $(this).addClass('hidden');
-        $('.dropdown-list', $thisCalendar).addClass('hidden');
-        // show/hide observations
-        $('.stage-marker', $thisCalendar).each( function () {
-            let $element = $(this);
+            if (dropdownLinks) {
+                dropdownLinks.forEach(dropdownLink => {
+                    dropdownLink.addEventListener('click', evt => {
+                        evt.preventDefault();
 
-            if(observationsToggleCombinedConditions($element, activeDate)) {
-                $element.show(200);
-            } else {
-                $element.hide(200);
+                        const activeDate = dropdownLink.textContent;
+
+                        calendar.querySelector('.active-year').textContent = activeDate;
+                        calendar.querySelectorAll('.dropdown-link.hidden').forEach(hiddenYear => hiddenYear.classList.remove('hidden'));
+                        dropdownLink.classList.add('hidden');
+                        calendar.querySelector('.dropdown-list').classList.add('hidden');
+                        // show/hide observations
+                        calendar.querySelectorAll('.stage-marker').forEach( observation => {
+                            const tabsHolder = document.querySelector('.tabs-holder:not(.stations)');
+                            toggleVisibility(
+                                observation,
+                                observationsToggleCombinedConditions(observation, activeDate)
+                            );
+                            resetTabMatchingElements(tabsHolder);
+                        });
+                    });
+                });
             }
-            resetTabMatchingElements($('.tabs-holder:not(.stations)'));
         });
-    });
+    }
 });

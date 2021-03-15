@@ -1,20 +1,26 @@
 import domready from 'mf-js/modules/dom/ready';
+import {animateDropdownArrow} from "../animate-dropdown-arrow";
+import {toggleVisibility} from "../../lib/toggle-element-visibility";
 
 domready(() => {
-    $('a.item-heading-dropdown').off('click').on('click', function (event) {
-        event.preventDefault();
+    document.querySelectorAll('a.item-heading-dropdown').forEach(dropdown =>
+        dropdown.addEventListener('click', event => {
+            event.preventDefault();
 
-        let id = $(this).closest('.list-cards-item').data('id');
+            const id = dropdown.closest('.list-cards-item').dataset.id;
 
-        $(this).toggleClass('right-arrow-orange-icon down-arrow-icon');
-        $('.periods-calendar[data-id="' + id + '"]').toggle(200);
-    });
+            animateDropdownArrow(dropdown);
+            toggleVisibility(document.querySelector('.periods-calendar[data-id="' + id + '"]'));
+        })
+    );
 
-    $('.table-mask-button').off('click').on('click', function (event) {
-        event.preventDefault();
+    document.getElementsByClassName('table-mask-button').forEach(button =>
+        button.addEventListener('click', event => {
+            event.preventDefault();
 
-        let id = $(this).closest('.periods-calendar').data('id');
+            const id = button.closest('.periods-calendar').dataset.id;
 
-        $('.list-cards-item[data-id="' + id + '"] a.item-heading-dropdown').trigger('click');
-    });
+            document.querySelector('.list-cards-item[data-id="' + id + '"] a.item-heading-dropdown').click();
+        })
+    );
 });

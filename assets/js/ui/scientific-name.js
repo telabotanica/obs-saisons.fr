@@ -1,4 +1,6 @@
-$( document ).ready( () => {
+import domready from "mf-js/modules/dom/ready";
+
+domready(() => {
     const scientificName = Array.from(document.querySelectorAll('.scientific-name'));
     const reScientificName = /^([\w\s]*)(?!\w*\.)/;
 

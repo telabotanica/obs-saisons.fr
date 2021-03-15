@@ -1,9 +1,13 @@
 import domready from 'mf-js/modules/dom/ready';
 
 domready(() => {
-    $('.dropdown-toggle').off('click').on('click', function (event) {
-        event.preventDefault();
+    document.querySelectorAll('.dropdown-toggle').forEach(dropdown =>
+        dropdown.addEventListener('click', evt => {
+            evt.preventDefault();
 
-        $(this).siblings('.dropdown-list').toggleClass('hidden');
-    })
+            dropdown.parentElement.querySelectorAll('.dropdown-list').forEach(
+                dateItem => dateItem.classList.toggle('hidden')
+            );
+        })
+    );
 });
