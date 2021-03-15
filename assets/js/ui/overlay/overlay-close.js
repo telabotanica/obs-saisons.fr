@@ -116,7 +116,10 @@ const closeOverlayOnEscapeKey = overlays => {
 
 export const closeOverlayOnClickOut = overlay => {
     overlay.addEventListener('click', evt => {
-        if(!evt.target.closest('.saisie-container, .obs-info-container')) {
+        if(
+            !evt.target.closest('.saisie-container, .obs-info-container') &&
+            !evt.target.classList.contains('ods-places-suggestion')
+        ) {
             closeOverlay(overlay);
         }
     });
