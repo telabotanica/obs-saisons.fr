@@ -75,8 +75,8 @@ const initFormOverlay = function(
 ) {
     form.reset();
     if(document.querySelector('.upload-zone .upload-input')) {
-
         const fileUploadHandler = new HandleFileUploads();
+
         fileUploadHandler.init();
     }
     if (openOverlayButton.classList.contains('edit')) {
@@ -294,7 +294,7 @@ const onChangeSetIndividual = function() {
     individualEl.addEventListener('change', () => {
         const selectedIndividual = individualEl.options[individualEl.selectedIndex];
 
-        eventEl.getElementsByClassName('event-option').forEach(
+        Array.from(eventEl.getElementsByClassName('event-option')).forEach(
             eventOption => {
                 eventOption.removeAttribute('selected');
                 selectOptionsLockToggle(eventOption);
@@ -303,37 +303,44 @@ const onChangeSetIndividual = function() {
 
         if (selectedIndividual && selectedIndividual.value) {
             const availableEvents = getDataAttrValuesArray(selectedIndividual.dataset.availableEvents.toString()),
-                eventsAberrationsDays = selectedIndividual.dataset.aberrationsDays,
+                eventsAberrationsDays = JSON.parse(selectedIndividual.dataset.aberrationsDays),
                 speciesPictureBase = selectedIndividual.dataset.picture;
-            let speciesPicture,
-                eventOption;
 
             updateSpeciesPageUrl(selectedIndividual);
             eventEl.removeAttribute('disabled');
-            availableEvents.forEach(eventId => {
-                eventOption = eventEl.querySelector('.event-option.event-'+ eventId);
-                speciesPicture = speciesPictureBase;
 
-                if (1 === availableEvents.length) {
-                    eventEl.classList.add('disabled');
-                    eventOption.setAttribute('selected','selected');
-                } else {
-                    speciesPicture += eventOption.dataset.pictureSuffix;
+            if (1 === availableEvents.length) {
+                const eventId= availableEvents[0],
+                    eventOption = eventEl.querySelector('.event-option.event-'+ eventId);
+
+                eventOption.setAttribute('selected','selected');
+                selectOptionsLockToggle(eventEl.firstElementChild);
+                eventEl.value = eventId;
+                eventEl.required = false;
+                eventEl.classList.add('disabled');
+                setObsEvent(eventId,
+                    eventOption,
+                    speciesPictureBase,
+                    eventsAberrationsDays
+                );
+            } else {
+                availableEvents.forEach(eventId => {
+                    const eventOption = eventEl.querySelector('.event-option.event-'+ eventId),
+                        speciesPicture = speciesPictureBase + eventOption.dataset.pictureSuffix;
+                    eventEl.required = true;
                     eventEl.classList.remove('disabled');
-                }
-
-                selectOptionsLockToggle(eventOption, false);
-                eventOption.dataset.picture = '/media/species/' + speciesPicture + '.jpg';
-                if(!!eventsAberrationsDays) {
-                    setEventAberrationDaysDataAttr(eventId, eventsAberrationsDays);
-                }
-            });
+                    setObsEvent(eventId,
+                        eventOption,
+                        speciesPicture,
+                        eventsAberrationsDays
+                    );
+                });
+            }
         } else {
             eventEl.classList.add('disabled');
             eventEl.setAttribute('disabled', 'disabled');
         }
-        const changeEvt = new Event('change');
-        eventEl.dispatchEvent(changeEvt);// triggers onChangeObsEvent()
+        eventEl.dispatchEvent(new Event('change'));// triggers onChangeObsEvent()
     });
 };
 
@@ -345,6 +352,19 @@ const updateSpeciesPageUrl = function(selectedIndividual) {
 
     if (speciesInUrl !== species) {
         link.setAttribute('href', url.replace(speciesInUrl,species));
+    }
+};
+
+const setObsEvent = (
+    eventId,
+    eventOption,
+    speciesPicture,
+    eventsAberrationsDays
+) => {
+    selectOptionsLockToggle(eventOption, false);
+    eventOption.dataset.picture = '/media/species/' + speciesPicture + '.jpg';
+    if(!!eventsAberrationsDays) {
+        setEventAberrationDaysDataAttr(eventId, eventsAberrationsDays);
     }
 };
 
@@ -363,7 +383,7 @@ const setEventAberrationDaysDataAttr = function(
 ) {
     const eventEl = document.getElementById('observation_event'),
         eventOptionEl = eventEl.querySelector('.event-option.event-'+eventId),
-        aberrationDays = JSON.parse(eventsAberrationsDays).find(aberrationDays =>
+        aberrationDays = eventsAberrationsDays.find(aberrationDays =>
             // ensure that both are integers and compare
             parseInt(aberrationDays.eventId) === parseInt(eventId)
         );
