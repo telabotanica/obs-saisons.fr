@@ -303,14 +303,16 @@ const onChangeSetIndividual = function() {
 
         if (selectedIndividual && selectedIndividual.value) {
             const availableEvents = getDataAttrValuesArray(selectedIndividual.dataset.availableEvents.toString()),
-                eventsAberrationsDays = selectedIndividual.dataset.aberrationsDays;
-            let speciesPicture = selectedIndividual.dataset.picture,
+                eventsAberrationsDays = selectedIndividual.dataset.aberrationsDays,
+                speciesPictureBase = selectedIndividual.dataset.picture;
+            let speciesPicture,
                 eventOption;
 
             updateSpeciesPageUrl(selectedIndividual);
             eventEl.removeAttribute('disabled');
             availableEvents.forEach(eventId => {
                 eventOption = eventEl.querySelector('.event-option.event-'+ eventId);
+                speciesPicture = speciesPictureBase;
 
                 if (1 === availableEvents.length) {
                     eventEl.classList.add('disabled');
