@@ -4,7 +4,9 @@
     <div class="accordion-content hide">
         {% for speciesGroupName, speciesGroup in speciesGroups(typeSpecies) %}
             {% if 1 == speciesGroup|length or 'arbres' != type.name %}
-                {% include 'components/list-cards/species-list-cards.html.twig' with {species:speciesGroup[0]} %}
+                {% for species in speciesGroup %}
+                    {% include 'components/list-cards/species-list-cards.html.twig' with {species:species} %}
+                {% endfor %}
             {% else %}
                 {% include 'components/list-cards/species-group-list-cards.html.twig' with {
                     speciesGroup:speciesGroup,
