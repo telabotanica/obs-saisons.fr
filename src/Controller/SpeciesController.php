@@ -38,12 +38,12 @@ class SpeciesController extends AbstractController
     ) {
         $species = $manager->getRepository(Species::class)->findOneBy(['vernacular_name' => $vernacularName]);
         if (!$species) {
-            $this->createNotFoundException('L’espèce n’a pas été trouvée');
+            throw $this->createNotFoundException('L’espèce n’a pas été trouvée');
         }
 
         $post = $species->getPost();
         if (!$post) {
-            $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
+            throw $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
         return $this->render('pages/species/species-single.html.twig', [
