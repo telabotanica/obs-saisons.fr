@@ -13,8 +13,15 @@
 
 		{% if analytics_tracking_id %}
 		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id={{ analytics_tracking_id }}"></script>
+		<script
+				type="opt-in"
+				data-type="application/javascript"
+				data-name="google-tag-manager"
+				async
+				data-src="https://www.googletagmanager.com/gtag/js?id={{ analytics_tracking_id }}">
+		</script>
 		<script>
+			var GTM_UA = '{{ analytics_tracking_id }}';
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
