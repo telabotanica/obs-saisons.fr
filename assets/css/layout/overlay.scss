@@ -121,12 +121,20 @@
 	margin-top: 30px;
 }
 
-.saisie-aide {
-	@extend %display-flex-column;
+#phenoclim-warning {
+	color: $grey181217;
+}
+
+.saisie-aide,
+#phenoclim-warning {
 	padding: 20px;
 	border: 1px solid grey(87);
 	border-radius: 4px;
 	background-color: #f3f9fa;
+}
+
+.saisie-aide {
+	@extend %display-flex-column;
 
 	@include media(sm) {
 		@include flex-direction-row;

@@ -21,6 +21,8 @@ StationLocation.prototype.initEvts = function() {
     this.handleCoordinates();
     this.onCoordinates();
     this.initSearchLocality();
+    // reset phenoclim warning message
+    this.phenoclimWarningToggle(false);
     this.onLocation();
     this.toggleMap();
 };
@@ -72,7 +74,8 @@ StationLocation.prototype.updateCoordinatesFields = function() {
 };
 
 StationLocation.prototype.loadLocationInfosFromOdsService = function() {
-    const locality = document.getElementById('station_locality'),
+    const lthis = this,
+        locality = document.getElementById('station_locality'),
         inseeCode = document.getElementById('station_inseeCode'),
         altitude = document.getElementById('station_altitude'),
         labels = [
@@ -93,6 +96,8 @@ StationLocation.prototype.loadLocationInfosFromOdsService = function() {
         data: query,
         success: function (data) {
             let locationInformations = JSON.parse(data);
+            console.log(locationInformations);
+            lthis.phenoclimWarningToggle(locationInformations.commune_phenoclim);
             // updates location informations fields
             locality.value = locationInformations.commune;
             inseeCode.value = locationInformations.code_insee;
@@ -104,6 +109,22 @@ StationLocation.prototype.loadLocationInfosFromOdsService = function() {
             labels.forEach(label => label.classList.remove('loading'));
         }
     });
+};
+
+// warns user if station locality is included in "Phenoclim" scientific program
+StationLocation.prototype.phenoclimWarningToggle = function(isPhenoclim) {
+    let phenoclimWarnigEl = document.getElementById('phenoclim-warning');
+
+    if(isPhenoclim && !phenoclimWarnigEl) {
+            phenoclimWarnigEl = document.createElement('p');
+            phenoclimWarnigEl.id = 'phenoclim-warning';
+            phenoclimWarnigEl.classList.add('field-help-text', 'help-text');
+            phenoclimWarnigEl.innerHTML = 'La station que vous souhaitez créer se trouve en montagne (Alpes, Pyrénées, Massif Central, Jura, Vosges, Corse), merci de saisir vos observations sur le programme partenaire ' +
+                '<a href="https://phenoclim.org/fr" class="green-link" target="_blank">Phenoclim</a>';
+            document.getElementById('station_altitude').insertAdjacentElement('beforebegin', phenoclimWarnigEl);
+    } else if (!isPhenoclim && phenoclimWarnigEl) {
+        phenoclimWarnigEl.remove();
+    }
 };
 
 
