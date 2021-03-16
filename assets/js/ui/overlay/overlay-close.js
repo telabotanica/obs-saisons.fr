@@ -1,5 +1,5 @@
 import domready from 'mf-js/modules/dom/ready';
-import {stationLocation, individualOvelayManageSpecies, observationOvelayManageIndividualAndEvents} from "./overlay-open";
+import {stationLocation, individualOverlayManageSpecies, observationOverlayManageIndividualAndEvents} from "./overlay-open";
 
 export const closeOverlay = overlay => {
     const form = overlay.querySelector('form'),
@@ -16,11 +16,11 @@ export const closeOverlay = overlay => {
         const openIndividualGlobalForm = document.querySelector('.open-individual-form-all-station');
 
         if (overlayClasses.contains('individual') && openIndividualGlobalForm) {
-            individualOvelayManageSpecies(openIndividualGlobalForm.dataset.species.toString(), true);
+            individualOverlayManageSpecies(openIndividualGlobalForm.dataset.species.toString(), true);
         } else {
             if (overlayClasses.contains('observation')) {
                 if(openIndividualGlobalForm) {
-                    observationOvelayManageIndividualAndEvents(overlay, openIndividualGlobalForm.dataset);
+                    observationOverlayManageIndividualAndEvents(overlay, openIndividualGlobalForm.dataset);
                 }
                 closeDetailsField();
                 document.getElementsByClassName('ods-form-warning').forEach(warningEl => {

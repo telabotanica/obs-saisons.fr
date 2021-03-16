@@ -43,11 +43,11 @@ const onOpenOverlay = function() {
                                 onChangeSetIndividual();
                                 onChangeObsEvent();
                                 onChangeObsDate();
-                                observationOvelayManageIndividualAndEvents(overlay, dataAttrs);
+                                observationOverlayManageIndividualAndEvents(overlay, dataAttrs);
                                 editObservationPreSetFields(overlay, dataAttrs);
                                 break;
                             case 'individual':
-                                individualOvelayManageSpecies(dataAttrs);
+                                individualOverlayManageSpecies(dataAttrs);
                                 editIndividualPreSetFields(overlay, dataAttrs);
                                 break;
                             default:
@@ -144,6 +144,7 @@ const getDataAttrValuesArray = function (dataAttrValue) {
         return dataAttrValue.split(',');
     }
 };
+
 const updateSelectOptions = function(
     selectEl,
     itemsToMatch,
@@ -162,6 +163,7 @@ const updateSelectOptions = function(
     selectEl.querySelectorAll('option:not(.exists-in-station.animal)').forEach(option => {
         option.removeAttribute('disabled');
     });
+
 
     if(sortOptions) {
         selectEl.querySelectorAll('.' + selectName + '-option').forEach(element => {
@@ -506,7 +508,7 @@ const checkAberrationsObsDays = function() {
     formWarningEl.classList.toggle('hidden',!message);
 };
 
-export const observationOvelayManageIndividualAndEvents = function(
+export const observationOverlayManageIndividualAndEvents = function(
     overlay,
     dataAttrs
 ) {
@@ -575,12 +577,12 @@ const editObservationPreSetFields = function(overlay, dataAttrs) {
  *  INDIVIDUAL   *
  * ************* */
 
-export const individualOvelayManageSpecies = function(dataAttrs) {
+export const individualOverlayManageSpecies = function(dataAttrs) {
     const speciesEl = document.getElementById('individual_species'),
         helpEl = document.getElementById('individual_species_help'),
         species = dataAttrs.species || '',
         availableSpecies = getDataAttrValuesArray(species.toString()) || null,
-        showAll = dataAttrs.allSpecies;
+        showAll = typeof dataAttrs.allSpecies === "boolean" ? dataAttrs.allSpecies : ['true',1,"1"].includes(dataAttrs.allSpecies);
      let speciesNameText;
 
     // toggle marker and help text on already recorded species in station
