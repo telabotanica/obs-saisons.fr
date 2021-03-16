@@ -39,10 +39,15 @@
             {% endif %}
         </div>
 
+        {% set vernacularName = listCard.species.vernacularName %}
+        {% if 'arbres' == listCard.species.type.name %}
+            {% set vernacularName = vernacularName|split(' ')[0] %}
+        {% endif %}
+
         {% set buttons = [{
             'icon': 'help-circle',
             'label': 'fiche',
-            'url' : path('species_single_show', {vernacularName: listCard.species.vernacularName})
+            'url' : path('species_single_show', {vernacularName: vernacularName})
         }] %}
         {% if show %}
             {% set individualsIds = [] %}

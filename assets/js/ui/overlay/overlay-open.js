@@ -293,7 +293,7 @@ const onChangeSetIndividual = function() {
     const individualEl = document.getElementById('observation_individual'),
         eventEl = document.getElementById('observation_event');
 
-    individualEl.addEventListener('change', () => {
+    $(individualEl).off('change').on('change', () => {
         const selectedIndividual = individualEl.options[individualEl.selectedIndex];
 
         Array.from(eventEl.getElementsByClassName('event-option')).forEach(
@@ -349,8 +349,12 @@ const onChangeSetIndividual = function() {
 const updateSpeciesPageUrl = function(selectedIndividual) {
     const link = document.querySelector('.saisie-aide-txt a.green-link'),
         url = link.getAttribute('href'),
-        speciesInUrl = url.substring(url.lastIndexOf('/')+1),
-        species = selectedIndividual.dataset.speciesName;
+        speciesInUrl = url.substring(url.lastIndexOf('/')+1);
+    let species = selectedIndividual.dataset.speciesName;
+
+    if('arbres' === selectedIndividual.dataset.speciesType) {
+        species = species.split(' ')[0];
+    }
 
     if (speciesInUrl !== species) {
         link.setAttribute('href', url.replace(speciesInUrl,species));
