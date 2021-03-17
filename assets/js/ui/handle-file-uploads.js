@@ -32,13 +32,7 @@ HandleFileUploads.prototype.initEvents = function() {
         }();
 
     if (isAdvancedUpload) {
-        ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach(
-            eventType => lthis.uploadInput.addEventListener(eventType, evt => {
-                evt.preventDefault();
-                evt.stopPropagation();
-            })
-        );
-
+        // need jquery event.originalEvent
         $(this.uploadInput).off('drop').on('drop', evt => {
             if (!!evt.originalEvent) {
                 lthis.files = evt.originalEvent.dataTransfer.files;
@@ -50,7 +44,7 @@ HandleFileUploads.prototype.initEvents = function() {
                 lthis.displayThumbs();
                 lthis.form.addEventListener(
                     'submit',
-                    lthis.ajaxSendFileSubmitHandler
+                    lthis.ajaxSendFileSubmitHandler.bind(lthis)
                 );
             }
         });
@@ -155,9 +149,9 @@ HandleFileUploads.prototype.onDeleteFile = function() {
 
          lthis.uploadInput.after(hiddenIsDeletePictureInput);
          lthis.uploadInput.value = '';
-         lthis.uploadInput.closest('form').removeEventListener(
+         lthis.form.removeEventListener(
              'submit',
-             lthis.ajaxSendFileSubmitHandler
+             lthis.ajaxSendFileSubmitHandler.bind(lthis)
          );
 
          lthis.img.classList.remove('obj');
