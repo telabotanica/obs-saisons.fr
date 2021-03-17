@@ -668,8 +668,11 @@ const onObsInfo = function(
 
 const observationListCardHtmlGenerate = function(dataAttrs) {
     const observation = JSON.parse(dataAttrs.observation),
-        temp = document.createElement('div');
+        listCardItem = document.createElement('div');
     let editButtons = '';
+
+    listCardItem.classList.add('list-cards-item', 'obs');
+    listCardItem.dataset.id = observation.id;
 
     if(dataAttrs?.showEdit) {
         editButtons =
@@ -686,17 +689,15 @@ const observationListCardHtmlGenerate = function(dataAttrs) {
             '</div>'
         ;
     }
-    temp.innerHTML = '<div class="list-cards-item obs" data-id="'+observation.id+'">'+
-            '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
+    listCardItem.innerHTML = '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
             '<div class="item-name-block">'+
                 '<div class="item-name">'+observation.user.displayName+'</div>'+
                 '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
                 '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
             '</div>'+
-            editButtons +
-        '</div>';
+            editButtons;
 
-    return temp;
+    return listCardItem;
 };
 
 /* *********** *
