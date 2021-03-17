@@ -11,6 +11,7 @@ HandleFileUploads.prototype.init = function() {
     } else {
         console.warn('File uploader could not initialize');
     }
+
 };
 
 HandleFileUploads.prototype.initForm = function() {
@@ -168,7 +169,7 @@ HandleFileUploads.prototype.onDeleteFile = function() {
 };
 
 HandleFileUploads.prototype.preSetFile = function(src) {
-    if (src) {
+    if (src && this.uploadInput) {
         this.uploadTextPlaceholder.classList.add('hidden');
         this.img.classList.add('obj');
         this.img.src = src;
