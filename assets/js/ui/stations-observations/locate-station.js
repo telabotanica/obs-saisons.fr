@@ -37,9 +37,11 @@ StationLocation.prototype.handleCoordinates = function() {
 };
 
 StationLocation.prototype.onCoordinates = function() {
-    $('#station_latitude, #station_longitude').on('blur', function() {
-        this.handleCoordinates();
-    }.bind(this));
+    [this.latitudeEl,this.longitudeEl].forEach(coordinate =>
+        coordinate.addEventListener('blur', function() {
+            this.handleCoordinates();
+        }.bind(this))
+    );
 };
 
 StationLocation.prototype.initSearchLocality = function() {
@@ -61,7 +63,7 @@ StationLocation.prototype.odsPlacesCallback = function(localityData) {
 
 
 StationLocation.prototype.onLocation = function() {
-    $('#map').on('location', function () {
+    document.getElementById('map-container').addEventListener('location', function () {
         this.updateCoordinatesFields();
         this.loadLocationInfosFromOdsService();
     }.bind(this));
@@ -116,11 +118,20 @@ StationLocation.prototype.phenoclimWarningToggle = function(isPhenoclim) {
     let phenoclimWarnigEl = document.getElementById('phenoclim-warning');
 
     if(isPhenoclim && !phenoclimWarnigEl) {
+        const text = document.createTextNode('La station que vous souhaitez créer se trouve en montagne (Alpes, Pyrénées, Massif Central, Jura, Vosges, Corse), merci de saisir vos observations sur le programme partenaire '),
+            link = document.createElement('a');
+
             phenoclimWarnigEl = document.createElement('p');
             phenoclimWarnigEl.id = 'phenoclim-warning';
             phenoclimWarnigEl.classList.add('field-help-text', 'help-text');
-            phenoclimWarnigEl.innerHTML = 'La station que vous souhaitez créer se trouve en montagne (Alpes, Pyrénées, Massif Central, Jura, Vosges, Corse), merci de saisir vos observations sur le programme partenaire ' +
-                '<a href="https://phenoclim.org/fr" class="green-link" target="_blank">Phenoclim</a>';
+
+            link.classList.add('green-link');
+            link.href = 'https://phenoclim.org/fr';
+            link.target = '_blank';
+            link.textContent = 'Phenoclim';
+
+            phenoclimWarnigEl.appendChild(text);
+            phenoclimWarnigEl.append(link);
             document.getElementById('station_altitude').insertAdjacentElement('beforebegin', phenoclimWarnigEl);
     } else if (!isPhenoclim && phenoclimWarnigEl) {
         phenoclimWarnigEl.remove();

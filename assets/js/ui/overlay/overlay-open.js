@@ -5,6 +5,7 @@ import {StationLocation} from "../stations-observations/locate-station";
 import {closeOverlayOnClickOut} from "./overlay-close";
 import {generateComparableFormatedDate} from "../date-format";
 import {onDeleteButton} from "../handle-delete-button";
+import {parseDatasetValToBool} from "../../lib/parse-to-bool";
 
 export const stationLocation = new StationLocation();
 
@@ -43,11 +44,11 @@ const onOpenOverlay = function() {
                                 onChangeSetIndividual();
                                 onChangeObsEvent();
                                 onChangeObsDate();
-                                observationOvelayManageIndividualAndEvents(overlay, dataAttrs);
+                                observationOverlayManageIndividualAndEvents(overlay, dataAttrs);
                                 editObservationPreSetFields(overlay, dataAttrs);
                                 break;
                             case 'individual':
-                                individualOvelayManageSpecies(dataAttrs);
+                                individualOverlayManageSpecies(dataAttrs);
                                 editIndividualPreSetFields(overlay, dataAttrs);
                                 break;
                             default:
@@ -144,6 +145,7 @@ const getDataAttrValuesArray = function (dataAttrValue) {
         return dataAttrValue.split(',');
     }
 };
+
 const updateSelectOptions = function(
     selectEl,
     itemsToMatch,
@@ -162,6 +164,7 @@ const updateSelectOptions = function(
     selectEl.querySelectorAll('option:not(.exists-in-station.animal)').forEach(option => {
         option.removeAttribute('disabled');
     });
+
 
     if(sortOptions) {
         selectEl.querySelectorAll('.' + selectName + '-option').forEach(element => {
@@ -249,7 +252,7 @@ const editStationPreSetFields = function(
                         break;
                     case 'habitat':
                         const habitatOption = Array.from(field.childNodes).find(
-                            option => option.value = stationData.habitat
+                            option => option.value === stationData.habitat
                         );
 
                         habitatOption.setAttribute('selected', 'selected');
@@ -291,7 +294,7 @@ const onChangeSetIndividual = function() {
     const individualEl = document.getElementById('observation_individual'),
         eventEl = document.getElementById('observation_event');
 
-    individualEl.addEventListener('change', () => {
+    $(individualEl).off('change').on('change', () => {
         const selectedIndividual = individualEl.options[individualEl.selectedIndex];
 
         Array.from(eventEl.getElementsByClassName('event-option')).forEach(
@@ -346,12 +349,19 @@ const onChangeSetIndividual = function() {
 
 const updateSpeciesPageUrl = function(selectedIndividual) {
     const link = document.querySelector('.saisie-aide-txt a.green-link'),
-        url = link.getAttribute('href'),
-        speciesInUrl = url.substring(url.lastIndexOf('/')+1),
-        species = selectedIndividual.dataset.speciesName;
+        url = link.href,
+        speciesInUrl = url.substring(url.lastIndexOf('/')+1);
+    let species = selectedIndividual.dataset.speciesName;
+
+    if((selectedIndividual.dataset.isTreeGroup)) {
+        species = species.split(' ')[0];
+    }
+    if(!/%[A-Z0-9]{2}/.test(species)) {
+        species = encodeURI(species);
+    }
 
     if (speciesInUrl !== species) {
-        link.setAttribute('href', url.replace(speciesInUrl,species));
+        link.href = url.replace(speciesInUrl, species);
     }
 };
 
@@ -506,7 +516,7 @@ const checkAberrationsObsDays = function() {
     formWarningEl.classList.toggle('hidden',!message);
 };
 
-export const observationOvelayManageIndividualAndEvents = function(
+export const observationOverlayManageIndividualAndEvents = function(
     overlay,
     dataAttrs
 ) {
@@ -575,12 +585,12 @@ const editObservationPreSetFields = function(overlay, dataAttrs) {
  *  INDIVIDUAL   *
  * ************* */
 
-export const individualOvelayManageSpecies = function(dataAttrs) {
+export const individualOverlayManageSpecies = function(dataAttrs) {
     const speciesEl = document.getElementById('individual_species'),
         helpEl = document.getElementById('individual_species_help'),
         species = dataAttrs.species || '',
         availableSpecies = getDataAttrValuesArray(species.toString()) || null,
-        showAll = dataAttrs.allSpecies;
+        showAll = parseDatasetValToBool(dataAttrs.allSpecies);
      let speciesNameText;
 
     // toggle marker and help text on already recorded species in station
