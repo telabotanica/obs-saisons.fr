@@ -252,7 +252,7 @@ const editStationPreSetFields = function(
                         break;
                     case 'habitat':
                         const habitatOption = Array.from(field.childNodes).find(
-                            option => option.value = stationData.habitat
+                            option => option.value === stationData.habitat
                         );
 
                         habitatOption.setAttribute('selected', 'selected');
