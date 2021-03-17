@@ -14,7 +14,7 @@ const onOpenOverlay = function() {
 
     if(openOverlayButtons) {
         openOverlayButtons.forEach(openOverlayButton => {
-            openOverlayButton.addEventListener('click', evt => {
+            $(openOverlayButton).off('click').on('click', evt => {
                 evt.preventDefault();
                 evt.stopPropagation();
 
@@ -29,15 +29,24 @@ const onOpenOverlay = function() {
                     closeOverlayOnClickOut(overlay);
                     document.body.style.overflow = 'hidden';
                     if (form) {
-                        dataAttrs = initFormOverlay(overlay, form, openOverlayButton, dataAttrs);
+                        form.reset();
+
+                        const fileUploadHandler = new HandleFileUploads(overlay.querySelector('.upload-input'));
+
+                        fileUploadHandler.init();
+
+                        if (openOverlayButton.classList.contains('edit')) {
+                            dataAttrs = setEditOverlayForm(overlay, dataAttrs);
+                        }
+
                         switch (dataAttrs.open) {
                             case 'admin-profile':
                             case 'profile':
-                                editProfilePreSetFields(overlay, dataAttrs);
+                                editProfilePreSetFields(overlay, dataAttrs, fileUploadHandler);
                                 break;
                             case 'station':
                                 stationLocation.init();
-                                editStationPreSetFields(overlay, dataAttrs);
+                                editStationPreSetFields(overlay, dataAttrs, fileUploadHandler);
                                 break;
                             case 'observation':
                                 openDetailsField();
@@ -45,7 +54,7 @@ const onOpenOverlay = function() {
                                 onChangeObsEvent();
                                 onChangeObsDate();
                                 observationOverlayManageIndividualAndEvents(overlay, dataAttrs);
-                                editObservationPreSetFields(overlay, dataAttrs);
+                                editObservationPreSetFields(overlay, dataAttrs, fileUploadHandler);
                                 break;
                             case 'individual':
                                 individualOverlayManageSpecies(dataAttrs);
@@ -67,25 +76,6 @@ const onOpenOverlay = function() {
 /* *************** *
  *  FORM OVERLAY   *
  * *************** */
-
-const initFormOverlay = function(
-    overlay,
-    form,
-    openOverlayButton,
-    dataAttrs
-) {
-    form.reset();
-    if(document.querySelector('.upload-zone .upload-input')) {
-        const fileUploadHandler = new HandleFileUploads();
-
-        fileUploadHandler.init();
-    }
-    if (openOverlayButton.classList.contains('edit')) {
-        return setEditOverlayForm(overlay, dataAttrs);
-    }
-
-    return dataAttrs;
-};
 
 const setEditOverlayForm = function(
     overlay,
@@ -183,16 +173,6 @@ const updateSelectOptions = function(
     }
 };
 
-const displayThumbs = function (overlay, src) {
-    if (src) {
-        const placeholderImg = overlay.querySelector('.placeholder-img');
-
-        overlay.querySelector('.upload-zone-placeholder').classList.add('hidden');
-        placeholderImg.classList.add('obj');
-        placeholderImg.src = src;
-    }
-};
-
 const selectOptionsLockToggle = function(element, lock = true) {
     if (lock) {
         element.setAttribute('disabled','disabled');
@@ -214,12 +194,13 @@ const selectOption = function (element) {
 
 const editProfilePreSetFields = function(
     overlay,
-    dataAttrs
+    dataAttrs,
+    fileUploadHandler
 ) {
     const user = JSON.parse(dataAttrs.user);
 
     if (overlay.classList.contains('edit') && !!user.avatar) {
-        displayThumbs(overlay, user.avatar);
+        fileUploadHandler.preSetFile(user.avatar);
     }
 };
 
@@ -229,7 +210,8 @@ const editProfilePreSetFields = function(
 
 const editStationPreSetFields = function(
     overlay,
-    dataAttrs
+    dataAttrs,
+    fileUploadHandler
 ) {
     if (overlay.classList.contains('edit')) {
         const stationData = JSON.parse(dataAttrs.station);
@@ -261,7 +243,7 @@ const editStationPreSetFields = function(
                         field.checked = stationData.isPrivate;
                         break;
                     case 'headerImage':
-                        displayThumbs(overlay, stationData.headerImage);
+                        fileUploadHandler.preSetFile(stationData.headerImage);
                         break;
                     default:
                         break;
@@ -278,7 +260,7 @@ const editStationPreSetFields = function(
 const openDetailsField = function() {
     const openDetailsButton = document.querySelector('.open-details-button');
 
-    openDetailsButton.addEventListener('click', evt => {
+    $(openDetailsButton).off('click').on('click', evt => {
         evt.preventDefault();
 
         const openDetailsButtonContainer = openDetailsButton.closest('.button-form-container');
@@ -409,7 +391,7 @@ const onChangeObsEvent = function() {
     const eventEl = document.getElementById('observation_event'),
         observationDateEl = document.getElementById('observation_date');
 
-    eventEl.addEventListener('change', () => {
+    $(eventEl).off('change').on('change', () => {
         const isValidEvent = !!eventEl.value;
 
         updateHelpInfos(isValidEvent);
@@ -452,7 +434,7 @@ const onChangeObsDate = function() {
     let message;
 
     if(!!observationDate && !!eventEl) {
-        observationDate.addEventListener('blur', function () {
+        $(observationDate).off('blur').on('blur', function () {
             // front validation for safari input type date to type text
             const dateValue = observationDate.value;
 
@@ -534,7 +516,7 @@ export const observationOverlayManageIndividualAndEvents = function(
     }
 };
 
-const editObservationPreSetFields = function(overlay, dataAttrs) {
+const editObservationPreSetFields = function(overlay, dataAttrs, fileUploadHandler) {
     if (overlay.classList.contains('edit')) {
         const observation = JSON.parse(dataAttrs.observation),
             individualEl = document.getElementById('observation_individual');
@@ -571,7 +553,7 @@ const editObservationPreSetFields = function(overlay, dataAttrs) {
                         field.checked = observation.isMissing;
                         break;
                     case 'picture':
-                        displayThumbs(overlay, observation.picture);
+                        fileUploadHandler.preSetFile(observation.picture);
                         break;
                     default:
                         break;

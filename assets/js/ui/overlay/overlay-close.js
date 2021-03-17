@@ -76,9 +76,12 @@ const closeDetailsField = function() {
 const resetUploadFilesComponent = form => {
     const deleteFileButton = form.querySelector('.delete-file'),
         hiddenIsDeletePictureInput = form.querySelector('.is-delete-picture');
+    console.log(form);
 
-    if(deleteFileButton && hiddenIsDeletePictureInput) {
-        deleteFileButton('.delete-file').click();
+    if(deleteFileButton) {
+        deleteFileButton.click();
+    }
+    if(hiddenIsDeletePictureInput) {
         hiddenIsDeletePictureInput.remove();
     }
 };
