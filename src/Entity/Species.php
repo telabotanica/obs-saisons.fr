@@ -11,6 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Species
 {
+    const TREE_GROUPS = [
+        'Abricotier',
+        'Amandier',
+        'Cerisier',
+        'Poirier',
+        'Pommier',
+        'Prunier',
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -144,4 +153,10 @@ class Species
         return $this;
     }
 
+    public function isTreeGroup()
+    {
+        $vernacularNameParts = explode(' ', $this->getVernacularName());
+
+        return in_array($vernacularNameParts[0], self::TREE_GROUPS);
+    }
 }

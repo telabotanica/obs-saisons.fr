@@ -5,6 +5,7 @@ import {StationLocation} from "../stations-observations/locate-station";
 import {closeOverlayOnClickOut} from "./overlay-close";
 import {generateComparableFormatedDate} from "../date-format";
 import {onDeleteButton} from "../handle-delete-button";
+import {parseDatasetValToBool} from "../../lib/parse-to-bool";
 
 export const stationLocation = new StationLocation();
 
@@ -348,16 +349,19 @@ const onChangeSetIndividual = function() {
 
 const updateSpeciesPageUrl = function(selectedIndividual) {
     const link = document.querySelector('.saisie-aide-txt a.green-link'),
-        url = link.getAttribute('href'),
+        url = link.href,
         speciesInUrl = url.substring(url.lastIndexOf('/')+1);
     let species = selectedIndividual.dataset.speciesName;
 
-    if('arbres' === selectedIndividual.dataset.speciesType) {
+    if((selectedIndividual.dataset.isTreeGroup)) {
         species = species.split(' ')[0];
+    }
+    if(!/%[A-Z0-9]{2}/.test(species)) {
+        species = encodeURI(species);
     }
 
     if (speciesInUrl !== species) {
-        link.setAttribute('href', url.replace(speciesInUrl,species));
+        link.href = url.replace(speciesInUrl, species);
     }
 };
 
@@ -586,7 +590,7 @@ export const individualOverlayManageSpecies = function(dataAttrs) {
         helpEl = document.getElementById('individual_species_help'),
         species = dataAttrs.species || '',
         availableSpecies = getDataAttrValuesArray(species.toString()) || null,
-        showAll = typeof dataAttrs.allSpecies === "boolean" ? dataAttrs.allSpecies : ['true',1,"1"].includes(dataAttrs.allSpecies);
+        showAll = parseDatasetValToBool(dataAttrs.allSpecies);
      let speciesNameText;
 
     // toggle marker and help text on already recorded species in station

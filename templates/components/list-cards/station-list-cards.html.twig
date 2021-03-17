@@ -38,9 +38,8 @@
                 </div>
             {% endif %}
         </div>
-
         {% set vernacularName = listCard.species.vernacularName %}
-        {% if 'arbres' == listCard.species.type.name %}
+        {% if listCard.species.isTreeGroup() %}
             {% set vernacularName = vernacularName|split(' ')[0] %}
         {% endif %}
 
