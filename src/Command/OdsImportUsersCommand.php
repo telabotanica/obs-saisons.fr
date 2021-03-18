@@ -56,118 +56,121 @@ class OdsImportUsersCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $conn = $this->managerRegistry->getConnection('ods_legacy');
-        $legacyUsers = $conn->fetchAll('
-            SELECT DISTINCT du.name AS display_name,
-                du.uid,
-                du.mail AS email,
-                du.pass as password,
-                du.created as created_at,
-                du.status,
-                CONCAT(IFNULL(p.first_name,\'\'),\' \',IFNULL(p.last_name,\'\')) AS name,
-                p.post_code,
-                p.locality,
-                p.profile_type,
-                p.is_newsletter_subscriber
-            FROM `drupal_users` du 
-            LEFT JOIN (
-                SELECT pv.uid as uid,
-                    MAX(CASE WHEN (pf.title = \'Nom\') THEN pv.value ELSE NULL END) as last_name,
-                    MAX(CASE WHEN (pf.title = \'Prénom\') THEN pv.value ELSE NULL END) as first_name,
-                    MAX(CASE WHEN (pf.title = \'Code postal\') THEN pv.value ELSE NULL END) as post_code,
-                    MAX(CASE WHEN (pf.title = \'Ville\') THEN pv.value ELSE NULL END) as locality,
-                    MAX(CASE WHEN (pf.title = \'Vous êtes un\') THEN pv.value ELSE NULL END) as profile_type,
-                    MAX(CASE WHEN (pf.title = \'Abonnement à la lettre d\'\'actualités\') THEN pv.value ELSE 0 END) as is_newsletter_subscriber
-            
-                FROM `drupal_profile_values` pv
-                LEFT JOIN `drupal_profile_fields` pf on pf.fid = pv.fid
-                GROUP BY uid
-                ORDER BY uid
-            ) p ON du.uid = p.uid
-            WHERE du.uid != 4;
-        ');
+        // Shoud we import users ?
+        $question = new ConfirmationQuestion('Import users? (BEWARE, ALREADY IMPORTED USERS COULD BE DISABLED) [y/N]', false);
+        $mustImportUser = $this->getHelper('question')->ask($input, $output, $question);
 
-        foreach ($legacyUsers as $legacyUser) {
-            $io->text('creating user : '.$legacyUser['display_name']);
+        if ($mustImportUser) {
+            $conn = $this->managerRegistry->getConnection('ods_legacy');
+            $legacyUsers = $conn->fetchAll('
+                SELECT DISTINCT du.name AS display_name,
+                    du.uid,
+                    du.mail AS email,
+                    du.pass as password,
+                    du.created as created_at,
+                    du.status,
+                    CONCAT(IFNULL(p.first_name,\'\'),\' \',IFNULL(p.last_name,\'\')) AS name,
+                    p.post_code,
+                    p.locality,
+                    p.profile_type,
+                    p.is_newsletter_subscriber
+                FROM `drupal_users` du
+                LEFT JOIN (
+                    SELECT pv.uid as uid,
+                        MAX(CASE WHEN (pf.title = \'Nom\') THEN pv.value ELSE NULL END) as last_name,
+                        MAX(CASE WHEN (pf.title = \'Prénom\') THEN pv.value ELSE NULL END) as first_name,
+                        MAX(CASE WHEN (pf.title = \'Code postal\') THEN pv.value ELSE NULL END) as post_code,
+                        MAX(CASE WHEN (pf.title = \'Ville\') THEN pv.value ELSE NULL END) as locality,
+                        MAX(CASE WHEN (pf.title = \'Vous êtes un\') THEN pv.value ELSE NULL END) as profile_type,
+                        MAX(CASE WHEN (pf.title = \'Abonnement à la lettre d\'\'actualités\') THEN pv.value ELSE 0 END) as is_newsletter_subscriber
+                    FROM `drupal_profile_values` pv
+                    LEFT JOIN `drupal_profile_fields` pf on pf.fid = pv.fid
+                    GROUP BY uid
+                    ORDER BY uid
+                ) p ON du.uid = p.uid
+                WHERE du.uid != 4;
+            ');
 
-            $user = new User();
-            $user->setName($legacyUser['name']);
-            $user->setDisplayName($legacyUser['display_name']);
-            $user->setEmail($legacyUser['email']);
-            $user->setPassword($legacyUser['password']);
-            $user->setRoles(
-                $this->getUserRoles($legacyUser['email'])
-            );
-            $user->setStatus($legacyUser['status']);
-            if (preg_match('/^[\d]{5}$/', $legacyUser['post_code'])) {
-                $user->setPostCode($legacyUser['post_code']);
+            foreach ($legacyUsers as $legacyUser) {
+                $io->text('creating user : '.$legacyUser['display_name']);
+
+                $user = new User();
+                $user->setName($legacyUser['name']);
+                $user->setDisplayName($legacyUser['display_name']);
+                $user->setEmail($legacyUser['email']);
+                $user->setPassword($legacyUser['password']);
+                $user->setRoles(
+                    $this->getUserRoles($legacyUser['email'])
+                );
+                $user->setStatus($legacyUser['status']);
+                if (preg_match('/^[\d]{5}$/', $legacyUser['post_code'])) {
+                    $user->setPostCode($legacyUser['post_code']);
+                }
+                $user->setLocality($legacyUser['locality']);
+                $user->setProfileType($legacyUser['profile_type']);
+                $user->setIsNewsletterSubscriber($legacyUser['is_newsletter_subscriber'] ?? '0');
+                $user->setCreatedAt((new \DateTime())->setTimestamp($legacyUser['created_at']));
+                $user->setResetToken('tok3nha5toBR3s3tedElMe0w');
+                $user->setLegacyId($legacyUser['uid']);
+
+                $this->em->persist($user);
+
+                $io->text('...Ok.');
             }
-            $user->setLocality($legacyUser['locality']);
-            $user->setProfileType($legacyUser['profile_type']);
-            $user->setIsNewsletterSubscriber($legacyUser['is_newsletter_subscriber'] ?? '0');
-            $user->setCreatedAt((new \DateTime())->setTimestamp($legacyUser['created_at']));
-            $user->setResetToken('tok3nha5toBR3s3tedElMe0w');
-            $user->setLegacyId($legacyUser['uid']);
 
-            $this->em->persist($user);
+            $this->em->flush();
 
-            $io->text('...Ok.');
-        }
+            $io->success('Imported users: '.count($legacyUsers));
 
-        $this->em->flush();
+            $io->text('Disabling accounts with duplicated email');
 
-        $io->success('Imported users: '.count($legacyUsers));
-
-        $io->text('Disabling accounts with duplicated email');
-
-        // find duplicated emails
-        $qb = $this->em->createQueryBuilder();
-        $dups = $qb
-            ->addSelect('u')
-            ->from(User::class, 'u')
-            ->addGroupBy('u.email')
-            ->andHaving($qb->expr()->gt($qb->expr()->count('u.email'), 1))
-            ->getQuery()
-            ->getResult()
-        ;
-
-        $count = 0;
-        foreach ($dups as $duplicate) {
-            /**
-             * @var $duplicate User
-             */
-            // find users with duplicated emails
-            $io->text('Searching user with email: '.$duplicate->getEmail());
-
+            // find duplicated emails
             $qb = $this->em->createQueryBuilder();
-            $users = $qb
+            $dups = $qb
                 ->addSelect('u')
                 ->from(User::class, 'u')
-                ->andWhere($qb->expr()->eq('u.email', ':email'))
-                ->setParameter(':email', $duplicate->getEmail())
+                ->addGroupBy('u.email')
+                ->andHaving($qb->expr()->gt($qb->expr()->count('u.email'), 1))
                 ->getQuery()
-                ->getResult()
-            ;
+                ->getResult();
 
-            $io->text('...accounts found: '.count($users));
-
-            // disable user and change its email
-            foreach ($users as $i => $user) {
-                ++$count;
-
+            $count = 0;
+            foreach ($dups as $duplicate) {
                 /**
-                 * @var $user User
+                 * @var $duplicate User
                  */
-                $user->setStatus(User::STATUS_DISABLED);
-                $user->setEmail($user->getEmail().'_'.$i);
+                // find users with duplicated emails
+                $io->text('Searching user with email: '.$duplicate->getEmail());
+
+                $qb = $this->em->createQueryBuilder();
+                $users = $qb
+                    ->addSelect('u')
+                    ->from(User::class, 'u')
+                    ->andWhere($qb->expr()->eq('u.email', ':email'))
+                    ->setParameter(':email', $duplicate->getEmail())
+                    ->getQuery()
+                    ->getResult();
+
+                $io->text('...accounts found: '.count($users));
+
+                // disable user and change its email
+                foreach ($users as $i => $user) {
+                    ++$count;
+
+                    /**
+                     * @var $user User
+                     */
+                    $user->setStatus(User::STATUS_DISABLED);
+                    $user->setEmail($user->getEmail().'_'.$i);
+                }
+
+                $io->text('...Ok.'.count($users).' accounts disabled');
             }
 
-            $io->text('...Ok.'.count($users).' accounts disabled');
+            $this->em->flush();
+
+            $io->success(sprintf('Disabled email: %d; Disabled users: %d', count($dups), $count));
         }
-
-        $this->em->flush();
-
-        $io->success(sprintf('Disabled email: %d; Disabled users: %d', count($dups), $count));
 
         // Now send new password emails
         $question = new ConfirmationQuestion('Send imported users password reset emails? (BEWARE, REAL THOUSANDS EMAILS SHIT) [y/N]', false);
