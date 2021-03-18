@@ -207,19 +207,23 @@ class OdsImportUsersCommand extends Command
 
                 $io->text('send email to: '.$importedUser->getEmail());
 
-                $this->mailer->send(
-                    'contact@obs-saisons.fr',
-                    $importedUser->getEmail(),
-                    'Merci de réinitialiser votre mot de passe - obs-saisons.fr',
-                    $message
-                );
+                try {
+                    $this->mailer->send(
+                        'contact@obs-saisons.fr',
+                        $importedUser->getEmail(),
+                        'Merci de réinitialiser votre mot de passe - obs-saisons.fr',
+                        $message
+                    );
+
+                    // flushing each time to avoid sending mail and lost tokens in case of crash
+                    $this->em->flush();
+                } catch (\Throwable $e) {
+                    $io->text('...Error sending mail to '.$importedUser->getEmail());
+                }
 
                 $io->text('...Ok. Sleeping for few seconds');
 
                 sleep(3);
-
-                // flushing each time to avoid sending mail and lost tokens in case of crash
-                $this->em->flush();
             }
 
             $io->success('Done sending emails! Users imported \o/');
