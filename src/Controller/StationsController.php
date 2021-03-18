@@ -187,11 +187,15 @@ class StationsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'success' => true,
-                'redirect' => $this->generateUrl('my_stations'),
+                'redirect' => $this->generateUrl('stations_show', [
+                    'slug' => $station->getSlug(),
+                ]),
             ]);
         }
 
-        return $this->redirectToRoute('my_stations');
+        return $this->redirectToRoute('stations_show', [
+            'slug' => $station->getSlug(),
+        ]);
     }
 
     /**
