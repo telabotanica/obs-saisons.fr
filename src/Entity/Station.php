@@ -97,7 +97,7 @@ class Station
 
     /**
      * @Assert\Regex(
-     *     pattern = "[0-9]{5}",
+     *     pattern = "/[0-9]{5}/",
      *     message = "Le code INSEE saisi est invalide"
      * )
      *
