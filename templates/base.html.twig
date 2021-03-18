@@ -11,6 +11,25 @@
 		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/media/favicon/favicon-16x16.png') }}">
 		<link rel="shortcut icon" href="{{ asset('media/layout/icons/logo_ods.svg') }}" type="image/svg+xml">
 
+		{% if analytics_tracking_id %}
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script
+				type="opt-in"
+				data-type="application/javascript"
+				data-name="google-tag-manager"
+				async
+				data-src="https://www.googletagmanager.com/gtag/js?id={{ analytics_tracking_id }}">
+		</script>
+		<script>
+			var GTM_UA = '{{ analytics_tracking_id }}';
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', '{{ analytics_tracking_id }}');
+		</script>
+		{% endif %}
+
 		{# steelsheet #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}

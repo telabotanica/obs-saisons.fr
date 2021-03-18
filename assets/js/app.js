@@ -20,6 +20,7 @@ global.$ = global.jQuery = $;
  * ******* */
 import './lib/html-entities-decode';
 import './ui/error-display';
+import './ui/notice-cookies';
 /* ********** *
  * COMPONENTS *
  * ********** */
