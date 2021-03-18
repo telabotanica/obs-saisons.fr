@@ -71,7 +71,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class WebhookController extends AbstractController
 {
     /**
-     * @Route("/webhook/sync-mailchimp-contact/{listId}", name="webhook_sync_mailchimp_contact", requirements={"listId"="%mailchimp.list_id%"}, methods={"POST"})
+     * @Route("/webhook/sync-mailchimp-contact/{listId}", name="webhook_sync_mailchimp_contact", requirements={"listId"="%mailchimp.list_id%"}, methods={"POST","GET"})
      */
     public function syncMailchimpContactsWebhook(
         Request $request,
