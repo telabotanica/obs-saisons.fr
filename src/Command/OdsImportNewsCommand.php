@@ -62,7 +62,7 @@ class OdsImportNewsCommand extends Command
             JOIN `drupal_node_revisions` dnr ON dn.`nid` = dnr.`nid`
             LEFT JOIN `drupal_content_field_image` dfi ON dfi.`nid` = dn.`nid`
             LEFT JOIN `drupal_files` df ON df.`fid` = dfi.`field_image_fid`
-            WHERE dn.type = \'news\'
+            WHERE dn.type IN (\'news\', \'provence\', \'odsprovence\')
             OR (
                 dn.type = \'articles_observateurs\'
                 AND dn.`uid` = 1
