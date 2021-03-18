@@ -234,13 +234,13 @@ const editStationPreSetFields = function(
                         break;
                     case 'habitat':
                         const habitatOption = Array.from(field.childNodes).find(
-                            option => option.value === stationData.habitat
+                            option => (option.value).toLowerCase() === (stationData.habitat).toLowerCase()
                         );
 
                         habitatOption.setAttribute('selected', 'selected');
                         break;
                     case 'isPrivate':
-                        field.checked = stationData.isPrivate;
+                        field.checked = parseDatasetValToBool(stationData.isPrivate);
                         break;
                     case 'headerImage':
                         fileUploadHandler.preSetFile(stationData.headerImage);
