@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block main_content %}
 	{% include 'layout/header.html.twig' with ({
 		'title': title|default('Stations d’observation'),
@@ -31,7 +30,6 @@
                     station: card.station,
                     observations: card.observations,
                     contributorsCount: card.contributorsCount
-
                 } %}
             {% endfor %}
             <div class="card add">
