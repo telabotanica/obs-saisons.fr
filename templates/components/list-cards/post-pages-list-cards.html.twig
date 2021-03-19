@@ -7,7 +7,7 @@
 #}
 <div id="{{ page.slug }}" class="list-cards-item">
 
-    <a href="{{ path(page.slug) }}" class="item-name-block">
+    <a href="/{{ page.slug) }}" class="item-name-block">
         <div class="item-heading-dropdown">{{ page.title|capitalize }}</div>
         {% if constant('App\\Entity\\Post::STATUS_PENDING') == page.status %}
             <div class="item-name warning-content">En attente de publication</div>
