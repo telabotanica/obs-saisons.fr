@@ -72,7 +72,7 @@ class UserController extends AbstractController
         if ($this->isGranted(UserVoter::LOGGED)) {
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
             $previousPageUrl = $this->getTargetPath($session, 'main');
-            if (null === $previousPageUrl) {
+            if (null === $previousPageUrl || preg_match('/\/(user)\//', $previousPageUrl)) {
                 return $this->redirectToRoute('homepage');
             }
 
