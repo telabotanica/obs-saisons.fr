@@ -70,9 +70,10 @@ class UserController extends AbstractController
     public function loginPage(SessionInterface $session)
     {
         if ($this->isGranted(UserVoter::LOGGED)) {
+            // seems to be some dead code here, can't figure how we could arrive here
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
             $previousPageUrl = $this->getTargetPath($session, 'main');
-            if (null === $previousPageUrl || preg_match('/\/(user)\//', $previousPageUrl)) {
+            if (null === $previousPageUrl) {
                 return $this->redirectToRoute('homepage');
             }
 
@@ -273,18 +274,22 @@ class UserController extends AbstractController
             EntityManagerInterface $manager,
             UserPasswordEncoderInterface $passwordEncoder
     ) {
+        if ($this->getUser()) {
+            // Already logged
+            return $this->redirectToRoute('homepage');
+        }
+
+        /**
+         * @var User
+         */
+        $user = $manager->getRepository(User::class)->findOneBy(['resetToken' => $token]);
+        if (null === $user) {
+            $this->addFlash('error', 'Ce token est inconnu.');
+
+            return $this->redirectToRoute('homepage');
+        }
+
         if ($request->isMethod('POST')) {
-            /**
-             * @var User
-             */
-            $user = $manager->getRepository(User::class)->findOneBy(['resetToken' => $token]);
-
-            if (null === $user) {
-                $this->addFlash('error', 'Ce token est inconnu.');
-
-                return $this->redirectToRoute('homepage');
-            }
-
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
             $user->setResetToken(null);
             $manager->flush();
