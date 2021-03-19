@@ -32,7 +32,6 @@ OdsPlaces.prototype.initForm = function() {
     this.placeLabel = this.places.siblings('label');
     this.placesResults = $('.ods-places-results');
     this.placesResultsContainer = $('.ods-places-results-container');
-    this.placesSearchIcon = $('.ods-places-search-icon');
     this.placesCloseButton = $('.ods-places-close');
 };
 
@@ -70,14 +69,12 @@ OdsPlaces.prototype.launchSearch = function (evt) {
             success: this.nominatimOsmResponseCallback.bind(this),
             error: () => {
                 this.placeLabel.removeClass('loading');
-                console.log('no');
             }
         });
     }
 };
 
 OdsPlaces.prototype.nominatimOsmResponseCallback = function(data) {
-    console.log('yes');
     this.places.siblings('label').removeClass('loading');
     if (0 < data.length) {
         this.searchResults = data;
@@ -164,7 +161,7 @@ OdsPlaces.prototype.resetOnClick = function () {
 
 OdsPlaces.prototype.toggleCloseButton = function(isShow = true) {
     this.placesCloseButton.toggleClass('hidden', !isShow);
-    this.placesSearchIcon.toggleClass('hidden', isShow);
+    $('.ods-places-search-icon').toggleClass('hidden', isShow);
 };
 
 OdsPlaces.prototype.resetPlacesSearch = function() {
