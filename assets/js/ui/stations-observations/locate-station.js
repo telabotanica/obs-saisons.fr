@@ -1,7 +1,7 @@
 import {OdsPlaces} from "../location/locality";
 import {Location} from "../location/location";
 
-const ODS_LOCATION_INFO_SERVICE_URL = 'https://www.obs-saisons.fr/applications/jrest/OdsCommune/informationsPourCoordonnees';
+const ODS_LOCATION_INFO_SERVICE_URL = 'https://old.obs-saisons.fr/applications/jrest/OdsCommune/informationsPourCoordonnees';
 
 export function StationLocation() {}
 
