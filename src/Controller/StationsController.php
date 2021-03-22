@@ -45,6 +45,7 @@ class StationsController extends AbstractController
 
         return $this->render('pages/stations.html.twig', [
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit),
+            'mapStations' => $stationRepository->findAll(),
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'stationForm' => $form->createView(),
             'pagination' => [
@@ -78,6 +79,7 @@ class StationsController extends AbstractController
         return $this->render('pages/stations.html.twig', [
             'title' => 'Mes stations d’observation',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
+            'mapStations' => $stationRepository->findBy(['user' => $user]),
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)
                 ->setActiveTrail()
                 ->getBreadcrumbs('stations'),
@@ -106,6 +108,7 @@ class StationsController extends AbstractController
         return $this->render('pages/stations-search.html.twig', [
             'stationsArray' => $searchService->stationsSearch($searchTerm),
             'search' => $searchTerm,
+            'mapStations' => $searchService->stationsSearchRawResults($searchTerm),
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail()
                 ->getBreadcrumbs('stations'),
         ]);

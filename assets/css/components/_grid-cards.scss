@@ -66,6 +66,15 @@
         }
     }
 
+    &.stations-card-popup {
+        min-height: auto;
+        box-shadow: none;
+
+        .card-header{
+            height: 100px;
+        }
+    }
+
     .edit {
         position: absolute;
         @include display-flex;

@@ -46,7 +46,7 @@ $third-pc: 100/3;
 
 @mixin background-image($url: "default", $position: 0 0, $size: cover, $repeat: no-repeat) {
 	@if $url == "default" {
-		$url: image-url('example-bg', 'png');
+		$url: image-url('image-placeholder', 'svg');
 	}
 	background-image: $url;
 	background-position: $position;
