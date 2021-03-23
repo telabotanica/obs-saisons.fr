@@ -246,11 +246,11 @@ $button-color-map: (
   color: #fff;
   text-align: center;
   border-radius: 0;
+  line-height: 15px;
 
   @include media(xs,md) {
     margin-left: 20px;
     font-size: 10px;
-    line-height: 18px;
   }
 
   &.last {
