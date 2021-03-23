@@ -86,6 +86,10 @@ class AppExtension extends AbstractExtension
     public function getFilters()
     {
         return [
+            new TwigFilter('shortDate', [
+                $this,
+                'displayEventShortDates',
+            ]),
             new TwigFilter('slugify', [
                 $this,
                 'slugify',
@@ -158,6 +162,18 @@ class AppExtension extends AbstractExtension
         }
 
         return $removeDuplicates;
+    }
+
+    public function displayEventShortDates(
+        \DateTimeInterface $date
+    ): array {
+        $translatedShortDate = (new HandleDateTime())->dateTransFormat('d MMM', $date);
+        $translatedShortDateArray = explode(' ', $translatedShortDate);
+
+        return [
+            'day' => $translatedShortDateArray[0],
+            'month' => $translatedShortDateArray[1],
+        ];
     }
 
     public function displayEventDates(
