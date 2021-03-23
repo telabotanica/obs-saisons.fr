@@ -36,15 +36,20 @@ class Search
 
     public function stationsSearchRawResults(string $searchTerm)
     {
-        $foundStations = [];
-        foreach (self::STATIONS_SEARCH_KEYS as $searchKey) {
-            $foundStationsWithThisKey = $this->em->getRepository(Station::class)
-                ->search($searchTerm, $searchKey);
-            if (!empty($foundStationsWithThisKey) && !in_array($foundStationsWithThisKey, $foundStations)) {
-                $foundStations = array_merge($foundStations, $foundStationsWithThisKey);
+        // flatten search results
+        $foundStations = array_merge(...array_values($this->stationsSearch($searchTerm)));
+        //de-duplicate stations array
+        $stations = [];
+        $ids = [];
+        foreach ($foundStations as $station) {
+            $id = $station->getId();
+
+            if (!in_array($id, $ids)) {
+                $ids[] = $id;
+                $stations[] = $station;
             }
         }
 
-        return $foundStations;
+        return $stations;
     }
 }
