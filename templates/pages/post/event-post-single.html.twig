@@ -15,7 +15,8 @@
 				<div class="dual-blocks-container">
 					{% for date in eventsPostDates %}
 						<div class="event-date {{ loop.index == 2 ? 'last' }}">
-							{{ date|date("j") }}<br>{{ date|date("M") }}
+							{% set eventShortDate = date|shortDate %}
+							{{ eventShortDate.day }}<br>{{ eventShortDate.month }}{{ eventShortDate.year ? "<br>#{eventShortDate.year}"|raw : '' }}
 						</div>
 					{% endfor %}
 				</div>

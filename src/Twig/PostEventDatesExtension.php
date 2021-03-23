@@ -79,12 +79,18 @@ class PostEventDatesExtension extends AbstractExtension
     public function displayEventShortDates(
         \DateTimeInterface $date
     ): array {
-        $translatedShortDate = (new HandleDateTime())->dateTransFormat('d MMM', $date);
+        $pattern = 'd MMM';
+        if (date('Y') !== $date->format('Y')) {
+            $pattern .= ' Y';
+        }
+
+        $translatedShortDate = (new HandleDateTime())->dateTransFormat($pattern, $date);
         $translatedShortDateArray = explode(' ', $translatedShortDate);
 
         return [
             'day' => $translatedShortDateArray[0],
             'month' => $translatedShortDateArray[1],
+            'year' => $translatedShortDateArray[2] ?? null,
         ];
     }
 }

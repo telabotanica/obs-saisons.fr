@@ -7,7 +7,7 @@
         {% for date in eventPostDates %}
             <div class="event-date {{ loop.index == 2 ? 'last' }}">
                 {% set eventShortDate = date|shortDate %}
-                {{ eventShortDate.day }}<br>{{ eventShortDate.month }}
+                {{ eventShortDate.day }}<br>{{ eventShortDate.month }}{{ eventShortDate.year ? "<br>#{eventShortDate.year}"|raw : '' }}
             </div>
         {% endfor %}
     </div>
