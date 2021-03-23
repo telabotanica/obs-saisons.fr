@@ -5,17 +5,20 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EntityJsonSerialize;
 use App\Service\Search;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -45,7 +48,8 @@ class StationsController extends AbstractController
 
         return $this->render('pages/stations.html.twig', [
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit),
-            'mapStations' => $stationRepository->findAll(),
+            //'mapStations' => $stationRepository->findAll(),
+            'dataStationsQuery' => null,
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'stationForm' => $form->createView(),
             'pagination' => [
@@ -79,7 +83,8 @@ class StationsController extends AbstractController
         return $this->render('pages/stations.html.twig', [
             'title' => 'Mes stations d’observation',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
-            'mapStations' => $stationRepository->findBy(['user' => $user]),
+            //'mapStations' => $stationRepository->findBy(['user' => $user]),
+            'dataStationsQuery' => json_encode(['userId' => $user->getId()]),
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)
                 ->setActiveTrail()
                 ->getBreadcrumbs('stations'),
@@ -108,10 +113,42 @@ class StationsController extends AbstractController
         return $this->render('pages/stations-search.html.twig', [
             'stationsArray' => $searchService->stationsSearch($searchTerm),
             'search' => $searchTerm,
-            'mapStations' => $searchService->stationsSearchRawResults($searchTerm),
+            //'mapStations' => $searchService->stationsSearchRawResults($searchTerm),
+            'dataStationsQuery' => json_encode(['search' => $searchTerm]),
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail()
                 ->getBreadcrumbs('stations'),
         ]);
+    }
+
+    /**
+     * @Route("/stations/mapInfo", name="stations_map_info", methods={"GET"})
+     */
+    public function stationsMapInfo(
+        Request $request,
+        EntityManagerInterface $manager,
+        Search $searchService,
+        EntityJsonSerialize $entityJsonSerialize
+    ) {
+        $stationRepository = $manager->getRepository(Station::class);
+        $stations = null;
+
+        if ($request->query->has('search')) {
+            $stations = $searchService->stationsSearchRawResults($request->query->get('search'));
+        } elseif ($request->query->has('userId')) {
+            $user = $manager->getRepository(User::class)
+                ->find($request->query->get('userId'));
+            if ($user) {
+                $stations = $stationRepository->findBy(['user' => $user]);
+            }
+        } else {
+            $stations = $stationRepository->findAll();
+        }
+
+        return new Response(
+            $entityJsonSerialize->getJsonSerializedStationForListPageMap($stations),
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+        );
     }
 
     /**
