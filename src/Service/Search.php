@@ -44,8 +44,8 @@ class Search
         foreach ($foundStations as $station) {
             $id = $station->getId();
 
-            if (!in_array($id, $ids)) {
-                $ids[] = $id;
+            if (!isset($ids[$id])) {
+                $ids[$id] = $id;
                 $stations[] = $station;
             }
         }

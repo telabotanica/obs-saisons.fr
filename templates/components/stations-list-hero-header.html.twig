@@ -17,13 +17,13 @@
             Cherchez d’abord si vous trouvez une station publique près de chez vous dans laquelle vous pourrez contribuer, sinon créez une station (en bas de la liste) ou accéder à vos stations (dans l’onglet “Mes stations”).
         </p>
     </div>
+
+
     {% if app.user %}
         <a href="" class="button hero-header-button bt-add open" data-open="station">créer une nouvelle station</a>
     {% endif %}
 
-
-    <div id="stations-list-header-map" class="hero-header-media-part map show-map" data-stations-query="{{ dataStationsQuery }}"></div>
-
+    <div id="stations-list-header-map" class="hero-header-media-part map show-map" data-stations-query="{{ dataStationsQuery|default }}"><div class="stations-map-legend">{{ headerMapLegend|default('Toutes les stations') }}</div></div>
     <script>
         let dataRoute = "{{ path('stations_map_info')|escape('js') }}";
         let stationUrlTemplate = "{{ path('stations_show', {slug: 'slugPlaceHolder'})|escape('js') }}";

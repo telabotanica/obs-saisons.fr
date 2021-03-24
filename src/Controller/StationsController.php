@@ -48,8 +48,6 @@ class StationsController extends AbstractController
 
         return $this->render('pages/stations.html.twig', [
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit),
-            //'mapStations' => $stationRepository->findAll(),
-            'dataStationsQuery' => null,
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'stationForm' => $form->createView(),
             'pagination' => [
@@ -81,10 +79,9 @@ class StationsController extends AbstractController
         $lastPage = ceil($stationRepository->countStations($user) / $limit);
 
         return $this->render('pages/stations.html.twig', [
-            'title' => 'Mes stations d’observation',
+            'headerMapLegend' => 'Mes stations',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
-            //'mapStations' => $stationRepository->findBy(['user' => $user]),
-            'dataStationsQuery' => json_encode(['userId' => $user->getId()]),
+            'dataStationsQuery' => 'user',
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)
                 ->setActiveTrail()
                 ->getBreadcrumbs('stations'),
@@ -111,9 +108,9 @@ class StationsController extends AbstractController
         }
 
         return $this->render('pages/stations-search.html.twig', [
+            'headerMapLegend' => 'Resultats de ma recherche',
             'stationsArray' => $searchService->stationsSearch($searchTerm),
             'search' => $searchTerm,
-            //'mapStations' => $searchService->stationsSearchRawResults($searchTerm),
             'dataStationsQuery' => json_encode(['search' => $searchTerm]),
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail()
                 ->getBreadcrumbs('stations'),
@@ -134,9 +131,8 @@ class StationsController extends AbstractController
 
         if ($request->query->has('search')) {
             $stations = $searchService->stationsSearchRawResults($request->query->get('search'));
-        } elseif ($request->query->has('userId')) {
-            $user = $manager->getRepository(User::class)
-                ->find($request->query->get('userId'));
+        } elseif ($request->query->has('user')) {
+            $user = $this->getUser();
             if ($user) {
                 $stations = $stationRepository->findBy(['user' => $user]);
             }
