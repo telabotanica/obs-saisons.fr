@@ -1,53 +1,39 @@
 const imageType = /^image\//;
 
-export function HandleFileUploads() {}
+export function HandleFileUploads(uploadInput) {
+    this.uploadInput = uploadInput;
+}
 
 HandleFileUploads.prototype.init = function() {
-    const uploadInputEl = document.querySelector('.upload-zone .upload-input');
-
-    if(uploadInputEl) {
-        this.initForm(uploadInputEl);
+    if (this.uploadInput) {
+        this.initForm();
         this.initEvents();
+    } else {
+        console.warn('File uploader could not initialize');
     }
+
 };
 
-HandleFileUploads.prototype.initForm = function(uploadInputEl) {
-    this.uploadInputEl = uploadInputEl;
-    this.uploadZonePlaceholderEL = document.querySelector('.upload-zone-placeholder');
-    this.imgEl = document.querySelector('.placeholder-img');
-    this.form = uploadInputEl.closest('form');
-    this.deleteFileEl = document.querySelector('.delete-file');
+HandleFileUploads.prototype.initForm = function() {
+    const uploadZone = this.uploadInput.closest('.upload-zone');
+
+    this.form = uploadZone.closest('form');
+    this.uploadTextPlaceholder = uploadZone.querySelector('.upload-zone-placeholder');
+    this.img = uploadZone.querySelector('.placeholder-img');
+    this.deleteFileEl = this.form.querySelector('.delete-file');
 };
 
 HandleFileUploads.prototype.initEvents = function() {
-    const lthis = this;
-    const isAdvancedUpload = function () {
-        const div = document.createElement('div');
+    const lthis = this,
+        isAdvancedUpload = function () {
+            const div = document.createElement('div');
 
-        return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
-    }();
+            return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+        }();
 
     if (isAdvancedUpload) {
-        ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach(
-            eventType => lthis.uploadInputEl.addEventListener(eventType, function (evt) {
-                evt.preventDefault();
-                evt.stopPropagation();
-            })
-        );
-
-        ['dragover', 'dragenter'].forEach(
-            eventType => lthis.uploadInputEl.addEventListener(eventType, function () {
-                lthis.uploadInputEl.classList.add('is-dragover');
-            })
-        );
-
-        ['dragleave', 'dragend', 'drop'].forEach(
-            eventType => lthis.uploadInputEl.addEventListener(eventType, function () {
-                lthis.uploadInputEl.classList.remove('is-dragover');
-            })
-        );
-
-        $(this.uploadInputEl).on('drop', function (evt) {
+        // need jquery event.originalEvent
+        $(this.uploadInput).off('drop').on('drop', evt => {
             if (!!evt.originalEvent) {
                 lthis.files = evt.originalEvent.dataTransfer.files;
                 const hiddenIsDeletePictureInput = document.querySelector('.is-delete-picture');
@@ -56,7 +42,7 @@ HandleFileUploads.prototype.initEvents = function() {
                     hiddenIsDeletePictureInput.remove();
                 }
                 lthis.displayThumbs();
-                lthis.uploadInputEl.closest('form').addEventListener(
+                lthis.form.addEventListener(
                     'submit',
                     lthis.ajaxSendFileSubmitHandler.bind(lthis)
                 );
@@ -64,7 +50,7 @@ HandleFileUploads.prototype.initEvents = function() {
         });
     }
 
-    this.uploadInputEl.addEventListener('change', function (evt) {
+    this.uploadInput.addEventListener('change', evt => {
         lthis.files = evt.target.files;
         const hiddenIsDeletePictureInput = document.querySelector('.is-delete-picture');
 
@@ -79,28 +65,26 @@ HandleFileUploads.prototype.initEvents = function() {
 
 HandleFileUploads.prototype.displayThumbs = function() {
     if (!this.files) {
-        this.uploadZonePlaceholderEL.classList.remove('hidden');
-        this.uploadZonePlaceholderEL.textContent = 'L’image n’a pas pu être téléchargée.';
+        this.uploadTextPlaceholder.classList.remove('hidden');
+        this.uploadTextPlaceholder.textContent = 'L’image n’a pas pu être téléchargée.';
     }
 
     const file = this.files[0];
 
     if (!imageType.test(file.type)) {
-        this.uploadZonePlaceholderEL.classList.remove('hidden');
-        this.uploadZonePlaceholderEL.textContent = 'Le format du fichier n’est pas valide.';
+        this.uploadTextPlaceholder.classList.remove('hidden');
+        this.uploadTextPlaceholder.textContent = 'Le format du fichier n’est pas valide.';
     }
 
     const reader = new FileReader();
 
-    this.imgEl.classList.add('obj');
-    this.imgEl.file = file;
+    this.img.classList.add('obj');
+    this.img.file = file;
     reader.onload = (function(aImg) {
-        return function(evt) {
-            aImg.setAttribute('src', evt.target.result);
-        };
-    })(this.imgEl);
+        return evt => aImg.src = evt.target.result;
+    })(this.img);
     reader.readAsDataURL(file);
-    this.uploadZonePlaceholderEL.classList.add('hidden');
+    this.uploadTextPlaceholder.classList.add('hidden');
 };
 
 HandleFileUploads.prototype.ajaxSendFileSubmitHandler = function(evt) {
@@ -124,7 +108,7 @@ HandleFileUploads.prototype.ajaxSendFileSubmitHandler = function(evt) {
         if (!imageType.test(file.type)) {
             return false;
         }
-        ajaxData.append(this.uploadInputEl.name, file);
+        ajaxData.append(this.uploadInput.name, file);
     }
 
     fetch(formAction, {
@@ -163,18 +147,26 @@ HandleFileUploads.prototype.onDeleteFile = function() {
             value : 'true',
         });
 
-         lthis.uploadInputEl.after(hiddenIsDeletePictureInput);
-         lthis.uploadInputEl.value = '';
-         lthis.uploadInputEl.closest('form').removeEventListener(
+         lthis.uploadInput.after(hiddenIsDeletePictureInput);
+         lthis.uploadInput.value = '';
+         lthis.form.removeEventListener(
              'submit',
-             lthis.ajaxSendFileSubmitHandler
+             lthis.ajaxSendFileSubmitHandler.bind(lthis)
          );
 
-         lthis.imgEl.classList.remove('obj');
-         lthis.imgEl.src = '/media/layout/icons/photo.svg';
+         lthis.img.classList.remove('obj');
+         lthis.img.src = '/media/layout/icons/photo.svg';
 
-         lthis.uploadZonePlaceholderEL.classList.remove('hidden');
-         lthis.uploadZonePlaceholderEL.textContent = 'Ajoutez une photo';
+         lthis.uploadTextPlaceholder.classList.remove('hidden');
+         lthis.uploadTextPlaceholder.textContent = 'Ajoutez une photo';
     });
+};
+
+HandleFileUploads.prototype.preSetFile = function(src) {
+    if (src && this.uploadInput) {
+        this.uploadTextPlaceholder.classList.add('hidden');
+        this.img.classList.add('obj');
+        this.img.src = src;
+    }
 };
 

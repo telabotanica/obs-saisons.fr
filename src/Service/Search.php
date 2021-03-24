@@ -33,4 +33,23 @@ class Search
 
         return $foundStations;
     }
+
+    public function stationsSearchRawResults(string $searchTerm)
+    {
+        // flatten search results
+        $foundStations = array_merge(...array_values($this->stationsSearch($searchTerm)));
+        //de-duplicate stations array
+        $stations = [];
+        $ids = [];
+        foreach ($foundStations as $station) {
+            $id = $station->getId();
+
+            if (!isset($ids[$id])) {
+                $ids[$id] = $id;
+                $stations[] = $station;
+            }
+        }
+
+        return $stations;
+    }
 }

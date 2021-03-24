@@ -5,6 +5,7 @@ import {StationLocation} from "../stations-observations/locate-station";
 import {closeOverlayOnClickOut} from "./overlay-close";
 import {generateComparableFormatedDate} from "../date-format";
 import {onDeleteButton} from "../handle-delete-button";
+import {parseDatasetValToBool} from "../../lib/parse-to-bool";
 
 export const stationLocation = new StationLocation();
 
@@ -13,7 +14,7 @@ const onOpenOverlay = function() {
 
     if(openOverlayButtons) {
         openOverlayButtons.forEach(openOverlayButton => {
-            openOverlayButton.addEventListener('click', evt => {
+            $(openOverlayButton).off('click').on('click', evt => {
                 evt.preventDefault();
                 evt.stopPropagation();
 
@@ -28,26 +29,35 @@ const onOpenOverlay = function() {
                     closeOverlayOnClickOut(overlay);
                     document.body.style.overflow = 'hidden';
                     if (form) {
-                        dataAttrs = initFormOverlay(overlay, form, openOverlayButton, dataAttrs);
+                        form.reset();
+
+                        const fileUploadHandler = new HandleFileUploads(overlay.querySelector('.upload-input'));
+
+                        fileUploadHandler.init();
+
+                        if (openOverlayButton.classList.contains('edit')) {
+                            dataAttrs = setEditOverlayForm(overlay, dataAttrs);
+                        }
+
                         switch (dataAttrs.open) {
                             case 'admin-profile':
                             case 'profile':
-                                editProfilePreSetFields(overlay, dataAttrs);
+                                editProfilePreSetFields(overlay, dataAttrs, fileUploadHandler);
                                 break;
                             case 'station':
                                 stationLocation.init();
-                                editStationPreSetFields(overlay, dataAttrs);
+                                editStationPreSetFields(overlay, dataAttrs, fileUploadHandler);
                                 break;
                             case 'observation':
                                 openDetailsField();
                                 onChangeSetIndividual();
                                 onChangeObsEvent();
                                 onChangeObsDate();
-                                observationOvelayManageIndividualAndEvents(overlay, dataAttrs);
-                                editObservationPreSetFields(overlay, dataAttrs);
+                                observationOverlayManageIndividualAndEvents(overlay, dataAttrs);
+                                editObservationPreSetFields(overlay, dataAttrs, fileUploadHandler);
                                 break;
                             case 'individual':
-                                individualOvelayManageSpecies(dataAttrs);
+                                individualOverlayManageSpecies(dataAttrs);
                                 editIndividualPreSetFields(overlay, dataAttrs);
                                 break;
                             default:
@@ -66,25 +76,6 @@ const onOpenOverlay = function() {
 /* *************** *
  *  FORM OVERLAY   *
  * *************** */
-
-const initFormOverlay = function(
-    overlay,
-    form,
-    openOverlayButton,
-    dataAttrs
-) {
-    form.reset();
-    if(document.querySelector('.upload-zone .upload-input')) {
-        const fileUploadHandler = new HandleFileUploads();
-
-        fileUploadHandler.init();
-    }
-    if (openOverlayButton.classList.contains('edit')) {
-        return setEditOverlayForm(overlay, dataAttrs);
-    }
-
-    return dataAttrs;
-};
 
 const setEditOverlayForm = function(
     overlay,
@@ -144,6 +135,7 @@ const getDataAttrValuesArray = function (dataAttrValue) {
         return dataAttrValue.split(',');
     }
 };
+
 const updateSelectOptions = function(
     selectEl,
     itemsToMatch,
@@ -163,6 +155,7 @@ const updateSelectOptions = function(
         option.removeAttribute('disabled');
     });
 
+
     if(sortOptions) {
         selectEl.querySelectorAll('.' + selectName + '-option').forEach(element => {
             if (itemsToMatch.includes(element.value.toString())) {
@@ -177,16 +170,6 @@ const updateSelectOptions = function(
         if(1 === itemsToMatch.length) {
             selectEl.value = itemsToMatch[0];
         }
-    }
-};
-
-const displayThumbs = function (overlay, src) {
-    if (src) {
-        const placeholderImg = overlay.querySelector('.placeholder-img');
-
-        overlay.querySelector('.upload-zone-placeholder').classList.add('hidden');
-        placeholderImg.classList.add('obj');
-        placeholderImg.src = src;
     }
 };
 
@@ -211,12 +194,13 @@ const selectOption = function (element) {
 
 const editProfilePreSetFields = function(
     overlay,
-    dataAttrs
+    dataAttrs,
+    fileUploadHandler
 ) {
     const user = JSON.parse(dataAttrs.user);
 
     if (overlay.classList.contains('edit') && !!user.avatar) {
-        displayThumbs(overlay, user.avatar);
+        fileUploadHandler.preSetFile(user.avatar);
     }
 };
 
@@ -226,7 +210,8 @@ const editProfilePreSetFields = function(
 
 const editStationPreSetFields = function(
     overlay,
-    dataAttrs
+    dataAttrs,
+    fileUploadHandler
 ) {
     if (overlay.classList.contains('edit')) {
         const stationData = JSON.parse(dataAttrs.station);
@@ -249,16 +234,16 @@ const editStationPreSetFields = function(
                         break;
                     case 'habitat':
                         const habitatOption = Array.from(field.childNodes).find(
-                            option => option.value = stationData.habitat
+                            option => (option.value).toLowerCase() === (stationData.habitat).toLowerCase()
                         );
 
                         habitatOption.setAttribute('selected', 'selected');
                         break;
                     case 'isPrivate':
-                        field.checked = stationData.isPrivate;
+                        field.checked = parseDatasetValToBool(stationData.isPrivate);
                         break;
                     case 'headerImage':
-                        displayThumbs(overlay, stationData.headerImage);
+                        fileUploadHandler.preSetFile(stationData.headerImage);
                         break;
                     default:
                         break;
@@ -275,7 +260,7 @@ const editStationPreSetFields = function(
 const openDetailsField = function() {
     const openDetailsButton = document.querySelector('.open-details-button');
 
-    openDetailsButton.addEventListener('click', evt => {
+    $(openDetailsButton).off('click').on('click', evt => {
         evt.preventDefault();
 
         const openDetailsButtonContainer = openDetailsButton.closest('.button-form-container');
@@ -291,7 +276,7 @@ const onChangeSetIndividual = function() {
     const individualEl = document.getElementById('observation_individual'),
         eventEl = document.getElementById('observation_event');
 
-    individualEl.addEventListener('change', () => {
+    $(individualEl).off('change').on('change', () => {
         const selectedIndividual = individualEl.options[individualEl.selectedIndex];
 
         Array.from(eventEl.getElementsByClassName('event-option')).forEach(
@@ -346,12 +331,19 @@ const onChangeSetIndividual = function() {
 
 const updateSpeciesPageUrl = function(selectedIndividual) {
     const link = document.querySelector('.saisie-aide-txt a.green-link'),
-        url = link.getAttribute('href'),
-        speciesInUrl = url.substring(url.lastIndexOf('/')+1),
-        species = selectedIndividual.dataset.speciesName;
+        url = link.href,
+        speciesInUrl = url.substring(url.lastIndexOf('/')+1);
+    let species = selectedIndividual.dataset.speciesName;
+
+    if((selectedIndividual.dataset.isTreeGroup)) {
+        species = species.split(' ')[0];
+    }
+    if(!/%[A-Z0-9]{2}/.test(species)) {
+        species = encodeURI(species);
+    }
 
     if (speciesInUrl !== species) {
-        link.setAttribute('href', url.replace(speciesInUrl,species));
+        link.href = url.replace(speciesInUrl, species);
     }
 };
 
@@ -399,7 +391,7 @@ const onChangeObsEvent = function() {
     const eventEl = document.getElementById('observation_event'),
         observationDateEl = document.getElementById('observation_date');
 
-    eventEl.addEventListener('change', () => {
+    $(eventEl).off('change').on('change', () => {
         const isValidEvent = !!eventEl.value;
 
         updateHelpInfos(isValidEvent);
@@ -442,7 +434,7 @@ const onChangeObsDate = function() {
     let message;
 
     if(!!observationDate && !!eventEl) {
-        observationDate.addEventListener('blur', function () {
+        $(observationDate).off('blur').on('blur', function () {
             // front validation for safari input type date to type text
             const dateValue = observationDate.value;
 
@@ -506,7 +498,7 @@ const checkAberrationsObsDays = function() {
     formWarningEl.classList.toggle('hidden',!message);
 };
 
-export const observationOvelayManageIndividualAndEvents = function(
+export const observationOverlayManageIndividualAndEvents = function(
     overlay,
     dataAttrs
 ) {
@@ -524,7 +516,7 @@ export const observationOvelayManageIndividualAndEvents = function(
     }
 };
 
-const editObservationPreSetFields = function(overlay, dataAttrs) {
+const editObservationPreSetFields = function(overlay, dataAttrs, fileUploadHandler) {
     if (overlay.classList.contains('edit')) {
         const observation = JSON.parse(dataAttrs.observation),
             individualEl = document.getElementById('observation_individual');
@@ -561,7 +553,7 @@ const editObservationPreSetFields = function(overlay, dataAttrs) {
                         field.checked = observation.isMissing;
                         break;
                     case 'picture':
-                        displayThumbs(overlay, observation.picture);
+                        fileUploadHandler.preSetFile(observation.picture);
                         break;
                     default:
                         break;
@@ -575,12 +567,12 @@ const editObservationPreSetFields = function(overlay, dataAttrs) {
  *  INDIVIDUAL   *
  * ************* */
 
-export const individualOvelayManageSpecies = function(dataAttrs) {
+export const individualOverlayManageSpecies = function(dataAttrs) {
     const speciesEl = document.getElementById('individual_species'),
         helpEl = document.getElementById('individual_species_help'),
         species = dataAttrs.species || '',
         availableSpecies = getDataAttrValuesArray(species.toString()) || null,
-        showAll = dataAttrs.allSpecies;
+        showAll = parseDatasetValToBool(dataAttrs.allSpecies);
      let speciesNameText;
 
     // toggle marker and help text on already recorded species in station
@@ -658,8 +650,11 @@ const onObsInfo = function(
 
 const observationListCardHtmlGenerate = function(dataAttrs) {
     const observation = JSON.parse(dataAttrs.observation),
-        temp = document.createElement('div');
+        listCardItem = document.createElement('div');
     let editButtons = '';
+
+    listCardItem.classList.add('list-cards-item', 'obs');
+    listCardItem.dataset.id = observation.id;
 
     if(dataAttrs?.showEdit) {
         editButtons =
@@ -676,17 +671,15 @@ const observationListCardHtmlGenerate = function(dataAttrs) {
             '</div>'
         ;
     }
-    temp.innerHTML = '<div class="list-cards-item obs" data-id="'+observation.id+'">'+
-            '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
+    listCardItem.innerHTML = '<a href="'+dataAttrs.pictureUrl+'" class="list-card-img" style="background-image:url('+dataAttrs.pictureUrl+')" target="_blank"></a>'+
             '<div class="item-name-block">'+
                 '<div class="item-name">'+observation.user.displayName+'</div>'+
                 '<div class="item-name stage">'+dataAttrs.stage+'</div>'+
                 '<div class="item-heading-dropdown">'+dataAttrs.date+'</div>'+
             '</div>'+
-            editButtons +
-        '</div>';
+            editButtons;
 
-    return temp;
+    return listCardItem;
 };
 
 /* *********** *

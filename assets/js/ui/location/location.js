@@ -2,7 +2,7 @@ import L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
 //
-import {createMap, DEFAULT_POSITION, DEFAULT_ZOOM} from "../create-map";
+import {createMap, createMarker, DEFAULT_POSITION, DEFAULT_ZOOM} from "../create-map";
 export const DEFAULT_CITY_ZOOM = 12;
 const DEFAULT_MAP_ID_ATTR = 'map';
 
@@ -10,13 +10,14 @@ const DEFAULT_MAP_ID_ATTR = 'map';
 
 export function Location(mapIdAttr = DEFAULT_MAP_ID_ATTR) {
     this.mapIdAttr = mapIdAttr;
+    this.mapContainer = document.getElementById(mapIdAttr+'-container');
     this.setUpdateMapElement();
     this.map = {};
     this.setDefaultMapData();
 }
 
 Location.prototype.setUpdateMapElement = function() {
-    this.$mapEl = $('#'+this.mapIdAttr);
+    this.mapEl = document.getElementById(this.mapIdAttr);
 };
 
 Location.prototype.setDefaultMapData = function () {
@@ -56,8 +57,7 @@ Location.prototype.formatCoordinates = function (coordinates) {
 };
 
 Location.prototype.triggerLocationEvent = function () {
-    const locationEvent = $.Event('location');
-    this.$mapEl.trigger(locationEvent);
+    this.mapContainer.dispatchEvent(new CustomEvent('location'));
 };
 
 Location.prototype.setMapPosition = function () {
@@ -71,12 +71,16 @@ Location.prototype.setMapPosition = function () {
 
 Location.prototype.toggleMap = function () {
     const lthis = this;
+    $('#map-buttons').off('click').on('click', function (evt) {
+        evt.preventDefault();
 
-    $('#map-buttons').off('click').on('click', function (event) {
-        event.preventDefault();
-        $(this).find('span').toggleClass('hidden');
-        lthis.$mapEl.toggleClass('hidden');
-        if (!lthis.$mapEl.hasClass('hidden')) {
+        const isOpenMapRequired = lthis.mapEl.classList.contains('hidden');
+
+        // if isOpenMapRequired: will hide "open" label on button, and show "close" label
+        lthis.toggleMapButtonLabel(isOpenMapRequired);
+
+        lthis.mapEl.classList.toggle('hidden', !isOpenMapRequired);
+        if (isOpenMapRequired) {
             lthis.initMap();
         } else {
             lthis.closeMap();
@@ -87,43 +91,55 @@ Location.prototype.toggleMap = function () {
 Location.prototype.initMap = function() {
     this.map = this.createLocationMap(this.coordinates,this.zoom);
     // interactions with map
-    this.map.on('click', function(event) {
-        this.handleNewLocation(event.latlng);
+    this.map.addEventListener('click', function(evt) {
+        this.handleNewLocation(evt.latlng);
     }.bind(this));
 
-    this.map.marker.on('dragend', function() {
+    this.map.marker.addEventListener('dragend', function() {
         this.handleNewLocation(this.map.marker.getLatLng());
     }.bind(this));
 };
 
 Location.prototype.closeMap = function () {
     // reset map
-    this.map = L.DomUtil.get('map');
+    this.map = L.DomUtil.get(this.mapIdAttr);
     if (this.map != null) {
         this.map._leaflet_id = null;
     }
-    this.$mapEl.remove();
-    $('#open-map').removeClass('hidden');
-    $('#close-map').addClass('hidden');
-    $('.map-container').append('<div id="'+this.mapIdAttr+'" class="hidden"></div>');
+    // shows 'open' label on map control button
+    this.toggleMapButtonLabel();
+    this.mapContainer.innerHTML = '<div id="'+this.mapIdAttr+'" class="hidden"></div>';
     this.setUpdateMapElement();
+};
+
+Location.prototype.toggleMapButtonLabel = function(isHideOpenButton = false) {
+    document.getElementById('open-map').classList.toggle('hidden',isHideOpenButton);
+    document.getElementById('close-map').classList.toggle('hidden',!isHideOpenButton);
 };
 
 Location.prototype.createLocationMap = function(
     coordinates = DEFAULT_POSITION,
     zoom = DEFAULT_ZOOM,
-    elementIdAttr = DEFAULT_MAP_ID_ATTR,
+    elementIdAttr = this.mapIdAttr,
     hasZoomControl = true,
     isDraggable = true
 ) {
-    return createMap(
+    const map = createMap(
         elementIdAttr,
         ...Object.values(coordinates),
         zoom,
-        hasZoomControl,
+        hasZoomControl
+    ),
+    marker = createMarker(
+        coordinates,
         isDraggable,
         true
     );
+
+    map.addLayer(marker);
+    map.marker = marker;
+
+    return map;
 };
 
 // Remove the map

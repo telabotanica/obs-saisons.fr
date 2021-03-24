@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block top_content %}
+	{% include 'components/stations-list-hero-header.html.twig' %}
+{% endblock %}
+{% set page_container_classes = 'narrow' %}
 {% block main_content %}
-	{% include 'layout/header.html.twig' with ({
-		'title': title|default('Stations d’observation'),
-		'subtitle': 'Voici les stations d’observations dans lesquelles vous pouvez saisir vos observations.<br>Cherchez d’abord si vous trouvez une station publique près de chez vous dans laquelle vous pourrez contribuer, sinon créez une station (en bas de la liste) ou accéder à vos stations (dans l’onglet “Mes stations”).'
-	}) %}
 	{% include 'components/actionbar.html.twig' with {
 		actionbar: {
 			'classes': 'search',
@@ -31,7 +31,6 @@
                     station: card.station,
                     observations: card.observations,
                     contributorsCount: card.contributorsCount
-
                 } %}
             {% endfor %}
             <div class="card add">

@@ -20,6 +20,7 @@ global.$ = global.jQuery = $;
  * ******* */
 import './lib/html-entities-decode';
 import './ui/error-display';
+import './ui/notice-cookies';
 /* ********** *
  * COMPONENTS *
  * ********** */
@@ -50,6 +51,7 @@ import './ui/calendar/calendar-hide-legend';
 import './ui/stations-observations/station-search-form-submit';
 import './ui/stations-observations/event-post-dates-validate';
 import './ui/stations-observations/station-page-header-map';
+import './ui/stations-observations/stations-list-page-header-map';
 /* ******* *
  * OVERLAY *
  * ******* */

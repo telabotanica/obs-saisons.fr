@@ -35,34 +35,34 @@ php bin/console doctrine:fixtures:load
 ### Set All 
 (See `Migrate all static data` above)
 ```bash
-php bin/console odsstaticdata:migrate
+php bin/console ods:bootstrap:all-static-data
 ```
 ### Set Each
 To set each table apart, make sure previous table is already set :
 
 1 `TypeSpecies`
 ```bash
-php bin/console typespecies:import
+php bin/console ods:import:typespecies
 ```
 
 2 `Species`
 ```bash
-php bin/console species:import
+php bin/console ods:import:species
 ```
 
 3 `Events`
 ```bash
-php bin/console events:import
+php bin/console ods:import:events
 ```
 
 4 `EventSpecies`
 - set event and species
 ```bash
-php bin/console eventspecies:generate
+php bin/console ods:generate:eventspecies
 ```
 - set events periods and aberration alert periods
 ```bash
-php bin/console periods:import
+php bin/console ods:import:periods
 ```
 
 **`periods:import` Choice Question :**\

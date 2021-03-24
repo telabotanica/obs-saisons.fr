@@ -22,7 +22,7 @@ export function createMap(
     zoom = DEFAULT_ZOOM,
     hasZoomControl = true,
     isDraggable = true,
-    hasUniqueMarker = false,
+    hasMarker = false,
 ) {
     const map = L.map(elementIdAttr, {zoomControl: hasZoomControl}).setView([lat, lng], zoom);
     map.markers = [];
@@ -35,27 +35,26 @@ export function createMap(
 
     map.addLayer(new L.FeatureGroup());
 
-    const options = {draggable: isDraggable};
+    if (hasMarker) {
+        const marker = createMarker({'lat': lat, 'lng': lng});
 
-    if (hasUniqueMarker) {
-        options.icon = new MARKER_ICON();
-    }
-
-    let marker = new L.Marker(
-        {
-            'lat': lat,
-            'lng': lng
-        },
-        options
-    );
-
-    map.addLayer(marker);
-
-    if (hasUniqueMarker) {
-        map.marker = marker
-    } else {
+        map.addLayer(marker);
         map.markers.push(marker);
     }
 
     return map;
 }
+
+export const createMarker = (
+    coordinates = DEFAULT_POSITION,
+    isDraggable = true,
+    hasIcon = false,
+) => {
+    const options = {draggable: isDraggable};
+
+    if(hasIcon) {
+        options.icon = new MARKER_ICON();
+    }
+
+    return new L.Marker(coordinates, options);
+};

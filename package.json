@@ -23,6 +23,7 @@
         "jquery": "^3.5.1",
         "leaflet-draw": "^1.0.4",
         "leaflet.markercluster": "^1.4.1",
+        "orejime": "^2.0.1",
         "places.js": "^1.19.0",
         "plotly.js-dist": "^1.55.2"
     }

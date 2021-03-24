@@ -66,6 +66,15 @@
         }
     }
 
+    &.stations-card-popup {
+        min-height: auto;
+        box-shadow: none;
+
+        .card-header{
+            height: 100px;
+        }
+    }
+
     .edit {
         position: absolute;
         @include display-flex;
@@ -115,20 +124,11 @@
 /*     card header      */
 /************************/
 .card-header {
-    display: block;
+    @include display-flex;
+    @include justify-content-flex-end;
+    @include align-items-flex-start;
     height: 180px;
     @include background-image("default", 50% 50%);
-
-    @include media(sm) {
-        @include display-flex;
-        @include justify-content-flex-end;
-        @include align-items-flex-start;
-    }
-
-    .card-header-icons {
-        @include display-flex;
-        @include flex-direction-row;
-    }
 }
 
 .private-icon {
@@ -136,10 +136,15 @@
     @extend %justify-content-center;
     @extend %align-items-center;
     @include square-block(40px);
-    @include gap(margin, (top, right), 10px);
+    margin-top: 10px;
+    margin-right: 20px;
     border-radius: 50px;
     @include background-image(null, 50% 50%, 16px);
     background-color: rgba($grey131117, 0.8);
+
+    @include media(md) {
+        margin-right: 10px;
+    }
 }
 
 /**************************/

@@ -51,13 +51,12 @@
 }
 
 
-
-.input-search-container button {
+.ods-places-search-icon,
+.ods-places-close {
   overflow: visible;
   position: relative;
   border: 0;
   padding: 0;
-  @include pointer;
   height: 45px;
   width: 60px;
   border-radius: 0 3px 3px 0;
@@ -83,7 +82,7 @@
   }
 }
 
-.ods-places-launch {
+.ods-places-search-icon {
   @include background-image(image-url('search-green'), 15px 50%, 20px);
   background-color: $green725760;
 
@@ -95,6 +94,7 @@
 .ods-places-close {
   @include background-image(image-url('cross-white'), 7px 50%, 35px);
   background-color: $grey131117;
+  @include pointer;
 
   &:before {
     border-color: transparent $grey131117 transparent;

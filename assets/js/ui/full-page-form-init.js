@@ -6,18 +6,10 @@ const initFullPageFormFileUploads = formContainer => {
     const uploadInput = formContainer.querySelector('.upload-input');
 
     if (uploadInput) {
-        const fileUploadHandler = new HandleFileUploads(),
-            image = uploadInput.closest('.form-col').dataset.image;
+        const fileUploadHandler = new HandleFileUploads(uploadInput);
 
         fileUploadHandler.init();
-
-        if (!!image) {
-            const placeholderImgEl = formContainer.querySelector('.placeholder-img');
-
-            formContainer.querySelector('.upload-zone-placeholder').classList.add('hidden');
-            placeholderImgEl.classList.add('obj');
-            placeholderImgEl.src = image;
-        }
+        fileUploadHandler.preSetFile(uploadInput.closest('.form-col').dataset.image);
     }
 };
 

@@ -24,6 +24,7 @@
     background-color: #fff;
     box-shadow: 0 1px 3px 0 rgba(#000, 0.1);
     overflow: hidden;
+    max-height: 250px;
 
     @include media(xs,sm) {
         &:nth-child(odd) {
@@ -57,6 +58,7 @@
     @extend %list-cards-height;
     background-size: cover;
     background-position: center;
+    max-height: inherit;
 
     @include media(sm) {
         width: 140px;

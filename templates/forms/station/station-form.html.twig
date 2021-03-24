@@ -88,7 +88,7 @@
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
-                'pattern':'(100[1-9]|10[1-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3}|[1-8][0-9]{4}|9[0-8][0-9]{3}|990[0-9]{2}|991[0-2][0-9]|9913[0-8])|(2(A001|B36[4-6]|(A|B)(00[2-9]|0[1-8][0-9]|09[0-9]|[12][0-9]{2}|3[0-5][0-9]|36[0-3])))',
+                'pattern':'[0-9]{5}',
                 'data-name': 'inseeCode'
             },
         }) }}
@@ -113,8 +113,9 @@
                     'class': 'ods-checkbox-input',
                     'data-name': 'isPrivate'
                 },
-                'help': 'Si vous souhaitez signaler que cette station est personnelle,
-            vous pouvez cocher cette case.',
+                'help': 'Une station personnelle est une station pour laquelle vous êtes la seule personne à pouvoir
+                contribuer. Néanmoins, les observations restent visibles par tous et les données associées peuvent
+                être téléchargées.',
                 'help_attr': {'class': 'field-help-text'}
             }) }}
         </div>
