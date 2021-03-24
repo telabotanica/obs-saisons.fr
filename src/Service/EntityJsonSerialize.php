@@ -28,10 +28,33 @@ class EntityJsonSerialize
                 'createdAt',
                 'updatedAt',
                 'deletedAt',
+                'legacyId',
+                'department',
             ],
         ];
 
         return $serializer->serialize($station, 'json', $context);
+    }
+
+    public function getJsonSerializedStationForListPageMap(array $stations)
+    {
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+
+        $context = [
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'user',
+                'description',
+                'altitude',
+                'inseeCode',
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+                'legacyId',
+                'department',
+            ],
+        ];
+
+        return $serializer->serialize($stations, 'json', $context);
     }
 
     public function getJsonSerializedEditIndividual(Individual $individual)

@@ -12,6 +12,22 @@
 
         background-color: #e7e2dc;
     }
+
+    &.large-map {
+        @include media(lg) {
+            min-height: 600px;
+            padding-left: 8%;
+        }
+
+        .hero-header-content {
+            min-height: auto;
+            min-width: auto;
+
+            @include media(lg) {
+                padding-left: 0;
+            }
+        }
+    }
 }
 
 .hero-header-media-part {
@@ -27,11 +43,6 @@
         z-index: 0;
     }
 
-    &.map {
-        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba($grey281146, 0.3)), to(rgba($grey281146, 0.3))), image-url('map', 'png');
-        background-image: linear-gradient(180deg, rgba($grey281146, 0.3), rgba($grey281146, 0.3)), image-url('map', 'png');
-    }
-
     @include media(sm) {
         height: 280px;
     }
@@ -39,6 +50,17 @@
     @include media(lg) {
         width: $third-pc * 1%;
         height: auto;
+    }
+}
+
+.hero-header.large-map .hero-header-media-part {
+    background-image: none;
+    height: 600px;
+    min-width: 100%;
+
+    @include media(lg) {
+        width: 50%;
+        min-width: 50%;
     }
 }
 
@@ -137,35 +159,38 @@
 
     color: $brown;
     font-size: 14px;
-
-    /*&.map {
-        padding-right: 20px;
-
-        @include background-image(image-url('right-arrow-orange'), 98% 51%, 6px);
-    }*/
 }
 
 .privacy-status {
     @extend %hide;
+    @extend .stations-map-legend;
+    background-color: rgba($grey281146, 0.2);
 
     @include media(lg) {
-        @include position(absolute, 0, 0);
-
         display: block;
-
-        @include gap(margin, (top, right), 20px);
-        padding: 3px 10px;
-        border-radius: 4px;
-        background-color: rgba($grey281146, 0.2);
-        color: $grey131117;
-        font-size: 12px;
     }
 }
 
+.stations-map-legend {
+    @include position(absolute, 0, 0);
+    display: block;
+    @include gap(margin, (top, right), 20px);
+    padding: 3px 10px;
+    border-radius: 4px;
+    color: $grey131117;
+    font-size: 12px;
+    background-color: $grey262075;
+    z-index: 1;
+}
+
 .hero-header-button {
-    @extend .privacy-status;
+    z-index: 1;
+
     @include media(lg) {
-        @include position(absolute, auto, 0, 0);
+        @include position(absolute, auto, 0, 0, auto, 1);
         @include gap(margin, (bottom, right), 20px);
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 12px;
     }
 }

@@ -5,17 +5,20 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;
 use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EntityJsonSerialize;
 use App\Service\Search;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -76,8 +79,9 @@ class StationsController extends AbstractController
         $lastPage = ceil($stationRepository->countStations($user) / $limit);
 
         return $this->render('pages/stations.html.twig', [
-            'title' => 'Mes stations d’observation',
+            'headerMapLegend' => 'Mes stations',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
+            'dataStationsQuery' => 'user',
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)
                 ->setActiveTrail()
                 ->getBreadcrumbs('stations'),
@@ -104,11 +108,43 @@ class StationsController extends AbstractController
         }
 
         return $this->render('pages/stations-search.html.twig', [
+            'headerMapLegend' => 'Resultats de ma recherche',
             'stationsArray' => $searchService->stationsSearch($searchTerm),
             'search' => $searchTerm,
+            'dataStationsQuery' => json_encode(['search' => $searchTerm]),
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail()
                 ->getBreadcrumbs('stations'),
         ]);
+    }
+
+    /**
+     * @Route("/stations/mapInfo", name="stations_map_info", methods={"GET"})
+     */
+    public function stationsMapInfo(
+        Request $request,
+        EntityManagerInterface $manager,
+        Search $searchService,
+        EntityJsonSerialize $entityJsonSerialize
+    ) {
+        $stationRepository = $manager->getRepository(Station::class);
+        $stations = null;
+
+        if ($request->query->has('search')) {
+            $stations = $searchService->stationsSearchRawResults($request->query->get('search'));
+        } elseif ($request->query->has('user')) {
+            $user = $this->getUser();
+            if ($user) {
+                $stations = $stationRepository->findBy(['user' => $user]);
+            }
+        } else {
+            $stations = $stationRepository->findAll();
+        }
+
+        return new Response(
+            $entityJsonSerialize->getJsonSerializedStationForListPageMap($stations),
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+        );
     }
 
     /**

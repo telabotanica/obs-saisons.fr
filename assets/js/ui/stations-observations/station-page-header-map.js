@@ -3,7 +3,7 @@ import {Location, DEFAULT_CITY_ZOOM} from "../location/location";
 
 domready(() => {
     const stationHeaderMap = new Location(),
-        headerMap = document.getElementById('header-map');
+        headerMap = document.getElementById('station-single-header-map');
 
     if (headerMap && headerMap.classList.contains('show-map')) {
         stationHeaderMap.createLocationMap(
@@ -12,7 +12,7 @@ domready(() => {
                 lng: headerMap.dataset.longitude,
             },
             DEFAULT_CITY_ZOOM,
-            'header-map',
+            'station-single-header-map',
             false,
             false,
         );

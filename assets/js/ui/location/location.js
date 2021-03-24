@@ -2,7 +2,7 @@ import L from 'leaflet';
 import 'leaflet-draw';
 import 'leaflet.markercluster';
 //
-import {createMap, DEFAULT_POSITION, DEFAULT_ZOOM} from "../create-map";
+import {createMap, createMarker, DEFAULT_POSITION, DEFAULT_ZOOM} from "../create-map";
 export const DEFAULT_CITY_ZOOM = 12;
 const DEFAULT_MAP_ID_ATTR = 'map';
 
@@ -124,14 +124,22 @@ Location.prototype.createLocationMap = function(
     hasZoomControl = true,
     isDraggable = true
 ) {
-    return createMap(
+    const map = createMap(
         elementIdAttr,
         ...Object.values(coordinates),
         zoom,
-        hasZoomControl,
+        hasZoomControl
+    ),
+    marker = createMarker(
+        coordinates,
         isDraggable,
         true
     );
+
+    map.addLayer(marker);
+    map.marker = marker;
+
+    return map;
 };
 
 // Remove the map
