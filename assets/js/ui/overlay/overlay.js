@@ -1,0 +1,58 @@
+import {onDeleteButton} from "../handle-delete-button";
+
+export function Overlay(openOverlayButton) {
+    this.openOverlayButton = openOverlayButton;
+    this.dataAttrs = this.openOverlayButton.dataset;
+    this.overlay = document.querySelector('.overlay.' + this.dataAttrs.open);
+    this.form = this.overlay.querySelector('form');
+}
+
+// run specific if needed
+Overlay.prototype.init = function() {
+    this.overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    this.closeOverlayOnClickOut();
+    this.closeOverlayOnButtonClick();
+    this.closeOverlayOnEscapeKey();
+    //this.initOverlaySpecificBehaviour();
+    onDeleteButton(this.dataAttrs.open);
+};
+
+// run specif if needed
+Overlay.prototype.closeOverlay = function() {
+    document.body.style.overflow = 'auto';
+    this.overlay.classList.add('hidden');
+    //this.closeOverlaySpecificBehaviour();
+};
+
+Overlay.prototype.closeOverlayOnButtonClick = function() {
+    const lthis = this;
+
+    this.overlay.querySelector('.bt-cancel').addEventListener('click', evt => {
+        evt.preventDefault();
+
+        lthis.closeOverlay();
+    });
+};
+
+// run specific if needed
+Overlay.prototype.closeOverlayOnClickOut = function() {
+    const lthis = this;
+    this.overlay.addEventListener('click', function(evt) {
+        if(!evt.target.closest('.saisie-container')) {
+            lthis.closeOverlay();
+        }
+    });
+};
+
+// run specific if needed
+Overlay.prototype.closeOverlayOnEscapeKey = function() {
+    const lthis = this;
+    document.body.addEventListener('keydown', function(evt) {
+        const ESC_KEY_STRING = /^Esc(ape)?/;
+
+        if(27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+            lthis.closeOverlay();
+        }
+    });
+};

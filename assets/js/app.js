@@ -56,5 +56,4 @@ import './ui/stations-observations/stations-list-page-header-map';
  * OVERLAY *
  * ******* */
 import './ui/overlay/overlay-open';
-import './ui/overlay/overlay-close';
 
