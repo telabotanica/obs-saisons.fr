@@ -49,7 +49,7 @@ class AdminController extends AbstractController
         $species = $manager->getRepository(Species::class)
             ->findAllOrderedByTypeAndVernacularName();
 
-        $this->setOrigin($this->generateUrl('news_posts_list'));
+        $this->setOrigin($this->generateUrl('admin_species_list'));
 
         return $this->render('admin/species.html.twig', [
             'speciesList' => $species,
@@ -116,7 +116,7 @@ class AdminController extends AbstractController
             ->findBy(['category' => Post::CATEGORY_PAGE])
         ;
 
-        $this->setOrigin($this->generateUrl('news_posts_list'));
+        $this->setOrigin($this->generateUrl('admin_pages_list'));
 
         return $this->render('admin/pages.html.twig', [
             'pages' => $pages,

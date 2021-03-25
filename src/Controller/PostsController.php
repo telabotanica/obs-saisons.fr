@@ -269,7 +269,7 @@ class PostsController extends AbstractController
 
             $this->addFlash('notice', 'L’évènement a été créé');
 
-            $this->setOrigin($this->generateUrl('news_posts_list'));
+            $this->setOrigin($this->generateUrl('event_posts_list'));
 
             return $this->redirectToRoute('event_post_preview', [
                 'postId' => $eventPost->getId(),
