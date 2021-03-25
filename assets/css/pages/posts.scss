@@ -2,19 +2,9 @@
     margin-bottom: 20px;
 }
 
-%publication-date-style {
-    width: 80%;
-    @include gap(margin, "h", auto);
-
-    @include media(sm) {
-        width: 70%;
-    }
-}
-
 /*************************************/
 
 .publication-date {
-    @extend %publication-date-style;
     @include uppercase-small-text;
     a {
         text-decoration: none !important;
@@ -25,7 +15,6 @@
 }
 
 .rich-text-block {
-    @extend %publication-date-style;
     zoom: 1;
 
     &::after {
@@ -41,10 +30,6 @@
             margin-left:   rem(50px);
             margin-bottom: rem(50px);
         }
-    }
-
-    &.page-content {
-        @include gap(margin, "h", 20px);
     }
 
     h2 {
@@ -207,7 +192,6 @@
 
 .other-posts {
     @extend %display-flex-column;
-    @extend %publication-date-style;
     height: auto;
     margin-top: 50px;
 

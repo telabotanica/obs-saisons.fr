@@ -1,12 +1,8 @@
 .page-header {
-    padding: 40px;
+    margin-top: 24px;
 
     @include media(xs, sm) {
         padding-bottom: 30px;
-    }
-
-    @include media(md) {
-        padding-top: 60px;
     }
 }
 
@@ -14,33 +10,26 @@
 
 .page-title {
     margin-top: 0;
-    font-size: 24px;
-    line-height: 30px;
 
-    @include media(sm) {
-        font-size: 30px;
-        line-height: 36px;
-    }
-
-    @include media(md) {
-        font-size: 34px;
-    }
-
-    @include media(lg) {
-        margin-top: 10px;
-    }
+    font-size: 40px;
+    line-height: 42px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .page-subtitle {
     color: $grey131117;
-    margin-bottom: 20px;
+
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #ccbeb3;
+
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 400;
 
     @include media(lg) {
         color: $grey181217;
-    }
-
-    strong {
-        font-weight: 600;
     }
 
     a {

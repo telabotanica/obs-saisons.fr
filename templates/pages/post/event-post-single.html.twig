@@ -1,37 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block content %}
-	<div class="content page posts">
-		{% block post_header %}{% endblock %}
-		<div class="publication-date">
-			Publié le {{ post.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ post.author.getDisplayName() }}</strong>
-		</div>
-		<div class="rich-text-block">
-			<div class="event-dates-container">
-				{% set eventsPostDates = [post.startDate] %}
-				{% if post.endDate != post.startDate %}
-					{% set eventsPostDates = eventsPostDates|merge([post.endDate]) %}
-				{% endif %}
-				<div class="dual-blocks-container">
-					{% for date in eventsPostDates %}
-						<div class="event-date {{ loop.index == 2 ? 'last' }}">
-							{{ date|shortDate|raw }}
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-			<h2>{{ post.title|raw }}</h2>
-			{{ post.content|raw }}
-		</div>
-		{% block post_footer %}
-			{% if nextPreviousEventsPosts is defined %}
-				<div class="other-posts">
-					{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:nextPreviousEventsPosts.previous} %}
-					{% if nextPreviousEventsPosts.previous is not null or nextPreviousEventsPosts.next is not null %}
-						{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:nextPreviousEventsPosts.next} %}
-					{% endif %}
-				</div>
-			{% endif %}
-		{% endblock %}
+{% block main_content %}
+	{% block post_header %}{% endblock %}
+	<div class="publication-date">
+		Publié le {{ post.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ post.author.getDisplayName() }}</strong>
 	</div>
+	<div class="rich-text-block">
+		<div class="event-dates-container">
+			{% set eventsPostDates = [post.startDate] %}
+			{% if post.endDate != post.startDate %}
+				{% set eventsPostDates = eventsPostDates|merge([post.endDate]) %}
+			{% endif %}
+			<div class="dual-blocks-container">
+				{% for date in eventsPostDates %}
+					<div class="event-date {{ loop.index == 2 ? 'last' }}">
+						{{ date|shortDate|raw }}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<h2>{{ post.title|raw }}</h2>
+		{{ post.content|raw }}
+	</div>
+	{% block post_footer %}
+		{% if nextPreviousEventsPosts is defined %}
+			<div class="other-posts">
+				{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:nextPreviousEventsPosts.previous} %}
+				{% if nextPreviousEventsPosts.previous is not null or nextPreviousEventsPosts.next is not null %}
+					{% include 'components/post/next-previous-event-post.html.twig' with {eventPost:nextPreviousEventsPosts.next} %}
+				{% endif %}
+			</div>
+		{% endif %}
+	{% endblock %}
 {% endblock %}
