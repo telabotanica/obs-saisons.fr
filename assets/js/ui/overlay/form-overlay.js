@@ -10,7 +10,6 @@ export function FormOverlay(openOverlayButton) {
 FormOverlay.prototype = Object.create(Overlay.prototype);
 FormOverlay.prototype.constructor = FormOverlay;
 
-// run specific if needed
 FormOverlay.prototype.init = function() {
     Overlay.prototype.init.call(this);
 
@@ -18,7 +17,6 @@ FormOverlay.prototype.init = function() {
     this.setOverlayEditForm();
 };
 
-// run specific if needed
 FormOverlay.prototype.closeOverlay = function () {
     Overlay.prototype.closeOverlay.call(this);
     this.resetEditionForm();
@@ -26,7 +24,6 @@ FormOverlay.prototype.closeOverlay = function () {
     this.resetAllSelectOptions();
 };
 
-// run specific if needed
 FormOverlay.prototype.setOverlayEditForm = function() {
     if (this.openOverlayButton.classList.contains('edit')) {
         const editionPath = `/${this.dataAttrs.open}/`;

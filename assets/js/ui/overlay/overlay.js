@@ -7,22 +7,18 @@ export function Overlay(openOverlayButton) {
     this.form = this.overlay.querySelector('form');
 }
 
-// run specific if needed
 Overlay.prototype.init = function() {
     this.overlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     this.closeOverlayOnClickOut();
     this.closeOverlayOnButtonClick();
     this.closeOverlayOnEscapeKey();
-    //this.initOverlaySpecificBehaviour();
     onDeleteButton(this.dataAttrs.open);
 };
 
-// run specif if needed
 Overlay.prototype.closeOverlay = function() {
     document.body.style.overflow = 'auto';
     this.overlay.classList.add('hidden');
-    //this.closeOverlaySpecificBehaviour();
 };
 
 Overlay.prototype.closeOverlayOnButtonClick = function() {
@@ -35,7 +31,6 @@ Overlay.prototype.closeOverlayOnButtonClick = function() {
     });
 };
 
-// run specific if needed
 Overlay.prototype.closeOverlayOnClickOut = function() {
     const lthis = this;
     this.overlay.addEventListener('click', function(evt) {
@@ -45,7 +40,6 @@ Overlay.prototype.closeOverlayOnClickOut = function() {
     });
 };
 
-// run specific if needed
 Overlay.prototype.closeOverlayOnEscapeKey = function() {
     const lthis = this;
     document.body.addEventListener('keydown', function(evt) {
