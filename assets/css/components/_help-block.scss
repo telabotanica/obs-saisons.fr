@@ -12,6 +12,7 @@
     @include media(sm) {
         padding: 60px;
         line-height: 25px;
+        font-size: 16px;
     }
 
     @include media(md) {

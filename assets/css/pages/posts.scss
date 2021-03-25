@@ -231,7 +231,7 @@
     @extend %align-self-center;
     @extend %flex-1;
 
-    max-width: 100%;
+    width: 100%;
 
     @include padding-v(10px);
     @include linked-post-txt-padding-h(0);
