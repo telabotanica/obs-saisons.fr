@@ -9,7 +9,7 @@ const retrieveStations = (map, query) => {
             method: "GET",
             url: mapInfo.url,
             success: function (data) {
-                const renderer = L.canvas({padding: 0.1}),
+                const renderer = L.canvas({padding: 0.5}),
                     legend = L.control({ position: "bottomleft" });
 
                 legend.onAdd = function(map) {
