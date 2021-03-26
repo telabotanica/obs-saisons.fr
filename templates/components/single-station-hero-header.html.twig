@@ -10,7 +10,11 @@
 {% if not show or station.latitude == null or station.longitude == null %}
     {% set headerImage = station.headerImage != null ? station.headerImage : asset('media/layout/image-placeholder.svg')%}
 {% endif %}
-{% set images = images|default([])|merge(observations|map(o => o.picture is defined and o.picture is not empty  ? o.picture)) %}
+
+{% set images = [] %}
+{% for o in observations|filter(o => o.picture is defined and o.picture is not null) %}
+    {% set images = images|merge([o.picture]) %}
+{% endfor %}
 
 <div class="hero-header">
     <div id="station-single-header-map" class="hero-header-media-part map{{ show ? ' show-map'}}" data-latitude="{{ station.latitude }}" data-longitude="{{ station.longitude }}" style="background-image:linear-gradient(180deg,rgba(131,117,105,0.3),rgba(131,117,105,0.3)),url({{ headerImage }});">
