@@ -5,15 +5,14 @@
 	{% include 'components/single-station-hero-header.html.twig' %}
 {% endblock %}
 
-{% set page_container_classes = 'narrow' %}
+{% set page_container_classes = 'stations' %}
+
 {% set show = not station.isPrivate or app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
 {% set disable = (app.user.id is not defined) %}
 
 {% set species = species|default([])|merge(individuals|map(i => i.species))|removeDuplicates %}
 
 {% set hasSpecies = species|length > 0 %}
-
-{% block header_content %}{% endblock %}
 
 {% block main_content %}
 

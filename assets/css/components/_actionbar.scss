@@ -93,6 +93,7 @@
 
     @include media(lg) {
         @include align-items-stretch;
+        justify-content: flex-start;
 
         padding-left: 40px;
     }

@@ -38,24 +38,6 @@
     @include media(lg) {
         @include border((top, left), $grey306092);
     }
-
-    &.posts {
-        padding-top: 20px;
-        padding-bottom: 60px;
-
-        @include media(sm) {
-            padding-top: 40px;
-        }
-
-        @include media(md) {
-            padding-top: 60px;
-            padding-bottom: 100px;
-        }
-
-        @include media(lg) {
-            padding-top: 80px;
-        }
-    }
 }
 
 .pages-container {
@@ -63,33 +45,70 @@
     @include flex-direction-column;
     @include flex-wrap-nowrap;
 
-    width: 100%;
+    width: 80%;
+    max-width: 800px;
+    @include media(sm) {
+        width: 70%;
+    }
 
-    @include gap(padding, (right, bottom, left));
+    margin-right: auto;
+    margin-left: auto;
 
-    background-color: $grey303394;
+    padding-top: 20px;
+    padding-bottom: 60px;
+
+    @include media(sm) {
+        padding-top: 40px;
+    }
 
     @include media(md) {
-        @include gap(padding, "h", 8%);
+        padding-top: 60px;
         padding-bottom: 100px;
     }
 
-    &.narrow {
-        background-color: $grey303394;
-        @include media(xs,sm) {
-            padding-top: 10px;
-        }
+    @include media(lg) {
+        padding-top: 80px;
+    }
+
+    &.stations, &.species {
+        width: 100%;
+        max-width: 100%;
+
+        padding-top: 0;
+        margin-top: 10px;
 
         @include media(md) {
-            padding-top: 40px;
-        }
-
-        @include media(md, lg) {
-            @include gap(padding, "h", 6%);
+            margin-top: 40px;
+            padding-left: 6%;
+            padding-right: 6%;
         }
 
         @include media(lg) {
-            padding-top: 60px;
+            margin-top: 60px;
+            padding-left: 8%;
+            padding-right: 8%;
+        }
+
+        & .page-subtitle {
+            border-bottom: 0;
+        }
+    }
+
+    &.stations {
+        padding-bottom: 0;
+
+        @include media(md) {
+            padding-bottom: 100px;
+        }
+    }
+
+    &.species .page-header {
+        padding-left: 6%;
+        padding-right: 6%;
+
+        @include media(md) {
+            padding-left: 0;
+            padding-right: 0;
         }
     }
 }

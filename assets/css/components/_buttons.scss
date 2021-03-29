@@ -3,7 +3,6 @@
 /*************************************** */
 .green-link {
   @include green-text-semi-bold;
-  font-size: 16px;
 
   &.small {
     font-size: 14px;
