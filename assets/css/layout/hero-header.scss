@@ -184,10 +184,11 @@
     z-index: 1;
 
     @include media(lg) {
+        position: absolute;
+        bottom: 20px;
+        right: 0;
         @include hero-header-button-lg;
-        @include position(absolute, auto, 0, 0, auto, 1);
         border: 1px solid rgba($green, 0.1);
-        z-index: 1;
     }
 }
 
@@ -227,7 +228,9 @@
     }
 
     .hero-header-button {
-        box-shadow: 0 0 15px grey(0,0.2);
+        @include media(lg) {
+            right: auto;
+        }
     }
 }
 
