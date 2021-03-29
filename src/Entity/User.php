@@ -106,7 +106,7 @@ class User implements UserInterface
     private $profileType;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":0})
      */
     private $isNewsletterSubscriber;
 
