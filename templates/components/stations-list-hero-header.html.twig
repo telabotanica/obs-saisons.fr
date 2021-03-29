@@ -21,7 +21,7 @@
         <a href="" class="button hero-header-button bt-add open" data-open="station">créer une nouvelle station</a>
     {% endif %}
 
-    <div id="stations-list-header-map" class="hero-header-media-part map show-map" data-stations-query="{{ dataStationsQuery|default }}"><div class="stations-map-legend">{{ headerMapLegend|default('Toutes les stations') }}</div></div>
+    <div id="stations-list-header-map" class="hero-header-media-part map show-map" data-stations-query="{{ dataStationsQuery|default }}"></div>
     <script>
         let dataRoute = "{{ path('stations_map_info')|escape('js') }}";
         let stationUrlTemplate = "{{ path('stations_show', {slug: 'slugPlaceHolder'})|escape('js') }}";

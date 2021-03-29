@@ -2,28 +2,60 @@ import domready from "mf-js/modules/dom/ready";
 import {createMap, DEFAULT_POSITION, DEFAULT_ZOOM} from "../create-map";
 
 const retrieveStations = (map, query) => {
-    const url = setMapInfoUrl(query);
+    const mapInfo = setMapInfoUrl(query);
 
-    if(url) {
+    if(mapInfo.url) {
         $.ajax({
             method: "GET",
-            url: url,
+            url: mapInfo.url,
             success: function (data) {
-                const renderer = L.canvas({padding: 0.5});
+                const renderer = L.canvas({padding: 0.5}),
+                    legend = L.control({ position: "bottomleft" });
+
+                legend.onAdd = function(map) {
+                    const div = L.DomUtil.create("div", "legend");
+                    let title = 'Toutes les stations';
+
+                    if ('user' === mapInfo.queryType) {
+                        title = 'Mes stations';
+                    } else if ('search' === mapInfo.queryType) {
+                        title = 'Resultats de ma recherche';
+                    }
+                    div.innerHTML = `<h4>${title}</h4>
+                                    <i style="border-color: #3388ff;background-color: rgba(51, 136, 255 ,0.2)"></i><span>Station publique</span><br>
+                                    <i style="border-color: #524d4b;background-color: rgba(82, 77, 75, 0.2)"></i><span>Station personnelle*</span><br>
+                                    <em>*La position des stations personnelles est volontairement imprécise</em>`
+                    ;
+                    return div;
+
+                };
+                legend.addTo(map);
 
                 map.cluster = L.markerClusterGroup();
 
                 data.forEach(station => {
-                    const marker = L.circleMarker([station.latitude, station.longitude], {
+                    let privateIcon = '',
+                        markerColor = '#3388ff',
+                        latitude = station.latitude,
+                        longitude = station.longitude;
+
+                    if (station.isPrivate) {
+                        privateIcon = '<div class="private-icon cadenas-icon"></div>';
+                        markerColor = '#524d4b';
+                        latitude = Number.parseFloat(station.latitude).toFixed(2);
+                        longitude = Number.parseFloat(station.longitude).toFixed(2);
+                    }
+
+                    const marker = L.circleMarker([latitude, longitude], {
                             renderer: renderer,
-                            color: '#3388ff'
+                            color: markerColor
                         }),
                         url = stationUrlTemplate.replace('slugPlaceHolder', station.slug);
 
                     marker.bindPopup(
                         `<div class="card stations-card-popup">
                         <a href="${url}" class="card-header" style="background-image:url(${station.headerImage ? station.headerImage : '/media/layout/image-placeholder.svg'})">
-                            ${station.isPrivate ? '<div class="private-icon cadenas-icon"></div>': ''}
+                            ${privateIcon}
                         </a>
                         <div class="card-body">
                             <a href="${url}">
@@ -53,21 +85,30 @@ const setMapInfoUrl = query => {
         url += '?';
 
         if ('user' === query) {
-            return url + `${query}=`;
+            return {
+                url: url + `${query}=`,
+                queryType: 'user'
+            };
         }
 
         try {
             const parsedQuery = JSON.parse(query);
 
             if (parsedQuery.search) {
-                return url + `search=${parsedQuery.search}`;
+                return {
+                    url: url + `search=${parsedQuery.search}`,
+                    queryType: 'search'
+                };
             }
         } catch (error) {
             console.warn(error);
         }
     }
 
-    return url;
+    return {
+        url:url,
+        queryType: 'station'
+    };
 };
 
 domready(() => {
