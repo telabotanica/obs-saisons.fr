@@ -83,6 +83,5 @@ const mapZoomOnCtrlMousewheel = (elementIdAttr, map) => {
                 $map.removeClass('map-scroll');
             }, 1500);
         }
-
     });
 };
