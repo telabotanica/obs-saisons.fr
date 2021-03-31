@@ -43,6 +43,8 @@ export function createMap(
         map.markers.push(marker);
     }
 
+    mapZoomOnCtrlMousewheel(elementIdAttr, map);
+
     return map;
 }
 
@@ -58,4 +60,29 @@ export const createMarker = (
     }
 
     return new L.Marker(coordinates, options);
+};
+
+const mapZoomOnCtrlMousewheel = (elementIdAttr, map) => {
+    //disable default scroll
+    map.scrollWheelZoom.disable();
+    const $map = $('#'+elementIdAttr);
+
+    $map.on('mousewheel DOMMouseScroll', function (evt) {
+        evt.stopPropagation();
+        if (evt.ctrlKey === true) {
+            evt.preventDefault();
+            map.scrollWheelZoom.enable();
+            $map.removeClass('map-scroll');
+            setTimeout(function(){
+                map.scrollWheelZoom.disable();
+            }, 1000);
+        } else {
+            map.scrollWheelZoom.disable();
+            $map.addClass('map-scroll');
+            setTimeout(function(){
+                $map.removeClass('map-scroll');
+            }, 1500);
+        }
+
+    });
 };
