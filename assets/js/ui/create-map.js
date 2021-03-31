@@ -24,7 +24,16 @@ export function createMap(
     isDraggable = true,
     hasMarker = false,
 ) {
-    const map = L.map(elementIdAttr, {zoomControl: hasZoomControl}).setView([lat, lng], zoom);
+    const map = L.map(
+        elementIdAttr,
+        {
+            zoomControl: hasZoomControl,
+            // ensuring that a single finger scrolls the page and not the map, while still allowing for two-finger zoom+pan of the map
+            dragging: !L.Browser.mobile
+        }).setView(
+            [lat, lng],
+        zoom
+    );
     map.markers = [];
 
     L.tileLayer(
