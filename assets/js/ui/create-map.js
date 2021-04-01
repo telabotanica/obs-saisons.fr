@@ -24,7 +24,8 @@ export function createMap(
     isDraggable = true,
     hasMarker = false,
 ) {
-    const map = L.map(elementIdAttr, {zoomControl: hasZoomControl}).setView([lat, lng], zoom);
+    // dragging: !L.Browser.mobile, ensures that a single finger scrolls the page and not the map, while still allowing for two-finger zoom+pan of the map
+    const map = L.map(elementIdAttr,{zoomControl: hasZoomControl, dragging: !L.Browser.mobile}).setView([lat, lng], zoom);
     map.markers = [];
 
     L.tileLayer(
@@ -42,6 +43,8 @@ export function createMap(
         map.markers.push(marker);
     }
 
+    mapZoomOnCtrlMousewheel(elementIdAttr, map);
+
     return map;
 }
 
@@ -57,4 +60,28 @@ export const createMarker = (
     }
 
     return new L.Marker(coordinates, options);
+};
+
+const mapZoomOnCtrlMousewheel = (elementIdAttr, map) => {
+    //disable default scroll
+    map.scrollWheelZoom.disable();
+    const $map = $('#'+elementIdAttr);
+
+    $map.on('mousewheel DOMMouseScroll', function (evt) {
+        evt.stopPropagation();
+        if (evt.ctrlKey === true) {
+            evt.preventDefault();
+            map.scrollWheelZoom.enable();
+            $map.removeClass('map-scroll');
+            setTimeout(function(){
+                map.scrollWheelZoom.disable();
+            }, 1000);
+        } else {
+            map.scrollWheelZoom.disable();
+            $map.addClass('map-scroll');
+            setTimeout(function(){
+                $map.removeClass('map-scroll');
+            }, 1500);
+        }
+    });
 };

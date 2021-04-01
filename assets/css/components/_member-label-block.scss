@@ -1,5 +1,5 @@
 .member-label-block {
-    @include position(absolute, 0, auto, auto, 0, null);
+    @include position(absolute, 0, auto, auto, 0, 1000);
 
     @extend %display-flex;
     @extend %align-items-flex-start;
