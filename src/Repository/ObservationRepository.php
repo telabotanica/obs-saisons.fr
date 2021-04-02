@@ -8,7 +8,7 @@ use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Observation|null find($id, $lockMode = null, $lockVersion = null)
