@@ -1,4 +1,7 @@
 {
+    "babdev/pagerfanta-bundle": {
+        "version": "v3.0.2"
+    },
     "beberlei/doctrineextensions": {
         "version": "v1.2.7"
     },
@@ -155,6 +158,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.8.0"
+    },
+    "pagerfanta/pagerfanta": {
+        "version": "v2.7.1"
     },
     "php": {
         "version": "7.4"

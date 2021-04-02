@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "babdev/pagerfanta-bundle": " ^2.7",
         "beberlei/doctrineextensions": "^1.2",
         "sensio/framework-extra-bundle": "^5.1",
         "stof/doctrine-extensions-bundle": "^1.4",
