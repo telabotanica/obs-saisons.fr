@@ -100,7 +100,7 @@ class EntityJsonSerialize
 
     public function jsonSerializeObservationForExport(array $observations)
     {
-        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $serializer = new Serializer([new ObjectNormalizer()]);
 
         $context = [
             AbstractNormalizer::CALLBACKS => [
@@ -120,7 +120,7 @@ class EntityJsonSerialize
             $t[] = $serializer->normalize($observation, null, $context);
         }
 
-        return $serializer->serialize($t ?? [], 'json');
+        return $t ?? [];
     }
 
     public function getJsonSerializedEventSpeciesObservationType(EventSpecies $eventSpecies)

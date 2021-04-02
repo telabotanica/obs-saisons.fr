@@ -8,6 +8,7 @@ use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -160,7 +161,7 @@ class ObservationRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findWithFilters(
+    public function createFilteredObservationListQueryBuilder(
         ?string $year,
         ?string $typeSpecies,
         ?string $species,
@@ -169,14 +170,21 @@ class ObservationRepository extends ServiceEntityRepository
         ?string $region,
         ?string $station,
         ?string $individual
-    ): array {
+    ): QueryBuilder {
         $qb = $this->createQueryBuilder('o')
+            ->addSelect('PARTIAL o.{id, picture, isMissing, details, updatedAt, date, user, individual, event}')
             ->innerJoin('o.individual', 'i')
+            ->addSelect('PARTIAL i.{id, name, species, station}')
             ->innerJoin('o.event', 'e')
+            ->addSelect('PARTIAL e.{id, name, bbch_code}')
+            ->innerJoin('o.user', 'u')
+            ->addSelect('PARTIAL u.{id, displayName}')
             ->innerJoin('i.station', 'st')
+            ->addSelect('PARTIAL st.{id, locality, inseeCode, habitat, latitude, longitude, altitude, slug, department}')
             ->innerJoin('i.species', 'sp')
+            ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
-            ->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+            ->addSelect('PARTIAL ts.{id, name, reign}')
         ;
 
         if ($year) {
@@ -222,7 +230,7 @@ class ObservationRepository extends ServiceEntityRepository
         }
 
         if ($individual) {
-            $qb->andWhere($qb->expr()->eq('i.slug', ':individual'))
+            $qb->andWhere($qb->expr()->eq('i.name', ':individual'))
                 ->setParameter(':individual', $individual)
             ;
         }
@@ -232,10 +240,7 @@ class ObservationRepository extends ServiceEntityRepository
 
         $qb->orderBy('o.date', 'DESC');
 
-        return $qb
-            ->getQuery()
-            ->getResult()
-        ;
+        return $qb;
     }
 
     public function findFilteredForEventsEvolutionChart(
@@ -281,7 +286,6 @@ class ObservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getScalarResult()
         ;
-
     }
 
     // /**
