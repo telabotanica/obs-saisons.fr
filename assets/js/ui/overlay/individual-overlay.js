@@ -78,7 +78,7 @@ IndividualOverlay.prototype.updateSelectOptions = function(
     itemsToMatch,
     sortOptions = true
 ) {
-    FormOverlay.prototype.updateSelectOptions.call(this);
+    FormOverlay.prototype.updateSelectOptions.call(this, selectEl, itemsToMatch, sortOptions);
 
     selectEl.querySelectorAll('.exists-in-station.animal').forEach(option => {
         option.toggleAttribute('disabled', !sortOptions);
