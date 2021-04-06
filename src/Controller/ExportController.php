@@ -8,6 +8,8 @@ use App\Entity\Species;
 use App\Entity\Station;
 use App\Service\EntityJsonSerialize;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +49,7 @@ class ExportController extends AbstractController
         $serializer = new EntityJsonSerialize();
 
         return new Response(
-            $serializer->jsonSerializeObservationForExport($data),
+            json_encode($serializer->jsonSerializeObservationForExport($data)),
             Response::HTTP_OK,
             ['content-type' => 'application/json']
         );
@@ -58,8 +60,8 @@ class ExportController extends AbstractController
      */
     public function exportWithFilters(Request $request, EntityManagerInterface $em)
     {
-        $data = $em->getRepository(Observation::class)
-            ->findWithFilters(
+        $qb = $em->getRepository(Observation::class)
+            ->createFilteredObservationListQueryBuilder(
                 $request->query->get('year'),
                 $request->query->get('typeSpecies'),
                 $request->query->get('species'),
@@ -67,13 +69,44 @@ class ExportController extends AbstractController
                 $request->query->get('department'),
                 $request->query->get('region'),
                 $request->query->get('station'),
-                $request->query->get('individual')
+                $request->query->get('individual'),
             );
 
         $serializer = new EntityJsonSerialize();
 
+        $pager = new Pagerfanta(
+            new QueryAdapter($qb)
+        );
+
+        $pager->setCurrentPage($request->query->get('page') ?? 1);
+        $pager->setMaxPerPage($request->query->get('size') ?? 2000);
+
+        $observations = iterator_to_array($pager->getCurrentPageResults());
+
+        $url = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
+        $params = $request->query->all();
+        if (array_key_exists('page', $params)) {
+            unset($params['page']);
+        }
+
+        $ret = [
+            'meta' => [
+                'totalPages' => $pager->getNbPages(),
+                'totalResults' => $pager->getNbResults(),
+                'pageSize' => count($observations),
+            ],
+            'data' => $serializer->jsonSerializeObservationForExport($observations),
+            'links' => [
+                'self' => $request->getUri(),
+                'first' => $url.'?'.http_build_query(array_merge($params, ['page' => 1])),
+                'last' => $url.'?'.http_build_query(array_merge($params, ['page' => $pager->getNbPages()])),
+                'prev' => $pager->hasPreviousPage() ? $url.'?'.http_build_query(array_merge($params, ['page' => $pager->getPreviousPage()])) : null,
+                'next' => $pager->hasNextPage() ? $url.'?'.http_build_query(array_merge($params, ['page' => $pager->getNextPage()])) : null,
+            ],
+        ];
+
         return new Response(
-            $serializer->jsonSerializeObservationForExport($data),
+            json_encode($ret),
             Response::HTTP_OK,
             ['content-type' => 'application/json']
         );
