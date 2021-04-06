@@ -67,13 +67,8 @@ FormOverlay.prototype.updateSelectOptions = function(
         selectName = selectEl.dataset.name;
 
     selectEl.classList.toggle('disabled',(1 >= itemsToMatch.length && sortOptions));
-
     selectEl.getElementsByTagName('option').forEach(option => lthis.selectOptionsLockToggle(option, false));
     selectEl.closest('form').reset();
-    selectEl.querySelectorAll('option:not(.exists-in-station.animal)').forEach(option => {
-        option.removeAttribute('disabled');
-    });
-
 
     if(sortOptions) {
         selectEl.querySelectorAll('.' + selectName + '-option').forEach(element => {
