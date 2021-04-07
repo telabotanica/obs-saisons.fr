@@ -45,9 +45,9 @@
 
             {# Display months #}
             {% for i in 3..14 %}
-                {% set month = "0000-#{i - 2}-01"|localizeddate('none', 'none', 'fr', null, 'MMM')  %}
+                {% set month = "0000-#{i - 2}-01"|format_datetime(pattern='MMM',locale='fr')  %}
                 <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 month">{{ month }}</div>
-                {% if month == ("now"|localizeddate('none', 'none', 'fr', null, 'MMM')) %}
+                {% if month == ("now"|format_datetime(pattern='MMM',locale='fr')) %}
                     <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 table-colomn active-month top  {{ loop.last ? 'last-column' }}"></div>
                 {% endif %}
             {% endfor %}

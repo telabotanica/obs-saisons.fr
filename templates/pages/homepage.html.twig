@@ -17,7 +17,7 @@
 				{% for lastNewsPost in lastNewsPosts %}
 					<a href="{{ path("news_post_single_show", {'slug': lastNewsPost.slug}) }}" class="actu-une-container {{ not loop.first ? 'hidden' }}">
 						<h4 class="actus-une-title">{{ lastNewsPost.title }}</h4>
-						<div class="actus-une-date">{{ lastNewsPost.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}</div>
+						<div class="actus-une-date">{{ lastNewsPost.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}</div>
 					</a>
 				{% endfor %}
 				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'news_posts_list', button_label: 'toutes les actualités'} %}

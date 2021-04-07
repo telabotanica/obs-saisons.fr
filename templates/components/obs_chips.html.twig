@@ -89,7 +89,7 @@
             data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
             {# displaying obs-infos list cards #}
             data-picture-url="{{ pictureUrl }}"
-            data-date="{{ obs.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}"
+            data-date="{{ obs.date|format_datetime(pattern='d/MM/y',locale='fr') }}"
             data-show-edit="{{ canAdminStation or app.user.id|default == obs.user.id }}"
             data-open="obs-infos"
             {# editting observation #}
@@ -105,7 +105,7 @@
         >
             <div class="stage-marker-text {{ loop.index == observations|length or break? 'last' }}">
                 <div class="stage-text">{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
-                <div class="stage-date">Le {{ obs.date|localizeddate('none', 'none', 'fr', null, 'd MMMM y') }}</div>
+                <div class="stage-date">Le {{ obs.date|format_datetime(pattern='d MMMM y',locale='fr') }}</div>
             </div>
         </a>
     {% endif %}
