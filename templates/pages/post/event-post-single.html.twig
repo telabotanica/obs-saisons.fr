@@ -3,7 +3,7 @@
 {% block main_content %}
 	{% block post_header %}{% endblock %}
 	<div class="publication-date">
-		Publié le {{ post.createdAt|localizeddate('none', 'none', 'fr', null, 'd MMMM Y') }}, par <strong>{{ post.author.getDisplayName() }}</strong>
+		Publié le {{ post.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}, par <strong>{{ post.author.getDisplayName() }}</strong>
 	</div>
 	<div class="rich-text-block">
 		<div class="event-dates-container">

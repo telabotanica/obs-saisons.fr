@@ -93,7 +93,7 @@
 					<div class="item-name-block">
 						<div class="item-name">{{ observation.user.displayName }}</div>
 						<div class="item-name stage">{{ periodsNames[observation.event.name] }}{{ observation.event.stadeBbch != null ? " - stade #{observation.event.stadeBbch}" }}</div>
-						<div class="item-heading-dropdown">{{ observation.date|localizeddate('none', 'none', 'fr', null, 'd/MM/y') }}</div>
+						<div class="item-heading-dropdown">{{ observation.date|format_datetime(pattern='d/MM/y',locale='fr') }}</div>
 					</div>
 					<div class="item-details">
 						<div class="grey">{{ observation.individual.species.vernacularName }}</div>
