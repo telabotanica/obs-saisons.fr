@@ -37,7 +37,7 @@ $( document ).ready( () => {
 
                 retrieveData(
                 `${exportRoute}?year=${criteria.year}&species=${criteria.species.id}&region=${criteria.region.id}&department=${criteria.department.id}`,
-                    criteria, ( data ) => {
+                    ( data ) => {
                     if ( data.length ) {
                         displayPhenologicalChart(
                             Plotly,
@@ -75,7 +75,7 @@ $( document ).ready( () => {
                 };
 
                 retrieveData(`${eventsEvolutionRoute}?species=${criteria.species.id}&event=${criteria.event.id}&region=${criteria.region.id}&department=${criteria.department.id}`,
-                    criteria, ( data ) => {
+                    ( data ) => {
                     if ( data.length ) {
                         displayEvolutionChart(
                             Plotly,
@@ -198,12 +198,20 @@ function displayEvolutionChart( Plotly, chart, criteria, allObs ) {
     Plotly.newPlot( chart, data, layout );
 }
 
-function retrieveData( url, criteria, handleData ) {
+function retrieveData( url, handleData, previousPageData = [] ) {
     $.ajax({
         method: "GET",
         url: url,
         success: data => {
-            handleData( data );
+            if ( data.data ) {
+                if (data.links.next) {
+                    retrieveData(data.links.next, handleData, previousPageData.concat(data.data))
+                } else {
+                    handleData( data.data );
+                }
+            } else {
+                handleData( data );
+            }
         }
     });
 }

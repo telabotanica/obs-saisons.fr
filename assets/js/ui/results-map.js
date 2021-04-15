@@ -42,7 +42,7 @@ function retrieveObs( criteria, map ) {
             // create clusters and markers
             const renderer = L.canvas( { padding: 0.5 } );
             map.cluster = L.markerClusterGroup();
-            data.forEach( obs => {
+            data.data.forEach( obs => {
                 if ( !obs.isMissing ) {
                     let marker = L.circleMarker( [ obs.individual.station.lat, obs.individual.station.lon ], {
                         renderer: renderer,
