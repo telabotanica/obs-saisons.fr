@@ -35,6 +35,7 @@ class OdsImportIndividualsCommand extends Command
     {
         $this
             ->setDescription('Import individuals from legacy ODS database')
+            ->addOption('update-only-details')
         ;
     }
 
@@ -96,7 +97,16 @@ class OdsImportIndividualsCommand extends Command
         foreach ($importedIndividuals as $importedIndividual) {
             $this->io->text('Creating individual : '.$importedIndividual['name']);
 
-            $individual = $this->getIndividual($importedIndividual['id']);
+            if ($input->getOption('update-only-details')) {
+                $individual = $this->getIndividual($importedIndividual['id']);
+                if ($individual && $importedIndividual['details']) {
+                    $individual->setDetails($importedIndividual['details']);
+                    ++$count;
+                }
+                continue;
+            } else {
+                $individual = new Individual();
+            }
 
             $species = $this->getIndividualSpecies($importedIndividual['species_scientific_name']);
             if (!$species) {
@@ -180,13 +190,8 @@ class OdsImportIndividualsCommand extends Command
 
     private function getIndividual($legacy_id)
     {
-        $individual = $this->em->getRepository(Individual::class)
+        return $this->em->getRepository(Individual::class)
             ->findOneBy(['legacyId' => $legacy_id]);
-        if (!$individual) {
-            $individual = new Individual();
-        }
-
-        return $individual;
     }
 
     private function getIndividualSpecies(?string $importedIndividualSpeciesScientificName)
