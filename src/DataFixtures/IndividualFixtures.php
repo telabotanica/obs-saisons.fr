@@ -25,6 +25,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
             $individual->setName($faker->sentence(6, true));
             $individual->setSpecies($faker->randomElement($speciesRepository->findAllByTypeSpecies($faker->randomElement($plants))));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
+            $individual->setDetails($faker->text(200));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
 
@@ -38,6 +39,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
             $individual->setName($faker->sentence(6, true));
             $individual->setSpecies($faker->randomElement($speciesRepository->findAllByTypeSpecies($faker->randomElement($animals))));
             $individual->setUser($this->getReference('user-'.$faker->randomDigit));
+            $individual->setDetails($faker->text(200));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
 

@@ -41,6 +41,11 @@ class Individual
     private $user;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $details;
+
+    /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
@@ -111,6 +116,18 @@ class Individual
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details ?: null;
+    }
+
+    public function setDetails(?string $details): self
+    {
+        $this->details = $details;
 
         return $this;
     }
