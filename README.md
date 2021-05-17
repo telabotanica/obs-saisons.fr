@@ -74,10 +74,9 @@ _aberration alert periods :_ enter `a`
 
 ## Build css/js
 
-Install [NPM](https://www.npmjs.com/get-npm) and run:
 ```bash
-npm install
-npm run dev
+yarn
+yarn build
 ```
 
 ## Normalize code
