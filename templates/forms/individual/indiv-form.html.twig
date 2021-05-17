@@ -24,6 +24,18 @@
             'help_attr': {'class': 'field-help-text'}
         }) }}
     </div>
+    <div class="_2-col-form">
+        {{ form_row(individualForm.details, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Ajouter une précision',
+            'attr': {
+                'class': 'textarea-field text-field ods-input',
+                'rows': 3,
+                'data-name': 'details',
+                'placeholder': 'Si nécessaire, vous pouvez noter quelques précisions ici'
+            }
+        }) }}
+    </div>
 {% endblock %}
 
 {% block form_javascript %}{% endblock %}

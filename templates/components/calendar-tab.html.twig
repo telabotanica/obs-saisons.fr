@@ -57,6 +57,14 @@
             {# Displays individual's name #}
             <div class="individu-header">
                 <div class="individual">
+                    {% if individual.details %}
+                        <a
+                            href=""
+                            class="info-icon add-button-like individual-info open"
+                            data-open="individual-details"
+                            data-details="{{ individual.details }}"
+                        ></a>
+                    {% endif %}
                     <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
                     {% if canAdminStation or individual.user.id == app.user.id|default %}
                         <a

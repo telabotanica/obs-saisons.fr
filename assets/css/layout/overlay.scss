@@ -7,6 +7,7 @@
 }
 
 .obs-info-container,
+.individual-details-container,
 .saisie-container {
 	@include position(fixed, 0, 0, 0, 0, 1);
 	@extend %display-flex-column;
@@ -44,7 +45,8 @@
 	}
 }
 
-.obs-info-container {
+.obs-info-container,
+.individual-details-container {
 	min-width: 80%;
 	h3 {
 		margin: 10px auto;
@@ -53,7 +55,9 @@
 			margin: 10px;
 		}
 	}
+}
 
+.obs-info-container {
 	.item-name {
 		display: block;
 		text-transform: capitalize;

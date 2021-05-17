@@ -49,6 +49,7 @@ class OdsImportIndividualsCommand extends Command
                    oi_id_individu as id, 
                    oi_nom AS name,
                    oi_ce_station AS station_id,
+                   oi_commentaire AS details,
                    oe_nom_scientifique AS species_scientific_name,
                    os_ce_commune AS station_insee_code,
                    name AS user_display_name,
@@ -95,7 +96,7 @@ class OdsImportIndividualsCommand extends Command
         foreach ($importedIndividuals as $importedIndividual) {
             $this->io->text('Creating individual : '.$importedIndividual['name']);
 
-            $individual = new Individual();
+            $individual = $this->getIndividual($importedIndividual['id']);
 
             $species = $this->getIndividualSpecies($importedIndividual['species_scientific_name']);
             if (!$species) {
@@ -139,6 +140,7 @@ class OdsImportIndividualsCommand extends Command
             $individual->setSpecies($species);
             $individual->setStation($station);
             $individual->setUser($user);
+            $individual->setDetails($importedIndividual['details']);
             $individual->setName($importedIndividual['name']);
             $individual->setCreatedAt(new \DateTime($importedIndividual['created_at']));
             $individual->setLegacyId($importedIndividual['id']);
@@ -174,6 +176,17 @@ class OdsImportIndividualsCommand extends Command
         $this->io->success('Imported individuals: '.$count.'/'.count($importedIndividuals));
 
         return 0;
+    }
+
+    private function getIndividual($legacy_id)
+    {
+        $individual = $this->em->getRepository(Individual::class)
+            ->findOneBy(['legacyId' => $legacy_id]);
+        if (!$individual) {
+            $individual = new Individual();
+        }
+
+        return $individual;
     }
 
     private function getIndividualSpecies(?string $importedIndividualSpeciesScientificName)

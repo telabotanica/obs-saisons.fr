@@ -191,28 +191,45 @@
         @include flex-direction-row-reverse;
     }
 
-    .add-button-like.edit {
-        @include background-image(image-url('edit'), 50% 50%, 15px 20px);
-        background-color: transparent;
-        @include gap(padding, "h", 0);
-        @include square-block(40px);
-        margin-left: 0;
+    .add-button-like {
+        &.individual-info {
+            @include background-image(image-url('info'), 50% 50%, 25px 25px);
+            margin-right: 5px;
 
-        @include media(xs,md) {
-            display: block;
+            @include media(md) {
+                @include background-image(image-url('info-green'), 50% 50%, 35px 35px);
+            }
         }
+        &.edit {
+            @include background-image(image-url('edit'), 50% 50%, 15px 20px);
 
-        @include media(sm) {
-            @include button-colors(cancel);
-            border-radius: 4px;
+            @include media(md) {
+                @include background-image(image-url('edit-green'), 50% 50%, 20px 30px);
+            }
         }
+         &.edit,
+         &.individual-info {
+             background-color: transparent;
+             @include gap(padding, "h", 0);
+             @include square-block(40px);
+             margin-left: 0;
 
-        @include media(md) {
-            @include background-image(image-url('edit-green'), 50% 50%, 20px 30px);
-            background-color: $green704555;
-            @include square-block(60px);
-            border-radius: 0;
-        }
+             @include media(xs, md) {
+                 display: block;
+             }
+
+             @include media(sm) {
+                 @include button-colors(cancel);
+                 border-radius: 4px;
+             }
+
+             @include media(md) {
+
+                 background-color: $green704555;
+                 @include square-block(60px);
+                 border-radius: 0;
+             }
+         }
     }
 }
 

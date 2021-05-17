@@ -1,6 +1,7 @@
 import domready from 'mf-js/modules/dom/ready';
 import dynamicCallClass from "../../lib/dynamic-call-class";
 import {ObsInfosOverlay} from "./obs-infos-overlay";
+import {IndividualDetailsOverlay} from "./individual-details-overlay";
 import {StationOverlay} from "./station-overlay";
 import {ObservationOverlay} from "./observation-overlay";
 import {IndividualOverlay} from "./individual-overlay";
@@ -10,6 +11,7 @@ import {HandleFileUploads} from "../handle-file-uploads";
 
 const classes = {
     ObsInfosOverlay,
+    IndividualDetailsOverlay,
     StationOverlay,
     IndividualOverlay,
     ObservationOverlay,
