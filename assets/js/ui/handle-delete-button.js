@@ -1,7 +1,6 @@
 export const onDeleteButton = subject => {
     document.getElementsByClassName('delete-button').forEach(deleteButton => {
-        deleteButton.addEventListener('click', evt => {
-
+        $(deleteButton).off('click').on('click', function (evt) {
             let question = 'Êtes vous sûr de vouloir supprimer ce';
 
             switch (subject) {
