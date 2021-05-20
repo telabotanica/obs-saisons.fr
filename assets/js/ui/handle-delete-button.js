@@ -1,6 +1,9 @@
 export const onDeleteButton = subject => {
     document.getElementsByClassName('delete-button').forEach(deleteButton => {
-        $(deleteButton).off('click').on('click', function (evt) {
+        const clone = deleteButton.cloneNode(true);
+
+        deleteButton.replaceWith(clone);
+        clone.addEventListener('click', evt => {
             let question = 'Êtes vous sûr de vouloir supprimer ce';
 
             switch (subject) {
