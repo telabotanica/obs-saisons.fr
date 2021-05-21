@@ -43,8 +43,11 @@ IndividualOverlay.prototype.editFormPreSetFields = function() {
         if (this.individualData.name) {
             document.getElementById('individual_name').value = this.individualData.name;
         }
-        this.speciesEl.classList.remove('disabled');
+        if (this.individualData.details) {
+            document.getElementById('individual_details').value = this.individualData.details;
+        }
 
+        this.speciesEl.classList.remove('disabled');
         if (!!this.individualData.species.id || 0 === this.individualData.species.id) {
             this.selectOption(
                 this.speciesEl.querySelector('.species-option.species-' + this.individualData.species.id)

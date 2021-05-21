@@ -69,6 +69,7 @@ class EntityJsonSerialize
             AbstractNormalizer::ATTRIBUTES => [
                 'id',
                 'name',
+                'details',
                 'species',
                 'station',
             ],
