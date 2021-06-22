@@ -21,20 +21,4 @@ class SpeciesControllerTest extends WebTestCase
             'Assert list species page is StatusCode 200'
         );
     }
-
-    /**
-     * Test single species page.
-     */
-    public function testAnonymousSingleSpeciesPageIsValid()
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/especes/Abricotier');
-
-        $this->assertEquals(
-            200,
-            $client->getResponse()->getStatusCode(),
-            'Assert single species page is StatusCode 200'
-        );
-    }
 }
