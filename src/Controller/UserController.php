@@ -274,11 +274,6 @@ class UserController extends AbstractController
             EntityManagerInterface $manager,
             UserPasswordEncoderInterface $passwordEncoder
     ) {
-        if ($this->getUser()) {
-            // Already logged
-            return $this->redirectToRoute('homepage');
-        }
-
         /**
          * @var User
          */
