@@ -362,4 +362,22 @@ class PagesController extends AbstractController
             'page' => $page,
         ]);
     }
+
+    /**
+     * @Route("/expositions", name="expositions")
+     */
+    public function expositions(
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
+    ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'expositions']
+        );
+
+        return $this->render('pages/static-page.html.twig', [
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
+            'title' => 'Expositions',
+            'page' => $page,
+        ]);
+    }
 }

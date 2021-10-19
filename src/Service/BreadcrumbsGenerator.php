@@ -40,6 +40,7 @@ class BreadcrumbsGenerator
         'les-relais-ods' => 'Les relais de l\'ODS',
         'ods-provence' => 'ODS Provence',
         'mentions-legales' => 'Mentions légales',
+        'expositions' => 'Expositions',
     ];
     const EDITABLE_PAGES = [
         'a-propos',
@@ -61,6 +62,7 @@ class BreadcrumbsGenerator
         'les-relais-ods',
         'ods-provence',
         'mentions-legales',
+        'expositions',
     ];
 
     protected RequestStack $requestStack;
