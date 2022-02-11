@@ -7,7 +7,7 @@
         "file-loader": "^6.1.0",
         "leaflet": "^1.7.1",
         "mf-js": "^2.0.6",
-        "node-sass": "^4.14.1",
+        "node-sass": "^7.0.0",
         "sass-loader": "^9.0.3",
         "webpack-notifier": "^1.6.0"
     },
