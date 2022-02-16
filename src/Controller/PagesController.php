@@ -140,7 +140,7 @@ class PagesController extends AbstractController
 
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
-            'title' => 'Questions fréquences',
+            'title' => 'Questions fréquentes',
             'page' => $page,
         ]);
     }
