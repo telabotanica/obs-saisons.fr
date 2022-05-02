@@ -1,15 +1,15 @@
 {
     "devDependencies": {
-        "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
-        "@symfony/webpack-encore": "^0.31.0",
+        "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.7",
+        "@symfony/webpack-encore": "^1.8.2",
         "@telabotanica/ckeditor5-build-ods": "^22.0.1",
-        "core-js": "^3.6.5",
-        "file-loader": "^6.1.0",
-        "leaflet": "^1.7.1",
+        "core-js": "^3.22.3",
+        "file-loader": "^6.2.0",
+        "leaflet": "^1.8.0",
         "mf-js": "^2.0.6",
-        "node-sass": "^4.14.1",
-        "sass-loader": "^9.0.3",
-        "webpack-notifier": "^1.6.0"
+        "node-sass": "^7.0.1",
+        "sass-loader": "^12.6.0",
+        "webpack-notifier": "^1.15.0"
     },
     "license": "UNLICENSED",
     "private": true,
@@ -20,12 +20,12 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "jquery": "^3.5.1",
+        "jquery": "^3.6.0",
         "leaflet-draw": "^1.0.4",
-        "leaflet-gesture-handling": "^1.2.1",
-        "leaflet.markercluster": "^1.4.1",
-        "orejime": "^2.0.1",
+        "leaflet-gesture-handling": "^1.2.2",
+        "leaflet.markercluster": "^1.5.3",
+        "orejime": "^2.2.1",
         "places.js": "^1.19.0",
-        "plotly.js-dist": "^1.55.2"
+        "plotly.js-dist": "^2.11.1"
     }
 }
