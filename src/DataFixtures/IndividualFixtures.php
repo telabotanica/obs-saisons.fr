@@ -63,4 +63,3 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 }
-

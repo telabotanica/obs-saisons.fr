@@ -147,6 +147,7 @@ class ObservationRepository extends ServiceEntityRepository
     public function findByStationSlugForExport(string $stationSlug): array
     {
         $qb = $this->createQueryBuilder('o');
+
         return $qb
             ->innerJoin('o.individual', 'i')
             ->innerJoin('o.event', 'e')

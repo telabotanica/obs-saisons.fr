@@ -400,7 +400,6 @@ class UserController extends AbstractController
         $form = $this->createForm(ProfileType::class, $user);
 
         if ($request->isMethod('POST')) {
-
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 if ($user->getIsNewsletterSubscriber()) {

@@ -58,7 +58,7 @@ class TypeSpecies
     public function setReign(string $reign): self
     {
         if (!in_array($reign, self::REIGN)) {
-            throw new \InvalidArgumentException("\"Reign\" invalide (valeurs possibles: \"".self::REIGN_ANIMALS."\", \"".self::REIGN_PLANTS."\")");
+            throw new \InvalidArgumentException('"Reign" invalide (valeurs possibles: "'.self::REIGN_ANIMALS.'", "'.self::REIGN_PLANTS.'")');
         }
         $this->reign = $reign;
 

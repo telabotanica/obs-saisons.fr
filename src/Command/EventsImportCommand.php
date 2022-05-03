@@ -15,7 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class EventsImportCommand extends Command
 {
-    use  ImportCommandTrait;
+    use ImportCommandTrait;
 
     protected static $defaultName = 'ods:import:events';
 

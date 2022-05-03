@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class OdsStaticDataMigrate extends Command
 {
-    use  ImportCommandTrait;
+    use ImportCommandTrait;
 
     protected static $defaultName = 'ods:bootstrap:all-static-data';
 

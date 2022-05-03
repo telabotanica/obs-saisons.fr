@@ -207,7 +207,8 @@ class EntityJsonSerialize
         ];
     }
 
-    public function timestampableCallback(\DateTimeInterface $date) {
+    public function timestampableCallback(\DateTimeInterface $date)
+    {
         return $date->format('c');
     }
 

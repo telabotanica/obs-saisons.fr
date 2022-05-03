@@ -61,4 +61,3 @@ class ObservationFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 }
-

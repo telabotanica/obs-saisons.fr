@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Form\ContactType;
-use App\Service\BreadcrumbsGenerator;
 use App\Service\EmailSender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

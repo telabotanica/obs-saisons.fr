@@ -6,8 +6,8 @@ use App\Entity\Event;
 use App\Entity\EventSpecies;
 use App\Entity\Species;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)

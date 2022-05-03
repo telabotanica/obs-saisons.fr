@@ -201,7 +201,6 @@ class PagesController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/resultats", name="resultats")
      */

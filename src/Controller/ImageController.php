@@ -35,7 +35,6 @@ class ImageController extends AbstractController
      */
     public function imagesList()
     {
-
     }
 
     /**
@@ -43,8 +42,5 @@ class ImageController extends AbstractController
      */
     public function imageDelete()
     {
-
     }
-
-
 }

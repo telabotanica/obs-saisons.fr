@@ -136,7 +136,7 @@ class OdsImportUsersCommand extends Command
 
             $count = 0;
             foreach ($dups as $duplicate) {
-                /**
+                /*
                  * @var $duplicate User
                  */
                 // find users with duplicated emails
@@ -157,7 +157,7 @@ class OdsImportUsersCommand extends Command
                 foreach ($users as $i => $user) {
                     ++$count;
 
-                    /**
+                    /*
                      * @var $user User
                      */
                     $user->setStatus(User::STATUS_DISABLED);
@@ -195,7 +195,7 @@ class OdsImportUsersCommand extends Command
 
             foreach ($importedUsers as $importedUser) {
                 $token = $this->tokenGenerator->generateToken();
-                /**
+                /*
                  * @var $importedUser User
                  */
                 $importedUser->setResetToken($token);

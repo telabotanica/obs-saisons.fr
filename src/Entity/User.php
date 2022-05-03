@@ -318,6 +318,7 @@ class User implements UserInterface
         if ($this->deletedAt) {
             return null;
         }
+
         return $this->avatar;
     }
 
@@ -340,6 +341,7 @@ class User implements UserInterface
         if ($this->deletedAt) {
             return null;
         }
+
         return $this->locality;
     }
 
@@ -355,6 +357,7 @@ class User implements UserInterface
         if ($this->deletedAt) {
             return null;
         }
+
         return $this->country;
     }
 
@@ -370,6 +373,7 @@ class User implements UserInterface
         if ($this->deletedAt) {
             return null;
         }
+
         return $this->postCode;
     }
 
@@ -385,6 +389,7 @@ class User implements UserInterface
         if ($this->deletedAt) {
             return null;
         }
+
         return $this->profileType;
     }
 

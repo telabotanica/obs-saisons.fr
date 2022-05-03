@@ -2,7 +2,6 @@
 
 namespace App\Helper;
 
-
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

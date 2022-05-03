@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
-use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;

@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class SpeciesImportCommand extends Command
 {
-    use  ImportCommandTrait;
+    use ImportCommandTrait;
 
     protected static $defaultName = 'ods:import:species';
 

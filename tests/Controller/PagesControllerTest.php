@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Service\BreadcrumbsGenerator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PagesControllerTest extends WebTestCase
@@ -47,6 +46,5 @@ class PagesControllerTest extends WebTestCase
                 sprintf('Assert page %s is StatusCode 200', $page)
             );
         }
-
     }
 }

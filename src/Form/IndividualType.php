@@ -37,7 +37,6 @@ class IndividualType extends AbstractType
         $this->isEdit = false;
         $this->station = null;
         $this->individuals = [];
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
