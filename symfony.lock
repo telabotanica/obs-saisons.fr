@@ -36,7 +36,7 @@
         "version": "2.13.3"
     },
     "doctrine/data-fixtures": {
-        "version": "1.4.4"
+        "version": "1.5.3"
     },
     "doctrine/dbal": {
         "version": "2.10.3"
