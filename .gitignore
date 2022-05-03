@@ -27,3 +27,7 @@ yarn-error.log
 
 /public/images/
 
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
