@@ -1,7 +1,7 @@
 /* *** *
  * SCSS *
  * *** */
-import '../css/app.scss';
+import './styles/app.scss';
 /* ********* *
  * POLYFILLS *
  * ********* */
