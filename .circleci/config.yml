@@ -11,7 +11,7 @@ jobs:
         environment:
           APP_ENV: test
           APP_SECRET: $ecretf0rt3st
-          DATABASE_URL: mysql://root:@127.0.0.1:3306/circle_test
+          DATABASE_URL: mysql://root:@127.0.0.1:3306/circle
           SYMFONY_DEPRECATIONS_HELPER: weak
 
       # Specify service dependencies here if necessary
@@ -32,24 +32,20 @@ jobs:
       - run: sudo apt install mariadb-client
       - run: sudo docker-php-ext-install pdo_mysql
 
-      # Download and cache dependencies
+      # composer cache
       - restore_cache:
           keys:
             # "composer.lock" can be used if it is committed to the repo
             - composer-{{ .Environment.CACHE_VERSION }}-dependencies-{{ checksum "composer.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - composer-{{ .Environment.CACHE_VERSION }}-dependencies-
-
       - run: composer install -n --prefer-dist
-
       - save_cache:
           key: composer-{{ .Environment.CACHE_VERSION }}-dependencies-{{ checksum "composer.json" }}
           paths:
             - ./vendor
+      # yarn cache
       - restore_cache:
           keys:
             - node-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-            - node-{{ .Environment.CACHE_VERSION }}-
       - run: yarn install
       - save_cache:
           key: node-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
