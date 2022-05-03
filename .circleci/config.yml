@@ -63,7 +63,7 @@ jobs:
       - run: php bin/console cache:clear
 
       # run webpack
-      - run: npm run build
+      - run: yarn build
 
       # run tests with phpunit or codecept
       - run: ./bin/phpunit

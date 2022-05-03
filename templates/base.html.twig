@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<<<<<<< ours
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8">
 		{# set page title #}
@@ -34,6 +33,11 @@
 		{# steelsheet #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+		{# JS #}
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
 
@@ -73,10 +77,5 @@
 				{% endblock %}
 			</div>
 		</div>
-
-		{# JS #}
-		{% block javascripts %}
-			{{ encore_entry_script_tags('app') }}
-		{% endblock %}
 	</body>
 </html>
