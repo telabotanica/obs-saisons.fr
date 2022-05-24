@@ -7,6 +7,7 @@ use App\Service\EmailSender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use function Symfony\Component\String\u;
 
 /**
  * Class PagesController.
@@ -22,19 +23,20 @@ class ContactController extends AbstractController
     ) {
         $form = $this->createForm(ContactType::class);
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $vars = $request->request->get('contact');
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $vars = $request->request->get('contact');
 
-                $message = $message = $this->renderView('emails/contact.html.twig', [
-                    'userEmail' => $vars['email'],
+            $honeyPot = $vars[ContactType::HONEYPOT_FIELD_NAME];
+            if (u($honeyPot)->trim()->isEmpty()) {
+                $message = $this->renderView('emails/contact.html.twig', [
+                    'userEmail' => $vars[ContactType::EMAIL_FIELD_NAME],
                     'subject' => $vars['subject'],
                     'message' => $vars['message'],
                 ]);
 
                 $mailer->send(
-                    $vars['email'],
+                    $vars[ContactType::EMAIL_FIELD_NAME],
                     'contact@obs-saisons.fr',
                     $mailer->getSubjectFromTitle($message),
                     $message
