@@ -11,6 +11,6 @@ export const toggleVisibility = (element, matchesCondition = null) => {
 domready(() => {
     const hiddenElements = document.getElementsByClassName('hide');
     if (hiddenElements) {
-        hiddenElements.forEach(hiddenElement => hiddenElement.classList.add('toggle-visibility'));
+        Array.from(hiddenElements).forEach(hiddenElement => hiddenElement.classList.add('toggle-visibility'));
     }
 });

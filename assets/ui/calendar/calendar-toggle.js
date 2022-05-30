@@ -3,7 +3,7 @@ import {animateDropdownArrow} from "../animate-dropdown-arrow";
 import {toggleVisibility} from "../../lib/toggle-element-visibility";
 
 domready(() => {
-    document.querySelectorAll('a.item-heading-dropdown').forEach(dropdown =>
+    Array.from(document.querySelectorAll('a.item-heading-dropdown')).forEach(dropdown =>
         dropdown.addEventListener('click', event => {
             event.preventDefault();
 
@@ -14,7 +14,7 @@ domready(() => {
         })
     );
 
-    document.getElementsByClassName('table-mask-button').forEach(button =>
+    Array.from(document.getElementsByClassName('table-mask-button')).forEach(button =>
         button.addEventListener('click', event => {
             event.preventDefault();
 

@@ -64,7 +64,7 @@ IndividualOverlay.prototype.manageSpecies = function() {
 
     // toggle marker and help text on already recorded species in station
     helpEl.classList.toggle('hidden',!showAll || !species);
-    this.speciesEl.getElementsByClassName('exists-in-station').forEach(element => {
+    Array.from(this.speciesEl.getElementsByClassName('exists-in-station')).forEach(element => {
         const speciesNameText = element.textContent;
         if (!showAll && /\(\+\)/.test(speciesNameText)) {
             element.textContent = speciesNameText.replace(' (+)', '');
@@ -83,7 +83,7 @@ IndividualOverlay.prototype.updateSelectOptions = function(
 ) {
     FormOverlay.prototype.updateSelectOptions.call(this, selectEl, itemsToMatch, sortOptions);
 
-    selectEl.querySelectorAll('.exists-in-station.animal').forEach(option => {
+    Array.from(selectEl.querySelectorAll('.exists-in-station.animal')).forEach(option => {
         option.toggleAttribute('disabled', !sortOptions);
     });
 };

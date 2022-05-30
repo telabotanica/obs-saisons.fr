@@ -39,14 +39,14 @@ FormOverlay.prototype.resetEditionForm = function() {
         this.form.action = this.form.dataset.formActionReset;
         this.overlay.classList.remove('edit');
     }
-    this.overlay.getElementsByClassName('show-on-edit').forEach(
+    Array.from(this.overlay.getElementsByClassName('show-on-edit')).forEach(
         shownLinkOnEdition => shownLinkOnEdition.href = ''
     );
 };
 
 FormOverlay.prototype.resetAllSelectOptions = function () {
     const lthis = this;
-    this.form.getElementsByTagName('option').forEach(optionEl => lthis.selectOptionsLockToggle(optionEl, false));
+    Array.from(this.form.getElementsByTagName('option')).forEach(optionEl => lthis.selectOptionsLockToggle(optionEl, false));
 };
 
 // returns an array of values from data attributes value
@@ -67,11 +67,11 @@ FormOverlay.prototype.updateSelectOptions = function(
         selectName = selectEl.dataset.name;
 
     selectEl.classList.toggle('disabled',(1 >= itemsToMatch.length && sortOptions));
-    selectEl.getElementsByTagName('option').forEach(option => lthis.selectOptionsLockToggle(option, false));
+    Array.from(selectEl.getElementsByTagName('option')).forEach(option => lthis.selectOptionsLockToggle(option, false));
     selectEl.closest('form').reset();
 
     if(sortOptions) {
-        selectEl.querySelectorAll('.' + selectName + '-option').forEach(element => {
+        Array.from(selectEl.querySelectorAll('.' + selectName + '-option')).forEach(element => {
             if (itemsToMatch.includes(element.value.toString())) {
                 if (1 === itemsToMatch.length && element.classList.contains(selectName + '-' + itemsToMatch[0])) {
                     element.setAttribute('selected', 'selected');

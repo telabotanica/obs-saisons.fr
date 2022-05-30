@@ -5,7 +5,7 @@ domready(() => {
     const flashMessagesEl = document.getElementsByClassName('app-flashes');
 
     if (flashMessagesEl) {
-        flashMessagesEl.forEach(flashMessage => {
+        Array.from(flashMessagesEl).forEach(flashMessage => {
             setTimeout(() => {
                 slideUp(flashMessage);
             }, 5000);

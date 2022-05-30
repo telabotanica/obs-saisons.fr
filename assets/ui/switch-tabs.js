@@ -6,7 +6,7 @@ export const resetTabMatchingElements = (tabsHolder) => {
         targets =  document.querySelectorAll('[data-tab]:not(.tab)');
 
     if(activeTab !== 'all' && targets) {
-        targets.forEach(target => {
+        Array.from(targets).forEach(target => {
             if(activeTab !== target.dataset.tab) {
                 target.classList.add('hide');
             }
@@ -38,14 +38,14 @@ domready(() => {
 
         resetTabMatchingElements(tabsHolder);
 
-        tabElements.forEach(tab => {
+        Array.from(tabElements).forEach(tab => {
             tab.addEventListener('click', evt => {
                 const activeTab = tab.dataset.tab;
 
                 evt.preventDefault();
 
                 tabsHolder.dataset.active = activeTab;
-                elementsWithDataTab.forEach(elementWithDataTab => {
+                Array.from(elementsWithDataTab).forEach(elementWithDataTab => {
                     if (elementWithDataTab.classList.contains('tab')) {
                         elementWithDataTab.classList.toggle('not', (activeTab !== elementWithDataTab.dataset.tab));
                     } else {

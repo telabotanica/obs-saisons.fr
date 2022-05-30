@@ -11,7 +11,7 @@ export const displayError = (field, errorMessage, classAttr) => {
 };
 
 export const removeErrors = classAttr => {
-    document.getElementsByClassName(classAttr).forEach(errorMessageElement => {
+    Array.from(document.getElementsByClassName(classAttr)).forEach(errorMessageElement => {
         errorMessageElement.remove();
     });
 };

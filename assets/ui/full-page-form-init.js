@@ -29,7 +29,7 @@ domready(() => {
     const formContainers = document.querySelectorAll('.saisie-container.page');// ".page" means: not an overlay form
 
     if (formContainers.length) {
-        formContainers.forEach(formContainer => {
+        Array.from(formContainers).forEach(formContainer => {
             initFullPageFormFileUploads(formContainer);
             initFullPageFormLocality(formContainer);
         });

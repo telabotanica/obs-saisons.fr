@@ -192,7 +192,7 @@ ObservationOverlay.prototype.onChangeObsEvent = function() {
 ObservationOverlay.prototype.updateHelpInfos = function(isValidEvent) {
     const eventHelp = this.form.querySelector('.saisie-aide.event');
 
-    eventHelp.getElementsByTagName('img').forEach(img => img.remove());
+    Array.from(eventHelp.getElementsByTagName('img')).forEach(img => img.remove());
 
     if (isValidEvent) {
         const selectedEvent = this.eventEl.options[this.eventEl.selectedIndex],
@@ -350,7 +350,7 @@ ObservationOverlay.prototype.closeOverlay = function () {
         this.manageIndividualAndEvents(openIndividualGlobalForm.dataset);
     }
     this.closeDetailsField();
-    this.form.getElementsByClassName('ods-form-warning').forEach(warningEl => {
+    Array.from(this.form.getElementsByClassName('ods-form-warning')).forEach(warningEl => {
         warningEl.classList.add('hidden');
         warningEl.textContent = '';
     });

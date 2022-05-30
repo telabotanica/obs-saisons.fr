@@ -3,7 +3,7 @@ import {toggleVisibility} from "../lib/toggle-element-visibility";
 import {animateDropdownArrow} from "./animate-dropdown-arrow";
 
 domready(() => {
-    document.querySelectorAll('a.accordion-title-dropdown').forEach(
+    Array.from(document.querySelectorAll('a.accordion-title-dropdown')).forEach(
         dropdown => dropdown.addEventListener('click',event => {
             event.preventDefault();
 

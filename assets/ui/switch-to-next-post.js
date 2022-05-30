@@ -15,7 +15,7 @@ function getNodeNextElement(nodeList, element, direction) {
 }
 
 domready(() => {
-    document.getElementsByClassName('nav-arrow').forEach(
+    Array.from(document.getElementsByClassName('nav-arrow')).forEach(
         navArrow => navArrow.addEventListener('click', function (evt) {
             evt.preventDefault();
 
@@ -26,14 +26,14 @@ domready(() => {
                 direction = navArrow.dataset.direction;
 
             if(2 > targetNodeList.length) {
-                arrowsContainer.getElementsByClassName('nav-arrow').forEach(
+                Array.from(arrowsContainer.getElementsByClassName('nav-arrow')).forEach(
                     arrow => arrow.classList.add('inactive')
                 );
             }
 
             if(!!visibleTargetPost && !!targetNodeList && 1 < targetNodeList.length) {
                 visibleTargetPost.classList.add('hidden');
-                arrowsContainer.querySelectorAll('.nav-arrow.inactive').forEach(
+                Array.from(arrowsContainer.querySelectorAll('.nav-arrow.inactive')).forEach(
                     arrow => arrow.classList.remove('inactive')
                 );
 

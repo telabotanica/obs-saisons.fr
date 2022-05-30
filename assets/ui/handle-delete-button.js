@@ -1,5 +1,5 @@
 export const onDeleteButton = subject => {
-    document.getElementsByClassName('delete-button').forEach(deleteButton => {
+    Array.from(document.getElementsByClassName('delete-button')).forEach(deleteButton => {
         const clone = deleteButton.cloneNode(true);
 
         deleteButton.replaceWith(clone);

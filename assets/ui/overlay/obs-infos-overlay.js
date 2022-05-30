@@ -31,7 +31,7 @@ ObsInfosOverlay.prototype.onObsInfo = function () {
             return false;
         }
         return observationDatasetKeysCriteria.every(function (key) {
-            return lthis.dataAttrs[key] ===  observation.dataset[key];
+            return lthis.dataAttrs[key] === observation.dataset[key];
         });
     });
     const obsInfoEl = document.querySelector('.obs-informations');

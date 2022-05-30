@@ -4,7 +4,7 @@ domready(() => {
     const legendElements =  document.querySelectorAll('.helper-legend');
     let hideButton;
     if(legendElements.length) {
-        legendElements.forEach(legendEl => {
+        Array.from(legendElements).forEach(legendEl => {
                 hideButton = legendEl.querySelector('.hide-button');
                 if(hideButton) {
                     hideButton.addEventListener('click', evt => {

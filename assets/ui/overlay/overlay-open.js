@@ -55,7 +55,7 @@ const initExternalInstances = (
 export const onOpenOverlay = () => {
     let extInstancesStorage = {};
 
-    document.getElementsByClassName('open').forEach(openOverlayButton => {
+    Array.from(document.getElementsByClassName('open')).forEach(openOverlayButton => {
         $(openOverlayButton).off('click').on('click', evt => {
             evt.preventDefault();
             evt.stopPropagation();
