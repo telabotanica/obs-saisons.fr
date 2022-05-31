@@ -23,90 +23,91 @@
 {% endif %}
 
 
-{% for obs in observations if not break %}
-
-    {# set observation grid position #}
-    {% set column_start = ((obs.date|date("n")) + 2) * 10 %}
-    {% set row_start = 0 %}
-    {% set obsEvent = obs.event.id %}
-    {% for singleEventSpecies in eventsSpecies %}
-        {% if singleEventSpecies.event.id == obsEvent  %}
-            {% set row_start = loop.index %}
-        {% endif %}
-    {% endfor %}
-
-    {# set displayed picture#}
-    {% set pictureUrl = '' %}
-    {% if obs.isMissing == 0 %}
-        {% if obs.picture is not null %}
-            {% set pictureUrl = obs.picture %}
-        {% else %}
-            {% set pictureName = obs.individual.species.picture %}
-            {% if obs.individual.species.type.name == 'arbres' %}
-                {% set pictureName = "#{pictureName}_#{obs.event.stadeBbch|first}" %}
+{% for obs in observations %}
+    {% if not break %}
+        {# set observation grid position #}
+        {% set column_start = ((obs.date|date("n")) + 2) * 10 %}
+        {% set row_start = 0 %}
+        {% set obsEvent = obs.event.id %}
+        {% for singleEventSpecies in eventsSpecies %}
+            {% if singleEventSpecies.event.id == obsEvent  %}
+                {% set row_start = loop.index %}
             {% endif %}
-            {% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
-        {% endif %}
-    {% else %}
-        {% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
-    {% endif %}
-
-    {% set displayObservation = true %}
-    {% if isAnimal %}{# toggle display observation when only one event #}
-        {% if obs.isMissing and loop.index != observations|length %}
-            {# missing event observation is only displayed if no valid observation exists for the year #}
-            {% set displayObservation = false %}
-        {% else %}
-            {% set break = true %}
-        {% endif %}
-    {% else %}{# toggle display observation when observation is for missing event and not only one event #}
-        {% if obs.isMissing %}
-            {% if obsEvent not in stagesHavingObservations %}
-                {% set stagesHavingObservations = stagesHavingObservations|merge([obsEvent]) %}
-            {% elseif obsEvent in stagesHavingObservations %}
-                {% set displayObservation = false %}
-            {% endif %}
-        {% endif %}
-    {% endif %}
-
-    {# observation html #}
-    {% if row_start > 0 and column_start > 20 and displayObservation %}
-        {% set individualsIds = [] %}
-        {% for individual in  listCard.individuals %}
-            {% set individualsIds = individualsIds|merge([individual.id]) %}
         {% endfor %}
-        <a
-            href=""
-            class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}{{ hide? ' hide'}}"
-            {# matching tabs #}
-            data-tab="{{ obs.user.id }}"
-            {# matching calendar years menu and selecting observations for obs-infos list cards #}
-            data-year="{{ obs.date|date("Y") }}"
-            {# selecting observations for obs-infos list cards #}
-            data-month="{{ obs.date|date("n") }}"
-            data-individual-id="{{ obs.individual.id }}"
-            {# selecting and displaying observations for obs-infos list cards #}
-            data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
-            {# displaying obs-infos list cards #}
-            data-picture-url="{{ pictureUrl }}"
-            data-date="{{ obs.date|format_datetime(pattern='d/MM/y',locale='fr') }}"
-            data-show-edit="{{ canAdminStation or app.user.id|default == obs.user.id }}"
-            data-open="obs-infos"
-            {# editting observation #}
-            data-observation="{{ obs|getJsonSerializedEditObservation }}"
-            data-individuals-ids="{{ individualsIds|join(',') }}"{# all individual ids for this species #}
-            data-obs-date="{{ obs.date|date("Y-m-d", "Europe/Paris") }}"
-            style="
-                {{
-                    "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};
-                    grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};"
-                }}
-            "
-        >
-            <div class="stage-marker-text {{ loop.index == observations|length or break? 'last' }}">
-                <div class="stage-text">{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
-                <div class="stage-date">Le {{ obs.date|format_datetime(pattern='d MMMM y',locale='fr') }}</div>
-            </div>
-        </a>
+
+        {# set displayed picture#}
+        {% set pictureUrl = '' %}
+        {% if obs.isMissing == 0 %}
+            {% if obs.picture is not null %}
+                {% set pictureUrl = obs.picture %}
+            {% else %}
+                {% set pictureName = obs.individual.species.picture %}
+                {% if obs.individual.species.type.name == 'arbres' %}
+                    {% set pictureName = "#{pictureName}_#{obs.event.stadeBbch|first}" %}
+                {% endif %}
+                {% set pictureUrl = "/media/species/#{pictureName}.jpg" %}
+            {% endif %}
+        {% else %}
+            {% set pictureUrl = asset('media/layout/icons/eye-crossed.svg') %}
+        {% endif %}
+
+        {% set displayObservation = true %}
+        {% if isAnimal %}{# toggle display observation when only one event #}
+            {% if obs.isMissing and loop.index != observations|length %}
+                {# missing event observation is only displayed if no valid observation exists for the year #}
+                {% set displayObservation = false %}
+            {% else %}
+                {% set break = true %}
+            {% endif %}
+        {% else %}{# toggle display observation when observation is for missing event and not only one event #}
+            {% if obs.isMissing %}
+                {% if obsEvent not in stagesHavingObservations %}
+                    {% set stagesHavingObservations = stagesHavingObservations|merge([obsEvent]) %}
+                {% elseif obsEvent in stagesHavingObservations %}
+                    {% set displayObservation = false %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {# observation html #}
+        {% if row_start > 0 and column_start > 20 and displayObservation %}
+            {% set individualsIds = [] %}
+            {% for individual in  listCard.individuals %}
+                {% set individualsIds = individualsIds|merge([individual.id]) %}
+            {% endfor %}
+            <a
+                href=""
+                class="stage-marker {{ stagesCssClasses[obs.event.name] }}{{ obs.isMissing ? ' absence' }} open observation-{{ obs.id }}{{ hide? ' hide'}}"
+                {# matching tabs #}
+                data-tab="{{ obs.user.id }}"
+                {# matching calendar years menu and selecting observations for obs-infos list cards #}
+                data-year="{{ obs.date|date("Y") }}"
+                {# selecting observations for obs-infos list cards #}
+                data-month="{{ obs.date|date("n") }}"
+                data-individual-id="{{ obs.individual.id }}"
+                {# selecting and displaying observations for obs-infos list cards #}
+                data-stage="{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? " - stade #{obs.event.stadeBbch}" }}"
+                {# displaying obs-infos list cards #}
+                data-picture-url="{{ pictureUrl }}"
+                data-date="{{ obs.date|format_datetime(pattern='d/MM/y',locale='fr') }}"
+                data-show-edit="{{ canAdminStation or app.user.id|default == obs.user.id }}"
+                data-open="obs-infos"
+                {# editting observation #}
+                data-observation="{{ obs|getJsonSerializedEditObservation }}"
+                data-individuals-ids="{{ individualsIds|join(',') }}"{# all individual ids for this species #}
+                data-obs-date="{{ obs.date|date("Y-m-d", "Europe/Paris") }}"
+                style="
+                    {{
+                        "background-image: url(#{pictureUrl}); grid-column-start: #{column_start}; grid-column-end: #{column_start + 10};
+                        grid-row-start: #{row_start}; grid-row-end: #{row_start + 1};"
+                    }}
+                "
+            >
+                <div class="stage-marker-text {{ loop.index == observations|length or break? 'last' }}">
+                    <div class="stage-text">{{ periodsNames[obs.event.name] }}{{ obs.event.stadeBbch != null ? "- stade #{obs.event.stadeBbch}" }}</div>
+                    <div class="stage-date">Le {{ obs.date|format_datetime(pattern='d MMMM y',locale='fr') }}</div>
+                </div>
+            </a>
+        {% endif %}
     {% endif %}
 {% endfor %}
