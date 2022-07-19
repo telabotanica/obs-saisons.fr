@@ -134,10 +134,9 @@ class UserController extends AbstractController
             ]);
 
             $mailer->send(
-                    'contact@obs-saisons.fr',
-                    $user->getEmail(),
-                    $mailer->getSubjectFromTitle($message),
-                    $message
+                $user->getEmail(),
+                $mailer->getSubjectFromTitle($message),
+                $message
             );
 
             $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boite de reception.');
@@ -153,7 +152,7 @@ class UserController extends AbstractController
      */
     public function activate(
             Request $request,
-            string $token,
+            string $resetToken,
             EntityManagerInterface $manager,
             SessionInterface $session,
             TokenStorageInterface $tokenStorage,
@@ -162,7 +161,7 @@ class UserController extends AbstractController
         /**
          * @var User
          */
-        $user = $manager->getRepository(User::class)->findOneBy(['resetToken' => $token]);
+        $user = $manager->getRepository(User::class)->findOneBy(['resetToken' => $resetToken]);
 
         if (null === $user) {
             $this->addFlash('error', 'Ce token est inconnu.');
@@ -249,7 +248,6 @@ class UserController extends AbstractController
             ]);
 
             $mailer->send(
-                'contact@obs-saisons.fr',
                 $user->getEmail(),
                 $mailer->getSubjectFromTitle($message),
                 $message
@@ -509,7 +507,6 @@ class UserController extends AbstractController
                 ]);
 
                 $mailer->send(
-                    'contact@obs-saisons.fr',
                     $user->getEmail(),
                     $mailer->getSubjectFromTitle($message),
                     $message
@@ -523,7 +520,6 @@ class UserController extends AbstractController
                 ]);
 
                 $mailer->send(
-                    'contact@obs-saisons.fr',
                     $vars['email_new'],
                     $mailer->getSubjectFromTitle($message),
                     $message

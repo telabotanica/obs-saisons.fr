@@ -209,10 +209,9 @@ class OdsImportUsersCommand extends Command
 
                 try {
                     $this->mailer->send(
-                        'contact@obs-saisons.fr',
                         $importedUser->getEmail(),
                         'Merci de réinitialiser votre mot de passe - obs-saisons.fr',
-                        $message
+                        $message,
                     );
 
                     // flushing each time to avoid sending mail and lost tokens in case of crash

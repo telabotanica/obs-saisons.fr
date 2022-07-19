@@ -4,6 +4,8 @@ namespace App\Service;
 
 class EmailSender
 {
+    public const CONTACT_EMAIL = 'contact@obs-saisons.org';
+
     /**
      * @var \Swift_Mailer
      */
@@ -14,12 +16,13 @@ class EmailSender
         $this->mailer = $mailer;
     }
 
-    public function send($from, $to, $subject, $message)
+    public function send($to, $subject, $message, $replyTo = self::CONTACT_EMAIL)
     {
         $message = ( new \Swift_Message($subject) )
-                ->setFrom($from)
-                ->setTo($to)
-                ->setBody($message, 'text/html');
+            ->setFrom(self::CONTACT_EMAIL)
+            ->setTo($to)
+            ->setReplyTo($replyTo)
+            ->setBody($message, 'text/html');
 
         return $this->mailer->send($message);
     }

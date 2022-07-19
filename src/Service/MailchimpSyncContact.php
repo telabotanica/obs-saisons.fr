@@ -216,7 +216,6 @@ class MailchimpSyncContact
         ]);
 
         $this->mailer->send(
-            'contact@obs-saisons.fr',
             ['contact@obs-saisons.fr', $user->getEmail()],
             $this->mailer->getSubjectFromTitle($mailMessage),
             $mailMessage

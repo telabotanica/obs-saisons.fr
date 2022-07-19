@@ -36,10 +36,10 @@ class ContactController extends AbstractController
                 ]);
 
                 $mailer->send(
-                    $vars[ContactType::EMAIL_FIELD_NAME],
-                    'contact@obs-saisons.fr',
+                    EmailSender::CONTACT_EMAIL,
                     $mailer->getSubjectFromTitle($message),
-                    $message
+                    $message,
+                    $vars[ContactType::EMAIL_FIELD_NAME],
                 );
                 $this->addFlash('success', 'Votre message a été envoyé');
             } else {
