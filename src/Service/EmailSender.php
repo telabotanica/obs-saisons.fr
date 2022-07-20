@@ -4,7 +4,7 @@ namespace App\Service;
 
 class EmailSender
 {
-    public const CONTACT_EMAIL = 'contact@obs-saisons.org';
+    public const CONTACT_EMAIL = 'contact@obs-saisons.fr';
 
     /**
      * @var \Swift_Mailer
