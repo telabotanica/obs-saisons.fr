@@ -130,7 +130,7 @@ class UserController extends AbstractController
 
             $message = $this->renderView('emails/register-activation.html.twig', [
                     'user' => $user,
-                    'url' => $this->generateUrl('user_activate', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
+                    'url' => $this->generateUrl('user_activate', ['resetToken' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
 
             $mailer->send(
@@ -148,7 +148,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/activate/{token}", name="user_activate")
+     * @Route("/user/activate/{resetToken}", name="user_activate")
      */
     public function activate(
             Request $request,
