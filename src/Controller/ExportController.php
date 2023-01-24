@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\Observation;
 use App\Entity\Species;
 use App\Entity\Station;
+use App\Service\CsvService;
 use App\Service\EntityJsonSerialize;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -22,11 +23,11 @@ class ExportController extends AbstractController
     /**
      * @Route("/export", name="export")
      */
-    public function export(EntityManagerInterface $em)
+    public function export(EntityManagerInterface $em, CsvService $csvService)
     {
         $obs = $em->getRepository(Observation::class)->findAllPublic();
 
-        return new JsonResponse($obs);
+        return $csvService->csvAction($obs);
     }
 
     /**
