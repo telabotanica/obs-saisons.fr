@@ -153,21 +153,35 @@ class ExportController extends AbstractController
     /**
      * @Route("/export/species", name="export_species")
      */
-    public function exportSpecies(EntityManagerInterface $em)
+    public function exportSpecies(EntityManagerInterface $em, CsvService $csvService)
     {
         $data = $em->getRepository(Species::class)->findAllActiveArray();
 
-        return new JsonResponse($data);
+        $response = $csvService->exportCsvSpecies($data);
+
+        // If csv fail, return a json file
+        if ($response->getStatusCode() !== 200){
+            return new JsonResponse($data);
+        }
+
+        return $response;
     }
 
     /**
      * @Route("/export/events", name="export_events")
      */
-    public function exportEvents(EntityManagerInterface $em)
+    public function exportEvents(EntityManagerInterface $em, CsvService $csvService)
     {
         $data = $em->getRepository(Event::class)->findAllArray();
 
-        return new JsonResponse($data);
+        $response = $csvService->exportCsvEvents($data, 'export_events');
+
+        // If csv fail, return a json file
+        if ($response->getStatusCode() !== 200){
+            return new JsonResponse($data);
+        }
+
+        return $response;
     }
 
     /**
@@ -176,7 +190,8 @@ class ExportController extends AbstractController
     public function exportEventSpecies(
         $speciesId,
         Request $request,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        CsvService $csvService
     ) {
         $species = $em->getRepository(Species::class)->findOneById($speciesId);
         if (!$species) {
@@ -185,6 +200,16 @@ class ExportController extends AbstractController
 
         $data = $em->getRepository(Event::class)->findBySpeciesArray($species);
 
-        return new JsonResponse($data);
+        $speciesName = $species->getVernacularName();
+        $fileName = 'export_events_'.str_replace(' ', '-', $speciesName);
+
+        $response = $csvService->exportCsvEvents($data, $fileName);
+
+        // If csv fail, return a json file
+        if ($response->getStatusCode() !== 200){
+            return new JsonResponse($data);
+        }
+
+        return $response;
     }
 }
