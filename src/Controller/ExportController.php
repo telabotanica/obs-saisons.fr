@@ -27,7 +27,14 @@ class ExportController extends AbstractController
     {
         $obs = $em->getRepository(Observation::class)->findAllPublic();
 
-        return $csvService->csvAction($obs);
+        $response = $csvService->csvAction($obs);
+
+        // If csv fail, return a json file
+        if ($response->getStatusCode() !== 200){
+            return new JsonResponse($obs);
+        }
+
+        return $response;
     }
 
     /**
