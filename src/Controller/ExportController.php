@@ -27,7 +27,7 @@ class ExportController extends AbstractController
     {
         $obs = $em->getRepository(Observation::class)->findAllPublic();
 
-        $response = $csvService->csvAction($obs);
+        $response = $csvService->exportCsvAll($obs);
 
         // If csv fail, return a json file
         if ($response->getStatusCode() !== 200){
@@ -40,12 +40,11 @@ class ExportController extends AbstractController
     /**
      * @Route("/export/station/{slug}", name="export_station")
      */
-    public function exportStation(EntityManagerInterface $em, string $slug)
+    public function exportStation(EntityManagerInterface $em, string $slug, CsvService $csvService)
     {
         $station = $em->getRepository(Station::class)
             ->findBy(['slug' => $slug])
         ;
-
         if (!$station) {
             throw new NotFoundHttpException(sprintf('Station slug %s not found', $slug));
         }
@@ -54,13 +53,20 @@ class ExportController extends AbstractController
             ->findByStationSlugForExport($slug)
         ;
 
-        $serializer = new EntityJsonSerialize();
+        $response = $csvService->exportCsvStation($data, $slug);
 
-        return new Response(
-            json_encode($serializer->jsonSerializeObservationForExport($data)),
-            Response::HTTP_OK,
-            ['content-type' => 'application/json']
-        );
+        // If csv fail, return a json file
+        if ($response->getStatusCode() !== 200){
+            $serializer = new EntityJsonSerialize();
+
+            return new Response(
+                json_encode($serializer->jsonSerializeObservationForExport($data)),
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
+
+        return $response;
     }
 
     /**

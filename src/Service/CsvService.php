@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CsvService
 {
 
-    public function csvAction(array $data): Response
+    public function exportCsvAll(array $data): Response
     {
         $list = array(
             // Colonnes titre du csv
@@ -64,6 +64,73 @@ class CsvService
 
         $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
         $response->headers->set('Content-Disposition', 'attachment; filename="export_all_ods.csv"');
+
+        return $response;
+    }
+    public function exportCsvStation(array $data, string $slug): Response
+    {
+        $list = array(
+            // Colonnes titre du csv
+            [
+                'Id', 'Date', 'IsMissing', 'Détails', 'Date de l\'observation', 'Mise à jour', 'Date de suppression', 'Utilisateur', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Station public / privé', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Description de l\'espèce ', 'Type', 'Plante / Animal', 'Stade phénologique', 'Description du stade phénologique', 'Stade phénologique observé',
+            ]
+        );
+        // Lignes de data du csv
+        foreach ($data as $ob){
+            $obsDate = $ob->getDate() ? $ob->getDate()->format('Y-m-d') : null;
+            $missing = $ob->getIsMissing() ? 'oui' : 'non';
+            $createDate = $ob->getCreatedAt() ? $ob->getCreatedAt()->format('Y-m-d') : null;
+            $updateDate = $ob->getUpdatedAt() ? $ob->getUpdatedAt()->format('Y-m-d') : null;
+            $deletionDate = $ob->getDeletedAt() ? $ob->getDeletedAt()->format('Y-m-d') : null;
+            $isPrivate = $ob->getIndividual()->getStation()->getIsPrivate() ? 'oui' : 'non';
+            $isObservable = $ob->getEvent()->getIsObservable() ? 'oui' : 'non';
+
+            $list[] = [
+                $ob->getId(),
+                $obsDate,
+                $missing,
+                $ob->getDetails(),
+                $createDate,
+                $updateDate,
+                $deletionDate,
+                $ob->getUser()->getDisplayName(),
+                $ob->getIndividual()->getId(),
+                $ob->getIndividual()->getName(),
+                $ob->getIndividual()->getDetails(),
+                $ob->getIndividual()->getStation()->getId(),
+                $isPrivate,
+                $ob->getIndividual()->getStation()->getName(),
+                $ob->getIndividual()->getStation()->getDescription(),
+                $ob->getIndividual()->getStation()->getLocality(),
+                $ob->getIndividual()->getStation()->getHabitat(),
+                $ob->getIndividual()->getStation()->getLatitude(),
+                $ob->getIndividual()->getStation()->getLongitude(),
+                $ob->getIndividual()->getStation()->getAltitude(),
+                $ob->getIndividual()->getStation()->getInseeCode(),
+                $ob->getIndividual()->getStation()->getDepartment(),
+                $ob->getIndividual()->getSpecies()->getId(),
+                $ob->getIndividual()->getSpecies()->getVernacularName(),
+                $ob->getIndividual()->getSpecies()->getScientificName(),
+                $ob->getIndividual()->getSpecies()->getDescription(),
+                $ob->getIndividual()->getSpecies()->getType()->getName(),
+                $ob->getIndividual()->getSpecies()->getType()->getReign(),
+                $ob->getEvent()->getName(),
+                $ob->getEvent()->getDescription(),
+                $isObservable
+            ];
+        }
+
+        $fp = fopen('php://temp', 'w');
+        foreach ($list as $fields) {
+            fputcsv($fp, $fields);
+        }
+
+        rewind($fp);
+        $response = new Response(stream_get_contents($fp));
+        fclose($fp);
+
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="Export_obs"'.$slug.'".csv"');
 
         return $response;
     }
