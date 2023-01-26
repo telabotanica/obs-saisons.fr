@@ -52,18 +52,20 @@ class PostRepository extends ServiceEntityRepository
         }
         $queryParameterSet->setParameter('val', $category);
         if (Post::CATEGORY_EVENT === $category) {
-            $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'ASC')
-                ->addOrderBy('p.endDate', 'ASC');
+            $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'DESC')
+                ->addOrderBy('p.endDate', 'DESC');
         } else {
             $queryOrdered = $queryParameterSet->orderBy('p.createdAt', 'DESC');
         }
 
         $this->posts = $queryOrdered->getQuery()->getResult();
 
+        /*
         // uncomment to filter outdated events
         if (Post::CATEGORY_EVENT === $this->category) {
             $this->posts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
         }
+        */
 
         return $this;
     }
@@ -126,6 +128,16 @@ class PostRepository extends ServiceEntityRepository
 
     public function findLastFeaturedPosts(int $limit = 3): array
     {
+        $filteredPosts = [];
+        //Filter outdated events
+        if ($this->category === 'event'){
+            $filteredPosts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
+        }
+
+        // N'affiche sur la page d'accueil que les prochains événèments. S'il y en a pas, affiche les derniers
+        if (count($filteredPosts) > 0){
+            $this->posts = $filteredPosts;
+        }
         $lastPublishedPost[0] = reset($this->posts);
         // validate limit
         if (1 >= $limit) {
