@@ -15,6 +15,7 @@ import 'core-js/features/promise';
  * ****** */
 export const $ = require('jquery');
 global.$ = global.jQuery = $;
+require('bootstrap');
 /* ******* *
  * GLOBALS *
  * ******* */

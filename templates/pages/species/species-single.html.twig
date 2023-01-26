@@ -9,4 +9,15 @@
 
     <p>{{ post.content|default('')|raw }}</p>
 
+
+
 {% endblock %}
+
+{% block bottom_content %}
+{#    <div style="padding: 0 50px; background-color: #f5f0eb;">#}
+    <div class="species-calendar">
+        {% include 'components/species-calendar-tab.html.twig' %}
+    </div>
+
+{% endblock %}
+

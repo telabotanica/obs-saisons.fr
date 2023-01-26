@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\Species;
+use App\Entity\EventSpecies;
 use App\Service\BreadcrumbsGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,8 +47,17 @@ class SpeciesController extends AbstractController
             throw $this->createNotFoundException('La fiche espèce n’a pas été trouvée');
         }
 
+        $speciesEvents = $manager->getRepository(EventSpecies::class)
+            ->findBy(['species' => $species]);
+        $validEvents = [];
+        foreach ($speciesEvents as $eventSpecies) {
+            $validEvents[] = $eventSpecies->getEvent();
+        }
+
+
         return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
+            'eventsSpecies' => $speciesEvents,
             'post' => $post,
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($vernacularName)
                 ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]),
