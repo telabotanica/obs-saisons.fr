@@ -23,7 +23,7 @@ class SpeciesController extends AbstractController
         BreadcrumbsGenerator $breadcrumbsGenerator
     ) {
         return $this->render('pages/species/species-list.html.twig', [
-            'allSpecies' => $manager->getRepository(Species::class)->findAll(),
+            'allSpecies' => $manager->getRepository(Species::class)->findAllOrderedByTypeAndVernacularName(),
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
         ]);
     }
