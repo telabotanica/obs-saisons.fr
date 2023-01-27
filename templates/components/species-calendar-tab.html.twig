@@ -1,7 +1,7 @@
 {% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 {% set stagesCssClasses = constant('App\\Entity\\Event::CSS_CLASSES') %}
 
-<div class="periods-calendar">
+<div class="periods-calendar" id="calendar-species">
     <h3 class="calendar-title">Calendrier Phénologique</h3>
 
     <div class="species-table-container mb-3">
@@ -88,11 +88,11 @@
                 <div class="accordion-body">
                     {% for i in 1..eventsSpecies|length %}
                         {% set stage = eventsSpecies[i-1] %}
-                        <div>
+                        <p>
                             {{ periodsNames[stage.event.name] }}
                             stade {{ stage.event.stadeBbch }}
                             : {{ stage.event.description }}
-                        </div>
+                        </p>
                     {%  endfor %}
                 </div>
             </div>

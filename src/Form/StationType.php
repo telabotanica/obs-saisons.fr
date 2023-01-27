@@ -64,10 +64,12 @@ class StationType extends AbstractType
             ])
             ->add('isPrivate', CheckboxType::class, ['required' => false])
             ->add('headerImage', FileType::class, [
+                'mapped' => false,
                 'data_class' => null,
                 'constraints' => [
                     new File([
                         'maxSize' => '5243k',
+                        'maxSizeMessage'=> 'Votre fichier est trop lourd ! (5Mo maximum)',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
@@ -120,6 +122,7 @@ class StationType extends AbstractType
         $station = $formEvent->getData();
         $isDeletePicture = $station['isDeletePicture'] ?? false;
 
+        /*
         $imageData = $station['headerImage'] instanceof UploadedFile ? $station['headerImage'] : null;
         $this->headerImage = $this->uploadFileService->setFile(
             $imageData,// input file data
@@ -127,6 +130,7 @@ class StationType extends AbstractType
             $isDeletePicture// removal requested
         );
         $station['headerImage'] = $this->headerImage;
+        */
         $formEvent->setData($station);
     }
 

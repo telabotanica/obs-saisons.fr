@@ -12,9 +12,11 @@ use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EntityJsonSerialize;
 use App\Service\Search;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -151,7 +153,8 @@ class StationsController extends AbstractController
      */
     public function stationsNew(
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        UploadService $uploadFileService
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -161,13 +164,38 @@ class StationsController extends AbstractController
         $form = $this->createForm(StationType::class, $station);
 
         $form->handleRequest($request);
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('headerImage')->getData()){
+            $fileSize = $form->get('headerImage')->getData()->getSize();
+        }
+        if($fileSize > 5242880){ $oversize = true ;};
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image
+            $image = null;
+            $image = $form->get('headerImage')->getData();
+            $previousHeaderImage = $station->getHeaderImage();
+
+            $isDeletePicture = false;
+            $image = $uploadFileService->setFile(
+                $image,// input file data
+                $previousHeaderImage,
+                $isDeletePicture// removal requested
+            );
+
+            $station->setHeaderImage($image);
+
             $manager->persist($station);
             $manager->flush();
 
             $this->addFlash('success', 'Votre station a été créée');
+        } elseif ($oversize){
+            $this->addFlash('error', 'La station n’a pas pu être créée: votre image est trop lourde ! (5Mo maximum)');
         } else {
-            $this->addFlash('error', 'Votre station n’a pas pu être créée');
+            $this->addFlash('error', 'La station n’a pas pu être créée');
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -190,7 +218,8 @@ class StationsController extends AbstractController
     public function stationsEdit(
         Request $request,
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+        UploadService $uploadFileService
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -211,10 +240,36 @@ class StationsController extends AbstractController
         $form = $this->createForm(StationType::class, $station);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('headerImage')->getData()){
+            $fileSize = $form->get('headerImage')->getData()->getSize();
+        }
+        if($fileSize > 5242880){ $oversize = true ;};
+
+        if ($form->isSubmitted() && $form->isValid() && !$oversize) {
+
+            // Traitement de l'image
+            $image = null;
+            $image = $form->get('headerImage')->getData();
+            $previousHeaderImage = $station->getHeaderImage();
+
+            $isDeletePicture = false;
+            $image = $uploadFileService->setFile(
+                $image,// input file data
+                $previousHeaderImage,
+                $isDeletePicture// removal requested
+            );
+
+            $station->setHeaderImage($image);
+
             $manager->flush();
 
             $this->addFlash('success', 'Votre station a été modifiée');
+        } elseif ($oversize){
+            $this->addFlash('error', 'La station n’a pas pu être modifiée: votre image est trop lourde ! (5Mo maximum)');
         } else {
             $this->addFlash('error', 'La station n’a pas pu être modifiée');
         }
@@ -472,7 +527,8 @@ class StationsController extends AbstractController
     public function observationNew(
         Request $request,
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+        UploadService $uploadFileService
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -496,13 +552,38 @@ class StationsController extends AbstractController
         ]);
 
         $form->handleRequest($request);
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('picture')->getData()){
+            $fileSize = $form->get('picture')->getData()->getSize();
+        }
+        if($fileSize > 5242880){ $oversize = true ;};
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image
+            $image = null;
+            $image = $form->get('picture')->getData();
+            $previousHeaderImage = $station->getHeaderImage();
+
+            $isDeletePicture = false;
+            $image = $uploadFileService->setFile(
+                $image,// input file data
+                $previousHeaderImage,
+                $isDeletePicture// removal requested
+            );
+
+            $observation->setPicture($image);
+
             $manager->persist($observation);
             $manager->flush();
 
             $this->addFlash('success', 'Votre observation a été créée');
+        } elseif ($oversize){
+            $this->addFlash('error', "Votre observation n'a pas pu être créée: votre image est trop lourde ! (5Mo maximum)");
         } else {
-            $this->addFlash('error', 'Votre observation n’a pas pu être créée');
+            $this->addFlash('error', "Votre observation n'a pas pu être créée");
         }
 
         $redirect = $this->generateUrl('stations_show', [
@@ -525,7 +606,8 @@ class StationsController extends AbstractController
     public function observationEdit(
         Request $request,
         EntityManagerInterface $manager,
-        int $observationId
+        int $observationId,
+        UploadService $uploadFileService
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -549,12 +631,37 @@ class StationsController extends AbstractController
         ]);
 
         $form->handleRequest($request);
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('picture')->getData()){
+            $fileSize = $form->get('picture')->getData()->getSize();
+        }
+        if($fileSize > 5242880){ $oversize = true ;};
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image
+            $image = null;
+            $image = $form->get('picture')->getData();
+            $previousHeaderImage = $station->getHeaderImage();
+
+            $isDeletePicture = false;
+            $image = $uploadFileService->setFile(
+                $image,// input file data
+                $previousHeaderImage,
+                $isDeletePicture// removal requested
+            );
+
+            $observation->setPicture($image);
+
             $manager->flush();
 
             $this->addFlash('success', 'Votre observation a été modifiée');
+        } elseif ($oversize){
+            $this->addFlash('error', "Votre observation n'a pas pu être modifiée: votre image est trop lourde ! (5Mo maximum)");
         } else {
-            $this->addFlash('error', 'L’observation n’a pas pu être modifiée');
+            $this->addFlash('error', "Votre observation n'a pas pu être modifiée");
         }
 
         $redirect = $this->generateUrl('stations_show', [
