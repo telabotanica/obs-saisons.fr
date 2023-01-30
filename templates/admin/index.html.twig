@@ -8,9 +8,29 @@
         'subtitle': ''
     }) %}
 
-    <ul>
-        <li><a href="{{ path('admin_species_list') }}">Modifier une fiche espèce ?</a></li>
-        <li><a href="{{ path('admin_pages_list') }}">Modifier une page statique ?</a></li>
-        <li><a href="{{ path('admin_users_list') }}">Modifier un profil utilisateur ?</a></li>
-    </ul>
+    <div class="container">
+        <div class="row">
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg bg-secondary " href="{{ path('admin_species_list') }}">
+                    <a class="text-primary" href="{{ path('admin_species_list') }}">
+                        Modifier une fiche espèce
+                    </a>
+                </button>
+            </div>
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg bg-secondary" href="{{ path('admin_pages_list') }}">
+                    <a class="text-primary" href="{{ path('admin_pages_list') }}">
+                        Modifier une page statique
+                    </a>
+                </button>
+            </div>
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg bg-secondary" href="{{ path('admin_users_list') }}">
+                    <a class="text-primary" href="{{ path('admin_users_list') }}">
+                        Modifier un profil utilisateur
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
