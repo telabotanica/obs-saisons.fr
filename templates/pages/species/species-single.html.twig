@@ -7,14 +7,13 @@
         'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
     }) %}
 
-    <p>{{ post.content|default('')|raw }}</p>
+    <div class="rich-text-block-fiche">{{ post.content|default('')|raw }}</div>
 
 
 
 {% endblock %}
 
 {% block bottom_content %}
-{#    <div style="padding: 0 50px; background-color: #f5f0eb;">#}
     <div class="species-calendar">
         {% include 'components/species-calendar-tab.html.twig' %}
         {% include 'components/actionbar.html.twig' with {
