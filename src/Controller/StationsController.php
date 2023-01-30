@@ -172,6 +172,19 @@ class StationsController extends AbstractController
             $fileSize = $form->get('headerImage')->getData()->getSize();
         }
         if($fileSize > 5242880){ $oversize = true ;};
+	
+		// Check if a station with the same name already exist, even if deleted
+		$manager->getFilters()->disable('softdeleteable');
+		$checkStationExist = $manager->getRepository(Station::class)
+			->findOneBy(
+				['name' => $station->getName(), 'locality' => $station->getLocality()]
+			);
+		$manager->getFilters()->enable('softdeleteable');
+		if ($checkStationExist) {
+			$this->addFlash('error', 'La station n’a pas pu être créée: Le nom existe déjà.');
+		
+			return $this->redirectToRoute('stations');
+		}
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Traitement de l'image
