@@ -120,7 +120,7 @@ class CsvService
             ];
         }
 
-        return $this->createCsv($list, 'export_station_'.$slug);
+        return $this->createCsv($list, 'export_'.$slug);
     }
 
     public function exportCsvSpecies(array $data): Response

@@ -166,6 +166,24 @@ class ObservationRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findBySpeciesForExport (int $speciesId): array {
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('o.event', 'e')
+            ->innerJoin('i.station', 'st')
+            ->innerJoin('i.species', 'sp')
+            ->innerJoin('sp.type', 'ts')
+            ->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+            ->andWhere($qb->expr()->eq('st.isPrivate', $qb->expr()->literal(false)))
+            ->andWhere($qb->expr()->eq('sp.id', ':speciesId'))
+            ->setParameter(':speciesId', $speciesId)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function createFilteredObservationListQueryBuilder(
         ?string $year,
         ?string $typeSpecies,

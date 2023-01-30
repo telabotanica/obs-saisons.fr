@@ -50,7 +50,7 @@ class ExportController extends AbstractController
         }
 
         $data = $em->getRepository(Observation::class)
-            ->findByStationSlugForExport($slug)
+            ->findByStationSlugForExport('station_'.$slug)
         ;
 
         $response = $csvService->exportCsvStation($data, $slug);
@@ -164,6 +164,35 @@ class ExportController extends AbstractController
             return new JsonResponse($data);
         }
 
+        return $response;
+    }
+
+    /**
+     * @Route("/export/species/{speciesId}", name="export_single_species")
+     */
+    public function exportSingleSpecies($speciesId,EntityManagerInterface $em, CsvService $csvService)
+    {
+        $species = $em->getRepository(Species::class)->findBy(['id' => $speciesId]);
+
+        if (!$species) {
+            throw new \InvalidArgumentException(sprintf('Invalid species with id %s', $speciesId));
+        }
+
+        $data = $em->getRepository(Observation::class)->findBySpeciesForExport($speciesId);
+
+        $speciesName = $species[0]->getVernacularName();
+        $response = $csvService->exportCsvStation($data, 'observations_'.$speciesName);
+
+        // If csv fail, return a json file
+        if ($response->getStatusCode() !== 200){
+            $serializer = new EntityJsonSerialize();
+
+            return new Response(
+                json_encode($serializer->jsonSerializeObservationForExport($data)),
+                Response::HTTP_OK,
+                ['content-type' => 'application/json']
+            );
+        }
         return $response;
     }
 

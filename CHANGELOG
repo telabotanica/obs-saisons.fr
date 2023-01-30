@@ -1,9 +1,11 @@
 Changements 2023-01-26 [création de la branche "v2"]:
 * Bug
  - Résolution du bug où les évènements passés disparaissaient et n'étaient plus visible
+ - Résolution d'un bug affichant une erreur 500 lors d'upload d'image trop lourde.
 * Export
  - Les exports de données se font dorénavant au format .csv
 * Fiches espèces
  - Ajout du calendrier phénologique à la fin de chaque fiche espèce
+ - Ajout d'un bouton export à la fin de chaque fiche espèce avec les toutes les obs publiques
 * Misc
  - Changement de catégorie du ciste cotonneux (dorénavant dans la catégorie "arbres")

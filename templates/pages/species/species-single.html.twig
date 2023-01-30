@@ -17,7 +17,22 @@
 {#    <div style="padding: 0 50px; background-color: #f5f0eb;">#}
     <div class="species-calendar">
         {% include 'components/species-calendar-tab.html.twig' %}
+        {% include 'components/actionbar.html.twig' with {
+            actionbar: {
+                'components': [
+                    {
+                        'name': 'squared-button',
+                        'data': {
+                        'icon': 'export',
+                        'label': 'exporter',
+                        'link': path('export_single_species',{'speciesId': species.id})
+                    }
+                    }
+                ]
+            },
+        } %}
     </div>
+
 
 {% endblock %}
 
