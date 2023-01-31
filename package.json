@@ -21,6 +21,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@telabotanica/ckeditor5-build-ods-v2": "^1.1.1",
         "bootstrap": "5.2.3",
         "jquery": "^3.6.3",
         "leaflet-draw": "^1.0.4",
