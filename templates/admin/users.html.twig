@@ -19,7 +19,8 @@
                 <th scope="row">{{ user.email }}</th>
                 <td>{{ user.displayName }}</td>
                 <td>{{ user.name }}</td>
-                <td>{{ (user.roles[0] == 'ROLE_USER') ? 'User' : 'Admin' }}</td>
+{#                {% if user.roles[1] %}#}
+                <td>{{ user.roles[1] is defined ? 'Admin' : 'User' }}</td>
                 <td><a target="_blank" href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
             </tr>
         {% else %}

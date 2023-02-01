@@ -25,7 +25,7 @@
 			<a href="{{ path('user_dashboard') }}" class="nav-item resp-connect">
 				<div>Profil</div>
 			</a>
-			{% if app.user and (app.user.roles[0] == 'ROLE_ADMIN') %}
+			{% if app.user and app.user.roles[1] is defined and (app.user.roles[1] == 'ROLE_ADMIN') %}
 				<a class="nav-item resp-connect" href="{{ path('home_admin') }}">Admin</a>
 			{% endif %}
 			<a href="{{ path('user_logout') }}" class="nav-item resp-connect">

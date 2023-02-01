@@ -6,7 +6,7 @@
 			<h2 class="site-title">Contribuez à la recherche sur le changement climatique !</h2>
 		{% endif %}
 		<div class="right-links">
-			{% if app.user and (app.user.roles[0] == 'ROLE_ADMIN') %}
+			{% if app.user and app.user.roles[1] is defined and (app.user.roles[1] == 'ROLE_ADMIN') %}
 			<div>
 				<a href="{{ path('home_admin') }}"><img src="{{ asset('media/layout/icons/admin-generic.svg') }}" alt="admin_page" width="64"
 					 height="64" title="admin_logo">
