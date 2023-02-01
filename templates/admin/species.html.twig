@@ -1,22 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center"> Liste des pages espèces</h2>
+    <div class="row d-flex justify-content-evenly">
+        {% set type = '' %}
+        {% for species in speciesList %}
+            {% if (type) is not same as (species.type.name) %}
+                {% set type = species.type.name %}
 
-    <dl>
-    {% set type = '' %}
-    {% for species in speciesList %}
-        {% if (type) is not same as (species.type.name) %}
-            {% set type = species.type.name %}
-            <dt>{{ type }}</dt>
-        {% endif %}
-        <dd>
-            <a href="{{ path('admin_species_page_edit', {speciesId: species.id}) }}">
-                {{ species.vernacularName }} ({{ species.scientificName }})
-            </a>
-            (<a href="{{ path('admin_species_page_edit', {speciesId: species.id, mode: 'html'}) }}">html</a>) {{ species.post ? '✅' }}
-        </dd>
-    {% endfor %}
-    </dl>
+                <div class="admin-species-type my-3">
+                    <h3 class="text-center text-primary">{{ type }}</h3>
+                </div>
+
+            {% endif %}
+
+            <div class="admin-card mx-1 my-2">
+                <h5 class="card-head text-center">{{ species.vernacularName }}</h5>
+                <h6 class="card-subtitle mt-2 text-muted text-center">{{ species.scientificName }}</h6>
+
+                <div class="admin-card-body text-center">
+                    <p><a class="card-link"
+                          target="_blank"
+                          href="{{ path('species_single_show', {vernacularName: species.vernacularName}) }}">
+                            Voir la page
+                        </a></p>
+                    <p><a class="card-link" href="{{ path('admin_species_page_edit', {speciesId: species.id}) }}">
+                            Éditeur WYSIWYG
+                        </a></p>
+                    <p><a class="card-link"
+                          href="{{ path('admin_species_page_edit', {speciesId: species.id, mode: 'html'}) }}">
+                            Éditeur HTML
+                        </a></p>
+                    <p>{{ species.post ? '✅' }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}
 

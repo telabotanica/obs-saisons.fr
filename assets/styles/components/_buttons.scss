@@ -388,4 +388,25 @@ button a{
   text-decoration: none;
 }
 
+.btn-admin {
+  background-color: $green725760;
+  a {
+    color: $green;
+  }
+}
+
+.btn-admin:hover{
+  background-color: $green;
+  a {
+    color: $green725760;
+  }
+}
+
+.admin-return-btn {
+  margin-top: -50px;
+
+  @include media(xs,md) {
+    margin-top: 0;
+  }
+}
 

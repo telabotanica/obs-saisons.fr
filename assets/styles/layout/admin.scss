@@ -1,0 +1,52 @@
+.admin-card{
+    //background-color: $green725760;
+    color: $green;
+    box-shadow: 10px 10px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 0 0 10px 0;
+    width: 23%;
+    border-radius: 20px;
+}
+
+.card-link {
+    color: $green;
+}
+
+.card-link:hover {
+    color: $green725760;
+}
+
+.card-head {
+    width: 100%;
+    margin: 0;
+    padding: 10px 0;
+    background-color: $green;
+    color: $grey303394;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.admin-card-body {
+    padding: 10px 0;
+}
+
+.row>* {
+    padding: 0;
+}
+
+#admin-table {
+    th {
+        color: $green;
+    }
+
+    a{
+        color: $green;
+        font-weight: bold;
+    }
+}
+
+.admin-species-type {
+    background-color: $green725760;
+    width: 100%;
+    border-radius: 20px;
+}

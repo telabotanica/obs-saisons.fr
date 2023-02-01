@@ -1,17 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block main_content %}
-    <ul>
-        <li>email (pseudo : nom)</li>
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center"> Liste des utilisateurs</h2>
+    <table class="table" id="admin-table">
+        <thead>
+        <tr>
+            <th scope="col">E-mail</th>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Role</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
         {% for user in users %}
-            <li>
-                <a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">
-                    {{ user.email }} ({{ user.displayName}} : {{ user.name }})
-                </a>
-            </li>
+            <tr>
+                <th scope="row">{{ user.email }}</th>
+                <td>{{ user.displayName }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ (user.roles[0] == 'ROLE_USER') ? 'User' : 'Admin' }}</td>
+                <td><a target="_blank" href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
+            </tr>
         {% else %}
-            <li>Pas d’utilisateurs</li>
+            <td>Pas d'utilisateurs</td>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 {% endblock %}
 
