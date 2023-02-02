@@ -6,6 +6,11 @@
 	<div class="rich-text-block">
 		<h2>{{ post.title|raw }}</h2>
 		{{ post.content|raw }}
+		{% if is_granted('ROLE_ADMIN') and (constant('App\\Entity\\Post::STATUS_PENDING') == post.status)%}
+			<div><a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
+					Valider l'évènement
+				</a></div>
+		{% endif %}
 	</div>
 	{% block post_footer %}
 		{% if nextPreviousNewsPosts is defined %}

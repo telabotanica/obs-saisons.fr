@@ -7,7 +7,9 @@ use App\Entity\User;
 use App\Form\EventPostType;
 use App\Form\NewsPostType;
 use App\Helper\OriginPageTrait;
+use App\Security\Voter\PostVoter;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\EmailSender;
 use App\Service\SlugGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class PostsController.
@@ -94,7 +97,7 @@ class PostsController extends AbstractController
         SlugGenerator $slugGenerator,
         UrlGeneratorInterface $router
     ) {
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+        $this->denyAccessUnlessGranted(User::ROLE_USER);
 
         $newsPost = new Post();
         $newsPost->setCategory(Post::CATEGORY_NEWS);
@@ -141,10 +144,18 @@ class PostsController extends AbstractController
         }
 
         $this->denyAccessUnlessGranted(
-            User::ROLE_ADMIN,
+            PostVoter::EDIT,
             $newsPost,
             'Vous n’êtes pas autorisé à modifier cet article'
         );
+	
+		if ($newsPost->getStatus(Post::STATUS_ACTIVE)){
+			$this->denyAccessUnlessGranted(
+				User::ROLE_ADMIN,
+				$newsPost,
+				'L’actualité est déjà publié et ne peut pas être modifié'
+			);
+		}
 
         if (Post::CATEGORY_NEWS !== $newsPost->getCategory()) {
             throw $this->createAccessDeniedException('Votre demande d’édition ne correspond pas à un article.');
@@ -197,10 +208,18 @@ class PostsController extends AbstractController
         }
 
         $this->denyAccessUnlessGranted(
-            User::ROLE_ADMIN,
+            PostVoter::EDIT,
             $newsPost,
             'Vous n’êtes pas autorisé à publier cet article'
         );
+	
+		if ($newsPost->getStatus(Post::STATUS_ACTIVE)){
+			$this->denyAccessUnlessGranted(
+				User::ROLE_ADMIN,
+				$newsPost,
+				'L’actualité est déjà publié et ne peut pas être modifié'
+			);
+		}
 
         return $this->render('pages/post/news-post-preview.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($newsPost->getSlug(), $newsPost->getTitle())
@@ -229,7 +248,6 @@ class PostsController extends AbstractController
         $lastPage = ceil(count($eventPostRepository->findAll()) / $limit);
 
         $this->setOrigin($request->getPathInfo());
-
         return $this->render('pages/post/event-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'eventPosts' => $eventPosts,
@@ -253,7 +271,7 @@ class PostsController extends AbstractController
         SlugGenerator $slugGenerator,
         UrlGeneratorInterface $router
     ) {
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+        $this->denyAccessUnlessGranted(User::ROLE_USER);
 
         $eventPost = new Post();
         $eventPost->setCategory(Post::CATEGORY_EVENT);
@@ -296,14 +314,22 @@ class PostsController extends AbstractController
             ->find($postId);
 
         if (!$eventPost) {
-            throw $this->createNotFoundException('L’article n’existe pas');
+            throw $this->createNotFoundException('L’évènement n’existe pas');
         }
-
-        $this->denyAccessUnlessGranted(
-            User::ROLE_ADMIN,
+		
+		$this->denyAccessUnlessGranted(
+            PostVoter::EDIT,
             $eventPost,
             'Vous n’êtes pas autorisé à modifier cet évènement'
         );
+	
+		if ($eventPost->getStatus(Post::STATUS_ACTIVE)){
+			$this->denyAccessUnlessGranted(
+				User::ROLE_ADMIN,
+				$eventPost,
+				'L’évènement est déjà publié et ne peut pas être modifié'
+			);
+		}
 
         if (Post::CATEGORY_EVENT !== $eventPost->getCategory()) {
             throw $this->createAccessDeniedException('Votre demande d’édition ne correspond pas à un évènement.');
@@ -345,12 +371,20 @@ class PostsController extends AbstractController
         if (null === $eventPost) {
             throw new NotFoundHttpException('L’évènement demandé n’existe pas');
         }
-
+		
         $this->denyAccessUnlessGranted(
-            User::ROLE_ADMIN,
+			PostVoter::EDIT,
             $eventPost,
             'Vous n’êtes pas autorisé à publier cet évènement'
         );
+	
+		if ($eventPost->getStatus(Post::STATUS_ACTIVE)){
+			$this->denyAccessUnlessGranted(
+				User::ROLE_ADMIN,
+				$eventPost,
+				'L’évènement est déjà publié et ne peut pas être modifié'
+			);
+		}
 
         return $this->render('pages/post/event-post-preview.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($eventPost->getSlug(), $eventPost->getTitle())
@@ -403,10 +437,19 @@ class PostsController extends AbstractController
         }
 
         $this->denyAccessUnlessGranted(
-            User::ROLE_ADMIN,
+            PostVoter::EDIT,
             $post,
             'Vous n’êtes pas autorisé à supprimer cette publication'
         );
+	
+		if ($post->getStatus(Post::STATUS_ACTIVE)){
+			$this->denyAccessUnlessGranted(
+				User::ROLE_ADMIN,
+				$post,
+				'L’évènement est déjà publié et ne peut pas être modifié'
+			);
+		}
+		
         $manager->remove($post);
         $manager->flush();
 
@@ -426,7 +469,9 @@ class PostsController extends AbstractController
      */
     public function postPublish(
         EntityManagerInterface $manager,
-        int $postId
+        int $postId,
+		EmailSender $mailer,
+		UserInterface $user
     ) {
         $post = $manager->getRepository(Post::class)
             ->find($postId);
@@ -434,16 +479,64 @@ class PostsController extends AbstractController
         if (!$post) {
             throw $this->createNotFoundException('La publication n’existe pas');
         }
-
-        $this->denyAccessUnlessGranted(
-            User::ROLE_ADMIN,
-            $post,
-            'Vous n’êtes pas autorisé à activer cette publication'
-        );
-        $post->setStatus(Post::STATUS_ACTIVE);
-        $manager->flush();
-
-        $this->addFlash('notice', 'La publication a été activée');
+	
+		$url='https://www.obs-saisons.fr/';
+		if ($post->getCategory() === 'event'){
+			$cat = 'evenements/';
+		} else {
+			$cat = 'actualites/';
+		}
+		$postSlug =$url.$cat.$post->getSlug();
+		
+		// Si Admin on publie le post, sinon s'il n'est pas encore publié l'utilisateur le soumet à validation
+		if ($this->isGranted(User::ROLE_ADMIN, $post)){
+			$post->setStatus(Post::STATUS_ACTIVE);
+			$manager->flush();
+			
+			//TODO envoyer un email de validation à l'auteur pour le tenir au courant
+			
+			$this->addFlash('notice', 'La publication a été activée');
+		} else if ($this->isGranted(
+			PostVoter::EDIT,
+			$post
+		)){
+			if ($post->getStatus(Post::STATUS_ACTIVE)){
+				$this->denyAccessUnlessGranted(
+					User::ROLE_ADMIN,
+					$post,
+					'L’évènement est déjà publié et ne peut pas être modifié'
+				);
+			}
+			
+			$post->setStatus(Post::STATUS_PENDING);
+			$manager->flush();
+			
+			//Envoie d'un mail aux admins pour validation
+			$emailMessage = 'La publication suivante est en attente de validation';
+			$subject = 'Une publication ODS est en attente de validation';
+			
+			$message = $this->renderView('emails/contact.html.twig', [
+				'userEmail' => $user->getEmail(),
+				'subject' => $subject,
+				'message' => $emailMessage,
+				'link' => $postSlug,
+				'postName' => $post->getTitle()
+			]);
+			
+			$mailer->send(
+				EmailSender::CONTACT_EMAIL,
+				$mailer->getSubjectFromTitle($message),
+				$message
+			);
+			
+			$this->addFlash('notice', 'La publication a été envoyée aux administrateurs pour validation');
+		} else {
+			$this->denyAccessUnlessGranted(
+				PostVoter::EDIT,
+				$post,
+				'Vous n’êtes pas autorisé à activer cette publication'
+			);
+		}
 
         return $this->redirect(
             $this->generateOriginUrl(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()])

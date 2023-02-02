@@ -46,10 +46,10 @@ class PostRepository extends ServiceEntityRepository
 
         $queryParameterSet = $this->createQueryBuilder('p')
             ->andWhere('p.category = :val');
-        if ($filterActivePosts) {
-            $queryParameterSet->andWhere('p.status = :status');
-            $queryParameterSet->setParameter('status', Post::STATUS_ACTIVE);
-        }
+//        if ($filterActivePosts) {
+//            $queryParameterSet->andWhere('p.status = :status');
+//            $queryParameterSet->setParameter('status', Post::STATUS_ACTIVE);
+//        }
         $queryParameterSet->setParameter('val', $category);
         if (Post::CATEGORY_EVENT === $category) {
             $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'DESC')

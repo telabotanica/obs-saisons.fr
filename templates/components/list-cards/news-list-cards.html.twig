@@ -16,7 +16,8 @@
         </div>
     </div>
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and (app.user.id == newsPost.author.id ) and constant
+        ('App\\Entity\\Post::STATUS_PENDING') == newsPost.status)%}
         {% include 'components/buttons/dual-squared-button.html.twig' with {
             buttons: [
                 {

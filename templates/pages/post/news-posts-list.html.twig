@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set isPostAdmin = is_granted('ROLE_ADMIN') %}
+{% set isPostUser = is_granted('ROLE_USER') %}
 
 {% block main_content %}
 
@@ -8,20 +9,27 @@
 		'title': 'Actualités',
 		'subtitle': 'Les <strong>actualités</strong> de l’Observatoire des Saisons.'
 	}) %}
+	{% if isPostAdmin or isPostUser %}
+		<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
+			<div class="add-list-card">
+				<div class="icon-add-list-card add-square-icon"></div>
+				<div class="add-card-text">Vous souhaitez nous faire partager une actualité ?</div>
+				<a href="{{ path('news_post_create') }}" class="button bt-add ">Saisir une actualité</a>
+			</div>
+		</div>
+	{% endif %}
 
 	{% for id, newsPost in newsPosts %}
+
+		{% if (constant('App\\Entity\\Post::STATUS_ACTIVE') == newsPost.status) or is_granted('ROLE_ADMIN') or
+			(is_granted('ROLE_USER') and (app.user.id == newsPost.author.id )) %}
+
 		{% include 'components/list-cards/news-list-cards.html.twig' with {newsPost:newsPost}  %}
 		{% set addListCardId = loop.last ? id + 1 %}
+
+		{%  endif %}
 	{% endfor %}
-	{% if isPostAdmin %}
-        <div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
-            <div class="add-list-card">
-                <div class="icon-add-list-card add-square-icon"></div>
-                <div class="add-card-text">Vous souhaitez nous faire partager une actualité ?</div>
-                <a href="{{ path('news_post_create') }}" class="button bt-add ">Saisir une actualité</a>
-            </div>
-        </div>
-	{% endif %}
+
 
 	{% include 'components/pagination.html.twig' with {routePath: path('news_posts_list')} %}
 
