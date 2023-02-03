@@ -28,7 +28,7 @@
 		{% include 'components/list-cards/events-list-cards.html.twig' with {eventPost:eventPost} %}
 		{% set addListCardId = loop.last ? id + 1 %}
 
-
+		{%  endif %}
 	{% endfor %}
 
 	{% include 'components/pagination.html.twig' with {routePath: path('event_posts_list')} %}
