@@ -197,3 +197,28 @@
         }
     }
 }
+
+.actionbarHomePage {
+    display: flex;
+    align-self: flex-start;
+    justify-content: flex-start;
+    height: 90px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+}
+
+.buttonHomePage {
+    background-color: transparent;
+    width: 70px;
+}
+
+.buttonLabelNews {
+    background-color: #bcd15f;
+    color: #302926;
+}
+.buttonLabelEvent {
+    background-color: #e7803a;
+    color: #302926;
+}
