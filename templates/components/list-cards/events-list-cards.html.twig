@@ -1,5 +1,5 @@
 {% set eventPostDates = [eventPost.startDate] %}
-{% if eventPost.endDate != eventPost.startDate %}
+{% if eventPost.endDate != eventPost.startDate and eventPost.endDate is not null %}
     {% set eventPostDates = eventPostDates|merge([eventPost.endDate]) %}
 {% endif %}
 <div id="{{ eventPost.title|slugify }}" class="list-cards-item" data-id="{{ id }}">
