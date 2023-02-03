@@ -129,6 +129,10 @@ class PostRepository extends ServiceEntityRepository
     public function findLastFeaturedPosts(int $limit = 3): array
     {
         $filteredPosts = [];
+		
+		// Filter pending posts
+		$this->posts = array_filter($this->posts, 'self::filterPendingPostscallback');
+		
         //Filter outdated events
         if ($this->category === 'event'){
             $filteredPosts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
@@ -214,4 +218,11 @@ class PostRepository extends ServiceEntityRepository
 
         return $isValidPost;
     }
+	
+	public function filterPendingPostscallback(Post $post): bool
+	{
+		$isValidPost =($post->getStatus() == 1);
+		
+		return $isValidPost;
+	}
 }
