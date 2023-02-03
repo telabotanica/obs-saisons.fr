@@ -187,6 +187,9 @@ class PostRepository extends ServiceEntityRepository
         if (!1 === abs($direction)) {
             return $matchingPost;
         }
+	
+		// Filter pending posts
+		$this->posts = array_filter($this->posts, 'self::filterPendingPostscallback');
 
         $referencePost = $this->find($id);
         foreach ($this->posts as $key => $post) {
