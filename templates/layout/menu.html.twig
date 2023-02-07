@@ -10,10 +10,34 @@
 		</a>
 
 		{% for menuItem, menuItemTitle in constant('App\\Service\\BreadcrumbsGenerator::MENU') %}
-			{% if 'my_stations' != menuItem or app.user %}
-				<a href="{{ path(menuItem) }}" class="nav-item{{ activeMenuItem == menuItem ? ' active' }}{{ 'my_stations' == menuItem ? ' featured'  }}">
-					<div class="">{{ menuItemTitle }}</div>
+			{#    Si l'item n'existe pas dans les sous menu -> pas de dropdown        #}
+			{% if menuItem == 'a-propos' or menuItem =='participer' or menuItem =='especes' or menuItem =='my_stations' %}
+				<a class="nav-item {{ activeMenuItem == menuItem ? ' active' }}{{ 'my_stations' == menuItem ? ' featured' }}"
+				   href="{{ path(menuItem) }}">
+					{{ menuItemTitle }}
 				</a>
+			{% else %}
+				{% if 'my_stations' != menuItem or app.user %}
+					<a class="">
+						<a class="nav-item {{ activeMenuItem == menuItem ? ' active' }}{{ 'my_stations' == menuItem ? ' featured' }}"
+						   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							{{ menuItemTitle }}
+						</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="{{ path(menuItem) }}">
+								{{ menuItemTitle == 'résultats' ? 'généralités' :  menuItemTitle }}
+							</a>
+							<hr class="dropdown-divider">
+							{% for subMenuItem, subMenus in constant ('App\\Service\\BreadcrumbsGenerator::SUBMENU') %}
+								{% if subMenuItem == menuItem %}
+									{% for subMenuPath, subMenu in subMenus %}
+										<a class="dropdown-item" href="{{ path(subMenuPath) }}">{{ subMenu }}</a>
+									{% endfor %}
+								{% endif %}
+							{% endfor %}
+						</div>
+					</a>
+				{% endif %}
 			{% endif %}
 		{% endfor %}
 
