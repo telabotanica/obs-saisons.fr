@@ -10,15 +10,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class BreadcrumbsGenerator
 {
     const MENU = [
-        'a-propos' => 'à propos',
-        'news_posts_list' => 'actualités',
-        'event_posts_list' => 'évènements',
-        'participer' => 'comment participer',
-        'especes' => 'espèces à Observer',
-        'my_stations' => 'saisir mes données',
-        'resultats' => 'résultats',
-        'outils-ressources' => 'outils & ressources',
-        'relais' => 'relais',
+        'a-propos' => 'À propos',
+        'news_posts_list' => 'Actualités',
+        'event_posts_list' => 'Évènements',
+        'participer' => 'Comment participer',
+        'especes' => 'Espèces à observer',
+        'my_stations' => 'Saisir mes données',
+        'resultats' => 'Résultats',
+        'outils-ressources' => 'Outils & ressources',
+        'relais' => 'Relais',
     ];
     const OTHER_BREADCRUMBS = [
         'stations' => 'Stations d’observation',
@@ -67,22 +67,22 @@ class BreadcrumbsGenerator
 	
 	const SUBMENU = [
 		'news_posts_list' => [
-			'news_post_create'=> 'saisir une actualité',
+			'news_post_create'=> 'Saisir une actualité',
 		],
 		'event_posts_list' => [
-			'event_post_create'=> 'créer un évènement',
+			'event_post_create'=> 'Créer un évènement',
 		],
 		'resultats' => [
-			'explorer-les-donnees' => 'cartes et graphs',
-			'export' => 'export des données',
-			'lettres-de-printemps' => 'lettres de printemps',
-			'resultats-scientifiques' => 'résultats scientifiques',
+			'explorer-les-donnees' => 'Explorer et visualiser les données',
+			'lettres-de-printemps' => 'Lettres de printemps',
+			'resultats-scientifiques' => 'Résultats scientifiques',
+			'export' => 'Export des données',
 		],
 		'outils-ressources' => [
-			'outils' => 'outils',
-			'ressources-pedagogiques'=> 'ressources pédagogiques',
-			'expositions'=> 'expositions',
-			'transmettre'=> 'transmettre',
+			'outils' => 'Outils',
+			'ressources-pedagogiques'=> 'Ressources pédagogiques',
+			'expositions'=> 'Expositions',
+			'transmettre'=> 'Transmettre',
 		],
 		'relais' => [
 			'ods-provence'=> 'ODS Provence',
@@ -136,9 +136,16 @@ class BreadcrumbsGenerator
     {
         $pageBreadcrumbs = array_merge(self::MENU, self::OTHER_BREADCRUMBS);
         foreach ($routes as $route) {
+			// Breadcrumb s'il y a des sous menu
+			foreach (self::SUBMENU as $key => $value){
+				if (in_array($route, array_keys($value))){
+					$this->addTrail($key, $pageBreadcrumbs[$key] ?? $key);
+					$this->addTrail($route, $value[$route] ?? $value[$route]);
+				}
+			}
             $this->addTrail($route, $pageBreadcrumbs[$route] ?? $route);
         }
-
+		
         if (!empty($this->activeTrail)) {
             $this->addTrail($this->activeTrail['route'], $this->activeTrail['label']);
         }
