@@ -1,5 +1,5 @@
 <div class="accordion-block" data-id="{{ id }}" data-tab="{{ type.reign }}">
-    <h4><a href="" class="accordion-title-dropdown right-arrow-orange-icon">{{ type.name|capitalize }}</a></h4>
+    <h4><a href="" class="accordion-title-dropdown right-arrow-orange-icon">{{ type.name == 'arbres' ? 'Arbres, arbustes et fruitiers' : type.name|capitalize }}</a></h4>
 
     <div class="accordion-content hide">
         {% for speciesGroupName, speciesGroup in speciesGroups(typeSpecies) %}
