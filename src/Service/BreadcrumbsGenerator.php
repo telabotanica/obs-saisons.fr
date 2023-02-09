@@ -18,7 +18,7 @@ class BreadcrumbsGenerator
         'my_stations' => 'Saisir mes données',
         'resultats' => 'Résultats',
         'outils-ressources' => 'Outils & ressources',
-        'relais' => 'Relais',
+        'relais' => 'Relais et déclinaisons',
     ];
     const OTHER_BREADCRUMBS = [
         'stations' => 'Stations d’observation',
@@ -39,6 +39,7 @@ class BreadcrumbsGenerator
         'se-former' => 'Se former',
         'les-relais-ods' => 'Les relais de l\'ODS',
         'ods-provence' => 'ODS Provence',
+		'ods-occitanie'=> 'ODS Occitanie',
         'mentions-legales' => 'Mentions légales',
         'expositions' => 'Expositions',
     ];
@@ -61,6 +62,7 @@ class BreadcrumbsGenerator
         'se-former',
         'les-relais-ods',
         'ods-provence',
+        'ods-occitanie',
         'mentions-legales',
         'expositions',
     ];
@@ -86,6 +88,7 @@ class BreadcrumbsGenerator
 		],
 		'relais' => [
 			'ods-provence'=> 'ODS Provence',
+			'ods-occitanie'=> 'ODS Occitanie',
 		],
 	];
 

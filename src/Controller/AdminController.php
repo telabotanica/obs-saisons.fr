@@ -120,7 +120,8 @@ class AdminController extends AbstractController
 
         return $this->render('admin/pages.html.twig', [
             'pages' => $pages,
-            'staticPagesList' => array_merge(BreadcrumbsGenerator::MENU, BreadcrumbsGenerator::OTHER_BREADCRUMBS),
+            'staticPagesList' => array_merge(BreadcrumbsGenerator::MENU, BreadcrumbsGenerator::OTHER_BREADCRUMBS,
+			),
         ]);
     }
 

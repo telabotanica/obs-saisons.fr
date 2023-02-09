@@ -343,6 +343,24 @@ class PagesController extends AbstractController
             'page' => $page,
         ]);
     }
+	
+	/**
+     * @Route("/ods-occitanie", name="ods-occitanie")
+     */
+    public function odsOccitanie(
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
+    ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'ods-occitanie']
+        );
+
+        return $this->render('pages/static-page.html.twig', [
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
+            'title' => 'ODS Occitanie',
+            'page' => $page,
+        ]);
+    }
 
     /**
      * @Route("/mentions-legales", name="mentions-legales")
