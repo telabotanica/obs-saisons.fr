@@ -310,6 +310,16 @@ class ObservationRepository extends ServiceEntityRepository
             ->getScalarResult()
         ;
     }
+	
+	public function findOrderedObsPerUser(User $user){
+		return $this->createQueryBuilder('o')
+			->andWhere('o.user = :user')
+			->setParameter('user', $user)
+			->orderBy('o.date', 'DESC')
+			->getQuery()
+			->getResult()
+			;
+	}
 
     // /**
     //  * @return Observation[] Returns an array of Observation objects

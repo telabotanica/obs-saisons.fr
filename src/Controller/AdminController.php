@@ -215,8 +215,7 @@ class AdminController extends AbstractController
             'action' => $this->generateUrl('stations_new'),
         ]);
 
-        $observations = $manager->getRepository(Observation::class)
-            ->findBy(['user' => $user]);
+		$observations = $manager->getRepository(Observation::class)->findOrderedObsPerUser($user);
 
         // add stations user didn't create but contributed to
         foreach ($observations as $observation) {

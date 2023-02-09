@@ -318,8 +318,7 @@ class UserController extends AbstractController
             'action' => $this->generateUrl('stations_new'),
         ]);
 
-        $observations = $manager->getRepository(Observation::class)
-            ->findBy(['user' => $user]);
+		$observations = $manager->getRepository(Observation::class)->findOrderedObsPerUser($user);
         foreach ($observations as $observation) {
             $obsStation = $observation->getIndividual()->getStation();
             if (!in_array($obsStation, $stations)) {
