@@ -12,6 +12,7 @@ use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EntityJsonSerialize;
 use App\Service\Search;
+use App\Service\SlugGenerator;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -414,7 +415,8 @@ class StationsController extends AbstractController
     public function individualNew(
         Request $request,
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -445,10 +447,11 @@ class StationsController extends AbstractController
         } else {
             $this->addFlash('error', 'Votre individu n’a pas pu être créé');
         }
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $station->getSlug(),
-        ]);
+		
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+		$slug = $station->getSlug().'#'.$slugifiedName;
+		
+		return $this->redirect('/stations/'.$station->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -457,7 +460,8 @@ class StationsController extends AbstractController
     public function individualEdit(
         Request $request,
         EntityManagerInterface $manager,
-        int $individualId
+        int $individualId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -485,10 +489,10 @@ class StationsController extends AbstractController
         } else {
             $this->addFlash('error', 'L’individu n’a pas pu être modifié');
         }
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $individual->getStation()->getSlug(),
-        ]);
+	
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -496,7 +500,8 @@ class StationsController extends AbstractController
      */
     public function individualDelete(
         EntityManagerInterface $manager,
-        int $individualId
+        int $individualId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -524,12 +529,12 @@ class StationsController extends AbstractController
 
         $manager->remove($individual);
         $manager->flush();
+	
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
 
         $this->addFlash('notice', 'Votre individu a été supprimé');
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $individual->getStation()->getSlug(),
-        ]);
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -541,7 +546,8 @@ class StationsController extends AbstractController
         Request $request,
         EntityManagerInterface $manager,
         int $stationId,
-        UploadService $uploadFileService
+        UploadService $uploadFileService,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -599,6 +605,9 @@ class StationsController extends AbstractController
             $this->addFlash('error', "Votre observation n'a pas pu être créée");
         }
 
+		$individual=$observation->getIndividual();
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+
         $redirect = $this->generateUrl('stations_show', [
             'slug' => $station->getSlug(),
         ]);
@@ -610,7 +619,7 @@ class StationsController extends AbstractController
             ]);
         }
 
-        return $this->redirect($redirect);
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -620,7 +629,8 @@ class StationsController extends AbstractController
         Request $request,
         EntityManagerInterface $manager,
         int $observationId,
-        UploadService $uploadFileService
+        UploadService $uploadFileService,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -676,6 +686,9 @@ class StationsController extends AbstractController
         } else {
             $this->addFlash('error', "Votre observation n'a pas pu être modifiée");
         }
+	
+		$individual=$observation->getIndividual();
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
 
         $redirect = $this->generateUrl('stations_show', [
             'slug' => $station->getSlug(),
@@ -687,8 +700,8 @@ class StationsController extends AbstractController
                 'redirect' => $redirect,
             ]);
         }
-
-        return $this->redirect($redirect);
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -696,7 +709,8 @@ class StationsController extends AbstractController
      */
     public function observationDelete(
         EntityManagerInterface $manager,
-        int $observationId
+        int $observationId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -716,11 +730,13 @@ class StationsController extends AbstractController
 
         $manager->remove($observation);
         $manager->flush();
+		
+		$individual=$observation->getIndividual();
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+		
 
         $this->addFlash('notice', 'Votre observation a été supprimée');
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $observation->getIndividual()->getStation()->getSlug(),
-        ]);
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 }
