@@ -14,7 +14,7 @@ export const onDeleteButton = subject => {
                         ' individus) seront' +
                         ' supprimées' +
                         ' définitivement. Si vous souhaitez conserver ses données veuillez annuler la' +
-                        ' suppression et vous désactiver la station sur la page correspondante';
+                        ' suppression et désactiver la station sur la page correspondante';
                     break;
                 case 'observation':
                     question += 'tte '+subject + '?';
