@@ -51,6 +51,18 @@
 
     <div class="privacy-status">Station {{ station.isPrivate ? 'personnelle' : 'publique' }}</div>
     {% if app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
-        <a href="" class="button hero-header-button bt-add edit open" data-open="station" data-station="{{ station|getJsonSerializedEditStation }}">modifier la station</a>
+        <a href="" class="button hero-header-button bt-add edit open" data-open="station"
+           data-station="{{ station|getJsonSerializedEditStation }}">modifier la station</a>
+
+        {% if is_granted('ROLE_ADMIN') and station.isDeactivated == 1 %}
+            <a href="{{ path('station_reactivate', {
+                stationId:station.id}) }}" class="button btn-desinscription-station">Réactiver cette station</a>
+        {% elseif station.isDeactivated == 0 or station.isDeactivated is null %}
+            <a href="{{ path('station_deactivate', {
+                stationId:station.id}) }}" class="button btn-desinscription-station">Désactiver / Me
+                désinscrire de cette station</a>
+        {% endif %}
+
+
     {% endif %}
 </div>

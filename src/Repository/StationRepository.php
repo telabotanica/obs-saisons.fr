@@ -29,9 +29,10 @@ class StationRepository extends ServiceEntityRepository
     public function countStations(User $user = null)
     {
         $qb = $this->createQueryBuilder('s')
-            ->select('count(s.id)');
+            ->select('count(s.id)')
+			->where('s.is_deactivated =0 OR s.is_deactivated is null');
         if ($user) {
-            $qb = $qb->where('s.user = (:user)')
+            $qb = $qb->andWhere('s.user = (:user)')
                 ->setParameter('user', $user);
         }
 
@@ -76,7 +77,8 @@ class StationRepository extends ServiceEntityRepository
             ->setParameter('user', $user);
         }
 
-        return $qb->addOrderBy('MAX(o.createdAt)', 'DESC')
+        return $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
+			->addOrderBy('MAX(o.createdAt)', 'DESC')
             ->addOrderBy('s.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
@@ -191,6 +193,22 @@ class StationRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+	
+	public function findAllDeactivatedStations(){
+		$qb = $this->createQueryBuilder('s')
+			->leftJoin(Individual::class, 'i', Expr\Join::WITH, 's.id = i.station')
+			->leftJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+			->addSelect('s')
+			->groupBy('s.id')
+		;
+		
+		return $qb->where('s.is_deactivated = 1')
+			->addOrderBy('MAX(o.createdAt)', 'DESC')
+			->addOrderBy('s.createdAt', 'DESC')
+			->getQuery()
+			->getResult()
+			;
+	}
 
     // /**
     //  * @return Station[] Returns an array of Station objects

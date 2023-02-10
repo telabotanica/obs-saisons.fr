@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;
@@ -739,4 +740,66 @@ class StationsController extends AbstractController
 	
 		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
+	
+	/**
+	 * @Route("/station/{stationId}/deactivate", name="station_deactivate")
+	 */
+	public function stationDesactivate(Request $request, EntityManagerInterface $manager, int $stationId
+	) {
+		if (!$this->isGranted(UserVoter::LOGGED)) {
+			return $this->redirectToRoute('user_login');
+		}
+		
+		$station = $manager->getRepository(Station::class)
+			->find($stationId)
+		;
+		if (!$station) {
+			throw $this->createNotFoundException('La station n’existe pas');
+		}
+		$this->denyAccessUnlessGranted(
+			'station:edit',
+			$station,
+			'Vous n’êtes pas autorisé à désactiver cette station'
+		);
+		
+		$station->setIsDeactivated(true);
+		$manager->flush();
+		
+		$this->addFlash('notice', 'La station a été désactivé');
+		
+		return $this->redirectToRoute('my_stations');
+	}
+	
+	/**
+	 * @Route("/station/{stationId}/reactivate", name="station_reactivate")
+	 */
+	public function stationReactivate(Request $request, EntityManagerInterface $manager, int $stationId
+	) {
+		if (!$this->isGranted(UserVoter::LOGGED)) {
+			return $this->redirectToRoute('user_login');
+		}
+		
+		$station = $manager->getRepository(Station::class)
+			->find($stationId)
+		;
+		if (!$station) {
+			throw $this->createNotFoundException('La station n’existe pas');
+		}
+		$this->denyAccessUnlessGranted(
+			'station:edit',
+			$station,
+			'Vous n’êtes pas autorisé à réactiver cette station'
+		);
+		
+		$station->setIsDeactivated(false);
+		$manager->flush();
+		
+		$this->addFlash('notice', 'La station a été réactivé');
+		
+		if ($this->isGranted(User::ROLE_ADMIN)){
+			return $this->redirectToRoute('admin_stations_list');
+		} else {
+			return $this->redirectToRoute('my_stations');
+		}
+	}
 }

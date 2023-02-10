@@ -405,4 +405,22 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
     }
+	
+	/**
+	 * @Route("/admin/stations", name="admin_stations_list")
+	 */
+	public function deactivatedStationsList(EntityManagerInterface $manager)
+	{
+		$stations = $manager->getRepository(Station::class)->findAllDeactivatedStations();
+		
+		// find all users ordered by name
+		$users = $manager->getRepository(User::class)
+			->findBy([], ['email' => 'ASC']);
+		
+		$this->setOrigin($this->generateUrl('admin_stations_list'));
+		
+		return $this->render('admin/stations.html.twig', [
+			'stations' => $stations,
+		]);
+	}
 }

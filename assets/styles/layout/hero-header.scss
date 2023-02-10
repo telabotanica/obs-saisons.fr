@@ -28,6 +28,10 @@
             }
         }
     }
+
+    a:hover{
+        color: $green;
+    }
 }
 
 .hero-header-media-part {
@@ -231,6 +235,27 @@
         @include media(lg) {
             right: auto;
         }
+    }
+}
+
+.btn-desinscription-station {
+    color: $green;
+    text-align: center;
+    align-self: stretch;
+    z-index: 1;
+    margin-top: 20px;
+
+    @include media(lg) {
+        position: absolute;
+        bottom: 20px;
+        right: 200px;
+        height: 33px;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        border: 1px solid rgba($green, 0.1);
+
+        @include gap(margin, (top, right), 20px);
     }
 }
 
