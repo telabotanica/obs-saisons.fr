@@ -274,7 +274,7 @@ ObservationOverlay.prototype.checkAberrationsObsDays = function() {
 
         message = `La date que vous venez de saisir sort de la période habituelle pour cet événement chez cette espèce (${selectedEvent.dataset.displayedStartDate} au ${selectedEvent.dataset.displayedEndDate}).
             Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/${species}" target="_blank" class="deep-green-link small">espèce</a>.
-            Si vous restez dans le doute, <a href="" target="_blank" class="deep-green-link small">contactez nous</a>.`;
+            Si vous restez dans le doute, <a href="https://www.obs-saisons.fr/contact" target="_blank" class="deep-green-link small">contactez nous</a>.`;
     }
 
     formWarningEl.innerHTML = message;
