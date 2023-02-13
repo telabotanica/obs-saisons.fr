@@ -765,7 +765,7 @@ class StationsController extends AbstractController
 		$station->setIsDeactivated(true);
 		$manager->flush();
 		
-		$this->addFlash('notice', 'La station a été désactivé');
+		$this->addFlash('notice', 'La station a été désactivée');
 		
 		return $this->redirectToRoute('my_stations');
 	}
