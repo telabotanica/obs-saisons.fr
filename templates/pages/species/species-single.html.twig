@@ -9,12 +9,7 @@
 
     <div class="rich-text-block-fiche">{{ post.content|default('')|raw }}</div>
 
-
-
-{% endblock %}
-
-{% block bottom_content %}
-    <div class="species-calendar">
+    <div class="species-calendar mt-0">
         {% include 'components/species-calendar-tab.html.twig' %}
         {% include 'components/actionbar.html.twig' with {
             actionbar: {
@@ -22,16 +17,15 @@
                     {
                         'name': 'squared-button',
                         'data': {
-                        'icon': 'export',
-                        'label': 'exporter',
-                        'link': path('export_single_species',{'speciesId': species.id})
-                    }
+                            'icon': 'export',
+                            'label': 'exporter',
+                            'link': path('export_single_species',{'speciesId': species.id})
+                        }
                     }
                 ]
             },
         } %}
     </div>
-
 
 {% endblock %}
 
