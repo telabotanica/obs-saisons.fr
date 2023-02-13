@@ -822,7 +822,7 @@ class StationsController extends AbstractController
 		$station->setIsDeactivated(false);
 		$manager->flush();
 		
-		$this->addFlash('notice', 'La station a été réactivé');
+		$this->addFlash('notice', 'La station a été réactivée');
 		
 		if ($this->isGranted(User::ROLE_ADMIN)){
 			return $this->redirectToRoute('admin_stations_list');
