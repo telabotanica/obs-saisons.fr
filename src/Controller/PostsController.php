@@ -512,10 +512,10 @@ class PostsController extends AbstractController
 			$manager->flush();
 			
 			//Envoie d'un mail aux admins pour validation
-			$emailMessage = 'La publication suivante est en attente de validation';
+			$emailMessage = 'La publication suivante est en attente de validation :';
 			$subject = 'Une publication ODS est en attente de validation';
 			
-			$message = $this->renderView('emails/contact.html.twig', [
+			$message = $this->renderView('emails/post-validation.html.twig', [
 				'userEmail' => $user->getEmail(),
 				'subject' => $subject,
 				'message' => $emailMessage,

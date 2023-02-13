@@ -5,9 +5,8 @@
 {% block preheader %}Demande de validation d'un post{% endblock %}
 
 {% block body %}
-    <h1>Message de <a href="mailto:{{ userEmail }}" title="Demande de validation d'un post">{{ userEmail }}</a></h1>
-    <p>Objet : {{ subject }}</p>
-    <p>Message :<p>
+    <h1>Publication en attente de validation</h1>
+    <p>Auteur: <a href="mailto:{{ userEmail }}" title="Demande de validation d'un post">{{ userEmail }}</a></p>
     <p>{{ message }}</p>
     <p><a href="{{ link }}" target="_blank">{{ postName }}</a></p>
 {% endblock %}
