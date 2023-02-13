@@ -14,6 +14,7 @@ use App\Service\BreadcrumbsGenerator;
 use App\Service\EntityJsonSerialize;
 use App\Service\Search;
 use App\Service\SlugGenerator;
+use App\Service\StationService;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -308,8 +309,11 @@ class StationsController extends AbstractController
      */
     public function stationDelete(
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+		StationService $stationService
     ) {
+		$isAdmin = $this->isGranted(User::ROLE_ADMIN);
+		
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
         }
@@ -325,7 +329,15 @@ class StationsController extends AbstractController
             $station,
             'Vous n’êtes pas autorisé à supprimer cette station'
         );
-
+	
+		// Prevent user to delete station with multiple contributors
+		$contributorsCount = $stationService->countContributors($station);
+		if ($contributorsCount > 1 && !$isAdmin){
+			$this->addFlash('error', "La station n'a pas été supprimée, d'autres utilisateurs contribuent à cette station. Veuillez contacter un administrateur.");
+			
+			return $this->redirectToRoute('my_stations');
+		}
+		
         // related individuals must also be removed
         $individuals = $manager->getRepository(Individual::class)
             ->findBy(['station' => $station])
@@ -744,8 +756,14 @@ class StationsController extends AbstractController
 	/**
 	 * @Route("/station/{stationId}/deactivate", name="station_deactivate")
 	 */
-	public function stationDesactivate(Request $request, EntityManagerInterface $manager, int $stationId
+	public function stationDesactivate(
+		Request $request,
+		EntityManagerInterface $manager,
+		int $stationId,
+		StationService $stationService
 	) {
+		$isAdmin = $this->isGranted(User::ROLE_ADMIN);
+		
 		if (!$this->isGranted(UserVoter::LOGGED)) {
 			return $this->redirectToRoute('user_login');
 		}
@@ -762,10 +780,20 @@ class StationsController extends AbstractController
 			'Vous n’êtes pas autorisé à désactiver cette station'
 		);
 		
+		// Prevent user to deactivate station with multiple contributors
+		$contributorsCount = $stationService->countContributors($station);
+		if ($contributorsCount > 1 && !$isAdmin){
+			$this->addFlash('error', "La station n'a pas été désactivée, d'autres utilisateurs contribuent à cette station. Veuillez contacter un administrateur.");
+			
+			return $this->redirectToRoute('stations_show', [
+				'slug'=> $station->getSlug()
+			]);
+		}
+		
 		$station->setIsDeactivated(true);
 		$manager->flush();
 		
-		$this->addFlash('notice', 'La station a été désactivée');
+		$this->addFlash('notice', "La station a été désactivée. Si c'est une erreur, veuillez contacter un administrateur pour la réactiver");
 		
 		return $this->redirectToRoute('my_stations');
 	}
