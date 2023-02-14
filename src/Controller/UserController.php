@@ -107,6 +107,10 @@ class UserController extends AbstractController
     ) {
         if ($request->isMethod('POST') && ('register' === $request->request->get('action'))) {
             $userRepository = $manager->getRepository(User::class);
+			
+			if ($request->get('hum') != ''){
+				return $this->redirectToRoute('user_login');
+			}
 
             if ($userRepository->findOneBy(['email' => $request->request->get('email')])) {
                 $this->addFlash('error', 'Cet utilisateur est déjà enregistré.');
