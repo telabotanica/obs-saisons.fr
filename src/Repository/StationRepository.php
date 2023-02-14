@@ -137,7 +137,7 @@ class StationRepository extends ServiceEntityRepository
             $searchTerm = substr($searchTerm, 0, 2);
         }
 
-        $searchResults = $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
+        $searchResults = $qb
 			->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
             ->setParameter('searchTerm', strtolower($searchTerm))
             ->getQuery()

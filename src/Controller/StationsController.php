@@ -141,7 +141,8 @@ class StationsController extends AbstractController
 				$stations = $stationRepository->findAllActive($user);
             }
         } else {
-            $stations = $stationRepository->findAllActive();
+//            $stations = $stationRepository->findAllActive();
+            $stations = $stationRepository->findAll();
         }
 
         return new Response(
