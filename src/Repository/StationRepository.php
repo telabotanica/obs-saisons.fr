@@ -137,7 +137,8 @@ class StationRepository extends ServiceEntityRepository
             $searchTerm = substr($searchTerm, 0, 2);
         }
 
-        $searchResults = $qb->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
+        $searchResults = $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
+			->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
             ->setParameter('searchTerm', strtolower($searchTerm))
             ->getQuery()
             ->getResult()
@@ -168,7 +169,8 @@ class StationRepository extends ServiceEntityRepository
             $alias = 'u';
         }
 
-        return $qb->andWhere($qb->expr()->like('lower('.$alias.'.'.$searchKey.')', ':searchKey'))
+        return $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
+			->andWhere($qb->expr()->like('lower('.$alias.'.'.$searchKey.')', ':searchKey'))
             ->setParameter('searchKey', strtolower($searchTerm).'%')
             ->getQuery()
             ->getResult()
@@ -188,6 +190,7 @@ class StationRepository extends ServiceEntityRepository
         $regexp = '.*'.str_replace(' ', '.*', strtolower($searchTerm)).'.*';
 
         return $qb->andWhere('REGEXP(lower('.$alias.'.'.$searchKey.'), :regexp) = true')
+			->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
             ->setParameter('regexp', $regexp)
             ->getQuery()
             ->getResult()
