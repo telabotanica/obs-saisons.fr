@@ -81,7 +81,7 @@ class StationsController extends AbstractController
         $user = $this->getUser();
         $stationRepository = $manager->getRepository(Station::class);
         $lastPage = ceil($stationRepository->countStations($user) / $limit);
-
+		
         return $this->render('pages/stations.html.twig', [
             'headerMapLegend' => 'Mes stations',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
@@ -138,10 +138,10 @@ class StationsController extends AbstractController
         } elseif ($request->query->has('user')) {
             $user = $this->getUser();
             if ($user) {
-                $stations = $stationRepository->findBy(['user' => $user]);
+				$stations = $stationRepository->findAllActive($user);
             }
         } else {
-            $stations = $stationRepository->findAll();
+            $stations = $stationRepository->findAllActive();
         }
 
         return new Response(

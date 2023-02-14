@@ -209,6 +209,22 @@ class StationRepository extends ServiceEntityRepository
 			->getResult()
 			;
 	}
+	
+	public function findAllActive(User $user = null)
+	{
+		$qb = $this->createQueryBuilder('s')
+			->where('s.is_deactivated =0 OR s.is_deactivated is null')
+		;
+		if ($user) {
+			$qb = $qb->andWhere('s.user = (:user)')
+				->setParameter('user', $user);
+		}
+		
+		return $qb
+			->getQuery()
+			->getResult()
+			;
+	}
 
     // /**
     //  * @return Station[] Returns an array of Station objects
