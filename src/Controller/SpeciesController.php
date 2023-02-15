@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\Species;
 use App\Entity\EventSpecies;
 use App\Service\BreadcrumbsGenerator;
+use App\Service\DateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,7 +36,8 @@ class SpeciesController extends AbstractController
     public function showSpecy(
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
-        string $vernacularName
+        string $vernacularName,
+		DateService $dateService
     ) {
         $species = $manager->getRepository(Species::class)->findOneBy(['vernacular_name' => $vernacularName]);
         if (!$species) {
@@ -53,12 +55,19 @@ class SpeciesController extends AbstractController
         foreach ($speciesEvents as $eventSpecies) {
             $validEvents[] = $eventSpecies->getEvent();
         }
-
-
+		
+		$calendar = [];
+		$type = $species->getType()->getReign();
+		foreach ($speciesEvents as $stage){
+			$calendar[] = $dateService->calculCalendrierPheno($stage);
+		}
+		
         return $this->render('pages/species/species-single.html.twig', [
             'species' => $species,
             'eventsSpecies' => $speciesEvents,
+			'type' => $type,
             'post' => $post,
+			'calendar' => $calendar,
             'breadcrumbs' => $breadcrumbsGenerator->setActiveTrail($vernacularName)
                 ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()]),
         ]);

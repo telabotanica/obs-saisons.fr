@@ -4,7 +4,44 @@
 <div class="periods-calendar" id="calendar-species">
     <h3 class="calendar-title">Calendrier Phénologique</h3>
 
-    <div class="species-table-container mb-3">
+    <div class="row d-flex justify-content-evenly mb-3" id="small-calendar">
+        {% for stage in calendar %}
+            <div class="species-card col-5 mx-1 my-2">
+                <h5 class="species-card-head text-center px-1">
+                    {{ (type == 'plantes') ? "#{stage['name']} stade #{stage['bbch']}" : "#{stage['name']}" }}
+                </h5>
+
+                <div class="admin-card-body text-center px-2">
+                    <h6>Dates d'observations</h6>
+                    {% if stage['p5'] is not empty and stage['p95'] is not empty and stage['p5'] !=
+                        stage['p95'] %}
+                        <div>
+                            <p>Du {{ stage['p5']|format_datetime (pattern='d MMMM', locale='fr') }}
+                                au {{ stage['p95']|format_datetime (pattern='d MMMM', locale='fr') }}</p>
+                        </div>
+                    {% else %}
+                        <div>
+                            <p>Information non disponible</p>
+                        </div>
+                    {% endif %}
+                    <h6>Dates d'observations les plus fréquentes</h6>
+                    {% if stage['p25'] is not empty and stage['p75'] is not empty and stage['p25'] !=
+                        stage['p75'] %}
+                        <div>
+                            <p>Du {{ stage['p25']|format_datetime (pattern='d MMMM', locale='fr') }}
+                                au {{ stage['p75']|format_datetime(pattern='d MMMM', locale='fr') }}</p>
+                        </div>
+                    {% else %}
+                        <div>
+                            <p>Information non disponible</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="species-table-container mb-3" id="large-calendar">
         <div class="gridSpe top">
 
             {# Display months #}
@@ -80,7 +117,8 @@
     <div class="accordion mb-3 mt-0" id="accordionLegend">
         <div class="accordion-item">
             <h3 class="accordion-header mt-0" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                     Légende
                 </button>
             </h3>
@@ -90,9 +128,8 @@
                     {% for i in 1..eventsSpecies|length %}
                         {% set stage = eventsSpecies[i-1] %}
                         <p>
-                            {{ periodsNames[stage.event.name] }}
-                            stade {{ stage.event.stadeBbch }}
-                            : {{ stage.event.description }}
+                            {{ (type == 'animaux') ? "stade : #{stage.event.description}" : "#{periodsNames[stage
+                            .event.name]} stade #{stage.event.stadeBbch} : #{stage.event.description}"}}
                         </p>
                     {%  endfor %}
                 </div>
