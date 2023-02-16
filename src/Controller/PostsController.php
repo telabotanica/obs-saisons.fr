@@ -246,6 +246,9 @@ class PostsController extends AbstractController
         $eventPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_EVENT);
         $eventPosts = $eventPostRepository->findAllPaginatedPosts($page, $limit);
         $lastPage = ceil(count($eventPostRepository->findAll()) / $limit);
+		if ($lastPage > 2){
+			$lastPage = 2;
+		}
 
         $this->setOrigin($request->getPathInfo());
         return $this->render('pages/post/event-posts-list.html.twig', [
