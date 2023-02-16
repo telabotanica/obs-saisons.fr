@@ -49,6 +49,11 @@
 			<a href="{{ isUserDashboardAdmin ? path('admin_user_parameters_edit', {userId:user.id}) : path('user_parameters_edit')  }}" class="button bt-add">Modifier {{ isPrivateDashboard ? 'm' : 's'  }}es paramètres</a>
 			<p>Modifier {{ isPrivateDashboard ? 'votre' : 'son'  }} e-mail et/ou {{ isPrivateDashboard ? 'votre' : 'son'  }} mot de passe</p>
 
+		{% if isUserDashboardAdmin and user.status == 2 %}
+			<a href="{{ path('admin_user_activate', {userId: user.id}) }}" class="button bt-add">Activer cet
+				utilisateur</a>
+			{% endif %}
+
 		{% endif %}
 
 

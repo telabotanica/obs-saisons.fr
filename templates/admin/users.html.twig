@@ -9,6 +9,7 @@
             <th scope="col">E-mail</th>
             <th scope="col">Pseudo</th>
             <th scope="col">Nom</th>
+            <th scope="col">status</th>
             <th scope="col">Role</th>
             <th scope="col"></th>
         </tr>
@@ -19,7 +20,13 @@
                 <th scope="row">{{ user.email }}</th>
                 <td>{{ user.displayName }}</td>
                 <td>{{ user.name }}</td>
-{#                {% if user.roles[1] %}#}
+                {% if user.status == 0 %}
+                    <td>désactivé</td>
+                {% elseif user.status == 1 %}
+                    <td>Activé</td>
+                {% elseif user.status == 2 %}
+                    <td>En attente d'activation</td>
+                {% endif %}
                 <td>{{ user.roles[1] is defined ? 'Admin' : 'User' }}</td>
                 <td><a target="_blank" href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
             </tr>

@@ -423,4 +423,46 @@ class AdminController extends AbstractController
 			'stations' => $stations,
 		]);
 	}
+	
+	/**
+	 * @Route("/admin/user/{userId}/activate", name="admin_user_activate")
+	 */
+	public function adminUserActivate($userId,Request $request, EntityManagerInterface $manager)
+	{
+		$user = $manager->getRepository(User::class)
+			->find($userId);
+		
+		if (!$user) {
+			throw $this->createNotFoundException('L’utilisateur n’existe pas');
+		}
+		
+		if (null === $user) {
+			$this->addFlash('error', 'Ce token est inconnu.');
+			
+			return $this->redirectToRoute('admin_users_list');
+		}
+		
+		if (User::STATUS_ACTIVE === $user->getStatus()) {
+			$this->addFlash('notice', 'Cet utilisateur est déjà activé.');
+			
+			return $this->redirectToRoute('admin_user_dashboard',
+					 ['userId' => $userId]
+			);
+		}
+		
+		if (User::STATUS_PENDING !== $user->getStatus()) {
+			$this->addFlash('warning', 'Impossible d’activer cet utilisateur.');
+			
+			return $this->redirectToRoute('homepage');
+		}
+		
+		$user->setResetToken(null);
+		$user->setStatus(User::STATUS_ACTIVE);
+		
+		$manager->flush();
+		
+		$this->addFlash('notice', "Le compte avec l'email ".$user->getEmail()." a été activé");
+		
+		return $this->redirectToRoute('admin_users_list');
+	}
 }
