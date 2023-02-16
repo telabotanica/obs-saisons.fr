@@ -50,7 +50,7 @@ class ExportController extends AbstractController
         }
 
         $data = $em->getRepository(Observation::class)
-            ->findByStationSlugForExport('station_'.$slug)
+            ->findByStationSlugForExport($slug)
         ;
 
         $response = $csvService->exportCsvStation($data, $slug);
