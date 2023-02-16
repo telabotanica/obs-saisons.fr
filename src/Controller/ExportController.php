@@ -250,8 +250,10 @@ class ExportController extends AbstractController
 	public function exportUserObs($userId, EntityManagerInterface $em, CsvService $csvService)
 	{
 		$this->denyAccessUnlessGranted(UserVoter::LOGGED);
+
+		$user = $em->getRepository(User::class)
+			->find($userId);
 		
-		$user = $this->getUser();
 		if (!$user) {
 			throw $this->createNotFoundException('L’utilisateur n’existe pas');
 		}

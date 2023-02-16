@@ -87,7 +87,8 @@
 		<h3>{{ isPrivateDashboard ? 'mes' : 'ses dernières' }} observations</h3>
 		{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
 		<div class="dashboard-obs-info-container">
-			<a href="{{ path('export_user',{userId: user.id}) }}" class="button bt-add mt-0 mb-4">Exporter mes obs</a>
+			<a href="{{ path('export_user',{userId: user.id}) }}" class="button bt-add mt-0 mb-4">Exporter {{
+				isPrivateDashboard ? 'mes' : 'ses'  }} obs</a>
 
 			{% for observation in observations %}
 				{% set pictureUrl = displayImageToObservation(observation)|default %}

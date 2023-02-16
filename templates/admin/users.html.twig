@@ -28,7 +28,7 @@
                     <td>En attente d'activation</td>
                 {% endif %}
                 <td>{{ user.roles[1] is defined ? 'Admin' : 'User' }}</td>
-                <td><a target="_blank" href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
+                <td><a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
             </tr>
         {% else %}
             <td>Pas d'utilisateurs</td>

@@ -1,4 +1,6 @@
 {% extends 'forms/base.html.twig' %}
+{% set isUserDashboardAdmin = isUserDashboardAdmin ?? false %}
+
 {% block form_title%}
     {{ title|default }}
 {% endblock %}
@@ -81,5 +83,14 @@
             }) }}
         </div>
     </div>
+    {% if isUserDashboardAdmin %}
+        <div class="_2-col-form">
+            <div class="form-col check">
+                {{ form_widget(profileForm.roles
+                ) }}
+            </div>
+        </div>
+    {% endif %}
+
     {% include 'forms/components/upload-block.html.twig' with { formField: profileForm.avatar } %}
 {% endblock %}

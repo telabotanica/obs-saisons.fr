@@ -267,9 +267,19 @@ class AdminController extends AbstractController
             if (!$wasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
                 $mailchimpSyncContact->subscribe($user);
             } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
-                $mailchimpSyncContact->unsubscribe($user);
+               $mailchimpSyncContact->unsubscribe($user);
             }
-
+			
+			// Add role admin if selected
+			$role = $form->get('roles')->getData();
+			$exist = false;
+			foreach ($role as $roleElem){
+				if($roleElem == 'ROLE_ADMIN'){
+					$exist = true;
+				}
+			}
+			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
+			
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
