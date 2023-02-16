@@ -434,6 +434,8 @@ class UserController extends AbstractController
         }
 
         $user = $this->getUser();
+		$role = $user->getRoles();
+		
         $wasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
 
         $form = $this->createForm(ProfileType::class, $user);
@@ -445,6 +447,14 @@ class UserController extends AbstractController
             } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
                 $mailchimpSyncContact->unsubscribe($user);
             }
+
+			$exist = false;
+			foreach ($role as $roleElem){
+				if($roleElem == 'ROLE_ADMIN'){
+					$exist = true;
+				}
+			}
+			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
 
             $manager->flush();
 
