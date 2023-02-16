@@ -320,6 +320,25 @@ class ObservationRepository extends ServiceEntityRepository
 			->getResult()
 			;
 	}
+	
+	public function findOrderedObsPerUserForExport(User $user): array
+	{
+		$qb = $this->createQueryBuilder('o');
+		
+		return $qb
+			->innerJoin('o.individual', 'i')
+			->innerJoin('o.event', 'e')
+			->innerJoin('i.station', 'st')
+			->innerJoin('i.species', 'sp')
+			->innerJoin('sp.type', 'ts')
+			->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+			->andWhere('o.user = :user')
+			->setParameter('user', $user)
+			->orderBy('o.date', 'DESC')
+			->getQuery()
+			->getResult()
+			;
+	}
 
     // /**
     //  * @return Observation[] Returns an array of Observation objects

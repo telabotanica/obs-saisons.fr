@@ -6,6 +6,8 @@ use App\Entity\Event;
 use App\Entity\Observation;
 use App\Entity\Species;
 use App\Entity\Station;
+use App\Entity\User;
+use App\Security\Voter\UserVoter;
 use App\Service\CsvService;
 use App\Service\EntityJsonSerialize;
 use Doctrine\ORM\EntityManagerInterface;
@@ -241,4 +243,34 @@ class ExportController extends AbstractController
 
         return $response;
     }
+	
+	/**
+	 * @Route("/export/user/{userId}", name="export_user")
+	 */
+	public function exportUserObs($userId, EntityManagerInterface $em, CsvService $csvService)
+	{
+		$this->denyAccessUnlessGranted(UserVoter::LOGGED);
+		
+		$user = $this->getUser();
+		if (!$user) {
+			throw $this->createNotFoundException('L’utilisateur n’existe pas');
+		}
+		
+		$userName = $user->getDisplayName();
+		$data = $em->getRepository(Observation::class)->findOrderedObsPerUserForExport($user);
+		$response = $csvService->exportCsvStation($data, $userName);
+		
+		// If csv fail, return a json file
+		if ($response->getStatusCode() !== 200){
+			$serializer = new EntityJsonSerialize();
+			
+			return new Response(
+				json_encode($serializer->jsonSerializeObservationForExport($data)),
+				Response::HTTP_OK,
+				['content-type' => 'application/json']
+			);
+		}
+		
+		return $response;
+	}
 }
