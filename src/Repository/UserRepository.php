@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Observation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,6 +46,35 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
+	
+	public function findNewMembersPerYear(int $year)
+	{
+		$qb = $this->createQueryBuilder('u')
+			->where('YEAR(u.createdAt) = :year')
+			->andWhere('u.roles NOT LIKE :role')
+			->andWhere('u.status = 1')
+			->setParameter('year', $year)
+			->setParameter('role','%ROLE_ADMIN')
+			->getQuery()
+			->getResult()
+			;
+		return count($qb);
+	}
+	
+//	public function findActiveMembersPerYear(int $year)
+//	{
+//		$qb = $this->createQueryBuilder('u')
+//			->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'u.id = o.userId')
+//			->addSelect('o')
+//			->where('YEAR(o.createdAt) = :year')
+//			->andWhere('u.roles NOT LIKE :role')
+//			->setParameter('year', $year)
+//			->setParameter('role','%ROLE_ADMIN')
+//			->getQuery()
+//			->getResult()
+//		;
+//		return count($qb);
+//	}
 
     // /**
     //  * @return User[] Returns an array of User objects

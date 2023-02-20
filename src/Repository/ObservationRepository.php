@@ -99,7 +99,7 @@ class ObservationRepository extends ServiceEntityRepository
     {
         $nowYear = date('Y');
         $allObsThisYear = $this->createQueryBuilder('o')
-            ->where('YEAR(o.date) = :nowYear')
+            ->where('YEAR(o.createdAt) = :nowYear')
             ->setParameter('nowYear', $nowYear)
             ->getQuery()
             ->getResult()
@@ -107,6 +107,42 @@ class ObservationRepository extends ServiceEntityRepository
 
         return count($allObsThisYear);
     }
+	
+	public function findObsCountPerYear(int $year): int
+	{
+		$allObsThisYear = $this->createQueryBuilder('o')
+			->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
+			->where('YEAR(o.createdAt) = :year')
+			->andWhere('o.deletedAt is null')
+			->andWhere('i.deletedAt is null')
+			->andWhere('s.deletedAt is null')
+			->andWhere('u.deletedAt is null')
+			->andWhere('u.roles NOT LIKE :role')
+			->setParameter('year', $year)
+			->setParameter('role','%ROLE_ADMIN')
+			->getQuery()
+			->getResult()
+		;
+		
+		return count($allObsThisYear);
+	}
+	
+	public function findActiveMembersPerYear(int $year)
+	{
+		$qb = $this->createQueryBuilder('o')
+			->innerJoin('o.user', 'u')
+			->select('distinct u.id')
+			->where('YEAR(o.createdAt) = :year')
+			->andWhere('u.roles NOT LIKE :role')
+			->setParameter('year', $year)
+			->setParameter('role','%ROLE_ADMIN')
+			->getQuery()
+			->getResult()
+		;
+		return count($qb);
+	}
 
     public function findAllPublic(): array
     {
@@ -147,6 +183,22 @@ class ObservationRepository extends ServiceEntityRepository
 
         return $minYear;
     }
+	
+	public function findAllYears()
+	{
+		$qb = $this->createQueryBuilder('o')
+			->select('distinct YEAR(o.date)')
+			->orderBy('YEAR(o.date)', 'DESC')
+			->getQuery()
+			->getResult();
+		
+		$years = [];
+		foreach ($qb as $year) {
+			$years[] = $year[1];
+		}
+		
+		return $years;
+	}
 
     public function findByStationSlugForExport(string $stationSlug): array
     {
