@@ -37,11 +37,18 @@
 #admin-table {
     th {
         color: $green;
+        max-width: 250px;
+        overflow: auto;
     }
 
     a{
         color: $green;
         font-weight: bold;
+    }
+
+    td {
+        max-width: 250px;
+        overflow: auto;
     }
 }
 
