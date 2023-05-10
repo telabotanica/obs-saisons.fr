@@ -228,7 +228,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('i.species', 'sp')
             ->innerJoin('sp.type', 'ts')
             ->addSelect(['i', 'e', 'st', 'sp', 'ts'])
-            ->andWhere($qb->expr()->eq('st.isPrivate', $qb->expr()->literal(false)))
+//            ->andWhere($qb->expr()->eq('st.isPrivate', $qb->expr()->literal(false)))
             ->andWhere($qb->expr()->eq('sp.id', ':speciesId'))
             ->setParameter(':speciesId', $speciesId)
             ->getQuery()

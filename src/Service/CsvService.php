@@ -26,7 +26,7 @@ class CsvService
     {
         $list = [
             // Colonnes titre du csv
-            ['Id','Date', 'IsMissing', 'Détails', 'Date de l\'observation', 'Mise à jour', 'Date de suppression', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Type', 'Plante / Animal']
+            ['Id','Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Type', 'Plante / Animal']
         ];
         // Lignes de data du csv
         foreach ($data as $ob){
@@ -72,7 +72,7 @@ class CsvService
         $list = [
             // Colonnes titre du csv
             [
-                'Id', 'Date', 'IsMissing', 'Détails', 'Date de l\'observation', 'Mise à jour', 'Date de suppression', 'Utilisateur', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Station public / privé', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Description de l\'espèce ', 'Type', 'Plante / Animal', 'Stade phénologique', 'Description du stade phénologique', 'Stade phénologique observé',
+                'Id', 'Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression', 'Utilisateur', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Station public / privé', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Description de l\'espèce ', 'Type', 'Plante / Animal', 'Stade phénologique', 'Description du stade phénologique', 'Stade phénologique observé',
             ]
         ];
         // Lignes de data du csv

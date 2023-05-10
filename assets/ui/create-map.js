@@ -31,7 +31,7 @@ export function createMap(
     map.markers = [];
 
     L.tileLayer(
-    'https://osm.tela-botanica.org/tuiles/osmfr/{z}/{x}/{y}.png', {
+    'https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
         attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
         maxZoom: 18
     }).addTo(map);
