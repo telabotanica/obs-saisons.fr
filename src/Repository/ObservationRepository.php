@@ -151,7 +151,7 @@ class ObservationRepository extends ServiceEntityRepository
         return $qb
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
-            ->andWhere($qb->expr()->eq('s.isPrivate', $qb->expr()->literal(false)))
+//            ->andWhere($qb->expr()->eq('s.isPrivate', $qb->expr()->literal(false)))
             ->addSelect(['s', 'i'])
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
