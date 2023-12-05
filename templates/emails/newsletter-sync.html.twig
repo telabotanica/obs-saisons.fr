@@ -9,6 +9,7 @@
 
 {% block body %}
     <h1><a href="{{ absolute_url(path('admin_user_dashboard', {userId:user.id})) }}" title="tableau de bord de l’utilisateur">{{ user.displayName }}</a> souhaite être {{ not isSubsciption ? 'dés' : '' }}inscrit</h1>
-    <p>{{ isSubsciption ? (isNewSubsciption ? 'La nouvelle ' : 'L’ ') : 'La dés' }}insription automatique de cet utilisateur ne s’est pas faite correctement.</p>
+    <p>{{ isSubsciption ? (isNewSubsciption ? 'La nouvelle ' : 'L’ ') : 'La dés' }}inscription automatique de cet
+        utilisateur ne s’est pas faite correctement.</p>
     <p>Email : {{ user.email }}</p>
 {% endblock %}
