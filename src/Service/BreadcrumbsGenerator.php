@@ -77,7 +77,7 @@ class BreadcrumbsGenerator
 		'resultats' => [
 			'explorer-les-donnees' => 'Explorer et visualiser les données',
 			'lettres-de-printemps' => 'Lettres de printemps',
-			'resultats-scientifiques' => 'Résultats scientifiques',
+//			'resultats-scientifiques' => 'Résultats scientifiques',
 			'export' => 'Export des données',
 		],
 		'outils-ressources' => [
