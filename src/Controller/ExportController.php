@@ -95,7 +95,7 @@ class ExportController extends AbstractController
         );
 
         $pager->setCurrentPage($request->query->get('page') ?? 1);
-        $pager->setMaxPerPage($request->query->get('size') ?? 2000);
+        $pager->setMaxPerPage($request->query->get('size') ?? 9000);
 
         $observations = iterator_to_array($pager->getCurrentPageResults());
 
