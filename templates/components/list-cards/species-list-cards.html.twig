@@ -10,7 +10,7 @@
     <div class="list-card-img" style="background-image:url({{ "/media/species/#{species.picture}.jpg" }})"></div>
 
     <a href="{{ path('species_single_show', {'vernacularName': species.vernacularName}) }}" class="item-name-block">
-        <div class="item-heading-dropdown">{{ species.vernacularName|capitalize }}</div>
+        <div class="item-heading-dropdown">{{ species.vernacularName }}</div>
         <div class="item-name scientific-name">{{ species.scientificName }}</div>
     </a>
 

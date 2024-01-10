@@ -142,3 +142,32 @@
 		box-shadow: none;
 	}
 }
+
+.dropdown-item {
+	border-left: 1px solid grey(53);
+	text-wrap: wrap;
+
+	&.nav-item {
+		padding-left: 10px;
+	}
+
+	&.active {
+		padding-left: 20px;
+		border-left: 4px solid grey(53);
+		background-color: #fff;
+		color: $grey181217
+	}
+}
+.dropdown-item:focus, .dropdown-item:hover, dropdown-item:active{
+	background: #fff;
+	color: $grey181217
+}
+
+.dropdown-menu {
+	border: none;
+
+	&.show {
+		position: relative !important;
+		transform: unset !important;
+	}
+}

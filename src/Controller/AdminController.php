@@ -404,7 +404,7 @@ class AdminController extends AbstractController
         $user->setDeletedAt(null);
 
         if ($user->getIsNewsletterSubscriber()) {
-            $mailchimpSyncContact->subscribe($user);
+            $mailchimpSyncContact->unsubscribe($user);
         }
 
         $user->setStatus(User::STATUS_ACTIVE);
