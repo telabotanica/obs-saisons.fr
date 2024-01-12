@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Form\ContactType;
 use App\Service\EmailSender;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\String\u;
@@ -52,5 +55,42 @@ class ContactController extends AbstractController
         return $this->render('pages/contact.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/newsletter/{postId}", name="envoi_newsletter")
+     */
+    public function sendNewsletters(
+        int $postId,
+        Request $request,
+        EmailSender $mailer,
+        EntityManagerInterface $manager
+    ) {
+        $newsletter = $manager->getRepository(Post::class)->find($postId);
+
+        if (!$newsletter) {
+            throw $this->createNotFoundException('La newsletter n’existe pas');
+        }
+
+        $message = $this->renderView('emails/newsletter.html.twig', [
+            'content' => $newsletter->getContent(),
+            'cover' => $newsletter->getCover()
+        ]);
+
+        $subject = $newsletter->getTitle();
+        // TODO changer ça pour récupérer la liste des inscrits à la NL
+        $emails = ['julien@tela-botanica.org','sf-test@tela-botanica.org'];
+
+        foreach ($emails as $email){
+            $mailer->sendNewsletter(
+                $email,
+                $subject,
+                $message
+            );
+        }
+
+        $this->addFlash('success', 'La newsletter a été envoyée');
+
+        return $this->redirectToRoute('admin_newsletters_list');
     }
 }
