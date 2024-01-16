@@ -1,0 +1,172 @@
+[
+  {
+    "vernacular_name": "Arbousier",
+    "scientific_name": "Arbutus unedo L.",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "11, 15, 61, 65, 85",
+    "is_active": 1,
+    "picture": "arbousier_1"
+  },
+  {
+    "vernacular_name": "Châtaignier",
+    "scientific_name": "Castanea sativa",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "11, 15, 61, 65, 85, 91, 95",
+    "is_active": 1,
+    "picture": "chataignier_1"
+  },
+  {
+    "vernacular_name": "Chêne vert",
+    "scientific_name": "Quercus ilex L.",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "11, 15, 61, 65, 85",
+    "is_active": 1,
+    "picture": "chene_vert_1"
+  },
+  {
+    "vernacular_name": "Ciste de Montpellier",
+    "scientific_name": "Cistus monspeliensis L.",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "11, 15, 61, 65, 85",
+    "is_active": 1,
+    "picture": "ciste_de_montpellier_1"
+  },
+  {
+    "vernacular_name": "Genêt scorpion",
+    "scientific_name": "Genista scorpius L.",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "61, 65",
+    "is_active": 1,
+    "picture": "genet_1"
+  },
+  {
+    "vernacular_name": "Thym commun",
+    "scientific_name": "Thymus vulgaris",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "11, 15, 61, 65, 85, 91, 95",
+    "is_active": 1,
+    "picture": "thym_1"
+  },
+  {
+    "vernacular_name": "Rainette méridoniale",
+    "scientific_name": "Hyla meridionalis",
+    "description": "",
+    "type_id": "",
+    "type_name": "amphibiens",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "rainette_meridionale"
+  },
+  {
+    "vernacular_name": "Petit duc scops",
+    "scientific_name": "Otus scops",
+    "description": "",
+    "type_id": "",
+    "type_name": "oiseaux",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "petit_duc_scops"
+  },
+  {
+    "vernacular_name": "Rollier d'Europe",
+    "scientific_name": "Coracias garrulus",
+    "description": "",
+    "type_id": "",
+    "type_name": "oiseaux",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "rollier_deurope"
+  },
+  {
+    "vernacular_name": "Huppe fasciée",
+    "scientific_name": "Upupa epops",
+    "description": "",
+    "type_id": "",
+    "type_name": "oiseaux",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "huppe_fasciee"
+  },
+  {
+    "vernacular_name": "Citron de Provence",
+    "scientific_name": "Gonepteryx cleopatra",
+    "description": "",
+    "type_id": "",
+    "type_name": "insectes",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "citron_de_provence"
+  },
+  {
+    "vernacular_name": "Cigale grise",
+    "scientific_name": "Cicada orni",
+    "description": "",
+    "type_id": "",
+    "type_name": "insectes",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "cigale_grise_1"
+  },
+  {
+    "vernacular_name": "Clathre rouge",
+    "scientific_name": "Clathrus ruber",
+    "description": "",
+    "type_id": "",
+    "type_name": "champignons",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "clathre_1"
+  },
+  {
+    "vernacular_name": "Pacha à deux queues",
+    "scientific_name": "Charaxes jasius",
+    "description": "",
+    "type_id": "",
+    "type_name": "insectes",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "pacha"
+  },
+  {
+    "vernacular_name": "Aurore de Provence",
+    "scientific_name": "Anthocharis euphenoides",
+    "description": "",
+    "type_id": "",
+    "type_name": "insectes",
+    "bbch_list": null,
+    "is_active": 1,
+    "picture": "aurore_provence"
+  },
+  {
+    "vernacular_name": "Pariétaire de Judée",
+    "scientific_name": "Parietaria judaica",
+    "description": "",
+    "type_id": "",
+    "type_name": "herbacées",
+    "bbch_list": "61",
+    "is_active": 1,
+    "picture": "pariétaire"
+  },
+  {
+    "vernacular_name": "Cormier",
+    "scientific_name": "Sorbus domestica L.",
+    "description": "",
+    "type_id": "",
+    "type_name": "arbres",
+    "bbch_list": "11, 15, 61, 65, 85, 91, 95",
+    "is_active": 1,
+    "picture": "Sorbusdomestica_Fructification_BBCH85"
+  }
+]
