@@ -157,6 +157,8 @@ class ObservationRepository extends ServiceEntityRepository
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
             ->addSelect('PARTIAL ts.{id, name, reign}')
+            ->innerJoin('o.event', 'e')
+            ->addSelect('PARTIAL e.{id, bbch_code, name, description}')
             ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getArrayResult()

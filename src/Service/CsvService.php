@@ -26,7 +26,7 @@ class CsvService
     {
         $list = [
             // Colonnes titre du csv
-            ['Id','Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Type', 'Plante / Animal']
+            ['Observation id','Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression','id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Type', 'Plante / Animal', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'stade phénologique','bbch_code','station ID', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département']
         ];
         // Lignes de data du csv
         foreach ($data as $ob){
@@ -44,9 +44,16 @@ class CsvService
                 $createDate,
                 $updateDate,
                 $deletionDate,
+                $ob['individual']['species']['id'],
+                $ob['individual']['species']['vernacular_name'],
+                $ob['individual']['species']['scientific_name'],
+                $ob['individual']['species']['type']['name'],
+                $ob['individual']['species']['type']['reign'],
                 $ob['individual']['id'],
                 $ob['individual']['name'],
                 $ob['individual']['details'],
+                $ob['event']['name'],
+                $ob['event']['bbch_code'],
                 $ob['individual']['station']['id'],
                 $ob['individual']['station']['name'],
                 $ob['individual']['station']['description'],
@@ -56,15 +63,9 @@ class CsvService
                 $ob['individual']['station']['longitude'],
                 $ob['individual']['station']['altitude'],
                 $ob['individual']['station']['inseeCode'],
-                $ob['individual']['station']['department'],
-                $ob['individual']['species']['id'],
-                $ob['individual']['species']['vernacular_name'],
-                $ob['individual']['species']['scientific_name'],
-                $ob['individual']['species']['type']['name'],
-                $ob['individual']['species']['type']['reign'],
+                $ob['individual']['station']['department']
             ];
         }
-
         return $this->createCsv($list, 'export_all_ods');
     }
     public function exportCsvStation(array $data, string $slug): Response
@@ -72,7 +73,7 @@ class CsvService
         $list = [
             // Colonnes titre du csv
             [
-                'Id', 'Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression', 'Utilisateur', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'station ID', 'Station public / privé', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Description de l\'espèce ', 'Type', 'Plante / Animal', 'Stade phénologique', 'Description du stade phénologique', 'Stade phénologique observé',
+                'Id', 'Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression', 'id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Description de l\'espèce ', 'Type', 'Plante / Animal', 'Utilisateur', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'Stade phénologique',  'bbch_code', 'Description du stade phénologique', 'stade phéno est observable', 'station ID', 'Station public / privé', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département',
             ]
         ];
         // Lignes de data du csv
@@ -93,10 +94,20 @@ class CsvService
                 $createDate,
                 $updateDate,
                 $deletionDate,
+                $ob->getIndividual()->getSpecies()->getId(),
+                $ob->getIndividual()->getSpecies()->getVernacularName(),
+                $ob->getIndividual()->getSpecies()->getScientificName(),
+                $ob->getIndividual()->getSpecies()->getDescription(),
+                $ob->getIndividual()->getSpecies()->getType()->getName(),
+                $ob->getIndividual()->getSpecies()->getType()->getReign(),
                 $ob->getUser()->getDisplayName(),
                 $ob->getIndividual()->getId(),
                 $ob->getIndividual()->getName(),
                 $ob->getIndividual()->getDetails(),
+                $ob->getEvent()->getName(),
+                $ob->getEvent()->getStadeBbch(),
+                $ob->getEvent()->getDescription(),
+                $isObservable,
                 $ob->getIndividual()->getStation()->getId(),
                 $isPrivate,
                 $ob->getIndividual()->getStation()->getName(),
@@ -107,16 +118,7 @@ class CsvService
                 $ob->getIndividual()->getStation()->getLongitude(),
                 $ob->getIndividual()->getStation()->getAltitude(),
                 $ob->getIndividual()->getStation()->getInseeCode(),
-                $ob->getIndividual()->getStation()->getDepartment(),
-                $ob->getIndividual()->getSpecies()->getId(),
-                $ob->getIndividual()->getSpecies()->getVernacularName(),
-                $ob->getIndividual()->getSpecies()->getScientificName(),
-                $ob->getIndividual()->getSpecies()->getDescription(),
-                $ob->getIndividual()->getSpecies()->getType()->getName(),
-                $ob->getIndividual()->getSpecies()->getType()->getReign(),
-                $ob->getEvent()->getName(),
-                $ob->getEvent()->getDescription(),
-                $isObservable
+                $ob->getIndividual()->getStation()->getDepartment()
             ];
         }
 

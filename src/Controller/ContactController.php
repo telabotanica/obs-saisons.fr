@@ -60,6 +60,7 @@ class ContactController extends AbstractController
     /**
      * @Route("/newsletter/{postId}", name="envoi_newsletter")
      */
+    /*
     public function sendNewsletters(
         int $postId,
         Request $request,
@@ -93,4 +94,5 @@ class ContactController extends AbstractController
 
         return $this->redirectToRoute('admin_newsletters_list');
     }
+    */
 }
