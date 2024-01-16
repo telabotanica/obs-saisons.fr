@@ -10,6 +10,7 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/media/favicon/favicon-32x32.png') }}">
 		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/media/favicon/favicon-16x16.png') }}">
 		<link rel="shortcut icon" href="{{ asset('media/layout/icons/logo_ods.svg') }}" type="image/svg+xml">
+		{%  block meta %}{% endblock %}
 
 		{% if analytics_tracking_id %}
 		<!-- Global site tag (gtag.js) - Google Analytics -->
