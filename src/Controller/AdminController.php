@@ -13,6 +13,7 @@ use App\Form\PagePostType;
 use App\Form\ProfileType;
 use App\Form\SpeciesPostType;
 use App\Form\StationType;
+use App\Form\StatsType;
 use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
 use App\Helper\OriginPageTrait;
@@ -21,6 +22,7 @@ use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
 use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
+use App\Service\Stats;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -479,10 +481,43 @@ class AdminController extends AbstractController
 		
 		return $this->redirectToRoute('admin_users_list');
 	}
+    /**
+     * @Route("/admin/stats", name="admin_stats")
+     */
+    public function getStats(EntityManagerInterface $manager, Request $request, Stats $statsService){
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        // Menu déroulant choix année
+        $minYear = $manager->getRepository(Observation::class)->findMinYear();
+        $years = $manager->getRepository(Observation::class)->findAllYears();
+
+        $yearsIndexed = [];
+        foreach ($years as $year){
+            $yearsIndexed[$year] = $year;
+        }
+        $year = new \DateTime('now');
+        $year = $year->format('Y');
+        $form = $this->createForm(StatsType::class,$years, ['years'=>$yearsIndexed]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $year = $form->get('years')->getData();
+        }
+
+        // Indicateurs
+        $stats = $statsService->getStats($year);
+
+        return $this->render('admin/stats.html.twig', [
+            'years' => $years,
+            'min_year' => $minYear,
+            'form' => $form->createView(),
+            'stats' => $stats
+        ]);
+    }
 
     /**
      * @Route("/admin/newsletters", name="admin_newsletters_list")
-     */
+     *//*
     public function newsletterList(EntityManagerInterface $manager)
     {
         $newsletters= $manager->getRepository(Post::class)
@@ -494,11 +529,11 @@ class AdminController extends AbstractController
         return $this->render('admin/newsletters.html.twig', [
             'newsletters' => $newsletters
         ]);
-    }
+    }*/
 
     /**
      * @Route("/admin/newsletters/create/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_create")
-     */
+     *//*
     public function addNewsletter(
         $mode,
         Request $request,
@@ -539,11 +574,12 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
             'upload' => $router->generate('image_create'),
         ]);
-    }
+    }*/
 
     /**
      * @Route("/admin/newsletters/{postId}/show", name="admin_newsletters_show")
      */
+    /*
     public function showNewsletter(int $postId, EntityManagerInterface $manager){
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
         $newsletter = $manager->getRepository(Post::class)->find($postId);
@@ -556,10 +592,11 @@ class AdminController extends AbstractController
             'cover' => $newsletter->getCover()
         ]);
     }
-
+*/
     /**
      * @Route("/admin/newsletters/{postId}/edit/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_edit")
      */
+    /*
     public function editNewsletter(
         $mode,
         int $postId,
@@ -596,4 +633,5 @@ class AdminController extends AbstractController
             'upload' => $router->generate('image_create'),
         ]);
     }
+    */
 }

@@ -1,0 +1,26 @@
+<div class="admin-card-stats-table mx-1 my-2">
+    <div class="admin-chiffre-card-body text-center">
+        <span class="fw-bold">{{ texte }}</span>
+    </div>
+    <div class="admin-chiffre-card-body text-center">
+        {% for statKey, stat in data %}
+            {% if stat is iterable %}
+            <p>
+                    {% for key, subStat in stat %}
+                        {%  if texte == 'Top 12 utilisateurs' or texte ==  'Top 5 utilisateurs' or texte == 'Observations et utilisateurs' or texte == 'Membres actifs'%}
+                            <span> {{ key }} :</span>
+                        {% endif %}
+                        <span class="">{{ subStat }} </span>
+                        {% if not loop.last %}/ {% endif %}
+                    {% endfor %}
+            </p>
+            {% else %}
+                {%  if texte == 'Observations et utilisateurs' or texte == 'Membres actifs'%}
+                    <span> {{ statKey }} :</span>
+                {% endif %}
+                <span class="">{{ stat }} </span>
+                {% if not loop.last %}/ {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
