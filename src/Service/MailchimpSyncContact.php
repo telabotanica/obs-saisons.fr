@@ -32,10 +32,12 @@ class MailchimpSyncContact
     ) {
         $this->logger = $logger;
         $this->params = $params;
-        $this->httpClient = HttpClient::createForBaseUri($this->params->get('mailchimp.api_base_uri'), [
-            'auth_basic' => 'key:'.$this->params->get('mailchimp.api_key'),
+        $this->httpClient = HttpClient::createForBaseUri($this->params->get('brevo.api_base_uri'), [
+//            'auth_basic' => 'key:'.$this->params->get('mailchimp.api_key'),
             'headers' => [
                 'Content-Type' => 'application/json',
+                'api-key' => $this->params->get('brevo.api_key'),
+                'accept' => 'application/json'
             ],
         ]);
         $this->flashBag = $flashBag;
@@ -45,11 +47,11 @@ class MailchimpSyncContact
 
     private function generateUrl(User $user = null)
     {
-        $url = $this->params->get('mailchimp.api_url');
-        if ($user) {
-            $url .= '/'.md5(strtolower($user->getEmail()));
-        }
+        $url = $this->params->get('brevo.api_url');
 
+        if ($user) {
+            $url .= '/'.urlencode($user->getEmail());
+        }
         return $url;
     }
 
@@ -61,19 +63,44 @@ class MailchimpSyncContact
     public function subscribe(User $user)
     {
         $subscriptionStatus = $this->checkSubscriptionStatus($user);
+
+        // Si on a pas d'info, l'utilisateur n'existe pas dans brevo donc on le crée et on l'inscrit à la NL.
+        if (!$subscriptionStatus) {
+            $this->addContact($user);
+        } else {
+            if(empty($subscriptionStatus->listIds) || !in_array($this->params->get('brevo.list_id'), $subscriptionStatus->listIds)){
+
+                $url = $this->params->get('brevo.api_url_list').'/contacts/add';
+
+                $subscription = $this->requestApi(
+                        $user,
+                        'POST',
+                        $url,
+                        ['emails' => [$user->getEmail()]]
+                    );
+                if (!$subscription) {
+                    $this->manageSyncFail($user, self::STATUS_SUBSCRIBED);
+                }
+            }
+        }
+/*
         // Request fail or 404 response is interpreted as unregistered contact.
         if (!$subscriptionStatus || 404 === $subscriptionStatus) {
             // On profile creation
             $this->addContact($user);
         } else {
             // on profile edition
+            $url = $this->params->get('brevo.api_url_list').'/contacts/add';
+
             $this->requestApi(
                 $user,
-                'PUT',
-                $this->generateUrl($user),
-                ['status' => self::STATUS_SUBSCRIBED]
+                'POST',
+                $url,
+//                ['emails' => md5(strtolower($user->getEmail()))]
+                ['emails' => $user->getEmail()]
             );
         }
+*/
     }
 
     /**
@@ -83,19 +110,23 @@ class MailchimpSyncContact
      */
     private function addContact(User $user)
     {
-        $this->requestApi(
-            $user,
-            'POST',
-            $this->generateUrl(),//no user email info in url
-            [
-                'email_address' => $user->getEmail(),
-                'status' => self::STATUS_SUBSCRIBED,
-                'merge_fields' => [
-                    'FNAME' => $user->getName(),
-                    'LNAME' => $user->getName(),
-                ],
-            ]
-        );
+        $subscription = $this->requestApi(
+                $user,
+                'POST',
+                $this->generateUrl(),
+                [
+                    'email' => $user->getEmail(),
+                    'listIds' => [3],
+                    "ext_id" => (string)$user->getId(),
+                    'attributes' => [
+                        'PRENOM' => $user->getName()
+                    ],
+                ]
+            );
+        if (!$subscription){
+            $this->manageSyncFail($user, self::STATUS_ADDED);
+        }
+
     }
 
     /**
@@ -104,12 +135,22 @@ class MailchimpSyncContact
      */
     public function unsubscribe(User $user)
     {
-        $this->requestApi(
-            $user,
-            'PUT',
-            $this->generateUrl($user),
-            ['status' => self::STATUS_UNSUBSCRIBED]
-        );
+        $subscriptionStatus = $this->checkSubscriptionStatus($user);
+
+        if ($subscriptionStatus && !empty($subscriptionStatus->listIds) && in_array($this->params->get('brevo.list_id'), $subscriptionStatus->listIds)) {
+            $url = $this->params->get('brevo.api_url_list').'/contacts/remove';
+
+            $subscription = $this->requestApi(
+                    $user,
+                    'POST',
+                    $url,
+                    ['emails' => [$user->getEmail()]]
+                );
+
+            if (!$subscription){
+                $this->manageSyncFail($user, self::STATUS_UNSUBSCRIBED);
+            }
+        }
     }
 
     /**
@@ -142,11 +183,13 @@ class MailchimpSyncContact
         if ($data) {
             $options = ['body' => json_encode($data)];
             // deduce status expectation from request body data parsing.
+            /*
             if ($data['status']) {
                 // on register new contact API call Mailchimp expects body['status'] === "subscribed",
                 // but if request fails we need $expectedStatus to hold distinct information of registration or subscription,
                 $expectedStatus = $isNewContact ? self::STATUS_ADDED : $data['status'];
             }
+            */
         }
 
         try {
@@ -177,19 +220,22 @@ class MailchimpSyncContact
             )->getContent();
 
             $content = json_decode($jsonContent);
-            if (!empty($content) && !empty($content->status)) {
-                return $content->status;
+
+            if (!empty($content)) {
+                return $content;
             }
         } catch (\Exception $e) {
             $this->logger->error($e);
+            return null;
         }
 
+        /*
         // only fired when request failed, or getting content failed,
         // and a particular status was expected
         if ($expectedStatus) {
             $this->manageSyncFail($user, $expectedStatus);
         }
-
+*/
         return null;
     }
 
