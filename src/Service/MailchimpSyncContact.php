@@ -156,7 +156,7 @@ class MailchimpSyncContact
     /**
      * Calls Mailchimp API to check a contact's status our Mailchimp audience.
      */
-    private function checkSubscriptionStatus(User $user)
+    public function checkSubscriptionStatus(User $user)
     {
         return $this->requestApi(
             $user,
@@ -225,7 +225,7 @@ class MailchimpSyncContact
                 return $content;
             }
         } catch (\Exception $e) {
-            $this->logger->error($e);
+//            $this->logger->error($e);
             return null;
         }
 
