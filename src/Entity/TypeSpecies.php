@@ -11,9 +11,11 @@ class TypeSpecies
 {
     const REIGN_ANIMALS = 'animaux';
     const REIGN_PLANTS = 'plantes';
+    const REIGN_MUSHROOM = 'champignons';
     const REIGN = [
         self::REIGN_ANIMALS,
         self::REIGN_PLANTS,
+        self::REIGN_MUSHROOM
     ];
 
     /**
@@ -58,7 +60,7 @@ class TypeSpecies
     public function setReign(string $reign): self
     {
         if (!in_array($reign, self::REIGN)) {
-            throw new \InvalidArgumentException('"Reign" invalide (valeurs possibles: "'.self::REIGN_ANIMALS.'", "'.self::REIGN_PLANTS.'")');
+            throw new \InvalidArgumentException('"Reign" invalide (valeurs possibles: "'.self::REIGN_ANIMALS.'", "'.self::REIGN_PLANTS.'", "'.self::REIGN_MUSHROOM.'")');
         }
         $this->reign = $reign;
 
