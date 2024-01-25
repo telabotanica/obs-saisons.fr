@@ -15,6 +15,7 @@ class MailchimpSyncContact
     const STATUS_SUBSCRIBED = 'subscribed';
     const STATUS_UNSUBSCRIBED = 'unsubscribed';
     const WEBHOOK_RESPONSE_TYPE_SUBSCRIBE = 'subscribe';
+    const NOT_REGISTERED = 'pas inscrit';
 
     private $logger;
     private $params;
@@ -108,7 +109,7 @@ class MailchimpSyncContact
      * As trying to subscribe leads to add contact on check contact status fail,
      * this method doesn't need to be public.
      */
-    private function addContact(User $user)
+    public function addContact(User $user)
     {
         $subscription = $this->requestApi(
                 $user,
@@ -269,5 +270,48 @@ class MailchimpSyncContact
 
         // user newsletter subscription status rollback on database
         $user->setIsNewsletterSubscriber(!$isSubscription);
+    }
+
+    public function checkBrevoMailingList(User $user){
+        $subscriptionStatus = $this->checkSubscriptionStatus($user);
+
+        if (!$subscriptionStatus){
+            return self::NOT_REGISTERED;
+        }
+
+        if (empty($subscriptionStatus->listIds) || !in_array($this->params->get('brevo.list_id'), $subscriptionStatus->listIds)){
+            return self::STATUS_UNSUBSCRIBED;
+        }
+
+        if (in_array($this->params->get('brevo.list_id'), $subscriptionStatus->listIds)){
+            return self::STATUS_SUBSCRIBED;
+        }
+
+        return null;
+    }
+
+    public function exportSubscribers(Array $users){
+        $data = [
+            'jsonBody' => $users,
+            'listIds' => [3],
+        ];
+        $options = ['body' => json_encode($data)];
+        $url = $this->params->get('brevo.api_url') . '/import';
+
+        try {
+            $jsonContent = $this->httpClient->request(
+                'POST',
+                $url,
+                $options
+            )->getContent();
+
+            $content = json_decode($jsonContent);
+
+            if (!empty($content)) {
+                return $content;
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
