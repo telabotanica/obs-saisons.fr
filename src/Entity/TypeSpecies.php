@@ -31,7 +31,7 @@ class TypeSpecies
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=7)
+     * @ORM\Column(type="string", length=30)
      */
     private $reign;
 
