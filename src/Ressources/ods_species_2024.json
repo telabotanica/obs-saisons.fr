@@ -7,7 +7,7 @@
     "type_name": "arbres",
     "bbch_list": "11, 15, 61, 65, 85",
     "is_active": 1,
-    "picture": "arbousier_1"
+    "picture": "arbousier"
   },
   {
     "vernacular_name": "Châtaignier",
@@ -17,7 +17,7 @@
     "type_name": "arbres",
     "bbch_list": "11, 15, 61, 65, 85, 91, 95",
     "is_active": 1,
-    "picture": "chataignier_1"
+    "picture": "chataignier"
   },
   {
     "vernacular_name": "Chêne vert",
@@ -27,7 +27,7 @@
     "type_name": "arbres",
     "bbch_list": "11, 15, 61, 65, 85",
     "is_active": 1,
-    "picture": "chene_vert_1"
+    "picture": "chene_vert"
   },
   {
     "vernacular_name": "Ciste de Montpellier",
@@ -37,7 +37,7 @@
     "type_name": "arbres",
     "bbch_list": "61, 65, 85",
     "is_active": 1,
-    "picture": "ciste_de_montpellier_1"
+    "picture": "ciste_de_montpellier"
   },
   {
     "vernacular_name": "Genêt scorpion",
@@ -47,7 +47,7 @@
     "type_name": "arbres",
     "bbch_list": "61, 65, 85",
     "is_active": 1,
-    "picture": "genet_1"
+    "picture": "genet"
   },
   {
     "vernacular_name": "Thym commun",
@@ -57,7 +57,7 @@
     "type_name": "arbres",
     "bbch_list": "61, 65",
     "is_active": 1,
-    "picture": "thym_1"
+    "picture": "thym"
   },
   {
     "vernacular_name": "Rainette méridoniale",
@@ -117,7 +117,7 @@
     "type_name": "insectes",
     "bbch_list": null,
     "is_active": 1,
-    "picture": "cigale_grise_1"
+    "picture": "cigale_grise"
   },
   {
     "vernacular_name": "Clathre rouge",
@@ -127,7 +127,7 @@
     "type_name": "champignons",
     "bbch_list": null,
     "is_active": 1,
-    "picture": "clathre_1"
+    "picture": "clathre"
   },
   {
     "vernacular_name": "Pacha à deux queues",
@@ -167,7 +167,7 @@
     "type_name": "arbres",
     "bbch_list": "11, 15, 61, 65, 85, 91, 95",
     "is_active": 1,
-    "picture": "Sorbusdomestica_Fructification_BBCH85"
+    "picture": "Sorbusdomestica"
   },
   {
     "vernacular_name": "Processionnaire du pin",
