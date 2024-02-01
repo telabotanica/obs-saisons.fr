@@ -263,18 +263,34 @@ ObservationOverlay.prototype.checkAberrationsObsDays = function() {
         return parseInt(day.replace('-', ''));
     }
 
-    if(
-        !!aberrationStartDay && !!aberrationEndDay && !!observationDay
-        && (
-            comparativeTimeValue(aberrationStartDay) > comparativeTimeValue(observationDay)
-            || comparativeTimeValue(aberrationEndDay) < comparativeTimeValue(observationDay)
-        )
-    ) {
+    function checkIfAberrationBetween2Years(start, end){
+        return (end - start) < 0;
+    }
+
+    function fillMessage(species){
+        return `La date que vous venez de saisir sort de la période habituelle pour cet événement chez cette espèce (${selectedEvent.dataset.displayedStartDate} au ${selectedEvent.dataset.displayedEndDate}).
+            Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/${species}" target="_blank" class="deep-green-link small">espèce</a>.
+            Si vous restez dans le doute, <a href="https://www.obs-saisons.fr/contact" target="_blank" class="deep-green-link small">contactez nous</a>.`
+    }
+
+    if(!!aberrationStartDay && !!aberrationEndDay && !!observationDay){
+        const between2Years = checkIfAberrationBetween2Years(comparativeTimeValue(aberrationStartDay), comparativeTimeValue(aberrationEndDay))
         const species = this.individualEl.options[this.individualEl.selectedIndex].dataset.speciesName;
 
-        message = `La date que vous venez de saisir sort de la période habituelle pour cet événement chez cette espèce (${selectedEvent.dataset.displayedStartDate} au ${selectedEvent.dataset.displayedEndDate}).
-            Si vous êtes sûr(e) de votre observation, ne tenez pas compte de ce message, sinon, vérifiez qu’il s’agit bien de ce stade et de cette <a href="/especes/${species}" target="_blank" class="deep-green-link small">espèce</a>.
-            Si vous restez dans le doute, <a href="https://www.obs-saisons.fr/contact" target="_blank" class="deep-green-link small">contactez nous</a>.`;
+        if (between2Years){
+            if (
+                comparativeTimeValue(aberrationStartDay) > comparativeTimeValue(observationDay) && comparativeTimeValue(aberrationEndDay) < comparativeTimeValue(observationDay)
+            ){
+                message = fillMessage(species);
+            }
+        } else {
+            if (comparativeTimeValue(aberrationStartDay) > comparativeTimeValue(observationDay)
+                || comparativeTimeValue(aberrationEndDay) < comparativeTimeValue(observationDay)){
+
+                message = fillMessage(species);
+            }
+        }
+
     }
 
     formWarningEl.innerHTML = message;
