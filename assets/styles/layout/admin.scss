@@ -57,3 +57,44 @@
     width: 100%;
     border-radius: 20px;
 }
+
+.admin-card-stats{
+    background-color: #fff;
+    color: $grey281146;
+    box-shadow: 10px 10px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 0 0 10px 0;
+    border-radius: 20px;
+    height: 100px;
+
+    @include media(xs, sm) {
+        height: 150px;
+    }
+
+    @include media(sm, md) {
+        height: 150px;
+    }
+}
+
+.admin-card-stats-table{
+    background-color: #fff;
+    color: $grey281146;
+    box-shadow: 10px 10px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 0 0 10px 0;
+    border-radius: 20px;
+    min-height: 100px;
+
+    @include media(xs, sm) {
+        height: 150px;
+    }
+
+    @include media(sm, md) {
+        height: 150px;
+    }
+}
+
+.admin-chiffre-card-body {
+    color: $grey281146;
+    padding: 20px 20px 0 20px;
+}

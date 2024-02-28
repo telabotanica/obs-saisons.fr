@@ -1,0 +1,205 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center">Indicateurs</h2>
+
+    <div class="d-flex justify-content-center">
+        {{ form_start(form, {
+            'attr': {
+                'class': 'col-lg-6 col-12 text-center'
+            }
+        }) }}
+        {{ form_widget(form.years) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+    <div class="row">
+        <div class="col-6">
+            {% if stats.nbStations <= 1 %}
+                {% set textObs = 'Station' %}
+            {% else %}
+                {% set textObs = 'Stations' %}
+            {% endif %}
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.nbStations,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% if stats.nbStationsWithData <= 1 %}
+                {% set textObs = 'Station avec données' %}
+            {% else %}
+                {% set textObs = 'Stations avec données' %}
+            {% endif %}
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.nbStationsWithData,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% if stats.obsPerYear <= 1 %}
+                {% set textObs = 'Observation' %}
+            {% else %}
+                {% set textObs = 'Observations' %}
+            {% endif %}
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.obsPerYear,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% if stats.newMembers <= 1 %}
+                {% set textObs = 'Inscrit' %}
+            {% else %}
+                {% set textObs = 'Inscrits' %}
+            {% endif %}
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.newMembers,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% if stats.activeMembers <= 1 %}
+                {% set textObs = 'Membre actif' %}
+            {% else %}
+                {% set textObs = 'Membres actifs' %}
+            {% endif %}
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.activeMembers,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.membersPerStatus,
+                'texte' : 'Membres par status'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.activeStationsPerYear,
+                'texte' : 'Stations actives (année / nombre d\'obs)'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.activeCitiesPerYear,
+                'texte' : 'Communes actives (année / nombre d\'obs)'
+            } %}
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.top10Animal,
+                'texte' : 'Top 10 animaux'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.top10Plantes,
+                'texte' : 'Top 10 plantes'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.top10Champignons,
+                'texte' : 'Top 10 champignons'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.top3Species,
+                'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-12">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.top12Users,
+                'texte' : 'Top 12 utilisateurs'
+            } %}
+        </div>
+    </div>
+    <h2 class="text-center">ODS Occitanie</h2>
+    <div class="row">
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.occitanie.nbStations,
+                'texte' : 'Nombre de stations'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.obsPerYear,
+                'texte' : 'Observations et utilisateurs'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.occitanie.newMembers,
+                'texte' : 'Nouveaux membres'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.activeMembers,
+                'texte' : 'Membres actifs'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top3,
+                'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-12">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top5Users,
+                'texte' : 'Top 5 utilisateurs'
+            } %}
+        </div>
+
+    </div>
+    <h2 class="text-center">ODS Provence</h2>
+    <div class="row">
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.nbStations,
+                'texte' : 'Nombre de stations'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.obsPerYear,
+                'texte' : 'Observations et utilisateurs'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.newMembers,
+                'texte' : 'Nouveaux membres'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.activeMembers,
+                'texte' : 'Membres actifs'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top3,
+                'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-12">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top5Users,
+                'texte' : 'Top 5 utilisateurs'
+            } %}
+        </div>
+    </div>
+{% endblock %}

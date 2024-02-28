@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\FrenchRegions;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
@@ -242,6 +243,27 @@ class StationRepository extends ServiceEntityRepository
 			->getResult()
 			;
 	}
+
+    public function countStationsEachYearPerRegion(int $year, $region = null)
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('YEAR(s.createdAt) <= :year')
+            ->setParameter('year', $year);
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getResult();
+
+        return $result[0][1] ?? 0;
+    }
 
     // /**
     //  * @return Station[] Returns an array of Station objects

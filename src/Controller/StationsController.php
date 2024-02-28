@@ -592,20 +592,11 @@ class StationsController extends AbstractController
         if ($form->get('picture')->getData()){
             $fileSize = $form->get('picture')->getData()->getSize();
         }
-        if($fileSize > 5242880){ $oversize = true ;};
+        $oversize = ($fileSize > 5242880);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Traitement de l'image
-            $image = null;
-            $image = $form->get('picture')->getData();
-            $previousHeaderImage = $station->getHeaderImage();
-
-            $isDeletePicture = false;
-            $image = $uploadFileService->setFile(
-                $image,// input file data
-                $previousHeaderImage,
-                $isDeletePicture// removal requested
-            );
+            $image = $uploadFileService->uploadFile($form->get('picture')->getData());
 
             $observation->setPicture($image);
 
@@ -675,20 +666,11 @@ class StationsController extends AbstractController
         if ($form->get('picture')->getData()){
             $fileSize = $form->get('picture')->getData()->getSize();
         }
-        if($fileSize > 5242880){ $oversize = true ;};
+        $oversize = ($fileSize > 5242880);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Traitement de l'image
-            $image = null;
-            $image = $form->get('picture')->getData();
-            $previousHeaderImage = $station->getHeaderImage();
-
-            $isDeletePicture = false;
-            $image = $uploadFileService->setFile(
-                $image,// input file data
-                $previousHeaderImage,
-                $isDeletePicture// removal requested
-            );
+            $image = $uploadFileService->uploadFile($form->get('picture')->getData());
 
             $observation->setPicture($image);
 

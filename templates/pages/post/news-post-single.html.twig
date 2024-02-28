@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+{% block meta %}
+	{% if post.cover %}
+		<meta property="og:image" content="{{ absolute_url(asset(post.cover)) }}">
+	{% endif %}
+{% endblock %}
 
 {% block main_content %}
 	{% block post_header %}{% endblock %}

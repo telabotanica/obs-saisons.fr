@@ -19,12 +19,14 @@ class Post
     const CATEGORY_EVENT = 'event';
     const CATEGORY_SPECIES = 'species';
     const CATEGORY_PAGE = 'page';
+    const CATEGORY_NEWSLETTER = 'newsletter';
 
     const CATEGORY_PARENT_ROUTE = [
         self::CATEGORY_NEWS => 'news_posts_list',
         self::CATEGORY_EVENT => 'event_posts_list',
         self::CATEGORY_SPECIES => 'especes',
         self::CATEGORY_PAGE => 'homepage',
+        self::CATEGORY_NEWSLETTER => 'admin_newsletters_list',
     ];
 
     /**

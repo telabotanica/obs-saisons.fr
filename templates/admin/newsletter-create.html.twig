@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+{#Édition de la page statique : {{ page.title }}#}
+{% endblock %}
+
+{% block main_content %}
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Création d\'une newsletter',
+        'subtitle': ''
+    }) %}
+
+    <a href="{{ origin ?? path('admin_newsletters_list') }}">Retour</a>
+    <br>
+
+    <section class="group-form">
+        {% include 'forms/post/newsletter-post-form.html.twig' with ({
+            action:'post',
+            editMode:editMode,
+            upload: upload,
+            form:form,
+            isPage: true,
+            post: post
+        }) %}
+    </section>
+{% endblock %}
+
