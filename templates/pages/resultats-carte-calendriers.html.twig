@@ -77,7 +77,7 @@
 
     <div id="phenological-chart-container">
         <select name="species" id="species-phenological-chart" class="criteria-list">
-            <option value="0" class="default-criteria" disabled>Choisissez unes espèce</option>
+            <option value="0" class="default-criteria" disabled>Choisissez une espèce</option>
             {% for species in allSpecies %}
                 <option
                         value="{{ species.id }}"
@@ -109,7 +109,8 @@
             {% endfor %}
         </select>
 
-        <div class="no-data">Aucune donnée pour les critères demandés</div>
+        <div class="no-data alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au
+            moins un de vos critères</div>
         <div class="chart"></div>
     </div>
 
@@ -156,7 +157,8 @@
             {% endfor %}
         </select>
 
-        <div class="no-data">Aucune donnée pour les critères demandés</div>
+        <div class="no-data alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au
+            moins un de vos critères</div>
         <div class="chart"></div>
     </div>
 

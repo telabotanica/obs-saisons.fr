@@ -1,0 +1,23 @@
+.chiffre-card{
+  background-color: #fff;
+  color: $grey281146;
+  box-shadow: 10px 10px 8px 0 rgba(0, 0, 0, 0.2),
+  0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 0 0 10px 0;
+  //width: 23%;
+  border-radius: 20px;
+  height: 220px;
+
+  @include media(xs, sm) {
+    height: 280px;
+  }
+
+  @include media(sm, md) {
+    height: 250px;
+  }
+}
+
+.chiffre-card-body {
+  color: $grey281146;
+  padding: 20px;
+}

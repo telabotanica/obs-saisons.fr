@@ -51,6 +51,23 @@
 
     <div class="privacy-status">Station {{ station.isPrivate ? 'personnelle' : 'publique' }}</div>
     {% if app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
-        <a href="" class="button hero-header-button bt-add edit open" data-open="station" data-station="{{ station|getJsonSerializedEditStation }}">modifier la station</a>
+        <a href="" class="button hero-header-button bt-add edit open" data-open="station"
+           data-station="{{ station|getJsonSerializedEditStation }}" title="Gérer les paramètres de ma station, me permet de supprimer celle-ci si elle a été créée par erreur">modifier la station</a>
+
+        {% if is_granted('ROLE_ADMIN') and station.isDeactivated == 1 %}
+            <a href="{{ path('station_reactivate', {
+                stationId:station.id}) }}" class="button btn-desinscription-station">Réactiver cette station</a>
+        {% elseif station.isDeactivated == 0 or station.isDeactivated is null %}
+            <a href="{{ path('station_deactivate', {
+                stationId:station.id}) }}"
+               class="button btn-desinscription-station"
+               title="Permet de retirer de mon affichage une station sur laquelle je ne veux plus participer"
+               onclick="return confirm('En désactivant votre accès à cette station vous ne pourrez plus y apporter ' +
+                'd\' observations ni la consulter. Celle-ci restera cependant accessible ainsi que ses données aux ' +
+                 'administrateurs du site, êtes vous sûr.e ?')">
+                Désactiver / Me désinscrire de cette station</a>
+        {% endif %}
+
+
     {% endif %}
 </div>

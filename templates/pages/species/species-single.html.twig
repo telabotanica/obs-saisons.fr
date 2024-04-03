@@ -7,6 +7,25 @@
         'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
     }) %}
 
-    <p>{{ post.content|default('')|raw }}</p>
+    <div class="rich-text-block-fiche">{{ post.content|default('')|raw }}</div>
+
+    <div class="species-calendar mt-0">
+        {% include 'components/species-calendar-tab.html.twig' %}
+        {% include 'components/actionbar.html.twig' with {
+            actionbar: {
+                'components': [
+                    {
+                        'name': 'squared-button',
+                        'data': {
+                            'icon': 'export',
+                            'label': 'exporter',
+                            'link': path('export_single_species',{'speciesId': species.id})
+                        }
+                    }
+                ]
+            },
+        } %}
+    </div>
 
 {% endblock %}
+

@@ -7,24 +7,31 @@ use App\Entity\Post;
 use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\User;
+use App\Form\NewsletterPostType;
+use App\Form\NewsPostType;
 use App\Form\PagePostType;
 use App\Form\ProfileType;
 use App\Form\SpeciesPostType;
 use App\Form\StationType;
+use App\Form\StatsType;
 use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
 use App\Helper\OriginPageTrait;
+use App\Security\Voter\PostVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
 use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
+use App\Service\Stats;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 
 class AdminController extends AbstractController
 {
@@ -119,7 +126,8 @@ class AdminController extends AbstractController
 
         return $this->render('admin/pages.html.twig', [
             'pages' => $pages,
-            'staticPagesList' => array_merge(BreadcrumbsGenerator::MENU, BreadcrumbsGenerator::OTHER_BREADCRUMBS),
+            'staticPagesList' => array_merge(BreadcrumbsGenerator::MENU, BreadcrumbsGenerator::OTHER_BREADCRUMBS,
+			),
         ]);
     }
 
@@ -214,8 +222,7 @@ class AdminController extends AbstractController
             'action' => $this->generateUrl('stations_new'),
         ]);
 
-        $observations = $manager->getRepository(Observation::class)
-            ->findBy(['user' => $user]);
+		$observations = $manager->getRepository(Observation::class)->findOrderedObsPerUser($user);
 
         // add stations user didn't create but contributed to
         foreach ($observations as $observation) {
@@ -266,9 +273,19 @@ class AdminController extends AbstractController
             if (!$wasNewsletterSubscriber && $user->getIsNewsletterSubscriber()) {
                 $mailchimpSyncContact->subscribe($user);
             } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
-                $mailchimpSyncContact->unsubscribe($user);
+               $mailchimpSyncContact->unsubscribe($user);
             }
-
+			
+			// Add role admin if selected
+			$role = $form->get('roles')->getData();
+			$exist = false;
+			foreach ($role as $roleElem){
+				if($roleElem == 'ROLE_ADMIN'){
+					$exist = true;
+				}
+			}
+			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
+			
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
@@ -393,7 +410,7 @@ class AdminController extends AbstractController
         $user->setDeletedAt(null);
 
         if ($user->getIsNewsletterSubscriber()) {
-            $mailchimpSyncContact->subscribe($user);
+            $mailchimpSyncContact->unsubscribe($user);
         }
 
         $user->setStatus(User::STATUS_ACTIVE);
@@ -404,4 +421,217 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
     }
+	
+	/**
+	 * @Route("/admin/stations", name="admin_stations_list")
+	 */
+	public function deactivatedStationsList(EntityManagerInterface $manager)
+	{
+		$stations = $manager->getRepository(Station::class)->findAllDeactivatedStations();
+		
+		// find all users ordered by name
+		$users = $manager->getRepository(User::class)
+			->findBy([], ['email' => 'ASC']);
+		
+		$this->setOrigin($this->generateUrl('admin_stations_list'));
+		
+		return $this->render('admin/stations.html.twig', [
+			'stations' => $stations,
+		]);
+	}
+	
+	/**
+	 * @Route("/admin/user/{userId}/activate", name="admin_user_activate")
+	 */
+	public function adminUserActivate($userId,Request $request, EntityManagerInterface $manager)
+	{
+		$user = $manager->getRepository(User::class)
+			->find($userId);
+		
+		if (!$user) {
+			throw $this->createNotFoundException('L’utilisateur n’existe pas');
+		}
+		
+		if (null === $user) {
+			$this->addFlash('error', 'Ce token est inconnu.');
+			
+			return $this->redirectToRoute('admin_users_list');
+		}
+		
+		if (User::STATUS_ACTIVE === $user->getStatus()) {
+			$this->addFlash('notice', 'Cet utilisateur est déjà activé.');
+			
+			return $this->redirectToRoute('admin_user_dashboard',
+					 ['userId' => $userId]
+			);
+		}
+		
+		if (User::STATUS_PENDING !== $user->getStatus()) {
+			$this->addFlash('warning', 'Impossible d’activer cet utilisateur.');
+			
+			return $this->redirectToRoute('homepage');
+		}
+		
+		$user->setResetToken(null);
+		$user->setStatus(User::STATUS_ACTIVE);
+		
+		$manager->flush();
+		
+		$this->addFlash('notice', "Le compte avec l'email ".$user->getEmail()." a été activé");
+		
+		return $this->redirectToRoute('admin_users_list');
+	}
+    /**
+     * @Route("/admin/stats", name="admin_stats")
+     */
+    public function getStats(EntityManagerInterface $manager, Request $request, Stats $statsService){
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        // Menu déroulant choix année
+        $minYear = $manager->getRepository(Observation::class)->findMinYear();
+        $years = $manager->getRepository(Observation::class)->findAllYears();
+
+        $yearsIndexed = [];
+        foreach ($years as $year){
+            $yearsIndexed[$year] = $year;
+        }
+        $year = new \DateTime('now');
+        $year = $year->format('Y');
+        $form = $this->createForm(StatsType::class,$years, ['years'=>$yearsIndexed]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $year = $form->get('years')->getData();
+        }
+
+        // Indicateurs
+        $stats = $statsService->getStats($year);
+
+        return $this->render('admin/stats.html.twig', [
+            'years' => $years,
+            'min_year' => $minYear,
+            'form' => $form->createView(),
+            'stats' => $stats
+        ]);
+    }
+
+    /**
+     * @Route("/admin/newsletters", name="admin_newsletters_list")
+     *//*
+    public function newsletterList(EntityManagerInterface $manager)
+    {
+        $newsletters= $manager->getRepository(Post::class)
+            ->findBy(['category' => Post::CATEGORY_NEWSLETTER], ['createdAt' => 'DESC'])
+        ;
+
+        $this->setOrigin($this->generateUrl('admin_newsletters_list'));
+
+        return $this->render('admin/newsletters.html.twig', [
+            'newsletters' => $newsletters
+        ]);
+    }*/
+
+    /**
+     * @Route("/admin/newsletters/create/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_create")
+     *//*
+    public function addNewsletter(
+        $mode,
+        Request $request,
+        EntityManagerInterface $manager,
+        SlugGenerator $slugGenerator,
+        UrlGeneratorInterface $router
+    ) {
+        // TODO Voir affichage de l'image cover
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        $date_created = new \DateTime();
+        $newsletter = new Post();
+        $newsletter->setContent('');
+        $newsletter->setCategory(Post::CATEGORY_NEWSLETTER);
+        $newsletter->setAuthor($this->getUser());
+        $newsletter->setCreatedAt($date_created);
+        $newsletter->setStatus(Post::STATUS_PENDING);
+
+        $form = $this->createForm(NewsletterPostType::class, $newsletter);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newsletter->setSlug($slugGenerator->generateSlug($newsletter->getTitle(), $date_created));
+
+            $manager->persist($newsletter);
+            $manager->flush();
+
+            $this->addFlash('notice', 'La newsletter a été créé');
+
+            $this->setOrigin($this->generateUrl('admin_newsletters_list'));
+
+            return $this->redirectToRoute('admin_newsletters_list');
+        }
+
+        return $this->render('admin/newsletter-create.html.twig', [
+            'post' => $newsletter,
+            'editMode' => $mode,
+            'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
+        ]);
+    }*/
+
+    /**
+     * @Route("/admin/newsletters/{postId}/show", name="admin_newsletters_show")
+     */
+    /*
+    public function showNewsletter(int $postId, EntityManagerInterface $manager){
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+        $newsletter = $manager->getRepository(Post::class)->find($postId);
+        if (!$newsletter) {
+            throw $this->createNotFoundException('La newsletter n’existe pas');
+        }
+
+        return $this->render('emails/newsletter.html.twig', [
+            'content' => $newsletter->getContent(),
+            'cover' => $newsletter->getCover()
+        ]);
+    }
+*/
+    /**
+     * @Route("/admin/newsletters/{postId}/edit/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_edit")
+     */
+    /*
+    public function editNewsletter(
+        $mode,
+        int $postId,
+        Request $request,
+        EntityManagerInterface $manager,
+        SlugGenerator $slugGenerator,
+        UrlGeneratorInterface $router
+    ) {
+        // TODO Voir affichage de l'image cover
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        $newsletter = $manager->getRepository(Post::class)->find($postId);
+
+        if (!$newsletter) {
+            throw $this->createNotFoundException('La newsletter n’existe pas');
+        }
+
+        $form = $this->createForm(NewsletterPostType::class, $newsletter);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($newsletter);
+            $manager->flush();
+
+            $this->addFlash('notice', 'La newsletter a été modifiée');
+
+            return $this->redirectToRoute('admin_newsletters_list');
+        }
+
+        return $this->render('admin/newsletter-create.html.twig', [
+            'post' => $newsletter,
+            'editMode' => $mode,
+            'form' => $form->createView(),
+            'upload' => $router->generate('image_create'),
+        ]);
+    }
+    */
 }

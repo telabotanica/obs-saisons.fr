@@ -6,9 +6,14 @@
 parameters:
     locale: 'fr'
     mailchimp.list_id: '%env(MAILCHIMP_LIST_ID)%'
+    brevo.list_id: '%env(BREVO_LIST_ID)%'
     mailchimp.api_key: '%env(MAILCHIMP_API_KEY)%'
+    brevo.api_key: '%env(BREVO_API_KEY)%'
     mailchimp.api_base_uri: '%env(MAILCHIMP_API_BASE_URI)%'
+    brevo.api_base_uri: '%env(BREVO_API_BASE_URI)%'
     mailchimp.api_url: '%env(MAILCHIMP_API_BASE_URI)%/3.0/lists/%env(MAILCHIMP_LIST_ID)%/members'
+    brevo.api_url: '%env(BREVO_API_BASE_URI)%/v3/contacts'
+    brevo.api_url_list: '%env(BREVO_API_BASE_URI)%/v3/contacts/lists/%env(BREVO_LIST_ID)%/'
 
 
 services:

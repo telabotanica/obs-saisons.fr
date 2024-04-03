@@ -20,8 +20,16 @@
 						<div class="actus-une-date">{{ lastNewsPost.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}</div>
 					</a>
 				{% endfor %}
-				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'news_posts_list', button_label: 'toutes les actualités'} %}
+				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'news_posts_list', button_label: 'toutes les actualités'}%}
 			</div>
+			{% if is_granted("ROLE_USER") %}
+				<div class="actionbar mb-0 mx-0 px-2 actionbarHomePage">
+					<a href="{{ path('news_post_create') }}" class="squared-button add-circle-icon buttonHomePage">
+						<div class="squared-button-label buttonLabelNews">ajouter
+						</div>
+					</a>
+				</div>
+			{% endif %}
 		</div>
 	{% else %}
 		<div class="actus-une">
@@ -70,6 +78,16 @@
 					</a>
 				{% endfor %}
 				{% include 'components/buttons/full-block-width-button.html.twig' with {button_path: 'event_posts_list', button_label: 'tous les évènements', button_color: 'orange'} %}
+				{% if is_granted("ROLE_USER") %}
+					<div class="actionbar mb-0 mx-0 px-2 actionbarHomePage">
+						<a href="{{ path('event_post_create') }}" class="squared-button add-circle-icon buttonHomePage">
+							<div class="squared-button-label buttonLabelEvent">
+								ajouter
+							</div>
+						</a>
+					</div>
+				{% endif %}
+
 			</div>
 		{% else %}
 			<div class="next-event">
@@ -80,6 +98,7 @@
 			</div>
 
 		{% endif %}
+
 	</div>
 	<div class="content home">
 		{% if featuredSpecies is not empty %}

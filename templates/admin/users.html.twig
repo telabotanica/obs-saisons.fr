@@ -1,17 +1,39 @@
 {% extends 'base.html.twig' %}
 
 {% block main_content %}
-    <ul>
-        <li>email (pseudo : nom)</li>
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center"> Liste des utilisateurs</h2>
+    <table class="table" id="admin-table">
+        <thead>
+        <tr>
+            <th scope="col">E-mail</th>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Nom</th>
+            <th scope="col">status</th>
+            <th scope="col">Role</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
         {% for user in users %}
-            <li>
-                <a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">
-                    {{ user.email }} ({{ user.displayName}} : {{ user.name }})
-                </a>
-            </li>
+            <tr>
+                <th scope="row">{{ user.email }}</th>
+                <td>{{ user.displayName }}</td>
+                <td>{{ user.name }}</td>
+                {% if user.status == 0 %}
+                    <td>supprimé</td>
+                {% elseif user.status == 1 %}
+                    <td>Activé</td>
+                {% elseif user.status == 2 %}
+                    <td>En attente d'activation</td>
+                {% endif %}
+                <td>{{ user.roles[1] is defined ? 'Admin' : 'User' }}</td>
+                <td><a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
+            </tr>
         {% else %}
-            <li>Pas d’utilisateurs</li>
+            <td>Pas d'utilisateurs</td>
         {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 {% endblock %}
 

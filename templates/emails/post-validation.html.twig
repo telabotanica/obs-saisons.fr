@@ -1,0 +1,12 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block title %}Une publication ODS est en attente de validation{% endblock %}
+
+{% block preheader %}Demande de validation d'un post{% endblock %}
+
+{% block body %}
+    <h1>Publication en attente de validation</h1>
+    <p>Auteur: <a href="mailto:{{ userEmail }}" title="Demande de validation d'un post">{{ userEmail }}</a></p>
+    <p>{{ message }}</p>
+    <p><a href="{{ link }}" target="_blank">{{ postName }}</a></p>
+{% endblock %}

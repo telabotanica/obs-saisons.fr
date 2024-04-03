@@ -4,10 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Observation;
 use App\Entity\Post;
+use App\Entity\Species;
+use App\Entity\Station;
+use App\Entity\User;
+use App\Form\StatsType;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\FeaturedSpecies;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -206,15 +211,43 @@ class PagesController extends AbstractController
      */
     public function explorerLesDonnees(
         BreadcrumbsGenerator $breadcrumbsGenerator,
-        EntityManagerInterface $em
-    ) {
+        EntityManagerInterface $em, Request $request) {
         $page = $em->getRepository(Post::class)->findOneBy(
             ['category' => Post::CATEGORY_PAGE, 'slug' => 'resultats']
         );
+		$minYear = $em->getRepository(Observation::class)->findMinYear();
+		$years = $em->getRepository(Observation::class)->findAllYears();
+		
+		$yearsIndexed = [];
+		foreach ($years as $year){
+			$yearsIndexed[$year] = $year;
+		}
+		
+		$year = new \DateTime('now');
+		$year = $year->format('Y');
+	
+		$form = $this->createForm(StatsType::class,$years, ['years'=>$yearsIndexed]);
+		$form->handleRequest($request);
+		
+		if ($form->isSubmitted() && $form->isValid()){
+			$year = $form->get('years')->getData();
+		}
+	
+		$obsPerYear = $em->getRepository(Observation::class)->findObsCountPerYear($year);
+		$nbStations = $em->getRepository(Station::class)->countStationsEachYear($year);
+		$newMembers = $em->getRepository(User::class)->findNewMembersPerYear($year);
+		$activeMembers= $em->getRepository(Observation::class)->findActiveMembersPerYear($year);
 
         return $this->render('pages/static/resultats.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'page' => $page,
+			'years' => $years,
+			'min_year' => $minYear,
+			'obsPerYear' => $obsPerYear,
+			'nbStations' => $nbStations,
+			'newMembers' => $newMembers,
+			'activeMembers' => $activeMembers,
+			'form' => $form->createView()
         ]);
     }
 
@@ -340,6 +373,24 @@ class PagesController extends AbstractController
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'title' => 'ODS Provence',
+            'page' => $page,
+        ]);
+    }
+	
+	/**
+     * @Route("/ods-occitanie", name="ods-occitanie")
+     */
+    public function odsOccitanie(
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
+    ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'ods-occitanie']
+        );
+
+        return $this->render('pages/static-page.html.twig', [
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
+            'title' => 'ODS Occitanie',
             'page' => $page,
         ]);
     }

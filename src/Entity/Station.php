@@ -132,6 +132,11 @@ class Station
      */
     private $department;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $is_deactivated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -339,6 +344,18 @@ class Station
     public function setDepartment(string $department): self
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    public function getIsDeactivated(): ?bool
+    {
+        return $this->is_deactivated;
+    }
+
+    public function setIsDeactivated(?bool $is_deactivated): self
+    {
+        $this->is_deactivated = $is_deactivated;
 
         return $this;
     }

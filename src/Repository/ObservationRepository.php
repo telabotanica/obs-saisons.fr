@@ -99,7 +99,7 @@ class ObservationRepository extends ServiceEntityRepository
     {
         $nowYear = date('Y');
         $allObsThisYear = $this->createQueryBuilder('o')
-            ->where('YEAR(o.date) = :nowYear')
+            ->where('YEAR(o.createdAt) = :nowYear')
             ->setParameter('nowYear', $nowYear)
             ->getQuery()
             ->getResult()
@@ -107,6 +107,42 @@ class ObservationRepository extends ServiceEntityRepository
 
         return count($allObsThisYear);
     }
+	
+	public function findObsCountPerYear(int $year): int
+	{
+		$allObsThisYear = $this->createQueryBuilder('o')
+			->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
+			->where('YEAR(o.createdAt) = :year')
+			->andWhere('o.deletedAt is null')
+			->andWhere('i.deletedAt is null')
+			->andWhere('s.deletedAt is null')
+			->andWhere('u.deletedAt is null')
+			->andWhere('u.roles NOT LIKE :role')
+			->setParameter('year', $year)
+			->setParameter('role','%ROLE_ADMIN')
+			->getQuery()
+			->getResult()
+		;
+		
+		return count($allObsThisYear);
+	}
+	
+	public function findActiveMembersPerYear(int $year)
+	{
+		$qb = $this->createQueryBuilder('o')
+			->innerJoin('o.user', 'u')
+			->select('distinct u.id')
+			->where('YEAR(o.createdAt) = :year')
+			->andWhere('u.roles NOT LIKE :role')
+			->setParameter('year', $year)
+			->setParameter('role','%ROLE_ADMIN')
+			->getQuery()
+			->getResult()
+		;
+		return count($qb);
+	}
 
     public function findAllPublic(): array
     {
@@ -115,12 +151,14 @@ class ObservationRepository extends ServiceEntityRepository
         return $qb
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
-            ->andWhere($qb->expr()->eq('s.isPrivate', $qb->expr()->literal(false)))
+//            ->andWhere($qb->expr()->eq('s.isPrivate', $qb->expr()->literal(false)))
             ->addSelect(['s', 'i'])
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
             ->addSelect('PARTIAL ts.{id, name, reign}')
+            ->innerJoin('o.event', 'e')
+            ->addSelect('PARTIAL e.{id, bbch_code, name, description}')
             ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getArrayResult()
@@ -147,6 +185,22 @@ class ObservationRepository extends ServiceEntityRepository
 
         return $minYear;
     }
+	
+	public function findAllYears()
+	{
+		$qb = $this->createQueryBuilder('o')
+			->select('distinct YEAR(o.date)')
+			->orderBy('YEAR(o.date)', 'DESC')
+			->getQuery()
+			->getResult();
+		
+		$years = [];
+		foreach ($qb as $year) {
+			$years[] = $year[1];
+		}
+		
+		return $years;
+	}
 
     public function findByStationSlugForExport(string $stationSlug): array
     {
@@ -164,6 +218,24 @@ class ObservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findBySpeciesForExport (int $speciesId): array {
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('o.event', 'e')
+            ->innerJoin('i.station', 'st')
+            ->innerJoin('i.species', 'sp')
+            ->innerJoin('sp.type', 'ts')
+            ->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+//            ->andWhere($qb->expr()->eq('st.isPrivate', $qb->expr()->literal(false)))
+            ->andWhere($qb->expr()->eq('sp.id', ':speciesId'))
+            ->setParameter(':speciesId', $speciesId)
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     public function createFilteredObservationListQueryBuilder(
@@ -291,6 +363,264 @@ class ObservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getScalarResult()
         ;
+    }
+	
+	public function findOrderedObsPerUser(User $user){
+		return $this->createQueryBuilder('o')
+			->andWhere('o.user = :user')
+			->setParameter('user', $user)
+			->orderBy('o.date', 'DESC')
+			->getQuery()
+			->getResult()
+			;
+	}
+	
+	public function findOrderedObsPerUserForExport(User $user): array
+	{
+		$qb = $this->createQueryBuilder('o');
+		
+		return $qb
+			->innerJoin('o.individual', 'i')
+			->innerJoin('o.event', 'e')
+			->innerJoin('i.station', 'st')
+			->innerJoin('i.species', 'sp')
+			->innerJoin('sp.type', 'ts')
+			->addSelect(['i', 'e', 'st', 'sp', 'ts'])
+			->andWhere('o.user = :user')
+			->setParameter('user', $user)
+			->orderBy('o.date', 'DESC')
+			->getQuery()
+			->getResult()
+			;
+	}
+
+    public function findTop10perType($reign, $year): array {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery('
+           SELECT s.scientific_name, s.vernacular_name, count(o) as nb_obs
+           FROM App\Entity\Observation o
+           JOIN o.individual i
+           JOIN i.species s
+           JOIN s.type ts
+           JOIN o.user u
+           WHERE o.deletedAt IS NULL
+             AND ts.reign = :reign
+             AND YEAR(o.createdAt) = :year
+           GROUP BY s.id
+           ORDER BY count(o) DESC 
+       ');
+       $query->setParameter('year', $year)
+           ->setParameter('reign', $reign)
+           ->setMaxResults(10);
+
+       return $query->getResult();
+    }
+
+    public function findTop3Species(int $year, $region = null){
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->innerJoin('o.user', 'u')
+            ->innerJoin('i.species', 'sp')
+            ->innerJoin('sp.type', 'ts')
+            ->select('sp.scientific_name as scientific_name, sp.vernacular_name as vernacular_name, count(o) as obs')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('YEAR(o.createdAt) >= 2015');
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->groupBy('sp.id')
+            ->orderBy('count(o)', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+    public function countAllActiveStationsPerYear(){
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->select(['YEAR(o.createdAt) as year, COUNT(DISTINCT s) as Nb_stations_actives'])
+            ->andWhere('o.deletedAt IS NULL')
+            ->andWhere('i.deletedAt IS NULL')
+            ->andWhere('s.deletedAt IS NULL')
+            ->groupBy('year')
+            ->orderBy('year', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countAllActiveCitiesPerYear(){
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->select(['YEAR(o.createdAt) as year, COUNT(DISTINCT s.inseeCode) as Nb_communes_actives'])
+            ->andWhere('o.deletedAt IS NULL')
+            ->andWhere('i.deletedAt IS NULL')
+            ->andWhere('s.deletedAt IS NULL')
+            ->groupBy('year')
+            ->orderBy('year', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countStationsWithData(){
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->select('COUNT(DISTINCT s)')
+            ->andWhere('o.deletedAt IS NULL')
+            ->andWhere('i.deletedAt IS NULL')
+            ->andWhere('s.deletedAt IS NULL');
+
+        $result = $qb
+            ->getQuery()
+            ->getResult();
+
+        return $result[0][1] ?? 0;
+    }
+
+    public function top12UsersPerYear(int $year){
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
+            ->innerJoin('o.user', 'u')
+            ->select('u.email, u.displayName, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
+            ->where('YEAR(o.createdAt) = :year')
+            ->setParameter('year', $year)
+            ->groupBy('o.user')
+            ->orderBy('count(o)', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findObsAndUserPerYearPerRegion(int $year, $region = null): array
+    {
+        $allObsThisYear = $this->createQueryBuilder('o')
+            ->join('o.individual', 'i')
+            ->join('i.station', 's')
+            ->join('i.user', 'u')
+            ->select('COUNT(o.id) as nb_obs, COUNT(DISTINCT o.user) as nb_utilisateurs')
+            ->where('YEAR(o.createdAt) = :year')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('i.deletedAt is null')
+            ->andWhere('s.deletedAt is null')
+            ->andWhere('u.deletedAt is null')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->setParameter('year', $year)
+            ->setParameter('role','%ROLE_ADMIN%');
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $allObsThisYear->andWhere($allObsThisYear->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+
+        }
+
+        $result = $allObsThisYear
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $result[0];
+    }
+
+    public function findNewMembersPerYearPerRegion(int $year, $region=null)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->join('o.individual', 'i')
+            ->join('i.station', 's')
+            ->join('i.user', 'u')
+            ->select('COUNT(DISTINCT u)')
+            ->where('YEAR(u.createdAt) = :year')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('i.deletedAt is null')
+            ->andWhere('s.deletedAt is null')
+            ->andWhere('u.deletedAt is null')
+            ->andWhere('u.roles NOT LIKE :role')
+            ->andWhere('u.status = 1')
+            ->setParameter('year', $year)
+            ->setParameter('role','%ROLE_ADMIN')
+        ;
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getResult();
+
+        return $result[0][1] ?? 0;
+    }
+
+    public function findactiveMembersPerYearPerRegion(int $year, $region = null)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->innerJoin('o.user', 'u')
+            ->select('count(o.id) as obs, count(DISTINCT u) as active_members, u.profileType as type')
+            ->where('YEAR(o.createdAt) = :year')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('i.deletedAt is null')
+            ->andWhere('s.deletedAt is null')
+            ->andWhere('u.deletedAt is null')
+            ->setParameter('year', $year)
+            ->groupBy('u.profileType');
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getResult();
+
+        return $result[0]?? 0;
+    }
+
+    public function top5UsersPerYearPerRegion(int $year, $region = null){
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->innerJoin('o.user', 'u')
+            ->select('u.email, u.displayName, u.postCode, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
+            ->where('YEAR(o.createdAt) = :year')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('i.deletedAt is null')
+            ->andWhere('s.deletedAt is null')
+            ->andWhere('u.deletedAt is null')
+            ->setParameter('year', $year)
+            ->groupBy('o.user')
+            ->orderBy('count(o)', 'DESC');
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getResult();
+
+        return $result;
     }
 
     // /**

@@ -1,9 +1,96 @@
-{% extends 'pages/static-page.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% set title = 'Résultats' %}
 {% set subtitle =
     "Les scientifiques ont besoin de temps pour analyser vos données, en attendant, vous pouvez explorer et visualiser toutes les données à l’aide de <a href=#{path('explorer-les-donnees')}><strong>cartes et de graphiques dynamiques</strong></a>.<br>
     Exportez <a href=#{path('explorer-les-donnees')}#export><strong>les données</strong></a> de l’Observatoire des Saisons.<br>
     Accédez aux <a href=#{path('lettres-de-printemps')}><strong>lettres de printemps</strong></a> pour consulter les bilans annuels de l’Observatoire.<br>
-    Accédez aux <a href=#{path('resultats-scientifiques')}><strong>résultats scientifiques</strong></a> pour trouver les articles scientifiques et vulgarisés issus de vos observations."
-%}
+    Accédez aux <a href=#{path('resultats-scientifiques')}><strong>résultats scientifiques</strong></a> pour trouver les articles scientifiques et vulgarisés issus de vos observations." %}
+{% set first_year = max(years|default(["now"|date("Y")])) %}
+
+{% block main_content %}
+    {% include 'layout/header.html.twig' with ({
+        'title': title,
+        'subtitle': subtitle|default
+    }) %}
+
+    <h2><span style="color:hsl(210,75%,60%);"><strong>L’Observatoire des Saisons en chiffres&nbsp;</strong></span></h2>
+    <p>La base de données phénologiques alimentée par vos relevés de terrain permet aux scientifiques d'étudier les
+        réponses de la faune et de la flore face au changement climatique. Voici quelques chiffres sur les observations
+        et le réseau d’observateurs :&nbsp;</p>
+
+    <div>
+        <div class="d-flex justify-content-center">
+            {{ form_start(form, {
+                'attr': {
+                    'class': 'col-lg-6 col-12 text-center'
+                }
+            }) }}
+            {{ form_widget(form.years) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                {% if obsPerYear <= 1 %}
+                    {% set textObs = ' observation' %}
+                {% else %}
+                    {% set textObs = ' observations' %}
+                {% endif %}
+                {% include 'components/cards/chiffres-cards.html.twig' with {
+                    'data' : obsPerYear,
+                    'image': 'media/layout/binoculars.svg',
+                    'alt': 'observations-img',
+                    'texte' : textObs
+                } %}
+            </div>
+
+            <div class="col-6">
+                {% include 'components/cards/chiffres-cards.html.twig' with {
+                    'data' : nbStations,
+                    'image': 'build/images/pointer-orange.svg',
+                    'alt': 'stations-img',
+                    'texte' : ' stations depuis le
+                    début du programme'
+                } %}
+            </div>
+
+            <div class="col-6">
+                {% if activeMembers <= 1 %}
+                    {% set textMembers = ' membre actif' %}
+                {% else %}
+                    {% set textMembers = ' membres actifs' %}
+                {% endif %}
+                {% include 'components/cards/chiffres-cards.html.twig' with {
+                    'data' : activeMembers,
+                    'image': 'media/layout/people-community.svg',
+                    'alt': 'membres-img',
+                    'texte' : textMembers
+                } %}
+            </div>
+
+            <div class="col-6">
+                {% if newMembers <= 1 %}
+                    {% set textInscrits = ' nouvel inscrit' %}
+                {% else %}
+                    {% set textInscrits = ' nouveaux
+                inscrits' %}
+                {% endif %}
+                {% include 'components/cards/chiffres-cards.html.twig' with {
+                    'data' : newMembers,
+                    'image': 'media/layout/people-add.svg',
+                    'alt': 'new-members-img',
+                    'texte' : textInscrits
+                } %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="rich-text-block">
+        {{ page.content|default|raw }}
+    </div>
+
+{% endblock %}

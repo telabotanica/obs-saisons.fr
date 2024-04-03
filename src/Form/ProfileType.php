@@ -5,8 +5,10 @@ namespace App\Form;
 use App\Entity\User;
 use App\Service\UploadService;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -69,6 +71,17 @@ class ProfileType extends AbstractType
                     'accept' => 'image/png, image/jpeg',
                 ],
             ])
+			->add('roles', ChoiceType::class, [
+				'label'=>'Role',
+				'choices' => [
+					'Droits' => [
+						'Admin' => 'ROLE_ADMIN',
+						'Utilisateur' => 'ROLE_USER',
+					],
+				],
+				'attr'=> ['class'=> 'form-control bg-light'],
+				'multiple' => true,
+			])
             // user picture removal request
             ->add('isDeletePicture', null, [
                 'mapped' => false,

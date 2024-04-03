@@ -8,9 +8,50 @@
         'subtitle': ''
     }) %}
 
-    <ul>
-        <li><a href="{{ path('admin_species_list') }}">Modifier une fiche espèce ?</a></li>
-        <li><a href="{{ path('admin_pages_list') }}">Modifier une page statique ?</a></li>
-        <li><a href="{{ path('admin_users_list') }}">Modifier un profil utilisateur ?</a></li>
-    </ul>
+    <div class="container">
+        <div class="row">
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg btn-admin" href="{{ path('admin_species_list') }}">
+                    <a href="{{ path('admin_species_list') }}">
+                        Modifier une fiche espèce
+                    </a>
+                </button>
+            </div>
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg btn-admin" href="{{ path('admin_pages_list') }}">
+                    <a href="{{ path('admin_pages_list') }}">
+                        Modifier une page statique
+                    </a>
+                </button>
+            </div>
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg btn-admin" href="{{ path('admin_users_list') }}">
+                    <a href="{{ path('admin_users_list') }}">
+                        Modifier un profil utilisateur
+                    </a>
+                </button>
+            </div>
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg btn-admin">
+                    <a href="{{ path('admin_stations_list') }}">
+                        Voir les stations désactivées
+                    </a>
+                </button>
+            </div>
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg btn-admin">
+                    <a href="{{ path('admin_stats') }}">
+                        Voir les indicateurs
+                    </a>
+                </button>
+            </div>
+{#            <div class="my-2 col-4 px-2">#}
+{#                <button class="btn btn-lg btn-admin">#}
+{#                    <a href="{{ path('admin_newsletters_list') }}">#}
+{#                        Voir et/ou écrire une Newsletter#}
+{#                    </a>#}
+{#                </button>#}
+{#            </div>#}
+        </div>
+    </div>
 {% endblock %}

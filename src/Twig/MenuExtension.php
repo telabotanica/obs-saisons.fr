@@ -21,6 +21,10 @@ class MenuExtension extends AbstractExtension
                 $this,
                 'getActiveMenuItem',
             ]),
+            new TwigFunction('getActiveSubMenuItem', [
+                $this,
+                'getActiveSubMenuItem',
+            ])
         ];
     }
 
@@ -43,4 +47,23 @@ class MenuExtension extends AbstractExtension
 
         return null;
     }
+
+    public function getActiveSubMenuItem(array $breadcrumbs = [])
+    {
+        if (empty($breadcrumbs)) {
+            return 'homepage';
+        }
+
+        $slugs = array_reverse(array_keys($breadcrumbs)); //look for the deepest match in path
+        $menuSlugs = array_keys(BreadcrumbsGenerator::OTHER_BREADCRUMBS);
+
+        foreach ($slugs as $slug) {
+            if (in_array($slug, $menuSlugs)) {
+                return $slug;
+            }
+        }
+
+        return null;
+    }
+
 }

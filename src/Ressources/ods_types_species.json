@@ -22,5 +22,9 @@
 	{
 		"name":"reptiles",
 		"reign":"animaux"
+	},
+	{
+		"name":"champignons",
+		"reign":"champignons"
 	}
 ]

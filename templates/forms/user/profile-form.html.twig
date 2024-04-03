@@ -1,4 +1,6 @@
 {% extends 'forms/base.html.twig' %}
+{% set isUserDashboardAdmin = isUserDashboardAdmin ?? false %}
+
 {% block form_title%}
     {{ title|default }}
 {% endblock %}
@@ -75,10 +77,20 @@
                     'class': 'ods-checkbox-input',
                     'data-name': 'isNewsletterSubscriber'
                 },
-                'help': 'Recevez la lettre d’actualités de l’ODS tous les deux mois en cochant cette case.',
+                'help': 'Recevez la lettre d’actualités de l’ODS tous les deux mois en cochant cette case. Un nom est
+                 obligatoire.',
                 'help_attr': {'class': 'field-help-text'}
             }) }}
         </div>
     </div>
+    {% if isUserDashboardAdmin %}
+        <div class="_2-col-form">
+            <div class="form-col check">
+                {{ form_widget(profileForm.roles
+                ) }}
+            </div>
+        </div>
+    {% endif %}
+
     {% include 'forms/components/upload-block.html.twig' with { formField: profileForm.avatar } %}
 {% endblock %}

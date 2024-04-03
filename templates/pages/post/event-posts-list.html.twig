@@ -1,19 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% set isPostAdmin = is_granted('ROLE_ADMIN') %}
+{% set isPostUser = is_granted('ROLE_USER') %}
 
 {% block main_content %}
 
 	{% include 'layout/header.html.twig' with ({
 		'title': 'Évènements',
-		'subtitle': "Les évènements autour de l’Observatoire des Saisons.<br><a href=#{path('contact')}>Contactez-nous</a> pour ajouter vos évènements."
+		'subtitle': "Les évènements autour de l’Observatoire des Saisons.<br><a href=#{path('contact')
+		}>Contactez-nous</a> pour ajouter vos évènements."
 	}) %}
-
-	{% for id, eventPost in eventPosts %}
-		{% include 'components/list-cards/events-list-cards.html.twig' with {eventPost:eventPost} %}
-		{% set addListCardId = loop.last ? id + 1 %}
-	{% endfor %}
-	{% if isPostAdmin %}
+	{% if isPostAdmin or isPostUser %}
 		<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
 			<div class="add-list-card">
 				<div class="icon-add-list-card add-square-orange-icon"></div>
@@ -22,6 +19,17 @@
 			</div>
 		</div>
 	{% endif %}
+
+	{% for id, eventPost in eventPosts %}
+
+		{% if (constant('App\\Entity\\Post::STATUS_ACTIVE') == eventPost.status) or is_granted('ROLE_ADMIN') or
+			(is_granted('ROLE_USER') and (app.user.id == eventPost.author.id )) %}
+
+		{% include 'components/list-cards/events-list-cards.html.twig' with {eventPost:eventPost} %}
+		{% set addListCardId = loop.last ? id + 1 %}
+
+		{%  endif %}
+	{% endfor %}
 
 	{% include 'components/pagination.html.twig' with {routePath: path('event_posts_list')} %}
 

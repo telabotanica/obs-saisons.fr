@@ -1,28 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block main_content %}
-
-    <dl>
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center"> Liste des pages statiques</h2>
+    <div class="row d-flex justify-content-evenly">
         {% for staticPageSlug, staticPageTitle in staticPagesList %}
             {% if staticPageSlug in constant('App\\Service\\BreadcrumbsGenerator::EDITABLE_PAGES') %}
-            <dt>
-                <a href="{{ path(staticPageSlug) }}">
-                    {{ staticPageTitle }}
-                </a>
-            </dt>
-            <dd>
-                <a href="{{ path('admin_static_page_edit', {slug: staticPageSlug}) }}">
-                    Éditeur WYSIWYG
-                </a>
-            </dd>
-            <dd>
-                <a href="{{ path('admin_static_page_edit', {slug: staticPageSlug, mode: 'html'}) }}">
-                    Éditeur HTML
-                </a>
-            </dd>
+
+                <div class="admin-card mx-1 my-2">
+                    <h5 class="card-head text-center">{{ staticPageTitle }}</h5>
+                    <div class="admin-card-body text-center">
+                        <p><a class="card-link" target="_blank" href="{{ path(staticPageSlug) }}">
+                                Voir la page
+                            </a></p>
+                        <p><a class="card-link" href="{{ path('admin_static_page_edit', {slug: staticPageSlug}) }}">
+                                Éditeur WYSIWYG
+                            </a></p>
+                        <p><a class="card-link" href="{{ path('admin_static_page_edit', {slug: staticPageSlug, mode:
+                                'html'}) }}">
+                                Éditeur HTML
+                            </a></p>
+                    </div>
+                </div>
             {% endif %}
         {% endfor %}
-    </dl>
+    </div>
 
 {% endblock %}
 

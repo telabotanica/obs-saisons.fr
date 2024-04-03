@@ -1,3 +1,4 @@
+@import "~bootstrap/scss/bootstrap";
 /**************************************************
 * SETTINGS
 **************************************************/
@@ -31,6 +32,7 @@
 @import "components/dropdown";
 @import "components/profile-Menu";
 @import "components/places-search";
+@import "components/chiffres-cards";
 
 /**************************************************
 * LAYOUTS
@@ -46,6 +48,7 @@
 @import "layout/overlay";
 @import "layout/calendar-tab";
 @import "layout/dashboard";
+@import "layout/admin";
 /**************************************************
 * PAGES
 *************************************************/

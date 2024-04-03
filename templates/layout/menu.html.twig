@@ -1,4 +1,6 @@
 {% set activeMenuItem = getActiveMenuItem(breadcrumbs|default([])) %}
+{% set activeSubMenuItem = getActiveSubMenuItem(breadcrumbs|default([])) %}
+
 <div class="menu">
 	<a href="/" class="site-name">
 		<img src="{{ asset('media/layout/logoodstexte.png') }}" alt="" class="logo">
@@ -10,10 +12,34 @@
 		</a>
 
 		{% for menuItem, menuItemTitle in constant('App\\Service\\BreadcrumbsGenerator::MENU') %}
-			{% if 'my_stations' != menuItem or app.user %}
-				<a href="{{ path(menuItem) }}" class="nav-item{{ activeMenuItem == menuItem ? ' active' }}{{ 'my_stations' == menuItem ? ' featured'  }}">
-					<div class="">{{ menuItemTitle }}</div>
+			{#    Si l'item n'existe pas dans les sous menu -> pas de dropdown        #}
+			{% if menuItem == 'a-propos' or menuItem =='participer' or menuItem =='especes' or menuItem =='my_stations' %}
+				<a class="nav-item{{ 'my_stations' == menuItem ? ' featured' }}{{ activeMenuItem == menuItem ? ' active' }}"
+				   href="{{ path(menuItem) }}">
+					{{ menuItemTitle }}
 				</a>
+			{% else %}
+				{% if 'my_stations' != menuItem or app.user %}
+					<a class="">
+						<a class="nav-item{{ 'my_stations' == menuItem ? ' featured' }}{{ activeMenuItem == menuItem ? ' show' }} "
+						   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							{{ menuItemTitle }}
+						</a>
+						<div class="dropdown-menu {{ activeMenuItem == menuItem ? 'show' }}" {{ activeMenuItem == menuItem ? 'style="position: relative; inset: 0px auto auto 0px; margin: 0px;"' }}>
+							<a class="dropdown-item nav-item {% if activeMenuItem == menuItem and not activeSubMenuItem %}active{% endif %}" href="{{ path(menuItem) }}">
+								{{ menuItemTitle == 'résultats' ? 'généralités' :  menuItemTitle }}
+							</a>
+{#							<hr class="dropdown-divider">#}
+							{% for subMenuItem, subMenus in constant ('App\\Service\\BreadcrumbsGenerator::SUBMENU') %}
+								{% if subMenuItem == menuItem %}
+									{% for subMenuPath, subMenu in subMenus %}
+										<a class="dropdown-item nav-item {{ activeSubMenuItem == subMenuPath ? 'active' }} {{ activeMenuItem == subMenuPath ? ' active' }}" href="{{ path(subMenuPath) }}">{{ subMenu }}</a>
+									{% endfor %}
+								{% endif %}
+							{% endfor %}
+						</div>
+					</a>
+				{% endif %}
 			{% endif %}
 		{% endfor %}
 
@@ -25,6 +51,9 @@
 			<a href="{{ path('user_dashboard') }}" class="nav-item resp-connect">
 				<div>Profil</div>
 			</a>
+			{% if app.user and app.user.roles[1] is defined and (app.user.roles[1] == 'ROLE_ADMIN') %}
+				<a class="nav-item resp-connect" href="{{ path('home_admin') }}">Admin</a>
+			{% endif %}
 			<a href="{{ path('user_logout') }}" class="nav-item resp-connect">
 				<div>Déconnexion</div>
 			</a>

@@ -1,0 +1,25 @@
+{% extends 'emails/base-newsletter.html.twig' %}
+
+{#{% block productname %}<img src="{{cover}}" alt="logo ODS" class="top-logo">{% endblock %}#}
+
+{% block header %}
+{#<td class="email-masthead" style="background-image: url({{ cover }}); background-size: cover; height: 300px; width: 100%; z-index: 10">#}
+{#<td class="email-masthead" style="height: 300px; width: 100%;" background="{{ cover }}">#}
+<td class="email-masthead" style="height: 300px; width: 100%;">
+    <img src="{{cover}}" alt="cover image" class="nl-cover">
+</td>
+{% endblock %}
+
+{% block body %}
+    <div class="">
+        <img src="{{ asset('media/layout/logoodstexte.png') }}" alt="logo ODS" class="top-logo">
+
+        {{ content|default('')|raw }}
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <p class="sub align-center">&copy; Observatoire des Saisons</p>
+    <p class="align-center">Notre adresse mail:<br><a href="mailto:contact@obs-saisons.fr">contact@obs-saisons.fr</a></p>
+    <p class="align-center">Vous ne souhaitez plus recevoir cette lettre ?<br>Vous pouvez vous <a>désabonner de cette liste</a> à tout moment.</p>
+{% endblock %}

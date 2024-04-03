@@ -54,12 +54,40 @@
     }
 }
 
+@mixin hide_on_large {
+    @include media(md) {
+        display: none !important;
+    }
+}
+
 .table-container {
     @include media(md) {
         margin-bottom: 30px;
         border-bottom: 1px solid grey(87);
         background-color: #fff;
     }
+}
+
+.species-table-container {
+
+    @include media(md) {
+        margin-bottom: 30px;
+        border: 1px solid $grey301486;
+        border-bottom: 1px solid #dee2e6;
+        background-color: #fff;
+    }
+
+    @include hide_on_small;
+}
+
+.species-calendar {
+    background-color: #f5f0eb;
+    margin-top: -70px;
+}
+
+.calendar-title{
+    display: flex;
+    justify-content: center;
 }
 
 .grid {
@@ -79,6 +107,33 @@
 
     &.content {
         @include media(md) {
+            @for $i from 1 through 7 {
+                &-#{$i} {
+                    @include grid-template-rows(grid-repeat($i, 50px));
+                }
+            }
+        }
+    }
+}
+
+.gridSpe {
+    @include media(xs) {
+        @include display-grid;
+        grid-auto-columns: 1fr;
+        @include grid-template-columns(grid-repeat(140, 1fr));
+    }
+
+    &.top {
+        @include media(xs) {
+            @include grid-template-rows(60px);
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            border-bottom: 1px solid $grey301486;
+        }
+    }
+
+    &.content {
+        @include media(xs) {
             @for $i from 1 through 7 {
                 &-#{$i} {
                     @include grid-template-rows(grid-repeat($i, 50px));
@@ -272,11 +327,39 @@
     @include hide_on_small;
 }
 
+.monthSpe {
+    @include display-flex-justify-content-center;
+    @include grid-justify-self(center);
+    @include grid-align-self(center);
+    @include flex-1;
+    @include font_default_semi_bold;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
 /**************************************************/
 .table-colomn {
     border-right: 1px dashed $grey301486;
 
     @include hide_on_small;
+
+    &.active-month {
+        background-color: rgba($green725760, 0.2);
+    }
+
+    &.top {
+        border-left: 1px dashed $grey301486;
+    }
+
+    &.last-column {
+        border-right-style: none;
+    }
+}
+
+.table-colomnSpe {
+    border-right: 1px dashed $grey301486;
 
     &.active-month {
         background-color: rgba($green725760, 0.2);
@@ -317,12 +400,47 @@
     }
 }
 
+.table-intitule-stageSpe {
+    @include display-flex;
+    @include justify-content-flex-start;
+    @include align-items-center;
+    @include grid-align-self(center);
+    @include grid-justify-self(start);
+    @include square-block(100%);
+    padding-left: 20px;
+    @include border((right, bottom), grey(87));
+    background-color: rgba($green725760, 0.2);
+    @include font_default_semi_bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+
+    &.darker {
+        background-color: rgba($green725760, 0.3);
+    }
+
+    &.last {
+        border-bottom-style: none;
+    }
+}
+
 
 /**************************************************/
 .table-row {
     border-bottom: 1px solid grey(87);
 
     @include hide_on_small;
+
+    &.darker {
+        background-color: #fdfaf7;
+    }
+
+    &.last {
+        border-bottom-style: none;
+    }
+}
+
+.table-rowSpe {
+    border-bottom: 1px solid grey(87);
 
     &.darker {
         background-color: #fdfaf7;
@@ -350,6 +468,25 @@ $stage-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
     filter: blur(2px);
 
     @include hide_on_small;
+
+    @each $stage, $stage-color in $stage-colors-map {
+        &.#{$stage} {
+            background-color: #{$stage-color};
+        }
+    }
+}
+
+.stage-periodSpe {
+    position: relative;
+    @include grid-align-self(center);
+    @include grid-justify-self(center);
+    z-index: 50;
+    width: 100%;
+    height: 10px;
+    border-radius: 20px;
+    opacity: 0.3;
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
 
     @each $stage, $stage-color in $stage-colors-map {
         &.#{$stage} {
@@ -480,3 +617,54 @@ $stage-colors-map: (floraison: $blue, feuillaison: $green725760, fructification:
 }
 
 /**********************************************************/
+.accordion {
+    --bs-accordion-btn-bg: transparent;
+    --bs-accordion-border-color: $green;
+    --bs-accordion-btn-focus-border-color: $green;
+    --bs-accordion-active-color: $green;
+    --bs-accordion-active-bg: $green725760;
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23#456d27'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    --bs-accordion-btn-focus-box-shadow: 0 0 0 0 #456d27;
+}
+
+.accordion-item {
+    background-color: $green725760;
+    border: 1px solid $grey301486;
+}
+
+.accordion-button:focus{
+    border-color: $green725760;
+}
+
+.accordion-button:not(.collapsed){
+    background-color: $green725760;
+    color: $grey131117;
+}
+
+.accordion-body{
+    //background-color: rgba(188, 211, 95, 0.2);
+    background-color: #fff;
+}
+
+.accordion-button{
+    margin-left: 50px;
+    width: auto;
+    padding: 20px;
+}
+
+.accordion-button:after{
+    margin-left: -100px;
+}
+
+.accordion-button:not(.collapsed)::after{
+    background-image: url("../assets/up-arrow-green.svg");
+    transform: rotate(180deg);
+}
+
+.accordion-button.collapsed::after {
+    background-image: url("../assets/up-arrow-green.svg");
+}
+
+#small-calendar{
+    @include hide_on_large;
+}

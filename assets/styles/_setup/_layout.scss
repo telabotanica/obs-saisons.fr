@@ -1,5 +1,21 @@
 $base_font_size: 16px !default;
 
+.bg-primary {
+    background-color: $green !important;
+}
+
+.bg-secondary {
+    background-color: $green725760 !important;
+}
+
+.text-primary {
+    color: $green !important;
+}
+
+.text-secondary {
+    color: $green725760 !important;
+}
+
 html.ods-mod-touch * {
     background-attachment: scroll !important;
 }
@@ -15,6 +31,10 @@ body {
 
 a {
     text-decoration: underline;
+}
+
+a:hover {
+    color: $grey131117;
 }
 
 blockquote {

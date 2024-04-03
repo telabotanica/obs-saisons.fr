@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\FrenchRegions;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
@@ -29,14 +30,29 @@ class StationRepository extends ServiceEntityRepository
     public function countStations(User $user = null)
     {
         $qb = $this->createQueryBuilder('s')
-            ->select('count(s.id)');
+            ->select('count(s.id)')
+			->where('s.is_deactivated =0 OR s.is_deactivated is null');
         if ($user) {
-            $qb = $qb->where('s.user = (:user)')
+            $qb = $qb->andWhere('s.user = (:user)')
                 ->setParameter('user', $user);
         }
 
         return $qb->getQuery()
             ->getSingleScalarResult()
+        ;
+    }
+	
+	public function countStationsEachYear(int $year)
+    {
+        $qb = $this->createQueryBuilder('s')
+			->where('s.is_deactivated =0 OR s.is_deactivated is null')
+			->andWhere('YEAR(s.createdAt) <= :year')
+			->setParameter('year', $year)
+			->getQuery()
+			->getResult()
+		;
+
+        return count($qb)
         ;
     }
 
@@ -76,7 +92,8 @@ class StationRepository extends ServiceEntityRepository
             ->setParameter('user', $user);
         }
 
-        return $qb->addOrderBy('MAX(o.createdAt)', 'DESC')
+        return $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
+			->addOrderBy('MAX(o.createdAt)', 'DESC')
             ->addOrderBy('s.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
@@ -135,7 +152,8 @@ class StationRepository extends ServiceEntityRepository
             $searchTerm = substr($searchTerm, 0, 2);
         }
 
-        $searchResults = $qb->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
+        $searchResults = $qb
+			->andWhere('lower('.$alias.'.'.$searchKey.') =:searchTerm')
             ->setParameter('searchTerm', strtolower($searchTerm))
             ->getQuery()
             ->getResult()
@@ -166,7 +184,8 @@ class StationRepository extends ServiceEntityRepository
             $alias = 'u';
         }
 
-        return $qb->andWhere($qb->expr()->like('lower('.$alias.'.'.$searchKey.')', ':searchKey'))
+        return $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
+			->andWhere($qb->expr()->like('lower('.$alias.'.'.$searchKey.')', ':searchKey'))
             ->setParameter('searchKey', strtolower($searchTerm).'%')
             ->getQuery()
             ->getResult()
@@ -186,10 +205,64 @@ class StationRepository extends ServiceEntityRepository
         $regexp = '.*'.str_replace(' ', '.*', strtolower($searchTerm)).'.*';
 
         return $qb->andWhere('REGEXP(lower('.$alias.'.'.$searchKey.'), :regexp) = true')
+			->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
             ->setParameter('regexp', $regexp)
             ->getQuery()
             ->getResult()
         ;
+    }
+	
+	public function findAllDeactivatedStations(){
+		$qb = $this->createQueryBuilder('s')
+			->leftJoin(Individual::class, 'i', Expr\Join::WITH, 's.id = i.station')
+			->leftJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+			->addSelect('s')
+			->groupBy('s.id')
+		;
+		
+		return $qb->where('s.is_deactivated = 1')
+			->addOrderBy('MAX(o.createdAt)', 'DESC')
+			->addOrderBy('s.createdAt', 'DESC')
+			->getQuery()
+			->getResult()
+			;
+	}
+	
+	public function findAllActive(User $user = null)
+	{
+		$qb = $this->createQueryBuilder('s')
+			->where('s.is_deactivated =0 OR s.is_deactivated is null')
+		;
+		if ($user) {
+			$qb = $qb->andWhere('s.user = (:user)')
+				->setParameter('user', $user);
+		}
+		
+		return $qb
+			->getQuery()
+			->getResult()
+			;
+	}
+
+    public function countStationsEachYearPerRegion(int $year, $region = null)
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('YEAR(s.createdAt) <= :year')
+            ->setParameter('year', $year);
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getResult();
+
+        return $result[0][1] ?? 0;
     }
 
     // /**

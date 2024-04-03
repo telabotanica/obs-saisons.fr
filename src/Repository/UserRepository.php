@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\FrenchRegions;
+use App\Entity\Observation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,6 +48,59 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
+	
+	public function findNewMembersPerYear(int $year)
+	{
+		$qb = $this->createQueryBuilder('u')
+			->where('YEAR(u.createdAt) = :year')
+			->andWhere('u.roles NOT LIKE :role')
+			->andWhere('u.status = 1')
+			->setParameter('year', $year)
+			->setParameter('role','%ROLE_ADMIN')
+			->getQuery()
+			->getResult()
+			;
+		return count($qb);
+	}
+
+    public function findTotalMembersPerStatus()
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $result = $qb
+            ->select('
+                CASE 
+                    WHEN u.status = 0 THEN \'désactivé\'
+                    WHEN u.status = 1 THEN \'actif\'
+                    WHEN u.status = 2 THEN \'pas encore activé\'
+                    ELSE \'Autre\'
+                END as status_du_compte,
+                COUNT(u) as NbreUtilisateurs
+            ')
+            ->where('u.deletedAt IS NULL')
+            ->andWhere('u.roles NOT LIKE :adminRole')
+            ->setParameter('adminRole', '%ROLE_ADMIN%')
+            ->groupBy('status_du_compte')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+//	public function findActiveMembersPerYear(int $year)
+//	{
+//		$qb = $this->createQueryBuilder('u')
+//			->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'u.id = o.userId')
+//			->addSelect('o')
+//			->where('YEAR(o.createdAt) = :year')
+//			->andWhere('u.roles NOT LIKE :role')
+//			->setParameter('year', $year)
+//			->setParameter('role','%ROLE_ADMIN')
+//			->getQuery()
+//			->getResult()
+//		;
+//		return count($qb);
+//	}
 
     // /**
     //  * @return User[] Returns an array of User objects

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <a href="{{ path('admin_newsletters_create') }}" class="button bt-add orange">Créer une newsletter</a>
+
+    <h2 class="text-center"> Liste des newsletter</h2>
+    {% if newsletters|length != 0 %}
+    <table class="table" id="admin-table">
+        <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Titre</th>
+            <th scope="col">Statut</th>
+            <th scope="col">Afficher</th>
+            <th scope="col">Modification</th>
+            <th scope="col">Envoi</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for newsletter in newsletters %}
+            <tr>
+                <th scope="row">{{ newsletter.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}</th>
+                <td>{{ newsletter.title }}</td>
+                <td>
+                    {% if newsletter.status == 0 %}
+                    En attente
+                    {% else %}
+                    Envoyée
+                    {% endif %}
+                </td>
+                <td><a href="{{ path('admin_newsletters_show', {postId:newsletter.id}) }}">Voir</a></td>
+                {%  if newsletter.status == 0 %}
+                <td>
+                    <a href="{{ path('admin_newsletters_edit', {postId:newsletter.id}) }}">Editer</a>
+                </td>
+                <td>
+                    <a href="{{ path('envoi_newsletter', {postId:newsletter.id}) }}">Envoyer</a>
+                </td>
+                <td>
+                    <a href="{{ path('envoi_newsletter', {postId:newsletter.id}) }}">Envoyer un mail test</a>
+                </td>
+                {%  endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h2 class="alert alert-danger text-center">Pas de newsletters</h2>
+    {% endif %}
+{% endblock %}
+

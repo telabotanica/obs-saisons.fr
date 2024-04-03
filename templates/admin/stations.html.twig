@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center"> Liste des stations désactivées</h2>
+    {% if stations|length != 0 %}
+    <table class="table" id="admin-table">
+        <thead>
+        <tr>
+            <th scope="col">Utilisateur</th>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Nom de la station</th>
+            <th scope="col">Ville</th>
+            <th scope="col">Département</th>
+            <th scope="col">Visibilité</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for station in stations %}
+            <tr>
+                <th scope="row">{{ station.user.email }}</th>
+                <td>{{ station.user.displayName }}</td>
+                <td>{{ station.name }}</td>
+                <td>{{ station.locality }}</td>
+                <td>{{ station.department }}</td>
+                <td>{{ station.isPrivate? 'privé' : 'public' }}</td>
+                <td><a href="{{ path('stations_show', {slug:station.slug}) }}">Voir</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h2 class="alert alert-danger text-center">Pas de stations désactivées</h2>
+    {% endif %}
+{% endblock %}
+

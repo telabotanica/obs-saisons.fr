@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Individual;
 use App\Entity\Observation;
 use App\Entity\Station;
+use App\Entity\User;
 use App\Form\IndividualType;
 use App\Form\ObservationType;
 use App\Form\StationType;
@@ -12,9 +13,13 @@ use App\Security\Voter\UserVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EntityJsonSerialize;
 use App\Service\Search;
+use App\Service\SlugGenerator;
+use App\Service\StationService;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,7 +81,7 @@ class StationsController extends AbstractController
         $user = $this->getUser();
         $stationRepository = $manager->getRepository(Station::class);
         $lastPage = ceil($stationRepository->countStations($user) / $limit);
-
+		
         return $this->render('pages/stations.html.twig', [
             'headerMapLegend' => 'Mes stations',
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit, $user),
@@ -133,9 +138,10 @@ class StationsController extends AbstractController
         } elseif ($request->query->has('user')) {
             $user = $this->getUser();
             if ($user) {
-                $stations = $stationRepository->findBy(['user' => $user]);
+				$stations = $stationRepository->findAllActive($user);
             }
         } else {
+//            $stations = $stationRepository->findAllActive();
             $stations = $stationRepository->findAll();
         }
 
@@ -151,7 +157,8 @@ class StationsController extends AbstractController
      */
     public function stationsNew(
         Request $request,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        UploadService $uploadFileService
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -161,13 +168,51 @@ class StationsController extends AbstractController
         $form = $this->createForm(StationType::class, $station);
 
         $form->handleRequest($request);
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('headerImage')->getData()){
+            $fileSize = $form->get('headerImage')->getData()->getSize();
+        }
+        if($fileSize > 5242880){ $oversize = true ;};
+	
+		// Check if a station with the same name already exist, even if deleted
+		$manager->getFilters()->disable('softdeleteable');
+		$checkStationExist = $manager->getRepository(Station::class)
+			->findOneBy(
+				['name' => $station->getName(), 'locality' => $station->getLocality()]
+			);
+		$manager->getFilters()->enable('softdeleteable');
+		if ($checkStationExist) {
+			$this->addFlash('error', 'La station n’a pas pu être créée: Le nom existe déjà.');
+		
+			return $this->redirectToRoute('stations');
+		}
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image
+            $image = null;
+            $image = $form->get('headerImage')->getData();
+            $previousHeaderImage = $station->getHeaderImage();
+
+            $isDeletePicture = false;
+            $image = $uploadFileService->setFile(
+                $image,// input file data
+                $previousHeaderImage,
+                $isDeletePicture// removal requested
+            );
+
+            $station->setHeaderImage($image);
+
             $manager->persist($station);
             $manager->flush();
 
             $this->addFlash('success', 'Votre station a été créée');
+        } elseif ($oversize){
+            $this->addFlash('error', 'La station n’a pas pu être créée: votre image est trop lourde ! (5Mo maximum)');
         } else {
-            $this->addFlash('error', 'Votre station n’a pas pu être créée');
+            $this->addFlash('error', 'La station n’a pas pu être créée');
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -190,7 +235,8 @@ class StationsController extends AbstractController
     public function stationsEdit(
         Request $request,
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+        UploadService $uploadFileService
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -211,10 +257,36 @@ class StationsController extends AbstractController
         $form = $this->createForm(StationType::class, $station);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('headerImage')->getData()){
+            $fileSize = $form->get('headerImage')->getData()->getSize();
+        }
+        if($fileSize > 5242880){ $oversize = true ;};
+
+        if ($form->isSubmitted() && $form->isValid() && !$oversize) {
+
+            // Traitement de l'image
+            $image = null;
+            $image = $form->get('headerImage')->getData();
+            $previousHeaderImage = $station->getHeaderImage();
+
+            $isDeletePicture = false;
+            $image = $uploadFileService->setFile(
+                $image,// input file data
+                $previousHeaderImage,
+                $isDeletePicture// removal requested
+            );
+
+            $station->setHeaderImage($image);
+
             $manager->flush();
 
             $this->addFlash('success', 'Votre station a été modifiée');
+        } elseif ($oversize){
+            $this->addFlash('error', 'La station n’a pas pu être modifiée: votre image est trop lourde ! (5Mo maximum)');
         } else {
             $this->addFlash('error', 'La station n’a pas pu être modifiée');
         }
@@ -238,8 +310,11 @@ class StationsController extends AbstractController
      */
     public function stationDelete(
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+		StationService $stationService
     ) {
+		$isAdmin = $this->isGranted(User::ROLE_ADMIN);
+		
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
         }
@@ -255,7 +330,15 @@ class StationsController extends AbstractController
             $station,
             'Vous n’êtes pas autorisé à supprimer cette station'
         );
-
+	
+		// Prevent user to delete station with multiple contributors
+		$contributorsCount = $stationService->countContributors($station);
+		if ($contributorsCount > 1 && !$isAdmin){
+			$this->addFlash('error', "La station n'a pas été supprimée, d'autres utilisateurs contribuent à cette station. Veuillez contacter un administrateur.");
+			
+			return $this->redirectToRoute('my_stations');
+		}
+		
         // related individuals must also be removed
         $individuals = $manager->getRepository(Individual::class)
             ->findBy(['station' => $station])
@@ -346,7 +429,8 @@ class StationsController extends AbstractController
     public function individualNew(
         Request $request,
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -377,10 +461,11 @@ class StationsController extends AbstractController
         } else {
             $this->addFlash('error', 'Votre individu n’a pas pu être créé');
         }
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $station->getSlug(),
-        ]);
+		
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+		$slug = $station->getSlug().'#'.$slugifiedName;
+		
+		return $this->redirect('/stations/'.$station->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -389,7 +474,8 @@ class StationsController extends AbstractController
     public function individualEdit(
         Request $request,
         EntityManagerInterface $manager,
-        int $individualId
+        int $individualId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -417,10 +503,10 @@ class StationsController extends AbstractController
         } else {
             $this->addFlash('error', 'L’individu n’a pas pu être modifié');
         }
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $individual->getStation()->getSlug(),
-        ]);
+	
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -428,7 +514,8 @@ class StationsController extends AbstractController
      */
     public function individualDelete(
         EntityManagerInterface $manager,
-        int $individualId
+        int $individualId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -456,12 +543,12 @@ class StationsController extends AbstractController
 
         $manager->remove($individual);
         $manager->flush();
+	
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
 
         $this->addFlash('notice', 'Votre individu a été supprimé');
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $individual->getStation()->getSlug(),
-        ]);
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -472,7 +559,9 @@ class StationsController extends AbstractController
     public function observationNew(
         Request $request,
         EntityManagerInterface $manager,
-        int $stationId
+        int $stationId,
+        UploadService $uploadFileService,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -496,14 +585,33 @@ class StationsController extends AbstractController
         ]);
 
         $form->handleRequest($request);
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('picture')->getData()){
+            $fileSize = $form->get('picture')->getData()->getSize();
+        }
+        $oversize = ($fileSize > 5242880);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image
+            $image = $uploadFileService->uploadFile($form->get('picture')->getData());
+
+            $observation->setPicture($image);
+
             $manager->persist($observation);
             $manager->flush();
 
             $this->addFlash('success', 'Votre observation a été créée');
+        } elseif ($oversize){
+            $this->addFlash('error', "Votre observation n'a pas pu être créée: votre image est trop lourde ! (5Mo maximum)");
         } else {
-            $this->addFlash('error', 'Votre observation n’a pas pu être créée');
+            $this->addFlash('error', "Votre observation n'a pas pu être créée");
         }
+
+		$individual=$observation->getIndividual();
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
 
         $redirect = $this->generateUrl('stations_show', [
             'slug' => $station->getSlug(),
@@ -516,7 +624,7 @@ class StationsController extends AbstractController
             ]);
         }
 
-        return $this->redirect($redirect);
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -525,7 +633,9 @@ class StationsController extends AbstractController
     public function observationEdit(
         Request $request,
         EntityManagerInterface $manager,
-        int $observationId
+        int $observationId,
+        UploadService $uploadFileService,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -549,13 +659,32 @@ class StationsController extends AbstractController
         ]);
 
         $form->handleRequest($request);
+
+        $fileSize = 0;
+        $oversize = false;
+
+        if ($form->get('picture')->getData()){
+            $fileSize = $form->get('picture')->getData()->getSize();
+        }
+        $oversize = ($fileSize > 5242880);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image
+            $image = $uploadFileService->uploadFile($form->get('picture')->getData());
+
+            $observation->setPicture($image);
+
             $manager->flush();
 
             $this->addFlash('success', 'Votre observation a été modifiée');
+        } elseif ($oversize){
+            $this->addFlash('error', "Votre observation n'a pas pu être modifiée: votre image est trop lourde ! (5Mo maximum)");
         } else {
-            $this->addFlash('error', 'L’observation n’a pas pu être modifiée');
+            $this->addFlash('error', "Votre observation n'a pas pu être modifiée");
         }
+	
+		$individual=$observation->getIndividual();
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
 
         $redirect = $this->generateUrl('stations_show', [
             'slug' => $station->getSlug(),
@@ -567,8 +696,8 @@ class StationsController extends AbstractController
                 'redirect' => $redirect,
             ]);
         }
-
-        return $this->redirect($redirect);
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
 
     /**
@@ -576,7 +705,8 @@ class StationsController extends AbstractController
      */
     public function observationDelete(
         EntityManagerInterface $manager,
-        int $observationId
+        int $observationId,
+		SlugGenerator $slugGenerator
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -596,11 +726,91 @@ class StationsController extends AbstractController
 
         $manager->remove($observation);
         $manager->flush();
+		
+		$individual=$observation->getIndividual();
+		$slugifiedName = $slugGenerator->slugify($individual->getSpecies()->getVernacularName());
+		
 
         $this->addFlash('notice', 'Votre observation a été supprimée');
-
-        return $this->redirectToRoute('stations_show', [
-            'slug' => $observation->getIndividual()->getStation()->getSlug(),
-        ]);
+	
+		return $this->redirect('/stations/'.$individual->getStation()->getSlug().'#'.$slugifiedName);
     }
+	
+	/**
+	 * @Route("/station/{stationId}/deactivate", name="station_deactivate")
+	 */
+	public function stationDesactivate(
+		Request $request,
+		EntityManagerInterface $manager,
+		int $stationId,
+		StationService $stationService
+	) {
+		$isAdmin = $this->isGranted(User::ROLE_ADMIN);
+		
+		if (!$this->isGranted(UserVoter::LOGGED)) {
+			return $this->redirectToRoute('user_login');
+		}
+		
+		$station = $manager->getRepository(Station::class)
+			->find($stationId)
+		;
+		if (!$station) {
+			throw $this->createNotFoundException('La station n’existe pas');
+		}
+		$this->denyAccessUnlessGranted(
+			'station:edit',
+			$station,
+			'Vous n’êtes pas autorisé à désactiver cette station'
+		);
+		
+		// Prevent user to deactivate station with multiple contributors
+		$contributorsCount = $stationService->countContributors($station);
+		if ($contributorsCount > 1 && !$isAdmin){
+			$this->addFlash('error', "La station n'a pas été désactivée, d'autres utilisateurs contribuent à cette station. Veuillez contacter un administrateur.");
+			
+			return $this->redirectToRoute('stations_show', [
+				'slug'=> $station->getSlug()
+			]);
+		}
+		
+		$station->setIsDeactivated(true);
+		$manager->flush();
+		
+		$this->addFlash('notice', "La station a été désactivée. Si c'est une erreur, veuillez contacter un administrateur pour la réactiver");
+		
+		return $this->redirectToRoute('my_stations');
+	}
+	
+	/**
+	 * @Route("/station/{stationId}/reactivate", name="station_reactivate")
+	 */
+	public function stationReactivate(Request $request, EntityManagerInterface $manager, int $stationId
+	) {
+		if (!$this->isGranted(UserVoter::LOGGED)) {
+			return $this->redirectToRoute('user_login');
+		}
+		
+		$station = $manager->getRepository(Station::class)
+			->find($stationId)
+		;
+		if (!$station) {
+			throw $this->createNotFoundException('La station n’existe pas');
+		}
+		$this->denyAccessUnlessGranted(
+			'station:edit',
+			$station,
+			'Vous n’êtes pas autorisé à réactiver cette station'
+		);
+		
+		$station->setIsDeactivated(false);
+		$manager->flush();
+		
+		$this->addFlash('notice', 'La station a été réactivée');
+		
+		if ($this->isGranted(User::ROLE_ADMIN)){
+			return $this->redirectToRoute('admin_stations_list');
+		} else {
+			return $this->redirectToRoute('my_stations');
+		}
+	}
 }

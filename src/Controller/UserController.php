@@ -107,6 +107,10 @@ class UserController extends AbstractController
     ) {
         if ($request->isMethod('POST') && ('register' === $request->request->get('action'))) {
             $userRepository = $manager->getRepository(User::class);
+			
+			if ($request->get('hum') != ''){
+				return $this->redirectToRoute('user_login');
+			}
 
             if ($userRepository->findOneBy(['email' => $request->request->get('email')])) {
                 $this->addFlash('error', 'Cet utilisateur est déjà enregistré.');
@@ -318,8 +322,7 @@ class UserController extends AbstractController
             'action' => $this->generateUrl('stations_new'),
         ]);
 
-        $observations = $manager->getRepository(Observation::class)
-            ->findBy(['user' => $user]);
+		$observations = $manager->getRepository(Observation::class)->findOrderedObsPerUser($user);
         foreach ($observations as $observation) {
             $obsStation = $observation->getIndividual()->getStation();
             if (!in_array($obsStation, $stations)) {
@@ -431,6 +434,8 @@ class UserController extends AbstractController
         }
 
         $user = $this->getUser();
+		$role = $user->getRoles();
+		
         $wasNewsletterSubscriber = $user->getIsNewsletterSubscriber();
 
         $form = $this->createForm(ProfileType::class, $user);
@@ -442,6 +447,14 @@ class UserController extends AbstractController
             } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
                 $mailchimpSyncContact->unsubscribe($user);
             }
+
+			$exist = false;
+			foreach ($role as $roleElem){
+				if($roleElem == 'ROLE_ADMIN'){
+					$exist = true;
+				}
+			}
+			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
 
             $manager->flush();
 

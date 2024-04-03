@@ -100,3 +100,9 @@
         opacity: 1;
     }
 }
+
+.dropdown-toggle:after,.profile-menu-button:after{
+    content: none;
+    border: none;
+    display: none;
+}

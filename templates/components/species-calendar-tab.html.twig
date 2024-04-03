@@ -1,0 +1,139 @@
+{% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
+{% set stagesCssClasses = constant('App\\Entity\\Event::CSS_CLASSES') %}
+
+<div class="periods-calendar" id="calendar-species">
+    <h3 class="calendar-title">Calendrier Phénologique</h3>
+
+    <div class="row d-flex justify-content-evenly mb-3" id="small-calendar">
+        {% for stage in calendar %}
+            <div class="species-card col-5 mx-1 my-2">
+                <h5 class="species-card-head text-center px-1">
+                    {{ (type == 'plantes') ? "#{stage['name']} stade #{stage['bbch']}" : "#{stage['name']}" }}
+                </h5>
+
+                <div class="admin-card-body text-center px-2">
+                    <h6>Dates d'observations</h6>
+                    {% if stage['p5'] is not empty and stage['p95'] is not empty and stage['p5'] !=
+                        stage['p95'] %}
+                        <div>
+                            <p>Du {{ stage['p5']|format_datetime (pattern='d MMMM', locale='fr') }}
+                                au {{ stage['p95']|format_datetime (pattern='d MMMM', locale='fr') }}</p>
+                        </div>
+                    {% else %}
+                        <div>
+                            <p>Information non disponible</p>
+                        </div>
+                    {% endif %}
+                    <h6>Dates d'observations les plus fréquentes</h6>
+                    {% if stage['p25'] is not empty and stage['p75'] is not empty and stage['p25'] !=
+                        stage['p75'] %}
+                        <div>
+                            <p>Du {{ stage['p25']|format_datetime (pattern='d MMMM', locale='fr') }}
+                                au {{ stage['p75']|format_datetime(pattern='d MMMM', locale='fr') }}</p>
+                        </div>
+                    {% else %}
+                        <div>
+                            <p>Information non disponible</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="species-table-container mb-3" id="large-calendar">
+        <div class="gridSpe top">
+
+            {# Display months #}
+            {% for i in 3..14 %}
+                {% set month = "0000-#{i - 2}-01"|format_datetime(pattern='MMM',locale='fr')  %}
+                <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 monthSpe">{{ month }}</div>
+                {% if month == ("now"|format_datetime(pattern='MMM',locale='fr')) %}
+                    <div class="grid_{{ "#{i}-#{i+1}" }}_1-2 table-colomnSpe active-month top  {{ loop.last ? 'last-column' }}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="gridSpe content-{{ eventsSpecies|length }}">
+            {% for i in 1..eventsSpecies|length %}
+                {% set stage = eventsSpecies[i-1] %}
+
+                {# Displays the calendar grid and lines titles #}
+                <div class="grid_1-3_{{ "#{i}-#{i+1}" }} table-intitule-stageSpe {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}">
+                    {{ periodsNames[stage.event.name] }}
+                    {{ stage.species.type.name == 'arbres' ? " - stade #{stage.event.stadeBbch}" }}
+                </div>
+                <div class="grid_3-15_{{ "#{i}-#{i+1}" }} table-rowSpe {{ i is even ? 'darker' }} {{ loop.last ? 'last' }}"></div>
+
+                {# périods of less frequent observations#}
+                {% if stage.percentile5 is not empty and stage.percentile95 is not empty and stage.percentile5 != stage.percentile95 %}
+                    {% set column_start = 30 + (stage.percentile5 * 120 / 365)|round %}
+                    {% set column_end = 30 + (stage.percentile95 * 120 / 365)|round %}
+                    {# Displays periods colored lines  opacity 0.3 #}
+                    {% if column_start < column_end %}
+                        <div class="stage-periodSpe {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                    {% else %}
+                        <div class="stage-periodSpe {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:150;grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                        <div class="stage-periodSpe {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:30;grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};" }}"></div>
+                    {% endif %}
+                {% endif %}
+
+                {# périods of more frequent observations#}
+                {% if stage.percentile25 is not empty and stage.percentile75 is not empty and stage.percentile25 != stage.percentile75 %}
+                    {% set column_start = 30 + (stage.percentile25 * 120 / 365)|round %}
+                    {% set column_end = 30 + (stage.percentile75 * 120 / 365)|round %}
+                    {# Displays periods colored lines opacity 1 #}
+                    {% if column_start < column_end %}
+                        <div class="stage-periodSpe {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};opacity:1;" }}"></div>
+                    {% else %}
+                        <div class="stage-periodSpe {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:#{column_start};grid-column-end:150;grid-row-start:#{i};grid-row-end:#{i+1};opacity:1;" }}"></div>
+                        <div class="stage-periodSpe {{ stagesCssClasses[stage.event.name] }}" style="{{ "grid-column-start:30;grid-column-end:#{column_end};grid-row-start:#{i};grid-row-end:#{i+1};opacity:1;" }}"></div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {# Highlights current month #}
+            {% for i in 3..14 %}
+                <div class="grid_{{"#{i}-#{i+1}"}}_1-{{ eventsSpecies|length + 1 }} table-colomnSpe {{ (i - 2) == ("now"|date('n')) ? 'active-month' }} {{ loop.last ? 'last-column' }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="helper-legend mb-3">
+        <div class="legends">
+            {# Sets an array of non duplicated values of stages class attibutes for this species #}
+            {% set stagesClassAttrs = stagesClassAttrs|default([])|merge(eventsSpecies|map(es => stagesCssClasses[es.event.name]))|removeDuplicates %}
+
+            {# Displays periods colored lines legends #}
+            {% for stageClassAttr in stagesClassAttrs %}
+                <div class="stage-periodSpe {{stageClassAttr }} legend"></div>
+            {% endfor %}
+        </div>
+        <div class="helper-legend-text">Périodes à laquelle est observée ce stade en moyenne les années précédentes</div>
+        <a href="" class="hide-button eye-crossed-icon" title="Ne plus afficher ce message"></a>
+    </div>
+
+    {# Légende #}
+    <div class="accordion mb-3 mt-0" id="accordionLegend">
+        <div class="accordion-item">
+            <h3 class="accordion-header mt-0" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Légende
+                </button>
+            </h3>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                 data-bs-parent="#accordionLegend">
+                <div class="accordion-body">
+                    {% for i in 1..eventsSpecies|length %}
+                        {% set stage = eventsSpecies[i-1] %}
+                        <p>
+                            {{ (type == 'animaux') ? "stade : #{stage.event.description}" : "#{periodsNames[stage
+                            .event.name]} stade #{stage.event.stadeBbch} : #{stage.event.description}"}}
+                        </p>
+                    {%  endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

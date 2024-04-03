@@ -60,7 +60,8 @@ class IndividualType extends AbstractType
 
                     return ucfirst($vernacularName);
                 },
-                'choice_attr' => function (Species $species, $key, $speciesId) {
+				'group_by' => 'type.name',
+				'choice_attr' => function (Species $species, $key, $speciesId) {
                     $choiceAttr['class'] = 'species-option species-'.$speciesId;
                     if (in_array($species, $this->stationAllSpecies)) {
                         $choiceAttr['class'] .= ' exists-in-station';

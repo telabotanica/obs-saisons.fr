@@ -1,0 +1,44 @@
+species_name,bbch_code,percentile_5,percentile_25,percentile_75,percentile_95,aberration_start_day,aberration_end_day
+Arbutus unedo L.,11,60,60,212,212,40,232
+Arbutus unedo L.,15,60,60,212,212,40,232
+Arbutus unedo L.,61,274,274,365,365,254,20
+Arbutus unedo L.,65,274,274,365,365,254,20
+Arbutus unedo L.,85,274,274,46,46,254,66
+Castanea sativa,11,110,110,135,135,90,155
+Castanea sativa,15,110,110,135,135,90,155
+Castanea sativa,61,140,140,181,181,120,201
+Castanea sativa,65,140,140,181,181,120,201
+Castanea sativa,85,274,274,304,304,254,294
+Castanea sativa,91,293,293,319,319,273,339
+Castanea sativa,95,293,293,319,319,273,339
+Quercus ilex L.,11,105,105,181,181,95,201
+Quercus ilex L.,15,105,105,181,181,95,201
+Quercus ilex L.,61,121,121,181,181,101,201
+Quercus ilex L.,65,121,121,181,181,101,201
+Quercus ilex L.,85,305,305,31,31,285,51
+Cistus monspeliensis L.,61,,,,,,
+Cistus monspeliensis L.,65,,,,,,
+Cistus monspeliensis L.,85,,,,,,
+Genista scorpius L.,61,91,91,181,181,71,201
+Genista scorpius L.,65,91,91,181,181,71,201
+Genista scorpius L.,85,,,,,,
+Thymus vulgaris,61,,,,,,
+Thymus vulgaris,65,,,,,,
+Hyla meridionalis,apparition,,,,,,
+Otus scops,apparition,,,,,,
+Coracias garrulus,apparition,,,,,,
+Upupa epops,apparition,,,,,,
+Gonepteryx cleopatra,apparition,,,,,,
+Cicada orni,apparition,,,,,,
+Clathrus ruber,apparition,,,,,,
+Parietaria judaica,61,114,151,242,279,90,305
+Charaxes jasius,apparition,,,,,,
+Anthocharis euphenoides,apparition,,,,,,
+Thaumetopoea pityocampa,apparition,,,,,,
+Sorbus domestica L.,11,91,91,151,151,71,171
+Sorbus domestica L.,15,91,91,151,151,71,171
+Sorbus domestica L.,61,105,105,151,151,85,171
+Sorbus domestica L.,65,105,105,151,151,85,171
+Sorbus domestica L.,85,227,227,293,293,207,313
+Sorbus domestica L.,91,258,258,334,334,238,354
+Sorbus domestica L.,95,274,274,334,334,254,354

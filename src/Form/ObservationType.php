@@ -172,14 +172,17 @@ class ObservationType extends AbstractType
         $observation = $formEvent->getData();
         $isDeletePicture = $observation['isDeletePicture'] ?? false;
 
+        /*
         $imageData = $observation['picture'] instanceof UploadedFile ? $observation['picture'] : null;
         $this->picture = $this->uploadFileService->setFile(
             $imageData,// input file data
             $this->previousPicture,
             $isDeletePicture// removal requested
         );
+        */
         $observation['date'] = (new HandleDateTime())->browserSupportDate($observation['date']);
-        $observation['picture'] = $this->picture;
+//        $observation['picture'] = $this->picture;
+
         $formEvent->setData($observation);
     }
 
