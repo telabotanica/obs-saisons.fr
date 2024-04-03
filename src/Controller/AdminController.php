@@ -515,6 +515,39 @@ class AdminController extends AbstractController
         ]);
     }
 
+    // Verification Image
+    
+    /**
+     * @Route("/admin/verif", name="admin_verif_image")
+     * 
+     */
+    public function verifImage()
+    {
+        $this->setOrigin($this->generateUrl('admin_verif_image'));
+
+        return $this->render('admin/verif-image.html.twig');
+    }
+
+
+    /**
+     * @Route("/admin/verif/post", name="admin_verif_image_form")
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws Exception
+     */
+    public function verifImageForm(
+        Request $request,
+        EntityManagerInterface $manager)
+    {
+        if ($request->isMethod('POST') && ('verifier' === $request->request->get('action'))){
+            return $this->redirectToRoute('admin_stats');
+        }
+        $this->setOrigin($this->generateUrl('admin_verif_image_form'));
+
+        return $this->redirectToRoute('admin');
+    }
+
     /**
      * @Route("/admin/newsletters", name="admin_newsletters_list")
      *//*
