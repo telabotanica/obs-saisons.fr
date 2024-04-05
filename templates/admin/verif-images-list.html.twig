@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    {% if erreur is not empty %}
+        <div class="alert alert-success">{{ erreur }}</div>
+    {% endif %}
+    <h2 class="text-center"> Liste des images à vérifier</h2>
+    <table class="table" id="admin-table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Utilisateur</th>
+            <th scope="col">Espèce</th>
+            <th scope="col">Stade observé</th>
+            <th scope="col">Status</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% if images is empty %}
+            <tr>
+                <td colspan="5">No images to check</td>
+            </tr>
+        {% else %}
+            {% for image in images %}
+                <tr>
+                    <td><img src="{{ image.picture }}" alt="Image de la station" style="width: 100px; height: 100px"></td>
+                    <td>{{ image.user.name }}</td>
+                    <td>{{ image.individual.species.vernacularName }}</td>
+                    <td>{{ image.event.name }}</td>
+{#                    Status en fonction de l'état de l'image       #}
+                    {% if image.isPictureValid == 0 %}
+                        <td><a href="{{ path('admin_verif_image', {imageId:image.id}) }}">A vérifier</a></td>
+{#                        <td>image</td>#}
+                    {% elseif image.isPictureValid == 1 %}
+                        <td><a href="{{ path('admin_verif_image', {imageId:image.id}) }}">Image Valide</a></td>
+                    {% elseif image.isPictureValid == 2 %}
+                        <td><a href="{{ path('admin_verif_image', {imageId:image.id}) }}">Image non Valide</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+
+        {% if totalImages > pageSize %}
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <div>
+                        {% if page > 1 %}
+                            <a href="?page={{ page - 1 }}">Previous</a>
+                        {% endif %}
+
+                        <span>Page {{ page }} of {{ totalPages }}</span>
+
+                        {% if (page - 1) * pageSize + images|length < totalImages %}
+                            <a href="?page={{ page + 1 }}">Next</a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        {% endif %}
+
+
+
+    </table>
+
+{% endblock %}

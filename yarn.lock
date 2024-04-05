@@ -982,6 +982,11 @@
     error-stack-parser "^2.0.0"
     string-width "^4.2.3"
 
+"@popperjs/core@^2.11.6":
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
+  integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
+
 "@symfony/webpack-encore@^1.8.2":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@symfony/webpack-encore/-/webpack-encore-1.8.2.tgz#ceffa0d9326d29fa62b3a61f213e8e01a9992a7e"
@@ -1012,6 +1017,11 @@
     webpack-cli "^4.9.1"
     webpack-dev-server "^4.0.0"
     yargs-parser "^20.2.4"
+
+"@telabotanica/ckeditor5-build-ods-v2@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@telabotanica/ckeditor5-build-ods-v2/-/ckeditor5-build-ods-v2-1.1.1.tgz#fb93c6193ade96f8782b0bd034c0aeae487e8045"
+  integrity sha512-P/SWFQ54uO+25AOKhOT9cs7OymS9x76aLIX0IkjHdH5X2EFNi2KOotQnk2iSn579+sFLE7nOPOMCS4t+c2SZIw==
 
 "@telabotanica/ckeditor5-build-ods@^22.0.1":
   version "22.0.1"
@@ -1743,6 +1753,11 @@ boolbase@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
+
+bootstrap@5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.2.3.tgz#54739f4414de121b9785c5da3c87b37ff008322b"
+  integrity sha512-cEKPM+fwb3cT8NzQZYEu4HilJ3anCrWqh3CHAok1p9jXqMPsPTBhU25fBckEJHJ/p+tTxTFTsFQGM+gaHpi3QQ==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -3418,10 +3433,10 @@ jest-worker@^27.4.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jquery@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
-  integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
+jquery@^3.6.3:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
+  integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
 
 js-base64@^2.4.3:
   version "2.6.4"

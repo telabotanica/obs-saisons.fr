@@ -2,30 +2,49 @@
 
 {% block main_content %}
     {% include 'components/buttons/admin-return-button.html.twig' %}
+    {% if erreur is not empty %}
+        <div class="alert alert-danger">{{ erreur }}</div>
+    {% endif %}
     <div class="row">
         <div class="leftCon col-9">
-            <img src="{{ asset('images/paper.jpg') }}" alt="paper"></img>
+            <div class="row"><img src="{{ observation.picture }}" alt="paper"></div>
+            <div class="row">{{ observation.user.name }} - {{ observation.individual.species.vernacularName }} - {{ observation.event.name }}</div>
+            <div class="row">debug id : {{ observation.id }}</div>
+
+
         </div>
+{#        {{ observation.id }}#}
         <div class="col-1"></div>
-        <div class="rightCon col-2" action="{{ path('admin_verif_image_form') }}">
+        <div class="rightCon col-2" action="{{ path('admin_stats') }}">
             <h1>Vérification</h1>
             <h3>Cette image est elle acceptable? </h3>
-            <form method="POST">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="conformeRadio">
-                    <label class="form-check-label" for="conformeRadio">
-                        Oui
-                    </label>
+            <form method="POST" action="{{ path('handle_form_submission', {imageId:observation.id}) }}">
+                {# Add hidden field for imageId #}
+                <input type="hidden" name="imageId" value="{{ observation.id }}">
+
+                <div class="row ps-3">
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="confirmRadio" id="confirmRadioTrue" value="1">
+                            <label class="form-check-label" for="confirmRadioTrue">Oui</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="confirmRadio" id="confirmRadioFalse" value="2">
+                            <label class="form-check-label" for="confirmRadioFalse">Non</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="conformeRadioFalse">
-                    <label class="form-check-label" for="conformeRadioFalse">
-                        Non
-                    </label>
+
+                <div class="form-group">
+                    <label for="motif">Motif de refus :</label>
+                    <input type="text" name="motif" class="mb-3">
                 </div>
-                	<input type="hidden" name="action" value="verifier">
-                    <button class="button bt-form bt-valider" type="submit">Soumettre</button>
+
+                <button class="button bt-form bt-valider" type="submit">Soumettre</button>
             </form>
+
         </div>
     </div>
 
