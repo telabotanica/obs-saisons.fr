@@ -600,65 +600,111 @@ class AdminController extends AbstractController
 
 //    Fonction qui donne toutes les images qui n'ont pas encore était vérifier
     /**
-     * @Route("/admin/images", name="admin_verif_image_list")
+     * @Route("/admin/images", name="admin_verif_image_list", methods={"GET"})
      *
      */
     public function getImageList(EntityManagerInterface $manager, Request $request){
-//        Donne accès aux administrateur uniquement
+        // Donne accès aux administrateurs uniquement
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
         $erreur = $this->get('session')->getFlashBag()->get('error');
-        $er2 ='';
+        $er2 = '';
         foreach ($erreur as $er) {
             $er2 = $er;
         }
-//        Ajout d'un système de pagination
+
+        //Prise en compte de l'id de l'espece sélectionner sur le dropdown
+        $selectedSpeciesId = $request->query->get('species', '');
+
+
+        // Ajout d'un système de pagination
         $page = $request->query->getInt('page', 1);
         $pageSize = 10; // Number of images per page
         $offset = ($page - 1) * $pageSize;
 
-//        Gestion d'erreur
+        try {
+            // Requête pour récupérer le nombre total d'images à vérifier
+            $queryBuilder = $manager->createQueryBuilder()
+                ->select('COUNT(o.id)')
+                ->from('App\Entity\Observation', 'o')
+                ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                ->setParameter('valid', 0);
+
+            $totalImages = $queryBuilder->getQuery()->getSingleScalarResult();
+
+            // Requête pour récupérer les images avec les informations associées
+            $imagesQuery = $manager->createQueryBuilder()
+                ->select('partial o.{id, createdAt, is_picture_valid, picture}', 'partial u.{id, name}',
+                    'partial e.{id, name}', 'partial i.{id, name}', 'partial s.{id, vernacular_name}')
+                ->from('App\Entity\Observation', 'o')
+                ->leftJoin('o.user', 'u')
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->leftJoin('i.species', 's')
+                ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                ->orderBy('o.createdAt', 'DESC')
+                ->setParameter('valid', 0)
+                ->setFirstResult($offset)
+                ->setMaxResults($pageSize);
+
+            //Prise en compte de la requete de filtrage
+            if (!empty($selectedSpeciesId)) {
+                $imagesQuery->andWhere('s.id = :speciesId')
+                    ->setParameter('speciesId', $selectedSpeciesId);
+            }
+
+            $images = $imagesQuery->getQuery()->getResult();
+//            $images2Query = $manager->createQueryBuilder()
+//                ->select('o')
+//                ->from('App:Observation', 'o')
+//                ->orderBy('o.createdAt', 'DESC');
+//
+//            $images2 = $images2Query->getQuery()->getResult();
+
+            // Requête afin de récupérer les différentes espèces pour le filtrage
+            $speciesQuery = $manager->createQueryBuilder()
+                ->select('partial s.{id, vernacular_name}')
+                ->from('App\Entity\Species', 's')
+                ->where('s.is_active = :is_active')
+                ->orderBy('s.id', 'ASC')
+                ->setParameter('is_active', 1);
+
+            $species = $speciesQuery->getQuery()->getResult();
 
 
-        try{
-            $images2 = $manager->getRepository(Observation::class)->findBy([], ['createdAt' => 'DESC']);
-//        Requete SQL allant chercher le nombre d'image qui doivent être véfier
-        $queryBuilder = $manager->createQueryBuilder()
-            ->select('COUNT(o.id)')
-            ->from('App\Entity\Observation', 'o')
-            ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
-            ->setParameter('valid', 0);
+            // Requete pour le nombre de page maximum pour la pagination
+            $totalImagesQuery = $manager->createQueryBuilder()
+                ->select('COUNT(o.id)')
+                ->from('App\Entity\Observation', 'o')
+                ->leftJoin('o.individual', 'i') // Ensure you join tables involved in filtering
+                ->leftJoin('i.species', 's')
+                ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                ->setParameter('valid', 0);
 
-//        Nombre total d'image
-        $totalImages = $queryBuilder->getQuery()->getSingleScalarResult();
+            if (!empty($selectedSpeciesId)) {
+                $totalImagesQuery->andWhere('s.id = :speciesId')
+                    ->setParameter('speciesId', $selectedSpeciesId);
+            }
 
-//        Requete SQL allant chercher les images ainsi que les informations qui lui sont attribuées
-        $images = $manager->createQueryBuilder()
-            ->select('o')
-            ->from('App\Entity\Observation', 'o')
-            ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
-            ->orderBy('o.createdAt', 'DESC')
-            ->setParameter('valid', 0)
-            ->setFirstResult($offset)
-            ->setMaxResults($pageSize)
-            ->getQuery()
-            ->getResult();
+            $totalImages = $totalImagesQuery->getQuery()->getSingleScalarResult();
 
-//        Donne le nombre de page total pour la pagination
-        $totalPages = ceil($totalImages / $pageSize);
 
-        }catch (\Exception $exception){
-            echo 'An error occured: ' . $exception->getMessage();
+            $totalPages = ceil($totalImages / $pageSize);
+
+        } catch (\Exception $exception) {
+            echo 'An error occurred: ' . $exception->getMessage();
         }
+
         return $this->render('admin/verif-images-list.html.twig', [
-            'images' => $images2,
+            'images' => $images,
+            'species' => $species,
             'page' => $page,
+            'selectedSpeciesId' => $selectedSpeciesId,
             'pageSize' => $pageSize,
             'totalPages' => $totalPages,
             'totalImages' => $totalImages,
-            'erreur'=>$er2
+            'erreur' => $er2
         ]);
-
     }
 
 
