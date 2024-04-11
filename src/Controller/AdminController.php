@@ -686,7 +686,7 @@ class AdminController extends AbstractController
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
                 ->leftJoin('i.species', 's')
-                ->orderBy('o.createdAt', 'DESC');
+                ->orderBy('o.createdAt', 'ASC');
 
             //Prise en compte de le requete de filtrage pas statut
             if ($selectedStatus !== '') {
