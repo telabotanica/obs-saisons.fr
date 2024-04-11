@@ -8,15 +8,49 @@
     <h2 class="text-center"> Liste des images à vérifier</h2>
 
     <form method="get" action="{{ path('admin_verif_image_list') }}">
-        <label for="species">Filter by species</label>
-        <select name="species">
-            <option value="">All species</option>
-            {% for specie in species %}
-                <option value="{{ specie.id }}"
-                        {% if selectedSpeciesId == specie.id %}selected{% endif %}>{{ specie.vernacularName }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Apply filter</button>
+        <div class="row">
+            <div class="col"><label for="species">Filtrer par espèces</label>
+                <select name="species" class="mb-2">
+                    <option value="">Toutes espèces</option>
+                    {% for specie in species %}
+                        <option value="{{ specie.id }}"
+                                {% if selectedSpeciesId == specie.id %}selected{% endif %}>{{ specie.vernacularName }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="statut">Filtrer par statut</label>
+                <select name="statut">
+                    <option value="0">Image à vérifier</option>
+                    <option value="1">Image valide</option>
+                    <option value="2">Image non valide</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="user">Filtrer par utilisateur</label>
+                <select name="user">
+                    <option value="">Tous utilisateur</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}"
+                                {% if selectedUserId == user.id %}selected{% endif %}>{{ user.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="stade">Filtrer par stade</label>
+                <select name="stade">
+                    <option value="">Tous stade</option>
+                    {% for stade in stades %}
+                        <option value="{{ stade.id }}"
+                                {% if selectedStadeId == stade.id %}selected{% endif %}>{{ stade.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div><button type="submit">Filtrer</button>
+
+
     </form>
     <table class="table" id="admin-table">
         <thead class="thead-dark">
@@ -25,7 +59,7 @@
             <th scope="col">Utilisateur</th>
             <th scope="col">Espèce</th>
             <th scope="col">Stade observé</th>
-            <th scope="col">Status</th>
+            <th scope="col">Statut</th>
         </tr>
         </thead>
 
@@ -60,15 +94,14 @@
                 <td colspan="5">
                     <div>
                         {% if page > 1 %}
-
-                            <a href="?page={{ page - 1 }}&species={{ selectedSpeciesId }}">Previous</a>
+{#                            !!!!!! Laisser la longue ligne sinon la pagination se casse #}
+                            <a href="?page={{ page - 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedStadeId|e('url') }}">Previous</a>
                         {% endif %}
 
                         <span>Page {{ page }} of {{ totalPages }}</span>
 
                         {% if (page - 1) * pageSize + images|length < totalImages %}
-
-                            <a href="?page={{ page + 1 }}&species={{ selectedSpeciesId }}">Next</a>
+                            <a href="?page={{ page + 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedStadeId|e('url') }}">Next</a>
                         {% endif %}
                     </div>
                 </td>

@@ -598,6 +598,7 @@ class AdminController extends AbstractController
 
 
 
+
 //    Fonction qui donne toutes les images qui n'ont pas encore était vérifier
     /**
      * @Route("/admin/images", name="admin_verif_image_list", methods={"GET"})
@@ -607,6 +608,7 @@ class AdminController extends AbstractController
         // Donne accès aux administrateurs uniquement
         $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
 
+        //code de gestion d'erreur afin de donner un message de réussite ou d'erreur
         $erreur = $this->get('session')->getFlashBag()->get('error');
         $er2 = '';
         foreach ($erreur as $er) {
@@ -616,50 +618,106 @@ class AdminController extends AbstractController
         //Prise en compte de l'id de l'espece sélectionner sur le dropdown
         $selectedSpeciesId = $request->query->get('species', '');
 
+        //Prise en compte du statut demandé lors de la selection du dropdown
+        $selectedStatus = $request->query->get('statut', '');
+
+        //Prise en compte de l'id de l'utilisateur sélectionner sur le dropdown
+        $selectedUserId = $request->query->get('user', '');
+
+        //Prise en compte de l'id de l'event sélectionner sur le dropdown
+        $selectedStadeId = $request->query->get('stade', '');
+
 
         // Ajout d'un système de pagination
         $page = $request->query->getInt('page', 1);
         $pageSize = 10; // Number of images per page
         $offset = ($page - 1) * $pageSize;
 
+        //try-catch pour la gestion d'erreur qui peut arriver avec la bdd
         try {
-            // Requête pour récupérer le nombre total d'images à vérifier
-            $queryBuilder = $manager->createQueryBuilder()
+
+            //Requete afin de prendre le nombre de d'image pour la pagination
+            $totalImagesQuery = $manager->createQueryBuilder()
                 ->select('COUNT(o.id)')
                 ->from('App\Entity\Observation', 'o')
-                ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
-                ->setParameter('valid', 0);
+                ->leftJoin('o.user', 'u')
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->leftJoin('i.species', 's');
 
-            $totalImages = $queryBuilder->getQuery()->getSingleScalarResult();
+            //logic de filtrage
+            if ($selectedStatus !== '') {
+                if ($selectedStatus == '0') {
+                    $totalImagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                        ->setParameter('valid', 0);
+                } else {
+                    $totalImagesQuery->andWhere('o.is_picture_valid = :status')
+                        ->setParameter('status', $selectedStatus);
+                }
+            } else {
+                $totalImagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                    ->setParameter('valid', 0);
+            }
+            if (!empty($selectedSpeciesId)) {
+                $totalImagesQuery->andWhere('s.id = :speciesId')
+                    ->setParameter('speciesId', $selectedSpeciesId);
+            }
+            if (!empty($selectedUserId)) {
+                $totalImagesQuery->andWhere('u.id = :userId')
+                    ->setParameter('userId', $selectedUserId);
+            }
+            if (!empty($selectedStadeId)) {
+                $totalImagesQuery->andWhere('e.id = :eventId')
+                    ->setParameter('eventId', $selectedStadeId);
+            }
+
+            //stockage du nombre d'images total
+            $totalImages = $totalImagesQuery->getQuery()->getSingleScalarResult();
 
             // Requête pour récupérer les images avec les informations associées
             $imagesQuery = $manager->createQueryBuilder()
-                ->select('partial o.{id, createdAt, is_picture_valid, picture}', 'partial u.{id, name}',
-                    'partial e.{id, name}', 'partial i.{id, name}', 'partial s.{id, vernacular_name}')
+                ->select('partial o.{id, createdAt, is_picture_valid, picture}',
+                    'partial u.{id, name}',
+                    'partial e.{id, name}',
+                    'partial i.{id, name}',
+                    'partial s.{id, vernacular_name}')
                 ->from('App\Entity\Observation', 'o')
                 ->leftJoin('o.user', 'u')
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
                 ->leftJoin('i.species', 's')
-                ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
-                ->orderBy('o.createdAt', 'DESC')
-                ->setParameter('valid', 0)
-                ->setFirstResult($offset)
-                ->setMaxResults($pageSize);
+                ->orderBy('o.createdAt', 'DESC');
 
-            //Prise en compte de la requete de filtrage
+            //Prise en compte de le requete de filtrage pas statut
+            if ($selectedStatus !== '') {
+                if ($selectedStatus == 0 ){
+                    $imagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                        ->setParameter('valid', 0);
+                }else{
+                    $imagesQuery->andWhere('o.is_picture_valid = :status')
+                        ->setParameter('status', $selectedStatus);
+                }
+            } else {
+                //cas par défault ou aucun statut n'est rentré en parametre
+                $imagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                    ->setParameter('valid', 0);
+            }
+
+            //Prise en compte des requetes de filtrage
             if (!empty($selectedSpeciesId)) {
                 $imagesQuery->andWhere('s.id = :speciesId')
                     ->setParameter('speciesId', $selectedSpeciesId);
             }
+            if(!empty($selectedUserId)){
+                $imagesQuery->andWhere('u.id = :userId')
+                    ->setParameter('userId', $selectedUserId);
+            }
+            if(!empty($selectedStadeId)){
+                $imagesQuery->andWhere('e.id = :eventId')
+                    ->setParameter('eventId', $selectedStadeId);
+            }
 
-            $images = $imagesQuery->getQuery()->getResult();
-//            $images2Query = $manager->createQueryBuilder()
-//                ->select('o')
-//                ->from('App:Observation', 'o')
-//                ->orderBy('o.createdAt', 'DESC');
-//
-//            $images2 = $images2Query->getQuery()->getResult();
+
 
             // Requête afin de récupérer les différentes espèces pour le filtrage
             $speciesQuery = $manager->createQueryBuilder()
@@ -671,23 +729,29 @@ class AdminController extends AbstractController
 
             $species = $speciesQuery->getQuery()->getResult();
 
+            //Requete afin de récupérer les différente utilisateurs pour le filtrage
+            $usersQuery = $manager->createQueryBuilder()
+                ->select('partial u.{id, name}')
+                ->from('App\Entity\User', 'u')
+                ->where('u.status = :status')
+                ->orderBy('u.id', 'ASC')
+                ->setParameter('status', 1);
 
-            // Requete pour le nombre de page maximum pour la pagination
-            $totalImagesQuery = $manager->createQueryBuilder()
-                ->select('COUNT(o.id)')
-                ->from('App\Entity\Observation', 'o')
-                ->leftJoin('o.individual', 'i') // Ensure you join tables involved in filtering
-                ->leftJoin('i.species', 's')
-                ->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
-                ->setParameter('valid', 0);
+            $users = $usersQuery->getQuery()->getResult();
 
-            if (!empty($selectedSpeciesId)) {
-                $totalImagesQuery->andWhere('s.id = :speciesId')
-                    ->setParameter('speciesId', $selectedSpeciesId);
-            }
+            //Requete afin de récupérer les différente stades à observé pour le filtrage
+            $stadesQuery = $manager->createQueryBuilder()
+                ->select('partial e.{id, name}')
+                ->from('App\Entity\Event', 'e')
+                ->where('e.is_observable = :is_observable')
+                ->orderBy('e.id', 'ASC')
+                ->setParameter('is_observable', 1);
 
-            $totalImages = $totalImagesQuery->getQuery()->getSingleScalarResult();
+            $stades = $stadesQuery->getQuery()->getResult();
 
+            $imagesQuery->setFirstResult($offset)->setMaxResults($pageSize);
+
+            $images = $imagesQuery->getQuery()->getResult();
 
             $totalPages = ceil($totalImages / $pageSize);
 
@@ -696,16 +760,22 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/verif-images-list.html.twig', [
+            'users'=>$users,
+            'stades'=>$stades,
             'images' => $images,
             'species' => $species,
             'page' => $page,
             'selectedSpeciesId' => $selectedSpeciesId,
+            'selectedStatus' => $selectedStatus,
+            'selectedUserId' => $selectedUserId,
+            'selectedStadeId' => $selectedStadeId,
             'pageSize' => $pageSize,
             'totalPages' => $totalPages,
             'totalImages' => $totalImages,
             'erreur' => $er2
         ]);
     }
+
 
 
     /**
