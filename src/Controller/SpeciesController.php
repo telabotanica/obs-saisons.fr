@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Observation;
 use App\Entity\Post;
 use App\Entity\Species;
 use App\Entity\EventSpecies;
@@ -70,30 +71,13 @@ class SpeciesController extends AbstractController
             throw $this->createNotFoundException('L’espèce n’a pas été trouvée');
         }
 
-// Query to find the latest 10 validated images for the specified species
-        $imagesQuery = $manager->createQueryBuilder()
-            ->select(
-                'partial o.{id, picture, is_picture_valid, updatedAt}',
-                'partial u.{id, name}',
-                'partial e.{id, name}',
-                'partial i.{id}'
-            )
-            ->from('App\Entity\Observation', 'o')
-            ->leftJoin('o.user', 'u')
-            ->leftJoin('o.event', 'e')
-            ->leftJoin('o.individual', 'i')
-            ->where('o.is_picture_valid = :valid AND i.species = :species')
-            ->orderBy('o.createdAt', 'DESC')
-            ->setMaxResults(10)
-            ->setParameters([
-                'valid' => 1,
-                'species' => $species
-            ]);
-
-// Execute the query to get the results
-        $images = $imagesQuery->getQuery()->getResult();
-
-//        dd($images);
+        // Query to find the latest 10 validated images for the specified species
+        $images = [];
+        try{
+            $images = $manager->getRepository(Observation::class)->findImagesCarousel($species);
+        }catch(\Exception $exception){
+            echo 'An error occurred -->' . $exception;
+        }
 
 		
         return $this->render('pages/species/species-single.html.twig', [

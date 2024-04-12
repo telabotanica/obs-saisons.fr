@@ -751,5 +751,33 @@ class ObservationRepository extends ServiceEntityRepository
        return $imagesQuery->getQuery()->getResult();
     }
 
+    public function findImagesCarousel($species)
+    {
+        $imagesQuery = '';
+        try{
+            $imagesQuery = $this->createQueryBuilder('o')
+                ->select(
+                    'partial o.{id, picture, is_picture_valid, updatedAt}',
+                    'partial u.{id, name}',
+                    'partial e.{id, name}',
+                    'partial i.{id}'
+                )
+                ->leftJoin('o.user', 'u')
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->where('o.is_picture_valid = :valid AND i.species = :species')
+                ->orderBy('o.createdAt', 'DESC')
+                ->setMaxResults(10)
+                ->setParameters([
+                    'valid' => 1,
+                    'species' => $species
+                ]);
 
+        }catch (\Exception $exception){
+            echo 'An error occurred --> ' . $exception;
+        }
+
+// Execute the query to get the results
+        return $imagesQuery->getQuery()->getResult();
+    }
 }
