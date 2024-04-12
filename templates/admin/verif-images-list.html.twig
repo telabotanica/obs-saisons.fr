@@ -43,7 +43,7 @@
                     <option value="">Tous stade</option>
                     {% for stade in stades %}
                         <option value="{{ stade.id }}"
-                                {% if selectedStadeId == stade.id %}selected{% endif %}>{{ stade.name }}</option>
+                                {% if selectedEventId == stade.id %}selected{% endif %}>{{ stade.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -95,13 +95,13 @@
                     <div>
                         {% if page > 1 %}
 {#                            !!!!!! Laisser la longue ligne sinon la pagination se casse #}
-                            <a href="?page={{ page - 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedStadeId|e('url') }}">Previous</a>
+                            <a href="?page={{ page - 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedEventId|e('url') }}">Previous</a>
                         {% endif %}
 
                         <span>Page {{ page }} of {{ totalPages }}</span>
 
                         {% if (page - 1) * pageSize + images|length < totalImages %}
-                            <a href="?page={{ page + 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedStadeId|e('url') }}">Next</a>
+                            <a href="?page={{ page + 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedEventId|e('url') }}">Next</a>
                         {% endif %}
                     </div>
                 </td>

@@ -651,4 +651,105 @@ class ObservationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    //Compte le nombre d'images pour la modération d'images
+    public function countImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId)
+    {
+        //Initialisation de la valeur pour éviter les erreurs
+        $totalImagesQuery = 0;
+
+        //try-catch pour la gestion d'erreur
+        try{
+            $totalImagesQuery = $this->createQueryBuilder('o')
+                ->select('COUNT(o.id)')
+                ->leftJoin('o.user', 'u')
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->leftJoin('i.species', 's');
+
+            if ($selectedStatus !== '') {
+                if ($selectedStatus == '0') {
+                    $totalImagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                        ->setParameter('valid', 0);
+                } else {
+                    $totalImagesQuery->andWhere('o.is_picture_valid = :status')
+                        ->setParameter('status', $selectedStatus);
+                }
+            } else {
+                $totalImagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                    ->setParameter('valid', 0);
+            }
+            if (!empty($selectedSpeciesId)) {
+                $totalImagesQuery->andWhere('s.id = :speciesId')
+                    ->setParameter('speciesId', $selectedSpeciesId);
+            }
+            if (!empty($selectedUserId)) {
+                $totalImagesQuery->andWhere('u.id = :userId')
+                    ->setParameter('userId', $selectedUserId);
+            }
+            if (!empty($selectedEventId)) {
+                $totalImagesQuery->andWhere('e.id = :eventId')
+                    ->setParameter('eventId', $selectedEventId);
+            }
+        }catch (\Exception $exception){
+            echo "An error occured -->" . $exception->getMessage();
+        }
+
+
+        //stockage du nombre d'images total
+        return $totalImagesQuery->getQuery()->getSingleScalarResult();
+    }
+
+    //Prend toutes les images d'observation dans la bdd
+    public function findImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId, $offset, $pageSize)
+    {
+        $imagesQuery = '';
+        // Requête pour récupérer les images avec les informations associées
+        $imagesQuery = $this->createQueryBuilder('o')
+            ->select('partial o.{id, createdAt, is_picture_valid, picture}',
+                'partial u.{id, name}',
+                'partial e.{id, name}',
+                'partial i.{id, name}',
+                'partial s.{id, vernacular_name}')
+            ->leftJoin('o.user', 'u')
+            ->leftJoin('o.event', 'e')
+            ->leftJoin('o.individual', 'i')
+            ->leftJoin('i.species', 's')
+            ->orderBy('o.createdAt', 'ASC');
+
+        //Prise en compte de le requete de filtrage pas statut
+        if ($selectedStatus !== '') {
+            if ($selectedStatus == 0 ){
+                $imagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                    ->setParameter('valid', 0);
+            }else{
+                $imagesQuery->andWhere('o.is_picture_valid = :status')
+                    ->setParameter('status', $selectedStatus);
+            }
+        } else {
+            //cas par défault ou aucun statut n'est rentré en parametre
+            $imagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                ->setParameter('valid', 0);
+        }
+
+        //Prise en compte des requetes de filtrage
+        if (!empty($selectedSpeciesId)) {
+            $imagesQuery->andWhere('s.id = :speciesId')
+                ->setParameter('speciesId', $selectedSpeciesId);
+        }
+        if(!empty($selectedUserId)){
+            $imagesQuery->andWhere('u.id = :userId')
+                ->setParameter('userId', $selectedUserId);
+        }
+        if(!empty($selectedEventId)){
+            $imagesQuery->andWhere('e.id = :eventId')
+                ->setParameter('eventId', $selectedEventId);
+        }
+
+        $imagesQuery->setFirstResult($offset)->setMaxResults($pageSize);
+
+       return $imagesQuery->getQuery()->getResult();
+    }
+
+
 }
