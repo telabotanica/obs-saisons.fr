@@ -63,6 +63,7 @@ class ObservationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->where('o.isMissing = 0')
+            ->leftJoin('o.user', 'u')
             ->orderBy('o.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
