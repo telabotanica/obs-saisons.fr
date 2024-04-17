@@ -669,16 +669,16 @@ class ObservationRepository extends ServiceEntityRepository
 
             if ($selectedStatus !== '') {
                 if ($selectedStatus == '0') {
-                    $totalImagesQuery->where("o.is_picture_valid = :valid OR o.is_picture_valid IS NULL AND
+                    $totalImagesQuery->where("(o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                         ->setParameter('valid', 0);
                 } else {
-                    $totalImagesQuery->andWhere("o.is_picture_valid = :status AND
+                    $totalImagesQuery->andWhere("(o.is_picture_valid = :status )AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                         ->setParameter('status', $selectedStatus);
                 }
             } else {
-                $totalImagesQuery->where("o.is_picture_valid = :valid OR o.is_picture_valid IS NULL AND
+                $totalImagesQuery->where("(o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('valid', 0);
             }
@@ -772,7 +772,7 @@ class ObservationRepository extends ServiceEntityRepository
                 ->leftJoin('o.user', 'u')
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
-                ->where("o.is_picture_valid = :valid AND i.species = :species AND
+                ->where("(o.is_picture_valid = :valid AND i.species = :species) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                 ->orderBy('o.createdAt', 'DESC')
                 ->setMaxResults(10)
