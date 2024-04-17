@@ -772,14 +772,14 @@ class ObservationRepository extends ServiceEntityRepository
                 ->leftJoin('o.user', 'u')
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
-                ->where('o.is_picture_valid = :valid AND i.species = :species')
+                ->where("o.is_picture_valid = :valid AND i.species = :species AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                 ->orderBy('o.createdAt', 'DESC')
                 ->setMaxResults(10)
                 ->setParameters([
                     'valid' => 1,
                     'species' => $species
                 ]);
-
         }catch (\Exception $exception){
             echo 'An error occurred --> ' . $exception;
         }
