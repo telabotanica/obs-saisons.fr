@@ -11,7 +11,7 @@
         <div class="carousel-inner">
             {% for image in images %}
                 <div class="carousel-item {{ loop.first ? 'active' : '' }}">
-                    <img class="d-block w-100 fixed-height-img" src="{{ image.picture }}" alt="Slide {{ loop.index }}">
+                    <img class="d-block w-100 fixed-height-img" src="{{ asset(image.picture) }}" alt="Slide {{ loop.index }}">
 
                     <div class="carousel-caption d-none d-md-block">
                         <p>photo de : {{ image.user.name }} - Observation : {{ image.event.name }}</p>
