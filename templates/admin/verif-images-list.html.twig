@@ -10,10 +10,10 @@
     <form method="get" action="{{ path('admin_verif_image_list') }}">
         <div class="row">
             <div class="col"><label for="species">Filtrer par espèces</label>
-                <select name="species" class="mb-2">
-                    <option value="">Toutes espèces</option>
+                <select name="species" class="form-select m-3">
+                    <option value="" >Toutes espèces</option>
                     {% for specie in species %}
-                        <option value="{{ specie.id }}"
+                        <option  value="{{ specie.id }}"
                                 {% if selectedSpeciesId == specie.id %}selected{% endif %}>{{ specie.vernacularName }}
                         </option>
                     {% endfor %}
@@ -21,7 +21,7 @@
             </div>
             <div class="col">
                 <label for="statut">Filtrer par statut</label>
-                <select name="statut">
+                <select class="form-select m-3" name="statut">
                     <option value="0">Image à vérifier</option>
                     <option value="1">Image valide</option>
                     <option value="2">Image non valide</option>
@@ -29,7 +29,7 @@
             </div>
             <div class="col">
                 <label for="user">Filtrer par utilisateur</label>
-                <select name="user">
+                <select class="form-select m-3" name="user">
                     <option value="">Tous utilisateur</option>
                     {% for user in users %}
                         <option value="{{ user.id }}"
@@ -39,7 +39,7 @@
             </div>
             <div class="col">
                 <label for="stade">Filtrer par stade</label>
-                <select name="stade">
+                <select class="form-select m-3" name="stade">
                     <option value="">Tous stade</option>
                     {% for stade in stades %}
                         <option value="{{ stade.id }}"
@@ -48,7 +48,7 @@
                 </select>
             </div>
 
-        </div><button type="submit">Filtrer</button>
+        </div><button class="mb-3 btn btn-admin" type="submit">Filtrer</button>
 
 
     </form>
@@ -59,6 +59,7 @@
             <th scope="col">Utilisateur</th>
             <th scope="col">Espèce</th>
             <th scope="col">Stade observé</th>
+            <th scope="col">Date</th>
             <th scope="col">Statut</th>
         </tr>
         </thead>
@@ -76,6 +77,7 @@
                     <td>{{ image.user.name }}</td>
                     <td>{{ image.individual.species.vernacularName }}</td>
                     <td>{{ image.event.name }}</td>
+                    <td>{{ image.date|date('d-m-Y') }}</td>
                     {% if image.isPictureValid == 0 %}
                         <td><a href="{{ path('admin_verif_image', {imageId: image.id}) }}">A vérifier</a></td>
                     {% elseif image.isPictureValid == 1 %}
