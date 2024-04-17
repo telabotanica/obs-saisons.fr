@@ -73,6 +73,7 @@ class SpeciesController extends AbstractController
 
         // Query to find the latest 10 validated images for the specified species
         $images = [];
+        $species = $manager->getRepository(Species::class)->findOneBy(['vernacular_name' => $vernacularName]);
         try{
             $images = $manager->getRepository(Observation::class)->findImagesCarousel($species);
         }catch(\Exception $exception){
