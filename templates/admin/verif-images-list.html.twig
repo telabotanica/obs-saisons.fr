@@ -71,7 +71,7 @@
         {% else %}
             {% for image in images %}
                 <tr>
-                    <td><img src="{{ asset(image.picture) }}" alt="Image de la station" style="width: 100px; height: 100px">
+                    <td><img src="{{ image.picture }}" alt="Image de la station" style="width: 100px; height: 100px">
                     </td>
                     <td>{{ image.user.name }}</td>
                     <td>{{ image.individual.species.vernacularName }}</td>
