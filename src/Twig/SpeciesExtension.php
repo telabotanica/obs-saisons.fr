@@ -54,7 +54,11 @@ class SpeciesExtension extends AbstractExtension
         $groups = [];
         foreach ($typeSpecies as $species) {
             $vernacularNameParts = explode(' ', $species->getVernacularName());
-            $groupName = $vernacularNameParts[0];
+            if ($vernacularNameParts[0] == 'Genêt'){
+                $groupName = $species->getVernacularName();
+            } else {
+                $groupName = $vernacularNameParts[0];
+            }
 
             if (empty($groups[$groupName])) {
                 $groups[$groupName] = [];
