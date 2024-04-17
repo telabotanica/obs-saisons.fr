@@ -669,14 +669,17 @@ class ObservationRepository extends ServiceEntityRepository
 
             if ($selectedStatus !== '') {
                 if ($selectedStatus == '0') {
-                    $totalImagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                    $totalImagesQuery->where("o.is_picture_valid = :valid OR o.is_picture_valid IS NULL AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                         ->setParameter('valid', 0);
                 } else {
-                    $totalImagesQuery->andWhere('o.is_picture_valid = :status')
+                    $totalImagesQuery->andWhere("o.is_picture_valid = :status AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                         ->setParameter('status', $selectedStatus);
                 }
             } else {
-                $totalImagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                $totalImagesQuery->where("o.is_picture_valid = :valid OR o.is_picture_valid IS NULL AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('valid', 0);
             }
             if (!empty($selectedSpeciesId)) {
@@ -720,15 +723,19 @@ class ObservationRepository extends ServiceEntityRepository
         //Prise en compte de le requete de filtrage pas statut
         if ($selectedStatus !== '') {
             if ($selectedStatus == 0 ){
-                $imagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+                $imagesQuery->where("o.is_picture_valid = :valid OR o.is_picture_valid IS NULL AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('valid', 0);
             }else{
-                $imagesQuery->andWhere('o.is_picture_valid = :status')
+                $imagesQuery->andWhere("o.is_picture_valid = :status AND o.picture IS NOT NULL AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('status', $selectedStatus);
             }
         } else {
             //cas par défault ou aucun statut n'est rentré en parametre
-            $imagesQuery->where('o.is_picture_valid = :valid OR o.is_picture_valid IS NULL')
+            $imagesQuery->where("
+                                            (o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
+                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                 ->setParameter('valid', 0);
         }
 
