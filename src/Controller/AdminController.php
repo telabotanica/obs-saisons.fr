@@ -22,6 +22,7 @@ use App\Helper\OriginPageTrait;
 use App\Security\Voter\PostVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
+use App\Service\EmailSender;
 use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
 use App\Service\Stats;
@@ -553,7 +554,9 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/image/{imageId}/handle-form-submission", name="handle_form_submission", methods={"POST"})
      */
-    public function handleFormSubmission($imageId, Request $request, EntityManagerInterface $manager)
+    public function handleFormSubmission($imageId, Request $request,
+                                         EntityManagerInterface $manager,
+                                         EmailSender $mailer)
     {
 
         $observation = $manager->getRepository(Observation::class)->find($imageId);
@@ -581,23 +584,25 @@ class AdminController extends AbstractController
             $observation->setIsPictureValid($isPictureValid);
             $observation->setMotifRefus($motifRefus);
 
+            // Envoie du mail de refus
+            $message = $this->renderView('emails/observation-image-rejected.html.twig', [
+                'user' => $observation->getUser()->getDisplayName(),
+                'observation' => $observation,
+                'link' => $this->generateUrl('observation_edit', ['id' => $observation->getId()]),
+                'motif' => $motifRefus
+            ]);
+            $mailer->send(
+                $observation->getUser()->getEmail(),
+                $mailer->getSubjectFromTitle($message, 'Observation refusée'),
+                $message
+            );
+
             // Persist changes to the database
             $manager->flush();
             $this->addFlash('error', "Modification effectué avec succes");
             return $this->redirectToRoute('admin_verif_image_list');
         }
     }
-
-//$isPictureValid = $data['confirmRadio'];
-//if ($isPictureValid == 1){
-//$observation->setIsPictureValid(1);
-//}elseif ($isPictureValid == 2){
-//$observation->setIsPictureValid(2);
-//}else{
-//    echo "mauvaise valeur rentrée";
-//}
-
-
 
 
 //    Fonction qui donne toutes les images qui n'ont pas encore était vérifier
