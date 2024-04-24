@@ -1,0 +1,10 @@
+/node_modules
+/var
+/.circleci
+.gitignore
+.env.local
+/public/build
+/Dockerfile
+/docker-compose.yml
+/.dockerignore
+.idea

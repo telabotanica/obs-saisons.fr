@@ -1,0 +1,30 @@
+services:
+
+  db:
+    image: mariadb:11.3
+    restart: always
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: odsstaticdata
+      MYSQL_USER: ods
+      MYSQL_PASSWORD: 1234
+    networks:
+      - "mbnet"
+    ports:
+      - "127.0.0.1:3306:3306"
+    expose:
+      - 3306
+
+  web:
+    build:
+      context: .  
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    networks:
+      - "mbnet"
+
+networks:
+ mbnet:
