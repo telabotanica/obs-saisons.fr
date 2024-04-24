@@ -704,7 +704,13 @@ class ObservationRepository extends ServiceEntityRepository
     }
 
     //Prend toutes les images d'observation dans la bdd
-    public function findImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId, $offset, $pageSize)
+    public function findImages($selectedStatus,
+                               $selectedSpeciesId,
+                               $selectedUserId,
+                               $selectedEventId,
+                               $offset,
+                               $pageSize,
+                               $sort)
     {
         $imagesQuery = '';
         // Requête pour récupérer les images avec les informations associées
@@ -717,8 +723,13 @@ class ObservationRepository extends ServiceEntityRepository
             ->leftJoin('o.user', 'u')
             ->leftJoin('o.event', 'e')
             ->leftJoin('o.individual', 'i')
-            ->leftJoin('i.species', 's')
-            ->orderBy('o.createdAt', 'ASC');
+            ->leftJoin('i.species', 's');
+
+        if ($sort === 'date_asc') {
+            $imagesQuery->orderBy('o.createdAt', 'ASC');
+        } else {
+            $imagesQuery->orderBy('o.createdAt', 'DESC');
+        }
 
         //Prise en compte de le requete de filtrage pas statut
         if ($selectedStatus !== '') {

@@ -628,6 +628,8 @@ class AdminController extends AbstractController
         //Prise en compte de l'id de l'event sélectionner sur le dropdown
         $selectedEventId = $request->query->get('stade', '');
 
+        //Prise en compte de la valeur de tri pour la date de création
+        $sort = $request->query->get('sort', '');
         //Initialisation de valeur par default afin d'eviter les erreurs
         $totalImages = 0;
         $users = [];
@@ -640,13 +642,15 @@ class AdminController extends AbstractController
         $pageSize = 10; // Number of images per page
         $offset = ($page - 1) * $pageSize;
 
+
+
         //try-catch pour la gestion d'erreur qui peut arriver avec la bdd
         try{
             $totalImages = $manager->getRepository(Observation::class)
                 ->countImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId);
 
             $images = $manager->getRepository(Observation::class)
-                ->findImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId, $offset, $pageSize);
+                ->findImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId, $offset, $pageSize, $sort);
 
             $species = $manager->getRepository(Species::class)->findAllOrderedByTypeAndVernacularName();
 
