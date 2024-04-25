@@ -53,9 +53,14 @@ class Comment
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $deletedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $deletedBy;
 
     public function __construct()
     {
@@ -148,6 +153,18 @@ class Comment
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDeletedBy(): ?User
+    {
+        return $this->deletedBy;
+    }
+
+    public function setDeletedBy(?User $deletedBy): self
+    {
+        $this->deletedBy = $deletedBy;
 
         return $this;
     }

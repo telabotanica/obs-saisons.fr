@@ -66,7 +66,7 @@ class CommentRepository extends ServiceEntityRepository
     public function findByPost(?\App\Entity\Post $newsPost)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.post = :post')
+            ->andWhere('c.post = :post AND (c.deletedBy != c.user OR c.deletedBy IS NULL)')
             ->setParameter('post', $newsPost)
             ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
