@@ -6,21 +6,21 @@
 {% endblock %}
 
 {% block main_content %}
-	{% block post_header %}{% endblock %}
-<div class="publication-date">Le {{ post.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}, par <a
-            href="{{ path('user_profile',{userId:post.author.id}) }}"><strong>{{ post.author.displayName }}</strong></a>
-</div>
-<div class="rich-text-block">
-    <h2>{{ post.title|raw }}</h2>
-    {{ post.content|raw }}
-    {% if is_granted('ROLE_ADMIN') and (constant('App\\Entity\\Post::STATUS_PENDING') == post.status) %}
-        <div><a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
-                Valider l'évènement
-            </a></div>
-    {% endif %}
-</div>
+    {% block post_header %}{% endblock %}
+    <div class="publication-date">Le {{ post.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}, par <a
+                href="{{ path('user_profile',{userId:post.author.id}) }}"><strong>{{ post.author.displayName }}</strong></a>
+    </div>
+    <div class="rich-text-block">
+        <h2>{{ post.title|raw }}</h2>
+        {{ post.content|raw }}
+        {% if is_granted('ROLE_ADMIN') and (constant('App\\Entity\\Post::STATUS_PENDING') == post.status) %}
+            <div><a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
+                    Valider l'évènement
+                </a></div>
+        {% endif %}
+    </div>
 
-{#Espace Commentaire#}
+    {# Espace Commentaire #}
     <div class="card round">
         <div class="card-header no-bg-image">
             <h3>Espace commentaire</h3>
@@ -30,8 +30,22 @@
                 {% for comment in comments %}
                     <li class="list-group-item">
                         <div>
-                            <h5 class="card-title">{{ comment.user.displayName }}</h5>
-                            <p class="card-text">{{ comment.comment }}</p>
+                            {% if comment.deletedAt|date('d-m-Y')  %}
+                                <h5 class="card-title">Modération</h5>
+                                <p class="card-text">Un administrateur a supprimé ce commentaire</p>
+{#                                TODO: gestion du if admin, si admin a supprimé#}
+                            {% else %}
+                                <h5 class="card-title">{{ comment.user.displayName }}</h5>
+                                <p class="card-text">{{ comment.comment }}</p>
+                                {% if is_granted('ROLE_ADMIN') or app.user.id == comment.user.id %}
+                                    <form action="{{ path('comment_delete', {commentId: comment.id}) }}" method="post" onsubmit="return confirm('Are you sure?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-comment' ~ comment.id) }}">
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </form>
+                            {% endif %}
+
+                                {% endif %}
+
                         </div>
                     </li>
                 {% endfor %}
@@ -55,4 +69,4 @@
             </div>
         {% endif %}
     {% endblock %}
-    {% endblock %}
+{% endblock %}

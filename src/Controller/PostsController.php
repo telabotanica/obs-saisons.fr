@@ -566,4 +566,36 @@ class PostsController extends AbstractController
             $this->generateOriginUrl(Post::CATEGORY_PARENT_ROUTE[$post->getCategory()])
         );
     }
+
+    /* ************************************************ *
+     * Comments
+     * ************************************************ */
+
+    /**
+     * @Route("/comment/delete/{commentId}", name="comment_delete", methods={"POST"})
+     */
+    public function deleteComment(Request $request, EntityManagerInterface $manager, int $commentId): RedirectResponse
+    {
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete-comment' . $commentId, $token)) {
+            $this->addFlash('error', 'Invalid CSRF token.');
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        $comment = $manager->getRepository(Comment::class)->find($commentId);
+        if (!$comment) {
+            $this->addFlash('error', 'Comment not found.');
+            return $this->redirectToRoute('homepage'); // Adjust as needed
+        }
+
+
+        $comment->setDeletedAt(new \DateTimeImmutable());
+        $comment->setIsEditable(false);
+        $comment->setDeletedBy($this->getUser());
+        $manager->persist($comment);
+        $manager->flush();
+
+        $this->addFlash('success', 'Comment deleted successfully.');
+        return $this->redirect($request->headers->get('referer'));
+    }
 }
