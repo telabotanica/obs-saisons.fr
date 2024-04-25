@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -40,19 +41,27 @@ class Comment
     private $isEditable;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $deletedAt;
 
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
-    private $updatedAt;
+    public function __construct()
+    {
+        $this->isEditable = true;
+    }
+
 
     public function getId(): ?int
     {
