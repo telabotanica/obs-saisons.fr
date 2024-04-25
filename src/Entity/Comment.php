@@ -35,7 +35,7 @@ class Comment
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default": true})
      */
     private $isEditable;
 
