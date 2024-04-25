@@ -63,4 +63,13 @@ class CommentRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findByPost(?\App\Entity\Post $newsPost)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.post = :post')
+            ->setParameter('post', $newsPost)
+            ->orderBy('c.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

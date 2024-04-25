@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Form\CommentFormType;
 use App\Form\EventPostType;
 use App\Form\NewsPostType;
 use App\Helper\OriginPageTrait;
@@ -63,18 +65,35 @@ class PostsController extends AbstractController
      * ************************************************ */
 
     /**
-     * @Route("/actualites/{slug<\d*\/\d*\/.+>}", name="news_post_single_show")
+     * @Route("/actualites/{slug<\d*\/\d*\/.+>}", name="news_post_single_show", methods={"GET", "POST"})
      */
     public function newsPostSingle(
         EntityManagerInterface $manager,
         BreadcrumbsGenerator $breadcrumbsGenerator,
-        string $slug
+        string $slug,
+        Request $request
     ) {
         $newsPostRepository = $manager->getRepository(Post::class)->setCategory(Post::CATEGORY_NEWS);
         $newsPost = $newsPostRepository->findBySlug($slug);
+
         if (null === $newsPost) {
             throw new NotFoundHttpException('La page demandée n’existe pas');
         }
+
+        $comment = new Comment();
+        $comment->setPost($newsPost);
+        $comment->setUser($this->getUser());
+        $form = $this->createForm(CommentFormType::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($comment);
+            $manager->flush();
+            $this->addFlash('notice', 'Votre commentaire a été ajouté');
+            return $this->redirectToRoute('news_post_single_show', ['slug' => $slug]);
+        }
+
+        $commentsReposity = $manager->getRepository(Comment::class);
+        $comments = $commentsReposity->findByPost($newsPost);
 
         $nextPreviousNewsPosts = $newsPostRepository->findNextPrevious($newsPost->getId());
 
@@ -83,6 +102,8 @@ class PostsController extends AbstractController
                 ->getBreadcrumbs(Post::CATEGORY_PARENT_ROUTE[$newsPost->getCategory()]),
             'post' => $newsPost,
             'nextPreviousNewsPosts' => $nextPreviousNewsPosts,
+            'comments' => $comments,
+            'form' => $form->createView()
         ]);
     }
 

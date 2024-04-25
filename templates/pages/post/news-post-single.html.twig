@@ -1,30 +1,58 @@
 {% extends 'base.html.twig' %}
 {% block meta %}
-	{% if post.cover %}
-		<meta property="og:image" content="{{ absolute_url(asset(post.cover)) }}">
-	{% endif %}
+    {% if post.cover %}
+        <meta property="og:image" content="{{ absolute_url(asset(post.cover)) }}">
+    {% endif %}
 {% endblock %}
 
 {% block main_content %}
 	{% block post_header %}{% endblock %}
-	<div class="publication-date">Le {{ post.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}, par <a href="{{ path('user_profile',{userId:post.author.id}) }}"><strong>{{ post.author.displayName }}</strong></a></div>
-	<div class="rich-text-block">
-		<h2>{{ post.title|raw }}</h2>
-		{{ post.content|raw }}
-		{% if is_granted('ROLE_ADMIN') and (constant('App\\Entity\\Post::STATUS_PENDING') == post.status)%}
-			<div><a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
-					Valider l'évènement
-				</a></div>
-		{% endif %}
-	</div>
-	{% block post_footer %}
-		{% if nextPreviousNewsPosts is defined %}
-			<div class="other-posts">
-				{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.previous} %}
-				{% if nextPreviousNewsPosts.previous is not null or nextPreviousNewsPosts.next is not null %}
-					{% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.next} %}
-				{% endif %}
-			</div>
-		{% endif %}
-	{% endblock %}
-{% endblock %}
+<div class="publication-date">Le {{ post.createdAt|format_datetime(pattern='d MMMM Y',locale='fr') }}, par <a
+            href="{{ path('user_profile',{userId:post.author.id}) }}"><strong>{{ post.author.displayName }}</strong></a>
+</div>
+<div class="rich-text-block">
+    <h2>{{ post.title|raw }}</h2>
+    {{ post.content|raw }}
+    {% if is_granted('ROLE_ADMIN') and (constant('App\\Entity\\Post::STATUS_PENDING') == post.status) %}
+        <div><a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
+                Valider l'évènement
+            </a></div>
+    {% endif %}
+</div>
+
+{#Espace Commentaire#}
+    <div class="card round">
+        <div class="card-header no-bg-image">
+            <h3>Espace commentaire</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for comment in comments %}
+                    <li class="list-group-item">
+                        <div>
+                            <h5 class="card-title">{{ comment.user.displayName }}</h5>
+                            <p class="card-text">{{ comment.comment }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ form_start(form) }}
+            {{ form_row(form.comment) }}
+            {{ form_row(form.submit) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+
+
+    {% block post_footer %}
+        {% if nextPreviousNewsPosts is defined %}
+            <div class="other-posts">
+                {% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.previous} %}
+                {% if nextPreviousNewsPosts.previous is not null or nextPreviousNewsPosts.next is not null %}
+                    {% include 'components/post/next-previous-news-post.html.twig' with {newsPost:nextPreviousNewsPosts.next} %}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% endblock %}
