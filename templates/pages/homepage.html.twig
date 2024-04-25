@@ -124,12 +124,14 @@
 					{% set obsIndividual = obs.individual %}
 					{% set obsSpecies = obsIndividual.species %}
 					{% set obsEvent = obs.event %}
+					{% set obsUser = obs.user %}
 					<li>
 						<a href="{{ path('stations_show', {'slug': obsIndividual.station.slug }) }}#{{ obsSpecies.vernacularName|slugify }}" class="recent-obs-item">
 							<img src="/media/species/{{ obsSpecies.picture }}{{ obsSpecies.type.id == 1 ? "_#{obsEvent.stadeBbch|first}" }}.jpg" alt="{{ obsSpecies.vernacularName|capitalize }} - {{ obs.user.name|upper }} - {{ obs.date|date('d/m/Y') }}" width="80">
 							<div class="recent-obs-item-content first">
 								<div class="recent-obs-title">{{ obsSpecies.vernacularName|capitalize }}</div>
 								<div class="recent-obs-item-stage">{{ obsEvent.name|capitalize }} {{ obsEvent.stadeBbch != null ? "stade #{obsEvent.stadeBbch}" }}</div>
+								<div class="recent-obs-item-stage">{{ obsUser.name }}</div>
 							</div>
 						</a>
 					</li>
