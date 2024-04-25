@@ -3,6 +3,14 @@ FROM debian
 
 RUN apt-get update && apt-get upgrade
 
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_NAME
+ARG APP_ENV
+ARG APP_SECRET
+ARG DEFAULT_URI
+
+
 # Install necessary packages and dependencies
 RUN <<EOF
     apt-get -y install software-properties-common
@@ -11,7 +19,7 @@ EOF
 
 # PHP 7.4
 RUN <<EOF
-apt -y install apt-transport-https lsb-release ca-certificates wget 
+apt -y install apt-transport-https lsb-release ca-certificates wget
 wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
 apt-get update
@@ -56,12 +64,11 @@ EOF
 
 # Create .env.local
 RUN <<EOF
-    echo "# Override default values for local environment
-
-APP_ENV=dev
-APP_SECRET=ecd641ed1419eeadb2ce117a6e6547a8
-DEFAULT_URI=http://localhost:8000
-DATABASE_URL=mysql://root:example@db:3306/odsstaticdata?charset=utf8mb4
+echo "# Override default values for local environment
+APP_ENV=${APP_ENV}
+APP_SECRET=${APP_SECRET}
+DEFAULT_URI=${DEFAULT_URI}
+DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}?charset=utf8mb4
 MAILER_URL=null://localhost
 MAILCHIMP_LIST_ID=your_local_mailchimp_list_id
 MAILCHIMP_API_BASE_URI=your_local_mailchimp_api_base_uri
@@ -80,4 +87,4 @@ EOF
 # Open HTTP and HTTPS port.
 EXPOSE 80
 
-CMD docker-assets/docker-services.sh ${workdir}
+CMD docker-assets/docker-services.sh ${workdir} ${APP_ENV}

@@ -5,10 +5,10 @@ services:
     restart: always
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: odsstaticdata
-      MYSQL_USER: ods
-      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     networks:
       - "mbnet"
     ports:
@@ -25,6 +25,13 @@ services:
       - "80:80"
     networks:
       - "mbnet"
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_ENV: ${APP_ENV}
+      APP_SECRET: ${APP_SECRET}
+      DEFAULT_URI: ${DEFAULT_URI}
 
 networks:
  mbnet:
