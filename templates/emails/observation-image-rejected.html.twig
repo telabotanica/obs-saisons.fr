@@ -1,12 +1,15 @@
 {% extends 'emails/base.html.twig' %}
 
-{% block title %}Image refuser{% endblock %}
+{% block title %}Image refusée{% endblock %}
 
-{% block preheader %}Image envoyé refuser{% endblock %}
+{% block preheader %}Image envoyée refusée{% endblock %}
 
 {% block body %}
     <h1>Votre image a été refusée</h1>
     <p>Bonjour {{ user }},</p>
-    <p>Votre image a été refusée pour la raison suivante : {{ motif }}</p>
+    Votre image a été refusée par un modérateur pour la raison suivante : {{ motif }}
     <p><a href="{{ link }}" target="_blank">Votre observation</a></p>
+
+    <p>Si vous souhaitez que votre photo puisse être visible par la communauté, merci de la modifier.</p>
+    <p>Pour toute question n'hésitez pas à nous contacter: contact@obs-saisons.fr</p>
 {% endblock %}

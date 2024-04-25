@@ -593,7 +593,7 @@ class AdminController extends AbstractController
             ]);
             $mailer->send(
                 $observation->getUser()->getEmail(),
-                $mailer->getSubjectFromTitle($message, 'Observation refusée'),
+                $mailer->getSubjectFromTitle($message, 'Image refusée'),
                 $message
             );
 
