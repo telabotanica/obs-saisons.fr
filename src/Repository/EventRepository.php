@@ -87,4 +87,22 @@ class EventRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllObservable(){
+
+        $stadesQuery ='';
+        try{
+            //Requete afin de récupérer les différente stades à observé pour le filtrage
+            $stadesQuery = $this->createQueryBuilder('e')
+                ->select('partial e.{id, name}')
+                ->where('e.is_observable = :is_observable')
+                ->orderBy('e.id', 'ASC')
+                ->setParameter('is_observable', 1);
+        }catch(\Exception $exception){
+            echo 'An error occured -->' . $exception;
+        }
+
+
+        return $stadesQuery->getQuery()->getResult();
+    }
 }

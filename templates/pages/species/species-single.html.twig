@@ -7,6 +7,45 @@
         'subtitle': '<span class="scientific-name">' ~ species.scientificName ~ '</span>'
     }) %}
 
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% if images|length <4 %}
+                <div class="carousel-item active">
+                    <img class="d-block w-100 fixed-height-img" src="{{ asset(species.picture) }}"
+                         alt="Image {{ species.vernacularName }}">
+                    <div class="carousel-caption d-none d-md-block">
+                        <p>{{ species.vernacularName }}</p>
+                    </div>
+                </div>
+            {% else %}
+                {% for image in images %}
+                    <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                        <img class="d-block w-100 fixed-height-img" src="{{ asset(image.picture) }}"
+                             alt="Slide {{ loop.index }}">
+
+                        <div class="carousel-caption d-none d-md-block">
+                            <p>photo de : {{ image.user.name }} - Observation : {{ image.event.name }}</p>
+                            <p></p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+            {#            <span class="carousel-control-prev-icon" aria-hidden="true"></span> #}
+            <span class="sr-only">Précédent</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+            {#            <span class="carousel-control-next-icon" aria-hidden="true"></span> #}
+            <span class="sr-only">Suivant</span>
+        </a>
+
+    </div>
+
+
+
+
     <div class="rich-text-block-fiche">{{ post.content|default('')|raw }}</div>
 
     <div class="species-calendar mt-0">
@@ -17,15 +56,22 @@
                     {
                         'name': 'squared-button',
                         'data': {
-                            'icon': 'export',
-                            'label': 'exporter',
-                            'link': path('export_single_species',{'speciesId': species.id})
-                        }
+                        'icon': 'export',
+                        'label': 'exporter',
+                        'link': path('export_single_species',{'speciesId': species.id})
+                    }
                     }
                 ]
             },
         } %}
     </div>
 
+
+    <style>
+        .fixed-height-img {
+            height: 500px;
+            object-fit: cover; /* This ensures the image covers the specified height without stretching */
+        }
+    </style>
 {% endblock %}
 

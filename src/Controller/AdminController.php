@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Event;
 use App\Entity\Observation;
 use App\Entity\Post;
 use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\User;
+use App\Form\ImageVerificationType;
 use App\Form\NewsletterPostType;
 use App\Form\NewsPostType;
 use App\Form\PagePostType;
@@ -31,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use function PHPUnit\Framework\isEmpty;
 
 
 class AdminController extends AbstractController
@@ -275,7 +278,7 @@ class AdminController extends AbstractController
             } elseif ($wasNewsletterSubscriber && !$user->getIsNewsletterSubscriber()) {
                $mailchimpSyncContact->unsubscribe($user);
             }
-			
+
 			// Add role admin if selected
 			$role = $form->get('roles')->getData();
 			$exist = false;
@@ -285,7 +288,7 @@ class AdminController extends AbstractController
 				}
 			}
 			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
-			
+
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
@@ -421,25 +424,25 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_user_dashboard', ['userId' => $userId]);
     }
-	
+
 	/**
 	 * @Route("/admin/stations", name="admin_stations_list")
 	 */
 	public function deactivatedStationsList(EntityManagerInterface $manager)
 	{
 		$stations = $manager->getRepository(Station::class)->findAllDeactivatedStations();
-		
+
 		// find all users ordered by name
 		$users = $manager->getRepository(User::class)
 			->findBy([], ['email' => 'ASC']);
-		
+
 		$this->setOrigin($this->generateUrl('admin_stations_list'));
-		
+
 		return $this->render('admin/stations.html.twig', [
 			'stations' => $stations,
 		]);
 	}
-	
+
 	/**
 	 * @Route("/admin/user/{userId}/activate", name="admin_user_activate")
 	 */
@@ -447,38 +450,38 @@ class AdminController extends AbstractController
 	{
 		$user = $manager->getRepository(User::class)
 			->find($userId);
-		
+
 		if (!$user) {
 			throw $this->createNotFoundException('L’utilisateur n’existe pas');
 		}
-		
+
 		if (null === $user) {
 			$this->addFlash('error', 'Ce token est inconnu.');
-			
+
 			return $this->redirectToRoute('admin_users_list');
 		}
-		
+
 		if (User::STATUS_ACTIVE === $user->getStatus()) {
 			$this->addFlash('notice', 'Cet utilisateur est déjà activé.');
-			
+
 			return $this->redirectToRoute('admin_user_dashboard',
 					 ['userId' => $userId]
 			);
 		}
-		
+
 		if (User::STATUS_PENDING !== $user->getStatus()) {
 			$this->addFlash('warning', 'Impossible d’activer cet utilisateur.');
-			
+
 			return $this->redirectToRoute('homepage');
 		}
-		
+
 		$user->setResetToken(null);
 		$user->setStatus(User::STATUS_ACTIVE);
-		
+
 		$manager->flush();
-		
+
 		$this->addFlash('notice', "Le compte avec l'email ".$user->getEmail()." a été activé");
-		
+
 		return $this->redirectToRoute('admin_users_list');
 	}
     /**
@@ -514,6 +517,173 @@ class AdminController extends AbstractController
             'stats' => $stats
         ]);
     }
+
+
+    /**
+     * @Route("/admin/image/{imageId}/dashboard", name="admin_verif_image", methods={"GET"})
+     *
+     */
+    public function adminImageDashboard($imageId, Request $request, EntityManagerInterface $manager)
+    {
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+        $observation = $manager->getRepository(Observation::class)->find($imageId);
+
+        if (!$observation) {
+            throw $this->createNotFoundException("L'image à vérifer n'existe pas");
+        }
+        $erreur = $this->get('session')->getFlashBag()->get('error');
+        $er2 ='';
+        foreach ($erreur as $er) {
+            $er2 = $er;
+        }
+
+        $imageVerificationForm = $this->createForm(ImageVerificationType::class, $observation);
+
+        $this->setOrigin($request->getPathInfo());
+
+        return $this->render('admin/verif-image.html.twig', [
+            'observation' => $observation,
+            '$imageVerificationForm' => $imageVerificationForm->createView(),
+            'erreur' =>$er2
+        ]);
+
+    }
+
+
+    /**
+     * @Route("/admin/image/{imageId}/handle-form-submission", name="handle_form_submission", methods={"POST"})
+     */
+    public function handleFormSubmission($imageId, Request $request, EntityManagerInterface $manager)
+    {
+
+        $observation = $manager->getRepository(Observation::class)->find($imageId);
+
+        if (!$observation) {
+            throw $this->createNotFoundException("L'image à vérifier n'existe pas");
+        }
+
+        $isPictureValid = $request->request->get('confirmRadio');
+        $motifRefus = $request->request->get('motif');
+
+
+        if ($isPictureValid == 0 Or empty($isPictureValid)) {
+            $this->addFlash('error', "Le choix ne peut pas être vide");
+            return $this->redirectToRoute('admin_verif_image', [
+                'imageId' => $imageId
+            ]);
+        } elseif ($isPictureValid == 2 and (empty($motifRefus) or $motifRefus == "")) {
+            $this->addFlash('error', "Le motif ne peut pas être nul");
+            return $this->redirectToRoute('admin_verif_image', [
+                'imageId' => $imageId
+            ]);
+        }else{
+            // Update the observation entity with the form data
+            $observation->setIsPictureValid($isPictureValid);
+            $observation->setMotifRefus($motifRefus);
+
+            // Persist changes to the database
+            $manager->flush();
+            $this->addFlash('error', "Modification effectué avec succes");
+            return $this->redirectToRoute('admin_verif_image_list');
+        }
+    }
+
+//$isPictureValid = $data['confirmRadio'];
+//if ($isPictureValid == 1){
+//$observation->setIsPictureValid(1);
+//}elseif ($isPictureValid == 2){
+//$observation->setIsPictureValid(2);
+//}else{
+//    echo "mauvaise valeur rentrée";
+//}
+
+
+
+
+//    Fonction qui donne toutes les images qui n'ont pas encore était vérifier
+    /**
+     * @Route("/admin/images", name="admin_verif_image_list", methods={"GET"})
+     *
+     */
+    public function getImageList(EntityManagerInterface $manager, Request $request){
+        // Donne accès aux administrateurs uniquement
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        //code de gestion d'erreur afin de donner un message de réussite ou d'erreur
+        $erreur = $this->get('session')->getFlashBag()->get('error');
+        $er2 = '';
+        foreach ($erreur as $er) {
+            $er2 = $er;
+        }
+
+        //Prise en compte de l'id de l'espece sélectionner sur le dropdown
+        $selectedSpeciesId = $request->query->get('species', '');
+
+        //Prise en compte du statut demandé lors de la selection du dropdown
+        $selectedStatus = $request->query->get('statut', '');
+
+        //Prise en compte de l'id de l'utilisateur sélectionner sur le dropdown
+        $selectedUserId = $request->query->get('user', '');
+
+        //Prise en compte de l'id de l'event sélectionner sur le dropdown
+        $selectedEventId = $request->query->get('stade', '');
+
+        //Prise en compte de la valeur de tri pour la date de création
+        $sort = $request->query->get('sort', '');
+        //Initialisation de valeur par default afin d'eviter les erreurs
+        $totalImages = 0;
+        $users = [];
+        $stades = [];
+        $species = [];
+        $images = [];
+
+        // Ajout d'un système de pagination
+        $page = $request->query->getInt('page', 1);
+        $pageSize = 10; // Number of images per page
+        $offset = ($page - 1) * $pageSize;
+
+
+
+        //try-catch pour la gestion d'erreur qui peut arriver avec la bdd
+        try{
+            $totalImages = $manager->getRepository(Observation::class)
+                ->countImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId);
+
+            $images = $manager->getRepository(Observation::class)
+                ->findImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId, $offset, $pageSize, $sort);
+
+            $species = $manager->getRepository(Species::class)->findAllOrderedByTypeAndVernacularName();
+
+            $users = $manager->getRepository(User::class)->findAllActiveMembers();
+
+            $stades = $manager->getRepository(Event::class)->findAllObservable();
+
+
+        }catch (\Exception $exception) {
+            echo 'An error occurred: ' . $exception->getMessage();
+        }
+        $totalPages = ceil($totalImages / $pageSize);
+
+
+
+        return $this->render('admin/verif-images-list.html.twig', [
+            'users'=>$users,
+            'stades'=>$stades,
+            'images' => $images,
+            'species' => $species,
+            'page' => $page,
+            'selectedSpeciesId' => $selectedSpeciesId,
+            'selectedStatus' => $selectedStatus,
+            'selectedUserId' => $selectedUserId,
+            'selectedEventId' => $selectedEventId,
+            'pageSize' => $pageSize,
+            'totalPages' => $totalPages,
+            'totalImages' => $totalImages,
+            'erreur' => $er2
+        ]);
+    }
+
+
 
     /**
      * @Route("/admin/newsletters", name="admin_newsletters_list")
