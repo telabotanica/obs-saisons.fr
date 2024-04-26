@@ -1,0 +1,10 @@
+name: OBS
+run-name: OBS
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: debian-6
+    steps:
+      - run: docker-compose build
+
+
