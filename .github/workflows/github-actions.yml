@@ -3,7 +3,7 @@ run-name: OBS
 on: [push]
 jobs:
   Deploy-Docker-Compose:
-    runs-on: debian-6
+    runs-on: [self-hosted, linux, x64]
     env:
       DB_NAME : ${{ vars.DB_NAME }}
       DB_USER : ${{ vars.DB_USER }}
