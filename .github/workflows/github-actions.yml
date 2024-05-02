@@ -17,3 +17,4 @@ jobs:
       - uses: Funloi2/obs-saisons.fr@docker-test
       - run: docker-compose build
       - run: docker-compose up -d
+
