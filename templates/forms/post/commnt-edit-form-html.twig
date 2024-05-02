@@ -1,0 +1,7 @@
+{{ form_start(form, {'action': path('comment_update',{commentId: comment.id}), 'method': 'POST'}) }}
+<div class="form-group">
+    {{ form_row(form.comment) }}
+</div>
+{{ form_row(form.submit) }}
+<input type="hidden" name="news_slug" value="{{ post.slug }}">
+{{ form_end(form) }}

@@ -65,11 +65,20 @@ class CommentRepository extends ServiceEntityRepository
 //    }
     public function findByPost(?\App\Entity\Post $newsPost)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.post = :post AND (c.deletedBy != c.user OR c.deletedBy IS NULL)')
+        $comments = $this->createQueryBuilder('c')
+            ->select('c', 'u')
+            ->join('c.user', 'u')
+            ->where('c.post = :post')
+            ->andWhere('c.deletedBy IS NULL OR c.deletedBy = u.id')
             ->setParameter('post', $newsPost)
-            ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
+
+        // Filter in PHP
+        return array_filter($comments, function ($comment) {
+            $deleter = $comment->getDeletedBy();
+            return !$deleter || in_array('ROLE_ADMIN', $deleter->getRoles());
+        });
     }
+
 }

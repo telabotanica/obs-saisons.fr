@@ -131,6 +131,29 @@
     @include background-image("default", 50% 50%);
 }
 
+.card-header.no-bg-image {
+    @include background-image(null, 0, 0); // Assuming this removes the image correctly
+    height: auto;
+    width: 100%;
+    min-height: 60px;
+    min-width: 200px;
+    border-radius: 2px;
+    box-shadow: 0 2px 3px 0 $grey281146_a1;
+
+    // Resetting flexbox properties for alignment
+    display: flex;
+    justify-content: flex-start; // Aligns children elements to the start of the flex container
+    align-items: center; // Centers items vertically in the container
+    padding-left: 10px; // Optional: adds some spacing inside the header
+}
+
+.card-header.no-bg-image h1,
+.card-header.no-bg-image h2,
+.card-header.no-bg-image p {
+    text-align: left; // Ensures text alignment is to the left
+    width: 100%; // Ensures the text elements occupy the full width available
+}
+
 .private-icon {
     @extend %display-flex;
     @extend %justify-content-center;
@@ -221,5 +244,49 @@
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
+
+.user-avatar {
+    width: 40px; /* Set the size of the avatar */
+    height: 40px; /* Set the size of the avatar */
+    border-radius: 50%; /* Makes the image round */
+    object-fit: cover; /* Ensures the image covers the space without distorting */
+    margin-right: 10px; /* Adds space between the image and the name */
+}
+.user-info {
+    display: flex;
+    align-items: center; /* Aligns the image and text vertically */
+}
+
+.comment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .comment-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; // Align items to the start of the flex container
+
+        .edit-form, .delete-form {
+            margin-right: 10px; // Ensure some space between buttons if needed
+        }
+    }
+
+        .btn {
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+
+            .svg-icon-edit, .svg-icon-bin {
+                width: 24px;
+                height: 24px;
+                vertical-align: middle;
+            }
+        }
+    }
+
+
+
 
 

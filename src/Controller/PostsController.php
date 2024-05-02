@@ -584,8 +584,8 @@ class PostsController extends AbstractController
 
         $comment = $manager->getRepository(Comment::class)->find($commentId);
         if (!$comment) {
-            $this->addFlash('error', 'Comment not found.');
-            return $this->redirectToRoute('homepage'); // Adjust as needed
+            $this->addFlash('error', 'Commentaire introuvable.');
+            return $this->redirect($request->headers->get('referer'));
         }
 
 
@@ -595,7 +595,36 @@ class PostsController extends AbstractController
         $manager->persist($comment);
         $manager->flush();
 
-        $this->addFlash('success', 'Comment deleted successfully.');
+        $this->addFlash('success', 'Commentaire éffacé');
         return $this->redirect($request->headers->get('referer'));
+    }
+
+
+    /**
+     * @Route("/comment/update/{commentId}", name="comment_update", methods={"POST"})
+     */
+    public function updateComment(Request $request, EntityManagerInterface $manager, int $commentId): Response
+    {
+        $comment = $manager->getRepository(Comment::class)->find($commentId);
+        if (!$comment) {
+            $this->addFlash('error', 'Commentaire non trouvé.');
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        // Check CSRF token validity
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('edit-comment' . $commentId, $token)) {
+            $this->addFlash('error', 'Invalid CSRF token.');
+            return $this->redirect($request->headers->get('referer'));
+        }
+        $slug = $request->request->get('slug');
+
+        $comment->setUpdatedAt(new \DateTimeImmutable());
+        $comment->setComment($request->request->get('comment'));
+        $manager->flush();
+        $this->addFlash('success', 'Commentaire modifié.');
+        return $this->redirectToRoute('news_post_single_show',['slug'=>$slug]);
+
+
     }
 }

@@ -20,12 +20,12 @@ final class Version20240425073254 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE comment CHANGE is_editable is_editable TINYINT(1) DEFAULT 1 NOT NULL');
+        $this->addSql('ALTER TABLE comment.scss CHANGE is_editable is_editable TINYINT(1) DEFAULT 1 NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE comment CHANGE is_editable is_editable TINYINT(1) NOT NULL');
+        $this->addSql('ALTER TABLE comment.scss CHANGE is_editable is_editable TINYINT(1) NOT NULL');
     }
 }

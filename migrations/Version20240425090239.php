@@ -20,16 +20,16 @@ final class Version20240425090239 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE comment ADD deleted_by_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526CC76F1F52 FOREIGN KEY (deleted_by_id) REFERENCES user (id)');
-        $this->addSql('CREATE INDEX IDX_9474526CC76F1F52 ON comment (deleted_by_id)');
+        $this->addSql('ALTER TABLE comment.scss ADD deleted_by_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE comment.scss ADD CONSTRAINT FK_9474526CC76F1F52 FOREIGN KEY (deleted_by_id) REFERENCES user (id)');
+        $this->addSql('CREATE INDEX IDX_9474526CC76F1F52 ON comment.scss (deleted_by_id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526CC76F1F52');
-        $this->addSql('DROP INDEX IDX_9474526CC76F1F52 ON comment');
-        $this->addSql('ALTER TABLE comment DROP deleted_by_id');
+        $this->addSql('ALTER TABLE comment.scss DROP FOREIGN KEY FK_9474526CC76F1F52');
+        $this->addSql('DROP INDEX IDX_9474526CC76F1F52 ON comment.scss');
+        $this->addSql('ALTER TABLE comment.scss DROP deleted_by_id');
     }
 }

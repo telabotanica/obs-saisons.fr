@@ -1,0 +1,15 @@
+.user-avatar {
+    width: 40px; /* Set the size of the avatar */
+    height: 40px; /* Set the size of the avatar */
+    border-radius: 50%; /* Makes the image round */
+    object-fit: cover; /* Ensures the image covers the space without distorting */
+    margin-right: 10px; /* Adds space between the image and the name */
+}
+.user-info {
+    display: flex;
+    align-items: center; /* Aligns the image and text vertically */
+}
+.svg-icon-bin {
+    width: 24px;
+    height: 24px;
+}

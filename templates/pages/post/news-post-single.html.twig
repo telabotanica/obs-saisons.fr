@@ -30,22 +30,63 @@
                 {% for comment in comments %}
                     <li class="list-group-item">
                         <div>
-                            {% if comment.deletedAt|date('d-m-Y')  %}
+                            {% if comment.deletedAt is not null %}
                                 <h5 class="card-title">Modération</h5>
                                 <p class="card-text">Un administrateur a supprimé ce commentaire</p>
-{#                                TODO: gestion du if admin, si admin a supprimé#}
                             {% else %}
-                                <h5 class="card-title">{{ comment.user.displayName }}</h5>
-                                <p class="card-text">{{ comment.comment }}</p>
-                                {% if is_granted('ROLE_ADMIN') or app.user.id == comment.user.id %}
-                                    <form action="{{ path('comment_delete', {commentId: comment.id}) }}" method="post" onsubmit="return confirm('Are you sure?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-comment' ~ comment.id) }}">
-                                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                                    </form>
+                                <div class="user-info">
+                                    {% set avatarPath = comment.user.avatar ? asset(comment.user.avatar) : asset('build/images/person.svg') %}
+                                    <img src="{{ avatarPath }}" alt="{{ comment.user.displayName ~ ' avatar' }}" class="user-avatar">
+                                    <h5 class="card-title">{{ comment.user.displayName }}</h5>
+                                </div>
+                                <div class="comment-item">
+                                    <p class="card-text">{{ comment.comment }}</p>
+                                    <div class="comment-actions">
+                                        {% if is_granted('ROLE_ADMIN') or app.user.id == comment.user.id %}
+                                            <form action="{{ path('comment_delete', {commentId: comment.id}) }}" method="post" onsubmit="return confirm('Are you sure?');" class="delete-form">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete-comment' ~ comment.id) }}">
+                                                <button type="submit" class="btn delete-button">
+                                                    <img src="{{ asset('build/images/delete.svg') }}" alt="bin" class="svg-icon-bin">
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                        {% if app.user.id == comment.user.id %}
+                                            <input type="hidden" name="_token" value="{{ csrf_token('edit-comment' ~ comment.id) }}">
+                                            <button type="button" class="btn edit-button" data-bs-toggle="modal" data-bs-target="#commentModal-{{ comment.id }}">
+                                                <img src="{{ asset('build/images/edit-green.6c62a9cc.svg') }}" alt="Edit" class="svg-icon-edit">
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="commentModal-{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="commentModalCenterTitle-{{ comment.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="commentModalLongTitle-{{ comment.id }}">{{ comment.user.displayName }}</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ path('comment_update', {commentId: comment.id}) }}" method="post">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('edit-comment' ~ comment.id) }}">
+                                                    <input type="hidden" name="slug" value="{{ post.slug }}">
+                                                    <div class="form-group">
+                                                        <label for="editCommentText-{{ comment.id }}">Commentaire</label>
+                                                        <textarea class="form-control" id="editCommentText-{{ comment.id }}" name="comment" rows="3">{{ comment.comment }}</textarea>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-admin">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endif %}
-
-                                {% endif %}
-
                         </div>
                     </li>
                 {% endfor %}
