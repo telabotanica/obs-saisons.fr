@@ -14,6 +14,7 @@ jobs:
       DEFAULT_URI : ${{ vars.DEFAULT_URI }}
     steps:
       - uses: Funloi2/obs-saisons.fr@docker-test
+      - run: whoami
       - run: sudo -E docker-compose build
       - run: sudo -E docker-compose up -d
 
