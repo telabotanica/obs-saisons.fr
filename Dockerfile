@@ -12,10 +12,8 @@ ARG DEFAULT_URI
 
 
 # Install necessary packages and dependencies
-RUN <<EOF
-    apt-get -y install software-properties-common
+RUN apt-get -y install software-properties-common && \
     apt-get -y install ca-certificates curl gnupg
-EOF
 
 # PHP 7.4
 RUN <<EOF
