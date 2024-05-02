@@ -13,8 +13,8 @@ jobs:
       APP_SECRET : ${{ vars.APP_SECRET }}
       DEFAULT_URI : ${{ vars.DEFAULT_URI }}
     steps:
-      - run: DB_NAME DB_USER DB_PASSWORD DB_ROOT_PASSWORD APP_ENV APP_SECRET DEFAULT_URI docker-compose build
-      - run: DB_NAME DB_USER DB_PASSWORD DB_ROOT_PASSWORD APP_ENV APP_SECRET DEFAULT_URI docker-compose up -d
+      - run: docker-compose build
+      - run: docker-compose up -d
 #      - uses: actions/obs-saisons.fr@docker-test
 
 
