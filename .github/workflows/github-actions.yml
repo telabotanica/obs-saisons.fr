@@ -15,7 +15,11 @@ jobs:
       DEFAULT_URI : ${{ vars.DEFAULT_URI }}
     steps:
       - name: Checkout
-        uses: Funloi2/obs-saisons.fr@docker-test
+        uses: actions/checkout@v2
+        with:
+          repository: 'Funloi2/obs-saisons.fr'
+          ref: 'docker-test'
+
       - name: Build 
         run: sudo -E docker-compose build
       - name: Up file
