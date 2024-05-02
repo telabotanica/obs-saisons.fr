@@ -2,6 +2,7 @@ name: OBS
 run-name: OBS
 on: [push]
 jobs:
+
   Deploy-Docker-Compose:
     runs-on: [self-hosted, linux, x64]
     env:
@@ -12,6 +13,7 @@ jobs:
       APP_ENV : ${{ vars.APP_ENV }}
       APP_SECRET : ${{ vars.APP_SECRET }}
       DEFAULT_URI : ${{ vars.DEFAULT_URI }}
+      options: --user root
     steps:
       - uses: Funloi2/obs-saisons.fr@docker-test
       - run: sudo -E docker-compose build
