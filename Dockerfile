@@ -87,4 +87,5 @@ EOF
 # Open HTTP and HTTPS port.
 EXPOSE 80
 
-CMD docker-assets/docker-services.sh ${workdir} ${APP_ENV}
+ENV app_env=${APP_ENV}
+CMD docker-assets/docker-services.sh ${workdir} ${app_env}
