@@ -49,7 +49,8 @@ ENV workdir /var/www/html/obs
 COPY --chown=www-data:www-data . ${workdir}
 WORKDIR ${workdir}
 
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install
+#COMPOSER_ALLOW_SUPERUSER=1
+RUN composer install
 
 #RUN yarn &&\
 #    yarn build
