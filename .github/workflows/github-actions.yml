@@ -15,6 +15,7 @@ jobs:
     steps:
       - uses: Funloi2/obs-saisons.fr@docker-test
       - run: sudo -E docker-compose build
+      - run: echo "nana"
       - run: sudo -E docker-compose up -d
 
 
