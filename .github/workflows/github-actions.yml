@@ -6,13 +6,13 @@ jobs:
   Deploy-Docker-Compose:
     runs-on: [self-hosted, linux, x64]
     env:
-      DB_NAME : ${{ vars.DB_NAME }}
-      DB_USER : ${{ vars.DB_USER }}
-      DB_PASSWORD : ${{ vars.DB_PASSWORD }}
-      DB_ROOT_PASSWORD : ${{ vars.DB_ROOT_PASSWORD }}
-      APP_ENV : ${{ vars.APP_ENV }}
-      APP_SECRET : ${{ vars.APP_SECRET }}
-      DEFAULT_URI : ${{ vars.DEFAULT_URI }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+      APP_ENV: ${{ secrets.APP_ENV }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}
+      DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2

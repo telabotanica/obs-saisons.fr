@@ -52,8 +52,8 @@ WORKDIR ${workdir}
 #COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install
 
-#RUN yarn &&\
-#    yarn build
+RUN yarn &&\
+    yarn build
 
 
 # Create .env.local
