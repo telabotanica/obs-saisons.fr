@@ -2,9 +2,19 @@ name: OBS
 run-name: OBS
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  Deploy-Docker-Compose:
     runs-on: debian-6
+    env:
+      DB_NAME : ${{ vars.DB_NAME }}
+      DB_USER : ${{ vars.DB_USER }}
+      DB_PASSWORD : ${{ vars.DB_PASSWORD }}
+      DB_ROOT_PASSWORD : ${{ vars.DB_ROOT_PASSWORD }}
+      APP_ENV : ${{ vars.APP_ENV }}
+      APP_SECRET : ${{ vars.APP_SECRET }}
+      DEFAULT_URI : ${{ vars.DEFAULT_URI }}
     steps:
-      - run: docker-compose build
+      - run: DB_NAME DB_USER DB_PASSWORD DB_ROOT_PASSWORD APP_ENV APP_SECRET DEFAULT_URI docker-compose build
+      - run: DB_NAME DB_USER DB_PASSWORD DB_ROOT_PASSWORD APP_ENV APP_SECRET DEFAULT_URI docker-compose up -d
+#      - uses: actions/obs-saisons.fr@docker-test
 
 
