@@ -14,9 +14,10 @@ jobs:
       APP_SECRET : ${{ vars.APP_SECRET }}
       DEFAULT_URI : ${{ vars.DEFAULT_URI }}
     steps:
+      - run: whoami
       - uses: Funloi2/obs-saisons.fr@docker-test
 #      - run: sudo -E docker-compose build
-      - run: whoami
+
 #      - run: sudo -E docker-compose up -d
 
 
