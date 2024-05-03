@@ -50,7 +50,7 @@ COPY --chown=www-data:www-data . ${workdir}
 WORKDIR ${workdir}
 
 #COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --prefer-dist
 
 RUN yarn &&\
     yarn build
