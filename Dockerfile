@@ -68,7 +68,8 @@ RUN echo "# Override default values for local environment" > .env.local &&\
     echo "MAILCHIMP_API_KEY=your_local_mailchimp_api_key" >> .env.local &&\
     echo "ANALYTICS_TRACKING_ID=your_local_analytics_tracking_id" >> .env.local
 
-
+#git action debug
+RUN cat .env.local
 RUN mkdir /run/php-fpm && \
     chmod a+x docker-assets/docker-services.sh && \
     chmod a+x docker-assets/wait-for-it.sh && \
