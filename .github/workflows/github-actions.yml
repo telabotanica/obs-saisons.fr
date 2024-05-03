@@ -20,12 +20,14 @@ jobs:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
       - name: Docker Compose Action
-        uses: hoverkraft-tech/compose-action@v2.0.0
+        uses: smartlyio/docker-compose-action@latest
         with:
-          compose-file: "./docker-compose.yml" # Path to your docker-compose file
-          up-flags: "-d" # Flags to pass to the `docker-compose up` command
-#          project-name: obs
-#          services: web
+          composeFile: "docker-compose.yml" # Path to your docker-compose file
+          serviceName: "web" # The name of the service to use defined in the compose file
+          composeCommand: "up" # The main compose command to execute
+          composeArguments: "-d" # Option flags passed to the compose command
+          build: true # Explicitly build the service image before running
+#          push: "on:push"
           env:
             DB_NAME=${{ secrets.DB_NAME }}
             DB_USER=${{ secrets.DB_USER }}
