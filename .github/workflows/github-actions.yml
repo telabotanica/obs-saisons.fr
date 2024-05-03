@@ -15,11 +15,11 @@ jobs:
       - run: echo env
       - run: echo ${APP_ENV}
         env:
-          APP_ENV: ${{ secrets.APP_ENV }}
+          APP_ENV: ${{ vars.APP_ENV }}
       - run: echo "$APP_ENV"
         env:
-          APP_ENV: ${{ secrets.APP_ENV }}
-      - run: echo ${{ secrets.APP_ENV }}
+          APP_ENV: ${{ vars.APP_ENV }}
+      - run: echo ${{ vars.APP_ENV }}
       - run: echo $APP_ENV
         env:
           DB_NAME: ${{ secrets.DB_NAME }}
