@@ -716,7 +716,7 @@ class ObservationRepository extends ServiceEntityRepository
         // Requête pour récupérer les images avec les informations associées
         $imagesQuery = $this->createQueryBuilder('o')
             ->select('partial o.{id, createdAt, is_picture_valid, picture, date}',
-                'partial u.{id, name}',
+                'partial u.{id, name, email}',
                 'partial e.{id, name}',
                 'partial i.{id, name}',
                 'partial s.{id, vernacular_name}')
