@@ -21,10 +21,10 @@
             </div>
             <div class="col">
                 <label for="statut" class="ms-3">Filtrer par statut</label>
-                <select class="form-select m-3" name="statut">
-                    <option value="0">Image à vérifier</option>
-                    <option value="1">Image valide</option>
-                    <option value="2">Image non valide</option>
+                <select name="statut" class="form-select m-3">
+                    <option value="0" {{ selectedStatus == '0' ? 'selected' : '' }}>Image à vérifier</option>
+                    <option value="1" {{ selectedStatus == '1' ? 'selected' : '' }}>Image valide</option>
+                    <option value="2" {{ selectedStatus == '2' ? 'selected' : '' }}>Image non valide</option>
                 </select>
             </div>
             <div class="col">
@@ -80,7 +80,7 @@
         <tbody>
         {% if images is empty %}
             <tr>
-                <td colspan="5">No images to check</td>
+                <td colspan="5">Pas d'image à modérer</td>
             </tr>
         {% else %}
             {% for image in images %}
