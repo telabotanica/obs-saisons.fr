@@ -19,28 +19,23 @@ jobs:
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
-      - name: Docker Compose Action
-        uses: hoverkraft-tech/compose-action@v1.5.1
+      - uses: hoverkraft-tech/compose-action@v1.5.1
         with:
           compose-file: docker-compose.yml
           compose-command: build
-#          project-name: obs
-#          services: web
-          env:
+          compose-options: -d
+          project-name: obs
+          services: web
+          env: |
             DB_NAME=${{ secrets.DB_NAME }}
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             APP_ENV=${{ secrets.APP_ENV }}
             APP_SECRET=${{ secrets.APP_SECRET }}
             DEFAULT_URI=${{ secrets.DEFAULT_URI }}
-      - name: Build docker
-        uses : hoverkraft-tech/compose-action@v1.5.1
-        with:
-          compose-file: docker-compose.yml
-          compose-command: up
-          compose-args: -d
+
 #      - name: Build
 #        run: docker-compose build
-      - name: Up file
-        run: docker-compose up -d
+#      - name: Up file
+#        run: docker-compose up -d
 
