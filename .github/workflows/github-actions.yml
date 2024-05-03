@@ -2,9 +2,8 @@ name: OBS
 run-name: OBS
 on: [ push ]
 jobs:
-
   Deploy-Docker-Compose:
-    runs-on: [ self-hosted, linux, x64 ]
+    runs-on: [self-hosted, linux, x64]
     env:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
@@ -19,15 +18,12 @@ jobs:
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
-      - run: echo "$APP_ENV"
-      - run: echo "${{ env.APP_ENV }}"
+
+      - name: Echo APP_ENV
+        run: |
+          echo "APP_ENV from env: $APP_ENV"
         env:
           APP_ENV: ${{ secrets.APP_ENV }}
-      - run: echo "$APP_ENV"
-        env:
-          APP_ENV: ${{ vars.APP_ENV }}
-      - run: echo ${{ vars.APP_ENV }}
-      - run: echo $APP_ENV
 
 #      - name: Docker Compose Action
 #        uses: smartlyio/docker-compose-action@latest
