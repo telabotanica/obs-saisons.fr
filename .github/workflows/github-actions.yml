@@ -1,6 +1,9 @@
 name: OBS
 run-name: OBS
-on: [ push ]
+on:
+  push:
+    branches:
+      - docker-test
 jobs:
   Deploy-Docker-Compose:
     runs-on: [self-hosted, linux, x64]
