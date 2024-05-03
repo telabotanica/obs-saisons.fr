@@ -588,7 +588,7 @@ class AdminController extends AbstractController
             $message = $this->renderView('emails/observation-image-rejected.html.twig', [
                 'user' => $observation->getUser()->getDisplayName(),
                 'observation' => $observation,
-                'link' => $this->generateUrl('observation_edit', ['id' => $observation->getId()]),
+                'link' => $this->router->generate('observation_edit', ['observationId' => $observation->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
                 'motif' => $motifRefus
             ]);
             $mailer->send(
