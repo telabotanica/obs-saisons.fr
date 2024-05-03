@@ -19,6 +19,10 @@ jobs:
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test
+      - name: Build
+        run: sudo -E docker-compose build
+      - name: Up file
+        run: sudo -E docker-compose up -d
 
 #      - name: Docker Compose Action
 #        uses: smartlyio/docker-compose-action@latest
@@ -36,9 +40,4 @@ jobs:
 #            APP_ENV=${{ secrets.APP_ENV }}
 #            APP_SECRET=${{ secrets.APP_SECRET }}
 #            DEFAULT_URI=${{ secrets.DEFAULT_URI }}
-
-      - name: Build
-        run: sudo -E docker-compose build
-      - name: Up file
-        run: sudo -E docker-compose up -d
 
