@@ -19,6 +19,10 @@ jobs:
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
+      - name: down
+        run: sudo -E docker-compose down
+      - name: clear cache
+        run: sudo -E docker system prune -af
       - name: Build
         run: sudo -E docker-compose build
       - name: Up file
