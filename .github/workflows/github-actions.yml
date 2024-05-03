@@ -5,36 +5,37 @@ jobs:
 
   Deploy-Docker-Compose:
     runs-on: [ self-hosted, linux, x64 ]
-#    env:
-#      DB_NAME: ${{ secrets.DB_NAME }}
-#      DB_USER: ${{ secrets.DB_USER }}
-#      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-#      DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-#      APP_ENV: ${{ secrets.APP_ENV }}
-#      APP_SECRET: ${{ secrets.APP_SECRET }}
-#      DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
+    env:
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+      APP_ENV: ${{ secrets.APP_ENV }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}
+      DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
-      - name: Docker Compose Action
-        uses: smartlyio/docker-compose-action@latest
-        with:
-          composeFile: "docker-compose.yml" # Path to your docker-compose file
-          serviceName: "web" # The name of the service to use defined in the compose file
-          composeCommand: "up" # The main compose command to execute
-          composeArguments: "-d" # Option flags passed to the compose command
-          build: true # Explicitly build the service image before running
-#          push: "on:push"
-          env:
-            DB_NAME=${{ secrets.DB_NAME }}
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            APP_ENV=${{ secrets.APP_ENV }}
-            APP_SECRET=${{ secrets.APP_SECRET }}
-            DEFAULT_URI=${{ secrets.DEFAULT_URI }}
+      - run: echo ${{ secrets.APP_ENV }}
+#      - name: Docker Compose Action
+#        uses: smartlyio/docker-compose-action@latest
+#        with:
+#          composeFile: "docker-compose.yml" # Path to your docker-compose file
+#          serviceName: "web" # The name of the service to use defined in the compose file
+#          composeCommand: "up" # The main compose command to execute
+#          composeArguments: "-d" # Option flags passed to the compose command
+#          build: true # Explicitly build the service image before running
+##          push: "on:push"
+#          env:
+#            DB_NAME=${{ secrets.DB_NAME }}
+#            DB_USER=${{ secrets.DB_USER }}
+#            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+#            APP_ENV=${{ secrets.APP_ENV }}
+#            APP_SECRET=${{ secrets.APP_SECRET }}
+#            DEFAULT_URI=${{ secrets.DEFAULT_URI }}
 
 #      - name: Build
 #        run: docker-compose build
