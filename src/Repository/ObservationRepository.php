@@ -776,7 +776,7 @@ class ObservationRepository extends ServiceEntityRepository
             $imagesQuery = $this->createQueryBuilder('o')
                 ->select(
                     'partial o.{id, picture, is_picture_valid, updatedAt}',
-                    'partial u.{id, name}',
+                    'partial u.{id, name, displayName}',
                     'partial e.{id, name}',
                     'partial i.{id}'
                 )

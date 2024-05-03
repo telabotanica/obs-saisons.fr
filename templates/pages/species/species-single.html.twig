@@ -11,7 +11,7 @@
         <div class="carousel-inner">
             {% if images|length <4 %}
                 <div class="carousel-item active">
-                    <img class="d-block w-100 fixed-height-img" src="{{ asset(species.picture) }}"
+                    <img class="d-block w-100 fixed-height-img" src="{{ asset('media/species/' ~ species.picture ~ '.jpg') }}"
                          alt="Image {{ species.vernacularName }}">
                     <div class="carousel-caption d-none d-md-block">
                         <p>{{ species.vernacularName }}</p>
@@ -24,22 +24,23 @@
                              alt="Slide {{ loop.index }}">
 
                         <div class="carousel-caption d-none d-md-block">
-                            <p>photo de : {{ image.user.name }} - Observation : {{ image.event.name }}</p>
+                            <p>photo de : {{ image.user.displayName|default('anonyme') }} - Observation : {{ image.event.name }}</p>
                             <p></p>
                         </div>
                     </div>
                 {% endfor %}
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+                    {#            <span class="carousel-control-prev-icon" aria-hidden="true"></span> #}
+                    <span class="sr-only">Précédent</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+                    {#            <span class="carousel-control-next-icon" aria-hidden="true"></span> #}
+                    <span class="sr-only">Suivant</span>
+                </a>
             {% endif %}
         </div>
 
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-            {#            <span class="carousel-control-prev-icon" aria-hidden="true"></span> #}
-            <span class="sr-only">Précédent</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-            {#            <span class="carousel-control-next-icon" aria-hidden="true"></span> #}
-            <span class="sr-only">Suivant</span>
-        </a>
+
 
     </div>
 
