@@ -5,30 +5,30 @@ jobs:
 
   Deploy-Docker-Compose:
     runs-on: [ self-hosted, linux, x64 ]
-
+    env:
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+      APP_ENV: ${{ secrets.APP_ENV }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}
+      DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
-      - run: echo env
-      - run: echo ${APP_ENV}
+      - run: echo "${{ env.APP_ENV }}"
+      - run: echo "${{ env.APP_ENV }}"
         env:
-          APP_ENV: ${{ vars.APP_ENV }}
+          APP_ENV: ${{ secrets.APP_ENV }}
       - run: echo "$APP_ENV"
         env:
           APP_ENV: ${{ vars.APP_ENV }}
       - run: echo ${{ vars.APP_ENV }}
       - run: echo $APP_ENV
-        env:
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-          APP_ENV: ${{ secrets.APP_ENV }}
-          APP_SECRET: ${{ secrets.APP_SECRET }}
-          DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
+
 #      - name: Docker Compose Action
 #        uses: smartlyio/docker-compose-action@latest
 #        with:
