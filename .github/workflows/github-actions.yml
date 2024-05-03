@@ -1,27 +1,46 @@
 name: OBS
 run-name: OBS
-on: [push]
+on: [ push ]
 jobs:
 
   Deploy-Docker-Compose:
-    runs-on: [self-hosted, linux, x64]
-    env:
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-      APP_ENV: ${{ secrets.APP_ENV }}
-      APP_SECRET: ${{ secrets.APP_SECRET }}
-      DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
+    runs-on: [ self-hosted, linux, x64 ]
+#    env:
+#      DB_NAME: ${{ secrets.DB_NAME }}
+#      DB_USER: ${{ secrets.DB_USER }}
+#      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+#      DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
+#      APP_ENV: ${{ secrets.APP_ENV }}
+#      APP_SECRET: ${{ secrets.APP_SECRET }}
+#      DEFAULT_URI: ${{ secrets.DEFAULT_URI }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
-
-      - name: Build 
-        run: sudo -E docker-compose build
+      - name: Docker Compose Action
+        uses: hoverkraft-tech/compose-action@v1.5.1
+        with:
+          compose-file: docker-compose.yml
+          compose-command: build
+#          project-name: obs
+#          services: web
+          env:
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            APP_ENV=${{ secrets.APP_ENV }}
+            APP_SECRET=${{ secrets.APP_SECRET }}
+            DEFAULT_URI=${{ secrets.DEFAULT_URI }}
+      - name: Build docker
+        uses : hoverkraft-tech/compose-action@v1.5.1
+        with:
+          compose-file: docker-compose.yml
+          compose-command: up
+          compose-args: -d
+#      - name: Build
+#        run: docker-compose build
       - name: Up file
-        run: sudo -E docker-compose up -d
+        run: docker-compose up -d
 
