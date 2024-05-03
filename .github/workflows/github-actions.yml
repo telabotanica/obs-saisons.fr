@@ -18,21 +18,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: 'Funloi2/obs-saisons.fr'
-          ref: 'docker-test'
-
-      - run: echo "${{ vars.APP_ENV}}"
-      - run: |
-          echo ": ${{ vars.DB_NAME}} "
-      - run: echo env.APP_ENV
-      - run: echo env.APP_ENV
-        env:
-          APP_ENV: ${{ vars.APP_ENV }}
-
-      - name: Echo APP_ENV
-        run: |
-          echo "APP_ENV from env: $APP_ENV"
-        env:
-          APP_ENV: ${{ vars.APP_ENV }}
+          ref: 'docker-test
 
 #      - name: Docker Compose Action
 #        uses: smartlyio/docker-compose-action@latest
@@ -51,8 +37,8 @@ jobs:
 #            APP_SECRET=${{ secrets.APP_SECRET }}
 #            DEFAULT_URI=${{ secrets.DEFAULT_URI }}
 
-#      - name: Build
-#        run: docker-compose build
-#      - name: Up file
-#        run: docker-compose up -d
+      - name: Build
+        run: sudo -E docker-compose build
+      - name: Up file
+        run: sudo -E docker-compose up -d
 
