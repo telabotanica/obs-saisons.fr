@@ -19,7 +19,7 @@ jobs:
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
-      - run: echo "${{ env.APP_ENV }}"
+      - run: echo "${{ secrets.APP_ENV }}"
       - run: echo "${{ env.APP_ENV }}"
         env:
           APP_ENV: ${{ secrets.APP_ENV }}
