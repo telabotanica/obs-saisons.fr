@@ -19,6 +19,7 @@ jobs:
         with:
           repository: 'Funloi2/obs-saisons.fr'
           ref: 'docker-test'
+      - run: echo env
       - run: echo ${{ secrets.APP_ENV }}
 #      - name: Docker Compose Action
 #        uses: smartlyio/docker-compose-action@latest
