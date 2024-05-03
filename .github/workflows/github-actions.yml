@@ -4,6 +4,7 @@ on: [ push ]
 jobs:
   Deploy-Docker-Compose:
     runs-on: [self-hosted, linux, x64]
+    environment: 'obs-test'
     env:
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USER: ${{ vars.DB_USER }}
