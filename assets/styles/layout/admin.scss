@@ -98,3 +98,14 @@
     color: $grey281146;
     padding: 20px 20px 0 20px;
 }
+
+.td-mail {
+    overflow: hidden;
+    white-space: nowrap; /* Keeps the text on a single line and uses ellipsis when it overflows */
+}
+
+.non-wrapping {
+    white-space: nowrap;  // Prevents wrapping of content within the element
+    overflow: hidden;     // Keeps the content from spilling out
+    text-overflow: ellipsis; // Adds an ellipsis if the content is too long to fit
+}
