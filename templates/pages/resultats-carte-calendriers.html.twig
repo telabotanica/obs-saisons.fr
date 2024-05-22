@@ -110,7 +110,8 @@
         </select>
 
         <div class="no-data alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au
-            moins un de vos critères</div>
+            moins un de vos critères
+        </div>
         <div class="chart"></div>
     </div>
 
@@ -118,7 +119,7 @@
         'title': 'Évolution des stades par espèce'
     }) %}
 
-    <div id="evolution-chart-container"  data-min-year="{{ minYear }}">
+    <div id="evolution-chart-container" data-min-year="{{ minYear }}">
         <select name="species" id="species-evolution-chart" class="criteria-list">
             <option value="0" class="default-criteria" disabled>Choisissez une espèce</option>
             {% for species in allSpecies %}
@@ -131,7 +132,7 @@
                 </option>
             {% endfor %}
         </select>
-        <select name="event" id="event-evolution-chart" class="criteria-list">
+        <select name=event id="event-evolution-chart" class="criteria-list">
             <option value="0" class="default-criteria" disabled>Choisissez un évènement</option>
             {% for eventName, eventIds in eventsIds %}
                 <option
@@ -158,7 +159,8 @@
         </select>
 
         <div class="no-data alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au
-            moins un de vos critères</div>
+            moins un de vos critères
+        </div>
         <div class="chart"></div>
     </div>
 
@@ -183,29 +185,167 @@
     </style>
     <script>
         // Example observation data
-        const observation = [
-            {date: new Date("2020-02-07"), category: "Arbre", espece: "abricotier"},
-            {date: new Date("2020-02-01"), category: "Arbre", espece: "abricotier"},
-            {date: new Date("2020-02-10"), category: "Arbre", espece: "abricotier"},
-            {date: new Date("2020-04-15"), category: "Arbre", espece: "Cerisier"},
-            {date: new Date("2020-04-20"), category: "Arbre", espece: "Cerisier"},
-            {date: new Date("2020-04-01"), category: "Arbre", espece: "Cerisier"},
+        const obs = [
+            {
+                date: new Date("2023-01-29"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "abricotier"
+            },
+            {
+                date: new Date("2023-12-27"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "abricotier"
+            },
+            {
+                date: new Date("2023-05-28"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "abricotier"
+            },
+            {
+                date: new Date("2023-02-24"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "abricotier"
+            },
+            {
+                date: new Date("2023-05-06"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "abricotier"
+            },
+            {
+                date: new Date("2023-11-02"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "abricotier"
+            },
+            {
+                date: new Date("2023-02-06"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-03-25"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-01-19"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-02-26"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-03-02"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-04-26"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-02-10"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-03-21"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-01-26"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-06-22"),
+                category: "Arbre",
+                event : "Fleuraison 15",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-08-08"),
+                category: "Arbre",
+                event: "Fleuraison 75",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-05-26"),
+                category: "Arbre",
+                event: "Fleuraison 75",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-10-09"),
+                category: "Arbre",
+                event: "Fleuraison 75",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-11-09"),
+                category: "Arbre",
+                event: "Fleuraison 75",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-09-27"),
+                category: "Arbre",
+                event: "Fleuraison 75",
+                espece: "Cerisier"
+            },
+            {
+                date: new Date("2023-12-12"),
+                category: "Arbre",
+                event: "Fleuraison 75",
+                espece: "Cerisier"
+            }
             // Add more data here
         ];
-
-        // Function to calculate first, median, and last dates for each species
-        function preprocessData(data) {
-            const nested = d3.groups(data, d => d.espece);
-            const result = nested.map(([espece, values]) => {
-                const dates = values.map(d => d.date).sort(d3.ascending);
-                return {
-                    espece,
-                    first: dates[0],
-                    median: dates[Math.floor(dates.length / 2)],
-                    last: dates[dates.length - 1]
-                };
+        const observation = [];
+        {% for observation in observations %}
+        observation.push({
+                date: new Date("{{ observation.date|date('Y-m-d') }}"),
+                {#category: "{{ observation.category }}",#}
+                event: "{{ observation.event.name }}",
+                espece: "{{ observation.individual.species.vernacularName }}"
             });
-            return result;
+        {% endfor %}
+
+
+        // Function to calculate first, median, and last dates for each species and event
+        function preprocessData(data) {
+            const nested = d3.groups(data, d => d.espece, d => d.event);
+            return nested.flatMap(([espece, events]) =>
+                events.map(([event, values]) => {
+                    const dates = values.map(d => d.date).sort(d3.ascending);
+                    return {
+                        espece,
+                        event,
+                        first: dates[0],
+                        median: dates[Math.floor(dates.length / 2)],
+                        last: dates[dates.length - 1]
+                    };
+                })
+            );
         }
 
         function chart(data) {
@@ -213,7 +353,7 @@
 
             // Specify the chart’s dimensions.
             const width = 928;
-            const height = 600;
+            const height = 900;
             const marginTop = 20;
             const marginRight = 20;
             const marginBottom = 30;
@@ -228,6 +368,11 @@
                 .domain(preprocessedData.map(d => d.espece))
                 .range([marginTop, height - marginBottom])
                 .padding(1);
+
+            // Create the color scale for events
+            const color = d3.scaleOrdinal()
+                .domain(preprocessedData.map(d => d.event))
+                .range(d3.schemeCategory10);
 
             // Create the SVG container.
             const svg = d3.create("svg")
@@ -260,12 +405,12 @@
                 .join("g")
                 .attr("transform", d => `translate(0,${y(d.espece)})`);
 
-            speciesGroup.append("rect")
+            const rectangles = speciesGroup.append("rect")
                 .attr("x", d => x(d.first))
                 .attr("width", d => x(d.last) - x(d.first))
                 .attr("y", -5)
                 .attr("height", 10)
-                .attr("fill", "lightblue")
+                .attr("fill", d => color(d.event))
                 .attr("stroke", "steelblue");
 
             speciesGroup.append("line")
@@ -276,12 +421,29 @@
                 .attr("stroke", "red")
                 .attr("stroke-width", 2);
 
+            // Detect and handle overlaps
+            const rects = speciesGroup.selectAll("rect").nodes();
+            rects.forEach((rect1, i) => {
+                const r1 = d3.select(rect1);
+                rects.slice(i + 1).forEach(rect2 => {
+                    const r2 = d3.select(rect2);
+                    const r1x1 = +r1.attr("x");
+                    const r1x2 = r1x1 + +r1.attr("width");
+                    const r2x1 = +r2.attr("x");
+                    const r2x2 = r2x1 + +r2.attr("width");
+                    if ((r1x1 < r2x2 && r1x2 > r2x1) && r1.attr("y") === r2.attr("y")) {
+                        r1.attr("fill-opacity", 0.5);
+                        r2.attr("fill-opacity", 0.5);
+                    }
+                });
+            });
+
             // Add points for first, median, and last dates.
             const points = speciesGroup.selectAll("circle")
                 .data(d => [
-                    {date: d.first, espece: d.espece},
-                    {date: d.median, espece: d.espece},
-                    {date: d.last, espece: d.espece}
+                    {date: d.first, espece: d.espece, event: d.event},
+                    {date: d.median, espece: d.espece, event: d.event},
+                    {date: d.last, espece: d.espece, event: d.event}
                 ])
                 .join("circle")
                 .attr("cx", d => x(d.date))
@@ -297,7 +459,7 @@
             // Add tooltip interactivity
             points.on("mouseover", (event, d) => {
                 tooltip.transition().duration(200).style("opacity", .9);
-                tooltip.html(`Species: ${d.espece}<br>Date: ${d.date.toLocaleDateString()}`)
+                tooltip.html(`Species: ${d.espece}<br>Event: ${d.event}<br>Date: ${d.date.toLocaleDateString()}`)
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })

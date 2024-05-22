@@ -31,6 +31,8 @@ class ResultsController extends AbstractController
 
         $events = $em->getRepository(Event::class)->findAll();
 
+        $observations = $em->getRepository(Observation::class)->findAll();
+
         $allEventSpecies = $em->getRepository(EventSpecies::class)->findAllScalarIds();
 
         // flatten array, eventsIds list indexed by species
@@ -50,6 +52,7 @@ class ResultsController extends AbstractController
         );
 
         return $this->render('pages/resultats-carte-calendriers.html.twig', [
+            'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'allTypeSpecies' => $typeSpecies,
             'allSpecies' => $species,
