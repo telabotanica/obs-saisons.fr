@@ -767,7 +767,7 @@ class ObservationRepository extends ServiceEntityRepository
                     'partial o.{id, picture, is_picture_valid, updatedAt}',
                     'partial u.{id, name}',
                     'partial e.{id, name}',
-                    'partial i.{id}'
+                    'partial i.{id}',
                 )
                 ->leftJoin('o.user', 'u')
                 ->leftJoin('o.event', 'e')
@@ -786,5 +786,48 @@ class ObservationRepository extends ServiceEntityRepository
 
 // Execute the query to get the results
         return $imagesQuery->getQuery()->getResult();
+    }
+
+    public function findObservationsGraph($selectedSpeciesIds, $selectedEventId, $selectedYear)
+    {
+        $observationQuery = '';
+        $containsValue = false;
+        try {
+            $observationQuery = $this->createQueryBuilder('o')
+                ->select(
+                    'partial o.{id, date}',
+                    'partial e.{id, name}',
+                    'partial i.{id}',
+                    'partial s.{id, vernacular_name}'
+                )
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->leftJoin('i.species', 's');
+            for ($i = 0; $i < count($selectedSpeciesIds); $i++) {
+                if ($selectedSpeciesIds[$i] != '') {
+                    $containsValue = true;
+                    break;
+                }
+            }
+//            dd($selectedSpeciesIds);
+            if ($containsValue){
+                $observationQuery
+                    ->andWhere('s.id IN (:speciesId)')
+                    ->setParameter('speciesId', $selectedSpeciesIds);
+            }
+            if (!empty($selectedEventId)) {
+                $observationQuery
+                    ->andWhere('e.id = :eventId')
+                    ->setParameter('eventId', $selectedEventId);
+            }
+            if (!empty($selectedYear)) {
+                $observationQuery
+                    ->andWhere('YEAR(o.date) = :year')
+                    ->setParameter('year', $selectedYear);
+            }
+        } catch (\Exception $exception) {
+            echo 'An error occurred --> ' . $exception->getMessage();
+        }
+        return $observationQuery->getQuery()->getResult();
     }
 }
