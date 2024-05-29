@@ -36,11 +36,19 @@ class ResultsController extends AbstractController
 
         $allEventSpecies = $em->getRepository(EventSpecies::class)->findAllScalarIds();
 
+
         //Prise en compte de l'id de l'espece sélectionner sur le dropdown
         $selectedSpeciesId = $request->query->get('species', '');
         $selectedSpeciesId2 = $request->query->get('species2', '');
         $selectedSpeciesId3 = $request->query->get('species3', '');
-        $selectedSpeciesIds = [$selectedSpeciesId, $selectedSpeciesId2, $selectedSpeciesId3];
+        if($selectedSpeciesId == '' && $selectedSpeciesId2 == '' && $selectedSpeciesId3 == ''){
+            for($i = 0; $i < 7; $i++) {
+                $random = rand(0, count($species) - 1);
+                $selectedSpeciesIds[] = $species[$random]->getId();
+            }
+        }else{
+            $selectedSpeciesIds = [$selectedSpeciesId, $selectedSpeciesId2, $selectedSpeciesId3];
+        }
 
         //Prise en compte du statut demandé lors de la selection du dropdown
         $selectedStatus = $request->query->get('statut', '');
@@ -52,9 +60,6 @@ class ResultsController extends AbstractController
         //Prise en compte de l'année sélectionner sur le dropdown
         $selectedYear = $request->query->get('year', '');
 
-        $selectedUserId = 0;
-        $offset = 0;
-        $pageSize = 0;
         $observations = $em->getRepository(Observation::class)
             ->findObservationsGraph($selectedSpeciesIds, $selectedEventId, $selectedYear);
 
