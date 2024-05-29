@@ -824,6 +824,10 @@ class ObservationRepository extends ServiceEntityRepository
                 $observationQuery
                     ->andWhere('YEAR(o.date) = :year')
                     ->setParameter('year', $selectedYear);
+            }else{
+                $observationQuery
+                    ->andWhere('YEAR(o.date) = :year')
+                    ->setParameter('year', date('Y'));
             }
         } catch (\Exception $exception) {
             echo 'An error occurred --> ' . $exception->getMessage();
