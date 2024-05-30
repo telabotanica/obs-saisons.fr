@@ -217,7 +217,24 @@
     <div id="chart" class="mt-5"></div>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            pointer-events: none;
+            font-size: 12px;
+        }
 
+        .form-select[multiple] {
+            height: auto; /* Adjust height to fit the content */
+            width: 100%; /* Make it full width */
+        }
+        .form-select[multiple] option {
+            padding: 10px; /* Add padding for better readability */
+        }
+    </style>
     <script>
         const observation = [];
         {% for observation in observations %}
