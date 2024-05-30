@@ -33,31 +33,34 @@ class ResultsController extends AbstractController
 
         $events = $em->getRepository(Event::class)->findAll();
 
-
         $allEventSpecies = $em->getRepository(EventSpecies::class)->findAllScalarIds();
 
+        // Prise en compte de l'id de l'espece sélectionner sur le dropdown
+        $selectedSpeciesIds = $request->query->get('species', []);
 
-        //Prise en compte de l'id de l'espece sélectionner sur le dropdown
-        $selectedSpeciesId = $request->query->get('species', '');
-        $selectedSpeciesId2 = $request->query->get('species2', '');
-        $selectedSpeciesId3 = $request->query->get('species3', '');
-        if($selectedSpeciesId == '' && $selectedSpeciesId2 == '' && $selectedSpeciesId3 == ''){
-            for($i = 0; $i < 7; $i++) {
-                $random = rand(0, count($species) - 1);
-                $selectedSpeciesIds[] = $species[$random]->getId();
+        if (empty($selectedSpeciesIds)) {
+            // Fetch 7 random species if none are selected
+            $selectedSpeciesIds = [];
+            $randomIndexes = array_rand($species, 7);
+            foreach ((array)$randomIndexes as $index) {
+                $selectedSpeciesIds[] = $species[$index]->getId();
             }
-        }else{
-            $selectedSpeciesIds = [$selectedSpeciesId, $selectedSpeciesId2, $selectedSpeciesId3];
+        } else {
+            if (!is_array($selectedSpeciesIds)) {
+                $selectedSpeciesIds = [$selectedSpeciesIds];
+            }
+            if (count($selectedSpeciesIds) > 5) {
+                $selectedSpeciesIds = array_slice($selectedSpeciesIds, 0, 5);
+            }
         }
 
-        //Prise en compte du statut demandé lors de la selection du dropdown
+        // Prise en compte du statut demandé lors de la selection du dropdown
         $selectedStatus = $request->query->get('statut', '');
 
-        //Prise en compte de l'id de l'event sélectionner sur le dropdown
+        // Prise en compte de l'id de l'event sélectionner sur le dropdown
         $selectedEventId = $request->query->get('event', '');
 
-
-        //Prise en compte de l'année sélectionner sur le dropdown
+        // Prise en compte de l'année sélectionner sur le dropdown
         $selectedYear = $request->query->get('year', '');
 
         $observations = $em->getRepository(Observation::class)
@@ -80,6 +83,7 @@ class ResultsController extends AbstractController
         );
 
 //        dd($observations);
+
         return $this->render('pages/resultats-carte-calendriers.html.twig', [
             'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
@@ -90,13 +94,12 @@ class ResultsController extends AbstractController
             'events' => $events,
             'selectedYear' => $selectedYear,
             'speciesEvents' => $speciesEvents,
-            'selectedSpeciesId' => $selectedSpeciesId,
-            'selectedSpeciesId2' => $selectedSpeciesId2,
-            'selectedSpeciesId3' => $selectedSpeciesId3,
+            'selectedSpeciesIds' => $selectedSpeciesIds,
             'selectedEventId' => $selectedEventId,
             'regions' => FrenchRegions::getRegionsList(),
             'departments' => FrenchRegions::getDepartmentsList(),
             'page' => $page,
         ]);
     }
+
 }
