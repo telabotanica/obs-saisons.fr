@@ -327,10 +327,7 @@
                 // Add the horizontal axis.
                 svg.append("g")
                     .attr("transform", `translate(0,${height - marginBottom})`)
-                    .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0))
-                    .call(g => g.selectAll("text")
-                        .style("font-size", "20px")  // Adjust the font size as needed
-                        .style("font-family", "sans-serif")) ; // Adjust the font family as needed
+                    .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0));
 
                 // Add the vertical axis.
                 svg.append("g")
@@ -338,7 +335,7 @@
                     .call(d3.axisLeft(y))
                     .call(g => g.select(".domain").remove())
                     .call(g => g.selectAll("text")
-                        .style("font-size", "20px")  // Adjust the font size as needed
+                        .style("font-size", "14px")  // Adjust the font size as needed
                         .style("font-family", "sans-serif"))  // Adjust the font family as needed
                     .call(g => g.append("text")
                         .attr("x", -marginLeft)
