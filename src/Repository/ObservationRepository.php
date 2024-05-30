@@ -796,7 +796,7 @@ class ObservationRepository extends ServiceEntityRepository
             $observationQuery = $this->createQueryBuilder('o')
                 ->select(
                     'partial o.{id, date}',
-                    'partial e.{id, name}',
+                    'partial e.{id, name, bbch_code}',
                     'partial i.{id}',
                     'partial s.{id, vernacular_name}'
                 )

@@ -190,7 +190,7 @@
                     <option value="">Tous stades</option>
                     {% for event in events %}
                         <option value="{{ event.id }}" {% if selectedEventId == event.id %}selected{% endif %}>
-                            {{ event.name }}
+                            {{ event.name }}{% if event.stadeBbch is not empty %} - {{ event.stadeBbch }}{% endif %}
                         </option>
                     {% endfor %}
                 </select>
@@ -219,19 +219,6 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <script>
-        function checkSpeciesLimit() {
-            const speciesSelect = document.getElementById('species-select');
-            const selectedOptions = Array.from(speciesSelect.selectedOptions);
-            const limitMessage = document.getElementById('species-limit-message');
-
-            if (selectedOptions.length > 5) {
-                limitMessage.style.display = 'block';
-                selectedOptions.slice(5).forEach(option => option.selected = false);
-            } else {
-                limitMessage.style.display = 'none';
-            }
-        }
-
         const observation = [];
         {% for observation in observations %}
         observation.push({
@@ -245,20 +232,19 @@
             document.querySelector(".no-data").style.display = "block";
         } else {
             function preprocessData(data) {
-                const nested = d3.groups(data, d => d.espece, d => d.event);
-                return nested.flatMap(([espece, events]) =>
-                    events.map(([event, values]) => {
-                        const dates = values.map(d => d.date).sort();
-                        return {
-                            espece,
-                            event,
-                            first: dates[0],
-                            median: dates[Math.floor(dates.length / 2)],
-                            last: dates[dates.length - 1],
-                            values: values
-                        };
-                    })
-                );
+                const nested = d3.groups(data, d => `${d.espece}-${d.event}`);
+                return nested.map(([key, values]) => {
+                    const dates = values.map(d => d.date).sort();
+                    const [espece, event] = key.split('-');
+                    return {
+                        espece,
+                        event,
+                        first: dates[0],
+                        median: dates[Math.floor(dates.length / 2)],
+                        last: dates[dates.length - 1],
+                        values: values
+                    };
+                });
             }
 
             function computeDensity(data) {
@@ -292,8 +278,8 @@
                 const preprocessedData = preprocessData(data);
 
                 // Specify the chart’s dimensions.
-                const width = 928;
-                const height = 750;
+                const width = 1280;
+                const height = 1500;
                 const marginTop = 20;
                 const marginRight = 20;
                 const marginBottom = 30;
@@ -305,7 +291,7 @@
                     .range([marginLeft, width - marginRight]);
 
                 const y = d3.scalePoint()
-                    .domain(preprocessedData.map(d => d.espece))
+                    .domain(preprocessedData.map(d => `${d.espece} - ${d.event}`))
                     .range([marginTop, height - marginBottom])
                     .padding(1);
 
@@ -324,19 +310,25 @@
                 // Add the horizontal axis.
                 svg.append("g")
                     .attr("transform", `translate(0,${height - marginBottom})`)
-                    .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0));
+                    .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0))
+                    .call(g => g.selectAll("text")
+                        .style("font-size", "20px")  // Adjust the font size as needed
+                        .style("font-family", "sans-serif")) ; // Adjust the font family as needed
 
                 // Add the vertical axis.
                 svg.append("g")
                     .attr("transform", `translate(${marginLeft},0)`)
                     .call(d3.axisLeft(y))
                     .call(g => g.select(".domain").remove())
+                    .call(g => g.selectAll("text")
+                        .style("font-size", "20px")  // Adjust the font size as needed
+                        .style("font-family", "sans-serif"))  // Adjust the font family as needed
                     .call(g => g.append("text")
                         .attr("x", -marginLeft)
                         .attr("y", 10)
                         .attr("fill", "currentColor")
                         .attr("text-anchor", "start")
-                        .text("Espèce"));
+                        .text("Espèce - Event"));
 
                 // Add linear gradients for each event
                 const defs = svg.append("defs");
@@ -381,7 +373,7 @@
                     .selectAll("g")
                     .data(preprocessedData)
                     .join("g")
-                    .attr("transform", d => `translate(0,${y(d.espece)})`);
+                    .attr("transform", d => `translate(0,${y(`${d.espece} - ${d.event}`)})`);
 
                 speciesGroup.append("rect")
                     .attr("x", d => x(parseDate(d.first).month))
@@ -439,9 +431,6 @@
             document.getElementById("chart").appendChild(chart(observation));
         }
     </script>
-
-
-
 
 
 {% endblock %}
