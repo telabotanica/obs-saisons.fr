@@ -107,7 +107,7 @@ class ObservationRepository extends ServiceEntityRepository
 
         return count($allObsThisYear);
     }
-	
+
 	public function findObsCountPerYear(int $year): int
 	{
 		$allObsThisYear = $this->createQueryBuilder('o')
@@ -125,10 +125,10 @@ class ObservationRepository extends ServiceEntityRepository
 			->getQuery()
 			->getResult()
 		;
-		
+
 		return count($allObsThisYear);
 	}
-	
+
 	public function findActiveMembersPerYear(int $year)
 	{
 		$qb = $this->createQueryBuilder('o')
@@ -185,7 +185,7 @@ class ObservationRepository extends ServiceEntityRepository
 
         return $minYear;
     }
-	
+
 	public function findAllYears()
 	{
 		$qb = $this->createQueryBuilder('o')
@@ -193,12 +193,12 @@ class ObservationRepository extends ServiceEntityRepository
 			->orderBy('YEAR(o.date)', 'DESC')
 			->getQuery()
 			->getResult();
-		
+
 		$years = [];
 		foreach ($qb as $year) {
 			$years[] = $year[1];
 		}
-		
+
 		return $years;
 	}
 
@@ -364,7 +364,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->getScalarResult()
         ;
     }
-	
+
 	public function findOrderedObsPerUser(User $user){
 		return $this->createQueryBuilder('o')
 			->andWhere('o.user = :user')
@@ -374,11 +374,11 @@ class ObservationRepository extends ServiceEntityRepository
 			->getResult()
 			;
 	}
-	
+
 	public function findOrderedObsPerUserForExport(User $user): array
 	{
 		$qb = $this->createQueryBuilder('o');
-		
+
 		return $qb
 			->innerJoin('o.individual', 'i')
 			->innerJoin('o.event', 'e')
@@ -821,14 +821,14 @@ class ObservationRepository extends ServiceEntityRepository
                     ->setParameter('eventId', $selectedEventId);
             }
             if (!empty($selectedYear)) {
-                $observationQuery
-                    ->andWhere('YEAR(o.date) = :year')
-                    ->setParameter('year', $selectedYear);
-            }else{
-                $observationQuery
-                    ->andWhere('YEAR(o.date) = :year')
-                    ->setParameter('year', date('Y'));
+                if ($selectedYear != 1){
+                    $observationQuery
+                        ->andWhere('YEAR(o.date) = :year')
+                        ->setParameter('year', $selectedYear);
+                }
             }
+
+//            dd($selectedYear);
         } catch (\Exception $exception) {
             echo 'An error occurred --> ' . $exception->getMessage();
         }

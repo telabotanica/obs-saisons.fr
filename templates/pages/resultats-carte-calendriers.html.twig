@@ -198,7 +198,7 @@
             <div class="mb-3">
                 <label for="year" class="form-label">Filtrer par année</label>
                 <select class="form-select" name="year">
-                    <option value="">Toutes années</option>
+                    <option value="1">Toutes années</option>
                     {% for i in minYear..'now'|date('Y') %}
                         <option value="{{ i }}" {% if selectedYear == i %}selected{% endif %}>
                             {{ i }}
