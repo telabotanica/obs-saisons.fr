@@ -49,8 +49,8 @@ class ResultsController extends AbstractController
             if (!is_array($selectedSpeciesIds)) {
                 $selectedSpeciesIds = [$selectedSpeciesIds];
             }
-            if (count($selectedSpeciesIds) > 5) {
-                $selectedSpeciesIds = array_slice($selectedSpeciesIds, 0, 5);
+            if (count($selectedSpeciesIds) > 7) {
+                $selectedSpeciesIds = array_slice($selectedSpeciesIds, 0, 7);
             }
         }
 
