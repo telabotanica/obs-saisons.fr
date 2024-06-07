@@ -49,19 +49,13 @@ class ResultsController extends AbstractController
             if (!is_array($selectedSpeciesIds)) {
                 $selectedSpeciesIds = [$selectedSpeciesIds];
             }
-            if (count($selectedSpeciesIds) > 7) {
-                $selectedSpeciesIds = array_slice($selectedSpeciesIds, 0, 7);
-            }
         }
 
-        // Prise en compte du statut demandé lors de la selection du dropdown
-        $selectedStatus = $request->query->get('statut', '');
-
         // Prise en compte de l'id de l'event sélectionner sur le dropdown
-        $selectedEventId = $request->query->get('event', '');
+        $selectedEventId = $request->query->get('event', []);
 
         // Prise en compte de l'année sélectionner sur le dropdown
-        $selectedYear = $request->query->get('year', '');
+        $selectedYear = $request->query->get('year', []);
 
         $observations = $em->getRepository(Observation::class)
             ->findObservationsGraph($selectedSpeciesIds, $selectedEventId, $selectedYear);

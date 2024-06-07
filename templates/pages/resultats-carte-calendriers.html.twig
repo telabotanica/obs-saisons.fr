@@ -173,10 +173,10 @@
     <div class="container mt-5">
         <h2>Select Multiple Species</h2>
         <form method="get" action="{{ path('explorer-les-donnees') }}">
-            <div class="mb-3 selectMultiple">
-                <label for="species" class="form-label">Filtrer par espèces (7 maximum)</label>
+            <div class="mb-3 selectMultiple" data-placeholder="Select species">
+                <label for="species" class="form-label">Filtrer par espèces</label>
                 <div>
-                    <select name="species[]" id="species-select" class="selectMultiple" multiple onchange="checkSpeciesLimit()">
+                    <select name="species[]" id="species-select" class="form-select" multiple onchange="checkSpeciesLimit()">
                         {% for specie in allSpecies %}
                             <option value="{{ specie.id }}" {% if specie.id in selectedSpeciesIds %}selected{% endif %}>
                                 {{ specie.vernacularName }}
@@ -184,35 +184,41 @@
                         {% endfor %}
                     </select>
                 </div>
-                <p id="species-limit-message" style="color: red; display: none;">You can select up to 7 species.</p>
+                <p id="species-limit-message" class="text-danger" style="display: none;">You can select up to 7 species.</p>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 selectMultiple" data-placeholder="Select event">
                 <label for="event" class="form-label">Filtrer par stade</label>
-                <select class="form-select" name="event">
-                    <option value="">Tous stades</option>
-                    {% for event in events %}
-                        <option value="{{ event.id }}" {% if selectedEventId == event.id %}selected{% endif %}>
-                            {{ event.name }}{% if event.stadeBbch is not empty %} - {{ event.stadeBbch }}{% endif %}
-                        </option>
-                    {% endfor %}
-                </select>
+                <div>
+                    <select class="form-select" name="event[]" multiple id="event-select">
+                        <option value="">Tous stades</option>
+                        {% for event in events %}
+                            <option value="{{ event.id }}" {% if selectedEventId == event.id %}selected{% endif %}>
+                                {{ event.name }}{% if event.stadeBbch is not empty %} - {{ event.stadeBbch }}{% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 selectMultiple" data-placeholder="Select year">
                 <label for="year" class="form-label">Filtrer par année</label>
-                <select class="form-select" name="year">
-                    <option value="1">Toutes années</option>
-                    {% for i in minYear..'now'|date('Y') %}
-                        <option value="{{ i }}" {% if selectedYear == i %}selected{% endif %}>
-                            {{ i }}
-                        </option>
-                    {% endfor %}
-                </select>
+                <div>
+                    <select class="form-select" name="year[]" multiple id="year-select">
+                        <option value="1">Toutes années</option>
+                        {% for i in minYear..'now'|date('Y') %}
+                            <option value="{{ i }}" {% if selectedYear == i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <button class="btn btn-primary" type="submit">Filtrer</button>
         </form>
 
         {% if observations is empty %}
-            <div class="alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au moins un de vos critères</div>
+            <div class="alert alert-danger">
+                Aucune donnée pour les critères demandés, veuillez modifier au moins un de vos critères
+            </div>
         {% endif %}
     </div>
 
@@ -224,47 +230,52 @@
         .selectMultiple select {
             display: none;
         }
+
         .selectMultiple > div {
             position: relative;
-            z-index: 2;
-            padding: 8px 12px 2px 12px;
+            padding: 8px 12px 2px;
             border-radius: 8px;
             background: #fff;
             font-size: 14px;
             min-height: 44px;
-            box-shadow: 0 4px 16px 0 rgba(22, 42, 90, 0.12);
+            box-shadow: 0 4px 16px rgba(22, 42, 90, 0.12);
             transition: box-shadow 0.3s ease;
         }
+
         .selectMultiple > div:hover {
             box-shadow: 0 4px 24px -1px rgba(22, 42, 90, 0.20);
         }
+
         .selectMultiple > div .arrow {
+            position: absolute;
             right: 1px;
             top: 0;
             bottom: 0;
             cursor: pointer;
             width: 28px;
-            position: absolute;
         }
+
         .selectMultiple > div .arrow:before,
         .selectMultiple > div .arrow:after {
             content: '';
             position: absolute;
-            display: block;
             width: 2px;
             height: 8px;
             border-bottom: 8px solid #99A3BA;
             top: 43%;
             transition: all 0.3s ease;
         }
+
         .selectMultiple > div .arrow:before {
             right: 12px;
             transform: rotate(-130deg);
         }
+
         .selectMultiple > div .arrow:after {
             left: 9px;
             transform: rotate(130deg);
         }
+
         .selectMultiple > div span {
             color: #99A3BA;
             display: block;
@@ -275,11 +286,13 @@
             line-height: 28px;
             transition: all 0.3s ease;
         }
+
         .selectMultiple > div span.hide {
             opacity: 0;
             visibility: hidden;
             transform: translate(-4px, 0);
         }
+
         .selectMultiple > div a {
             position: relative;
             padding: 0 24px 6px 8px;
@@ -289,23 +302,25 @@
             vertical-align: top;
             margin: 0 6px 0 0;
         }
+
         .selectMultiple > div a em {
             font-style: normal;
             display: block;
             white-space: nowrap;
         }
+
         .selectMultiple > div a:before {
             content: '';
+            position: absolute;
             left: 0;
             top: 0;
             bottom: 6px;
             width: 100%;
-            position: absolute;
-            display: block;
             background: rgba(228, 236, 250, 0.7);
             z-index: -1;
             border-radius: 4px;
         }
+
         .selectMultiple > div a i {
             cursor: pointer;
             position: absolute;
@@ -313,12 +328,11 @@
             right: 0;
             width: 24px;
             height: 28px;
-            display: block;
         }
+
         .selectMultiple > div a i:before,
         .selectMultiple > div a i:after {
             content: '';
-            display: block;
             width: 2px;
             height: 10px;
             position: absolute;
@@ -327,67 +341,82 @@
             background: #bcd35f;
             border-radius: 1px;
         }
+
         .selectMultiple > div a i:before {
             transform: translate(-50%, -50%) rotate(45deg);
         }
+
         .selectMultiple > div a i:after {
             transform: translate(-50%, -50%) rotate(-45deg);
         }
+
         .selectMultiple > div a.notShown {
             opacity: 0;
             transition: opacity 0.3s ease;
         }
+
         .selectMultiple > div a.notShown:before {
             width: 28px;
             transition: width 0.45s cubic-bezier(0.87, -0.41, 0.19, 1.44) 0.2s;
         }
+
         .selectMultiple > div a.notShown i {
             opacity: 0;
             transition: all 0.3s ease 0.3s;
         }
+
         .selectMultiple > div a.notShown em {
             opacity: 0;
             transform: translate(-6px, 0);
             transition: all 0.4s ease 0.3s;
         }
+
         .selectMultiple > div a.notShown.shown {
             opacity: 1;
         }
+
         .selectMultiple > div a.notShown.shown:before {
             width: 100%;
         }
+
         .selectMultiple > div a.notShown.shown i {
             opacity: 1;
         }
+
         .selectMultiple > div a.notShown.shown em {
             opacity: 1;
             transform: translate(0, 0);
         }
+
         .selectMultiple > div a.remove:before {
             width: 28px;
-            transition: width 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44) 0s;
+            transition: width 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44);
         }
+
         .selectMultiple > div a.remove i {
             opacity: 0;
-            transition: all 0.3s ease 0s;
+            transition: all 0.3s ease;
         }
+
         .selectMultiple > div a.remove em {
             opacity: 0;
             transform: translate(-12px, 0);
-            transition: all 0.4s ease 0s;
+            transition: all 0.4s ease;
         }
+
         .selectMultiple > div a.remove.disappear {
             opacity: 0;
-            transition: opacity 0.5s ease 0s;
+            transition: opacity 0.5s ease;
         }
+
         .selectMultiple > ul {
             margin: 0;
             padding: 0;
             list-style: none;
             font-size: 16px;
-            z-index: 9999; /* Ensures the dropdown appears above other content */
+            z-index: 9999;
             position: absolute;
-            top: calc(100% + 5px); /* Adjusted to ensure it doesn't overlap */
+            top: calc(100% + 5px);
             left: 0;
             right: 0;
             visibility: hidden;
@@ -397,7 +426,10 @@
             transform-origin: 0 0;
             filter: drop-shadow(0 12px 20px rgba(22, 42, 90, 0.08));
             transition: all 0.4s ease, transform 0.4s cubic-bezier(0.87, -0.41, 0.19, 1.44), filter 0.3s ease 0.2s;
+            max-height: 200px;
+            overflow-y: auto;
         }
+
         .selectMultiple > ul li {
             color: #1E2330;
             background: #fff;
@@ -407,22 +439,25 @@
             position: relative;
             transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease 0.3s, opacity 0.5s ease 0.3s, border-radius 0.3s ease 0.3s;
         }
+
         .selectMultiple > ul li:first-child {
             border-radius: 8px 8px 0 0;
         }
-        .selectMultiple > ul li:first-child:last-child {
-            border-radius: 8px;
-        }
-        .selectMultiple > ul li:last-child {
-            border-radius: 0 0 8px 8px;
-        }
+
+        .selectMultiple > ul li:first-child:last-child,
         .selectMultiple > ul li:last-child:first-child {
             border-radius: 8px;
         }
-        .selectMultiple > ul li:hover {
-            background:#bcd35f;
-            color: #000000;
+
+        .selectMultiple > ul li:last-child {
+            border-radius: 0 0 8px 8px;
         }
+
+        .selectMultiple > ul li:hover {
+            background: #bcd35f;
+            color: #000;
+        }
+
         .selectMultiple > ul li:after {
             content: '';
             position: absolute;
@@ -433,47 +468,59 @@
             background: rgba(0, 0, 0, 0.4);
             opacity: 0;
             border-radius: 100%;
-            transform: scale(1, 1) translate(-50%, -50%);
+            transform: scale(1) translate(-50%, -50%);
             transform-origin: 50% 50%;
         }
+
         .selectMultiple > ul li.beforeRemove {
             border-radius: 0 0 8px 8px;
         }
+
         .selectMultiple > ul li.beforeRemove:first-child {
             border-radius: 8px;
         }
+
         .selectMultiple > ul li.afterRemove {
             border-radius: 8px 8px 0 0;
         }
+
         .selectMultiple > ul li.afterRemove:last-child {
             border-radius: 8px;
         }
+
         .selectMultiple > ul li.remove {
             transform: scale(0);
             opacity: 0;
         }
+
         .selectMultiple > ul li.remove:after {
             animation: ripple 0.4s ease-out;
         }
+
         .selectMultiple > ul li.notShown {
             display: none;
             transform: scale(0);
             opacity: 0;
             transition: transform 0.35s ease, opacity 0.4s ease;
         }
+
         .selectMultiple > ul li.notShown.show {
             transform: scale(1);
             opacity: 1;
         }
+
         .selectMultiple.open > div {
             box-shadow: 0 4px 20px -1px rgba(22, 42, 90, 0.12);
         }
+
         .selectMultiple.open > div .arrow:before {
             transform: rotate(-50deg);
         }
+
         .selectMultiple.open > div .arrow:after {
             transform: rotate(50deg);
         }
+
         .selectMultiple.open > ul {
             transform: translate(0, 12px) scale(1);
             opacity: 1;
@@ -483,16 +530,16 @@
 
         @keyframes ripple {
             0% {
-                transform: scale(0, 0);
+                transform: scale(0);
                 opacity: 1;
             }
             25% {
-                transform: scale(30, 30);
+                transform: scale(30);
                 opacity: 1;
             }
             100% {
                 opacity: 0;
-                transform: scale(50, 50);
+                transform: scale(50);
             }
         }
 
@@ -501,17 +548,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        * {
-            box-sizing: inherit;
-        }
+        *,
         *::before,
         *::after {
             box-sizing: inherit;
-        }
-
-        .selectMultiple > ul {
-            max-height: 200px; /* Set the maximum height */
-            overflow-y: auto; /* Enable vertical scrolling */
         }
 
         .tooltip {
@@ -524,126 +564,132 @@
         }
 
         .form-select[multiple] {
-            height: auto; /* Adjust height to fit the content */
-            width: 100%; /* Make it full width */
+            height: auto;
+            width: 100%;
         }
+
         .form-select[multiple] option {
-            padding: 10px; /* Add padding for better readability */
+            padding: 10px;
         }
     </style>
 
     <script>
 
-        // Function to limit species selection to 7
-        function checkSpeciesLimit() {
-            var selectedOptions = $('#species-select').val();
-            if (selectedOptions.length > 7) {
-                $('#species-limit-message').show();
-                // Remove the last selected option
-                selectedOptions = selectedOptions.slice(0, 7);
-                $('#species-select').val(selectedOptions).trigger('change');
-            } else {
-                $('#species-limit-message').hide();
-            }
-        }
-
         // Initialize the selectMultiple dropdown
-        $(document).ready(function() {
-            var select = $('select[multiple]');
-            var options = select.find('option');
+        $(document).ready(function () {
+            function initializeSelectMultiple(selector, multiple = true) {
+                const select = $(selector);
+                const options = select.find('option');
+                const placeholder = select.closest('.selectMultiple').data('placeholder');
 
-            var div = $('<div />').addClass('selectMultiple');
-            var active = $('<div />');
-            var list = $('<ul />');
-            var placeholder = select.data('placeholder');
+                const div = $('<div />').addClass('selectMultiple');
+                const active = $('<div />');
+                const list = $('<ul />');
+                const span = $('<span />').text(placeholder).appendTo(active);
 
-            var span = $('<span />').text(placeholder).appendTo(active);
+                options.each(function () {
+                    const text = $(this).text();
+                    if ($(this).is(':selected')) {
+                        active.append($('<a />').html(`<em>${text}</em><i></i>`));
+                        span.addClass('hide');
+                    } else {
+                        list.append($('<li />').text(text));
+                    }
+                });
 
-            options.each(function() {
-                var text = $(this).text();
-                if($(this).is(':selected')) {
-                    active.append($('<a />').html('<em>' + text + '</em><i></i>'));
-                    span.addClass('hide');
-                } else {
-                    list.append($('<li />').html(text));
-                }
-            });
+                active.append($('<div />').addClass('arrow'));
+                div.append(active).append(list);
 
-            active.append($('<div />').addClass('arrow'));
-            div.append(active).append(list);
+                select.wrap(div);
 
-            select.wrap(div);
+                $(document).on('click', '.selectMultiple ul li', function () {
+                    const select = $(this).closest('.selectMultiple');
+                    const li = $(this);
+                    if (!select.hasClass('clicked')) {
+                        select.addClass('clicked');
+                        li.prev().addClass('beforeRemove');
+                        li.next().addClass('afterRemove');
+                        li.addClass('remove');
 
-            $(document).on('click', '.selectMultiple ul li', function(e) {
-                var select = $(this).parent().parent();
-                var li = $(this);
-                if(!select.hasClass('clicked')) {
-                    select.addClass('clicked');
-                    li.prev().addClass('beforeRemove');
-                    li.next().addClass('afterRemove');
-                    li.addClass('remove');
-                    var a = $('<a />').addClass('notShown').html('<em>' + li.text() + '</em><i></i>').hide().appendTo(select.children('div'));
-                    a.slideDown(400, function() {
-                        setTimeout(function() {
-                            a.addClass('shown');
-                            select.children('div').children('span').addClass('hide');
-                            select.find('option:contains(' + li.text() + ')').prop('selected', true);
-                        }, 500);
-                    });
-                    setTimeout(function() {
-                        if(li.prev().is(':last-child')) {
-                            li.prev().removeClass('beforeRemove');
-                        }
-                        if(li.next().is(':first-child')) {
-                            li.next().removeClass('afterRemove');
-                        }
-                        setTimeout(function() {
-                            li.prev().removeClass('beforeRemove');
-                            li.next().removeClass('afterRemove');
-                        }, 200);
-
-                        li.slideUp(400, function() {
-                            li.remove();
-                            select.removeClass('clicked');
-                        });
-                    }, 600);
-                }
-            });
-
-            $(document).on('click', '.selectMultiple > div a', function(e) {
-                var select = $(this).parent().parent();
-                var self = $(this);
-                self.removeClass().addClass('remove');
-                select.addClass('open');
-                setTimeout(function() {
-                    self.addClass('disappear');
-                    setTimeout(function() {
-                        self.animate({
-                            width: 0,
-                            height: 0,
-                            padding: 0,
-                            margin: 0
-                        }, 300, function() {
-                            var li = $('<li />').text(self.children('em').text()).addClass('notShown').appendTo(select.find('ul'));
-                            li.slideDown(400, function() {
-                                li.addClass('show');
-                                setTimeout(function() {
-                                    select.find('option:contains(' + self.children('em').text() + ')').prop('selected', false);
-                                    if(!select.find('option:selected').length) {
-                                        select.children('div').children('span').removeClass('hide');
-                                    }
-                                    li.removeClass();
-                                }, 400);
+                        // For single selection, check if there is already a selected item
+                        if (!multiple && select.find('a').length > 0) {
+                            // Remove the existing selected item
+                            select.find('a').each(function () {
+                                const a = $(this);
+                                const text = a.find('em').text();
+                                select.find('option').filter(function () {
+                                    return $(this).text() === text;
+                                }).prop('selected', false);
+                                a.remove();
                             });
-                            self.remove();
-                        })
-                    }, 300);
-                }, 400);
-            });
+                        }
 
-            $(document).on('click', '.selectMultiple > div .arrow, .selectMultiple > div span', function(e) {
-                $(this).parent().parent().toggleClass('open');
-            });
+                        const a = $('<a />').addClass('notShown').html(`<em>${li.text()}</em><i></i>`).hide().appendTo(select.children('div'));
+                        a.slideDown(400, function () {
+                            setTimeout(function () {
+                                a.addClass('shown');
+                                select.children('div').children('span').addClass('hide');
+                                select.find('option').filter(function () {
+                                    return $(this).text() === li.text();
+                                }).prop('selected', true);
+                            }, 500);
+                        });
+
+                        setTimeout(function () {
+                            li.prev().removeClass('beforeRemove');
+                            li.next().removeClass('afterRemove');
+                            li.slideUp(400, function () {
+                                li.remove();
+                                select.removeClass('clicked');
+                            });
+                        }, 600);
+                    }
+                });
+
+                $(document).on('click', '.selectMultiple > div a', function () {
+                    const select = $(this).closest('.selectMultiple');
+                    const self = $(this);
+                    self.removeClass().addClass('remove');
+                    select.addClass('open');
+                    setTimeout(function () {
+                        self.addClass('disappear');
+                        setTimeout(function () {
+                            self.animate({
+                                width: 0,
+                                height: 0,
+                                padding: 0,
+                                margin: 0
+                            }, 300, function () {
+                                const li = $('<li />').text(self.children('em').text()).addClass('notShown').appendTo(select.find('ul'));
+                                li.slideDown(400, function () {
+                                    li.addClass('show');
+                                    setTimeout(function () {
+                                        select.find('option').filter(function () {
+                                            return $(this).text() === self.children('em').text();
+                                        }).prop('selected', false);
+                                        if (!select.find('option:selected').length) {
+                                            select.children('div').children('span').removeClass('hide');
+                                        }
+                                        li.removeClass();
+                                    }, 400);
+                                });
+                                self.remove();
+                            })
+                        }, 300);
+                    }, 400);
+                });
+
+                $(document).on('click', '.selectMultiple > div .arrow, .selectMultiple > div span', function () {
+                    $(this).closest('.selectMultiple').toggleClass('open');
+                });
+            }
+
+            // Initialize species selector
+            initializeSelectMultiple('#species-select', true);
+
+            // Initialize event and year selectors
+            initializeSelectMultiple('#event-select', false);
+            initializeSelectMultiple('#year-select', false);
         });
 
         const observation = [];
@@ -669,7 +715,7 @@
                         first: dates[0],
                         median: dates[Math.floor(dates.length / 2)],
                         last: dates[dates.length - 1],
-                        values: values
+                        values
                     };
                 });
             }
@@ -685,14 +731,14 @@
 
                 const maxCount = Math.max(...Object.values(dateCounts));
 
-                return data.map(d => {
-                    const density = dateCounts[d.date] / maxCount;
-                    return {...d, density};
-                });
+                return data.map(d => ({
+                    ...d,
+                    density: dateCounts[d.date] / maxCount
+                }));
             }
 
             function parseDate(md) {
-                const [month, day] = md.split('-').map(d => parseInt(d, 10));
+                const [month, day] = md.split('-').map(Number);
                 return {month, day};
             }
 
@@ -739,16 +785,16 @@
                     .attr("transform", `translate(0,${height - marginBottom})`)
                     .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0))
                     .call(g => g.selectAll("text")
-                        .style("font-size", "20px")  // Adjust the font size as needed
-                        .style("font-family", "sans-serif"));  // Adjust the font family as needed
+                        .style("font-size", "20px")
+                        .style("font-family", "sans-serif"));
                 // Add the vertical axis.
                 svg.append("g")
                     .attr("transform", `translate(${marginLeft},0)`)
                     .call(d3.axisLeft(y))
                     .call(g => g.select(".domain").remove())
                     .call(g => g.selectAll("text")
-                        .style("font-size", "20px")  // Adjust the font size as needed
-                        .style("font-family", "sans-serif"))  // Adjust the font family as needed
+                        .style("font-size", "20px")
+                        .style("font-family", "sans-serif"))
                     .call(g => g.append("text")
                         .attr("x", -marginLeft)
                         .attr("y", 10)
@@ -857,6 +903,9 @@
             document.getElementById("chart").appendChild(chart(observation));
         }
     </script>
+
+
+
 
 
 {% endblock %}

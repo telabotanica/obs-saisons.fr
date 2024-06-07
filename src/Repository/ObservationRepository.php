@@ -788,7 +788,7 @@ class ObservationRepository extends ServiceEntityRepository
         return $imagesQuery->getQuery()->getResult();
     }
 
-    public function findObservationsGraph($selectedSpeciesIds, $selectedEventId, $selectedYear)
+    public function findObservationsGraph($selectedSpeciesIds, $selectedEventIds, $selectedYears)
     {
         $observationQuery = '';
         $containsValue = false;
@@ -803,35 +803,45 @@ class ObservationRepository extends ServiceEntityRepository
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
                 ->leftJoin('i.species', 's');
+
             for ($i = 0; $i < count($selectedSpeciesIds); $i++) {
                 if ($selectedSpeciesIds[$i] != '') {
                     $containsValue = true;
                     break;
                 }
             }
-//            dd($selectedSpeciesIds);
+
             if ($containsValue){
                 $observationQuery
-                    ->andWhere('s.id IN (:speciesId)')
-                    ->setParameter('speciesId', $selectedSpeciesIds);
+                    ->andWhere('s.id IN (:speciesIds)')
+                    ->setParameter('speciesIds', $selectedSpeciesIds);
             }
-            if (!empty($selectedEventId)) {
+
+            if (!empty($selectedEventIds)) {
                 $observationQuery
-                    ->andWhere('e.id = :eventId')
-                    ->setParameter('eventId', $selectedEventId);
+                    ->andWhere('e.id IN (:eventIds)')
+                    ->setParameter('eventIds', $selectedEventIds);
             }
-            if (!empty($selectedYear)) {
-                if ($selectedYear != 1){
+
+            if (!empty($selectedYears)) {
+                if (in_array(1, $selectedYears)) {
+                    // If the special value '1' is in the array, we do not filter by year.
+                    $selectedYears = array_filter($selectedYears, function($year) {
+                        return $year != 1;
+                    });
+                }
+
+                if (!empty($selectedYears)) {
                     $observationQuery
-                        ->andWhere('YEAR(o.date) = :year')
-                        ->setParameter('year', $selectedYear);
+                        ->andWhere('YEAR(o.date) IN (:years)')
+                        ->setParameter('years', $selectedYears);
                 }
             }
 
-//            dd($selectedYear);
         } catch (\Exception $exception) {
             echo 'An error occurred --> ' . $exception->getMessage();
         }
         return $observationQuery->getQuery()->getResult();
     }
+
 }
