@@ -176,7 +176,7 @@
             <div class="mb-3 selectMultiple">
                 <label for="species" class="form-label">Filtrer par espèces (7 maximum)</label>
                 <div>
-                    <select name="species[]" id="species-select" class="form-select" multiple onchange="checkSpeciesLimit()">
+                    <select name="species[]" id="species-select" class="selectMultiple" multiple onchange="checkSpeciesLimit()">
                         {% for specie in allSpecies %}
                             <option value="{{ specie.id }}" {% if specie.id in selectedSpeciesIds %}selected{% endif %}>
                                 {{ specie.vernacularName }}
@@ -236,7 +236,7 @@
             transition: box-shadow 0.3s ease;
         }
         .selectMultiple > div:hover {
-            box-shadow: 0 4px 24px -1px rgba(22, 42, 90, 0.16);
+            box-shadow: 0 4px 24px -1px rgba(22, 42, 90, 0.20);
         }
         .selectMultiple > div .arrow {
             right: 1px;
@@ -324,7 +324,7 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            background: #4D18FF;
+            background: #bcd35f;
             border-radius: 1px;
         }
         .selectMultiple > div a i:before {
@@ -509,6 +509,11 @@
             box-sizing: inherit;
         }
 
+        .selectMultiple > ul {
+            max-height: 200px; /* Set the maximum height */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
         .tooltip {
             position: absolute;
             background-color: white;
@@ -528,17 +533,6 @@
     </style>
 
     <script>
-        // Function to limit species selection to 7
-        $(document).ready(function() {
-            $('#species-select').select2({
-                placeholder: "Select species",
-                allowClear: true
-            });
-
-            $('#species-select').on('change', function() {
-                checkSpeciesLimit();
-            });
-        });
 
         // Function to limit species selection to 7
         function checkSpeciesLimit() {
