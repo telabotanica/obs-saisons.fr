@@ -176,7 +176,7 @@
             <div class="mb-3 selectMultiple" data-placeholder="Select species">
                 <label for="species" class="form-label">Filtrer par espèces</label>
                 <div>
-                    <select name="species[]" id="species-select" class="form-select" multiple onchange="checkSpeciesLimit()">
+                    <select name="species[]" id="species-select" class="form-select" multiple>
                         {% for specie in allSpecies %}
                             <option value="{{ specie.id }}" {% if specie.id in selectedSpeciesIds %}selected{% endif %}>
                                 {{ specie.vernacularName }}
@@ -187,6 +187,7 @@
                 <p id="species-limit-message" class="text-danger" style="display: none;">You can select up to 7 species.</p>
             </div>
             <div class="mb-3 selectMultiple" data-placeholder="Select event">
+                {#            TODO: Keep the selected elements in the dropdown#}
                 <label for="event" class="form-label">Filtrer par stade</label>
                 <div>
                     <select class="form-select" name="event[]" multiple id="event-select">
@@ -199,6 +200,8 @@
                     </select>
                 </div>
             </div>
+
+{#            TODO: Keep the selected elements in the dropdown#}
             <div class="mb-3 selectMultiple" data-placeholder="Select year">
                 <label for="year" class="form-label">Filtrer par année</label>
                 <div>
@@ -696,7 +699,7 @@
         {% for observation in observations %}
         observation.push({
             date: "{{ observation.date|date('m-d') }}",  // Keep date as string for custom handling
-            event: "{{ observation.event.name }}",
+            event: "{{ observation.event.name }} {{ observation.event.stadeBbch }}",
             espece: "{{ observation.individual.species.vernacularName }}"
         });
         {% endfor %}
