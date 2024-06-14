@@ -170,7 +170,7 @@
         let eventsEvolutionRoute = "{{ path('events_evolution')|escape('js') }}";
     </script>
     <div class="container mt-5">
-        <h2>Select Multiple Species</h2>
+        <h2>Graphique de densité d'observation par date</h2>
         <form method="get" action="{{ path('explorer-les-donnees') }}">
             <div class="mb-3 selectMultiple" data-placeholder="Select species">
                 <label for="species" class="form-label">Filtrer par espèces</label>
@@ -833,7 +833,7 @@
                         gradient.append("stop")
                             .attr("offset", "0%")
                             .attr("stop-color", colorScale(d.espece + '-' + d.event))
-                            .attr("stop-opacity", 0.3);
+                            .attr("stop-opacity", 0.001);
 
                         densities.forEach(dataPoint => {
                             const parsedDate = parseDate(dataPoint.date);
@@ -841,13 +841,13 @@
                             gradient.append("stop")
                                 .attr("offset", `${monthPos}%`)
                                 .attr("stop-color", colorScale(d.espece + '-' + d.event))
-                                .attr("stop-opacity", 0.3 + 0.7 * dataPoint.density); // Gradient from 30% to 100%
+                                .attr("stop-opacity", 0.001 + 0.999 * dataPoint.density); // Gradient from 30% to 100%
                         });
 
                         gradient.append("stop")
                             .attr("offset", "100%")
                             .attr("stop-color", colorScale(d.espece + '-' + d.event))
-                            .attr("stop-opacity", 0.3);
+                            .attr("stop-opacity", 0.001);
                     });
 
                     // Add the rectangles for first, median, and last dates.
@@ -917,7 +917,14 @@
     </script>
 
 
-
-
+    {#    TODO : Epaisseur de la ligne des observations à changer#}
+    {#    TODO : Mettre une couleur fix par évenements #}
+{#    TODO : Calendrier static par type d'espèce#}
+    {#     Feuillaison : vert#}
+    {#     Floraison : blue #}
+    {#     Fructification : orange#}
+    {#     fructification : rouge#}
+    {#     Première apparition : violet#}
+{#    regarder les points#}
 
 {% endblock %}
