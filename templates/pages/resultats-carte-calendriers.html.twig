@@ -747,17 +747,17 @@
                 const [month, day] = md.split('-');
                 return `${month}/${day}`;
             }
-
             function chart(data) {
                 const preprocessedData = preprocessData(data);
 
                 // Specify the chart’s dimensions.
                 const width = 1280;
-                const height = 1500;
+                const height = 1000; // Height for each graph
                 const marginTop = 20;
                 const marginRight = 20;
                 const marginBottom = 30;
                 const marginLeft = 200;
+                const yearSpacing = 50; // Space between each year's graph
 
                 // Create the positional scales.
                 const x = d3.scaleLinear()
@@ -767,22 +767,25 @@
                 // Create a color scale for species-events
                 const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-                // Create the SVG container.
-                const svg = d3.create("svg")
-                    .attr("width", width)
-                    .attr("height", height)
-                    .attr("viewBox", [0, 0, width, height])
-                    .attr("style", "max-width: 100%; height: auto; overflow: visible; font: 10px sans-serif;");
+                // Get the container div
+                const container = d3.select("#chart");
 
                 preprocessedData.forEach((yearData, yearIndex) => {
+                    // Create the SVG container for each graph.
+                    const svg = container.append("svg")
+                        .attr("width", width)
+                        .attr("height", height)
+                        .attr("viewBox", [0, 0, width, height])
+                        .attr("style", "max-width: 100%; height: auto; overflow: visible; font: 10px sans-serif; margin-bottom: " + yearSpacing + "px;");
+
                     const y = d3.scalePoint()
                         .domain(yearData.speciesEvents.map(d => `${d.espece} - ${d.event}`))
-                        .range([marginTop + yearIndex * height / preprocessedData.length, marginTop + (yearIndex + 1) * height / preprocessedData.length])
+                        .range([marginTop, height - marginBottom])
                         .padding(1);
 
                     // Add the horizontal axis.
                     svg.append("g")
-                        .attr("transform", `translate(0,${marginTop + yearIndex * height / preprocessedData.length - 10})`)
+                        .attr("transform", `translate(0,${height - marginBottom})`)
                         .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0))
                         .call(g => g.selectAll("text")
                             .style("font-size", "20px")
@@ -795,15 +798,19 @@
                         .call(g => g.select(".domain").remove())
                         .call(g => g.selectAll("text")
                             .style("font-size", "20px")
-                            .style("font-family", "sans-serif"))
+                            .style("font-family", "sans-serif")
+                            .style("padding", "5px")
+                            .attr("dy", "0.35em")
+                            .attr("dx", "-0.5em"))
                         .call(g => g.append("text")
                             .attr("x", -marginLeft)
-                            .attr("y", marginTop + yearIndex * height / preprocessedData.length - 10)
+                            .attr("y", marginTop - 10)
                             .attr("fill", "currentColor")
                             .attr("text-anchor", "start")
-                            .text(`${yearData.year} - Espèce - Event`))
-                        .style("font-size", "20px")
-
+                            .style("font-size", "24px")
+                            .style("font-weight", "bold")
+                            .text(`${yearData.year} - Espèce - Event `))
+                        .style("font-size", "20px");
 
                     // Add linear gradients for each event
                     const defs = svg.append("defs");
@@ -899,11 +906,12 @@
                             tooltip.transition().duration(500).style("opacity", 0);
                         });
                 });
-
-                return svg.node();
             }
 
-            // Append the created chart to the container div
+// Append the created chart to the container di
+
+
+// Append the created chart to the container div
             document.getElementById("chart").appendChild(chart(observation));
         }
     </script>
