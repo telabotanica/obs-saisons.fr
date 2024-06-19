@@ -833,7 +833,7 @@
                         gradient.append("stop")
                             .attr("offset", "0%")
                             .attr("stop-color", colorScale(d.espece + '-' + d.event))
-                            .attr("stop-opacity", 0.3);
+                            .attr("stop-opacity", 0.001);
 
                         densities.forEach(dataPoint => {
                             const parsedDate = parseDate(dataPoint.date);
@@ -841,13 +841,13 @@
                             gradient.append("stop")
                                 .attr("offset", `${monthPos}%`)
                                 .attr("stop-color", colorScale(d.espece + '-' + d.event))
-                                .attr("stop-opacity", 0.3 + 0.7 * dataPoint.density); // Gradient from 30% to 100%
+                                .attr("stop-opacity", 0.001 + 0.999 * dataPoint.density); // Gradient from 30% to 100%
                         });
 
                         gradient.append("stop")
                             .attr("offset", "100%")
                             .attr("stop-color", colorScale(d.espece + '-' + d.event))
-                            .attr("stop-opacity", 0.3);
+                            .attr("stop-opacity", 0.001);
                     });
 
                     // Add the rectangles for first, median, and last dates.
