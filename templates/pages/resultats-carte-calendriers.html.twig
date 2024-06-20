@@ -693,6 +693,7 @@
             year: "{{ observation.date|date('Y') }}",
             date: "{{ observation.date|date('m-d') }}",  // Keep date as string for custom handling
             event: "{{ observation.event.name }} {{ observation.event.stadeBbch }}",
+            eventObsName: "{{ observation.event.name }}",
             espece: "{{ observation.individual.species.vernacularName }}"
         });
         {% endfor %}
@@ -747,6 +748,30 @@
                 const [month, day] = md.split('-');
                 return `${month}/${day}`;
             }
+
+            function colorByEvent(event) {
+                switch (event.toLowerCase().trim()) {  // Ensure case-insensitivity
+                    case "feuillaison 11":
+                        return "green";
+                    case "feuillaison 15":
+                        return "green";
+                    case "floraison 61":
+                        return "blue";
+                    case "floraison 65":
+                        return "blue";
+                    case "fructification 85":
+                        return "orange";
+                    case "sénescence 91":
+                        return "red";
+                    case "sénescence 95":
+                        return "red";
+                    case "1ère apparition":
+                        return "violet";
+                    default:
+                        return "black";
+                }
+            }
+
             function chart(data) {
                 const preprocessedData = preprocessData(data);
 
@@ -763,9 +788,6 @@
                 const x = d3.scaleLinear()
                     .domain([1, 12])  // months from 1 to 12
                     .range([marginLeft, width - marginRight]);
-
-                // Create a color scale for species-events
-                const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
                 // Get the container div
                 const container = d3.select("#chart");
@@ -818,6 +840,8 @@
                     yearData.speciesEvents.forEach(d => {
                         const densities = computeDensity(d.values);
                         const gradientId = `gradient-${d.event.replace(/\s+/g, '-')}-${d.espece.replace(/\s+/g, '-')}-${yearData.year}`;
+                        const eventColor = colorByEvent(d.event);
+
 
                         const gradient = defs.append("linearGradient")
                             .attr("id", gradientId)
@@ -832,7 +856,7 @@
                         // Ensure the gradient covers the full range
                         gradient.append("stop")
                             .attr("offset", "0%")
-                            .attr("stop-color", colorScale(d.espece + '-' + d.event))
+                            .attr("stop-color", eventColor)
                             .attr("stop-opacity", 0.001);
 
                         densities.forEach(dataPoint => {
@@ -840,13 +864,13 @@
                             const monthPos = ((parsedDate.month - firstDate.month) / (lastDate.month - firstDate.month)) * 100; // Position within the gradient
                             gradient.append("stop")
                                 .attr("offset", `${monthPos}%`)
-                                .attr("stop-color", colorScale(d.espece + '-' + d.event))
+                                .attr("stop-color", eventColor)
                                 .attr("stop-opacity", 0.001 + 0.999 * dataPoint.density); // Gradient from 30% to 100%
                         });
 
                         gradient.append("stop")
                             .attr("offset", "100%")
-                            .attr("stop-color", colorScale(d.espece + '-' + d.event))
+                            .attr("stop-color", eventColor)
                             .attr("stop-opacity", 0.001);
                     });
 
@@ -860,8 +884,8 @@
                     speciesGroup.append("rect")
                         .attr("x", d => x(parseDate(d.first).month))
                         .attr("width", d => x(parseDate(d.last).month) - x(parseDate(d.first).month))
-                        .attr("y", -5)
-                        .attr("height", 10)
+                        .attr("y", -7)
+                        .attr("height", 15)
                         .attr("fill", d => `url(#gradient-${d.event.replace(/\s+/g, '-')}-${d.espece.replace(/\s+/g, '-')}-${yearData.year})`)
                         .attr("stroke", "none");
 
@@ -883,8 +907,8 @@
                         .join("circle")
                         .attr("cx", d => x(parseDate(d.date).month))
                         .attr("cy", 0)
-                        .attr("r", 5)
-                        .attr("fill", d => colorScale(d.espece + '-' + d.event));
+                        .attr("r", 10)
+                        .attr("fill", d => colorByEvent(d.event)); // Use colorByEvent for points
 
                     // Add tooltip element
                     const tooltip = d3.select("body").append("div")
@@ -908,10 +932,8 @@
                 });
             }
 
-// Append the created chart to the container di
-
-
 // Append the created chart to the container div
+
             document.getElementById("chart").appendChild(chart(observation));
         }
     </script>
