@@ -41,7 +41,7 @@ class ResultsController extends AbstractController
         if (empty($selectedSpeciesIds)) {
             // Fetch 7 random species if none are selected
             $selectedSpeciesIds = [];
-            $randomIndexes = array_rand($species, 7);
+            $randomIndexes = array_rand($species, 2);
             foreach ((array)$randomIndexes as $index) {
                 $selectedSpeciesIds[] = $species[$index]->getId();
             }
