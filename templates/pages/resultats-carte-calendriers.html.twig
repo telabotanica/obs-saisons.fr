@@ -620,10 +620,12 @@
                 if (uniqueYears.length <= 1) {
                     return; // Do not render anything
                 }
+
                 // Create the positional scales.
-                const x = d3.scaleLinear()
-                    .domain([1, 12])  // months from 1 to 12
-                    .range([marginLeft, width - marginRight]);
+                const x = d3.scaleBand()
+                    .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])  // months from 1 to 12
+                    .range([marginLeft, width - marginRight])
+                    .padding(0.1);
 
                 // Create a unique set of species-events combinations for the y-axis
                 const speciesEvents = Array.from(new Set(preprocessedData.flatMap(d => d.speciesEvents.map(se => `${se.espece} - ${se.event}`))));
@@ -646,7 +648,7 @@
                 // Add the horizontal axis.
                 svg.append("g")
                     .attr("transform", `translate(0,${height - marginBottom})`)
-                    .call(d3.axisBottom(x).ticks(12).tickFormat(d => d3.timeFormat("%B")(new Date(2000, 0, d))).tickSizeOuter(0))
+                    .call(d3.axisBottom(x).tickFormat(d => d3.timeFormat("%B")(new Date(2000, d - 1, 1))).tickSizeOuter(0))
                     .call(g => g.selectAll("text")
                         .style("font-size", "20px")
                         .style("font-family", "sans-serif"));
@@ -669,7 +671,7 @@
                         .attr("text-anchor", "start")
                         .style("font-size", "24px")
                         .style("font-weight", "bold")
-                        .text(`Espèce - Event `))
+                        .text("Espèce - Event"))
                     .style("font-size", "20px");
 
                 // Add linear gradients for each event
