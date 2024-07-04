@@ -482,6 +482,19 @@
                 const x = d3.scaleTime().domain([new Date(year, 0, 1), new Date(year, 11, 31)]).range([0, width]);
                 const y = d3.scaleBand().domain(eventSpecies).range([0, height]).padding(0.1);
 
+                // Add vertical grid lines
+                svg.selectAll("line.vertical-grid")
+                    .data(x.ticks(d3.timeMonth))
+                    .enter()
+                    .append("line")
+                    .attr("class", "vertical-grid")
+                    .attr("x1", function(d) { return x(d); })
+                    .attr("x2", function(d) { return x(d); })
+                    .attr("y1", 0)
+                    .attr("y2", height)
+                    .attr("stroke", "#ccc")
+                    .attr("stroke-dasharray", "2,2");
+
                 // Add the X Axis
                 svg.append("g")
                     .attr("transform", "translate(0," + height + ")")
