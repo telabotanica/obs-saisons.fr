@@ -405,7 +405,14 @@
                     const date = d.date.toDateString();
                     const count = density[key][date];
                     const maxCount = maxDensity[key];
-                    const opacity = (count / maxCount) * 100; // Scale opacity from 0 to 100
+
+                    // Ensure a minimum opacity if maxCount is less than 20
+                    const minOpacity = 0.30; // Set your desired minimum opacity here
+                    let opacity = (count / maxCount) * 100; // Scale opacity from 0 to 100
+                    if (maxCount < 20) {
+                        opacity = Math.max(opacity, minOpacity * 100); // Scale minOpacity to percentage
+                    }
+
                     return {
                         ...d,
                         key: key,
@@ -452,9 +459,9 @@
                 const densityData = computeDensity(data);
 
                 // Set the dimensions and margins of the graph
-                const margin = {top: 20, right: 30, bottom: 50, left: 100}, // Adjusted left margin
+                const margin = {top: 20, right: 30, bottom: 50, left: 200}, // Adjusted left margin
                     heightPerEvent = 10,
-                    width = 750;
+                    width = 500;
 
                 // Determine the range of dates and unique event-species combinations
                 const eventSpecies = Array.from(new Set(densityData.map(d => d.key)));
@@ -478,14 +485,17 @@
                 // Add the X Axis
                 svg.append("g")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(x).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b")));
+                    .call(d3.axisBottom(x).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b")))
+                    .selectAll("text")
+                    .style("font-size", "14px"); // Adjust the font size
 
                 // Add the Y Axis
                 svg.append("g")
                     .call(d3.axisLeft(y))
                     .selectAll("text")
                     .attr("transform", "translate(-10,0)") // Move text slightly to the left
-                    .style("text-anchor", "end"); // Align text to the end of the axis
+                    .style("text-anchor", "end")// Align text to the end of the axis
+                    .style("font-size", "14px"); // Adjust the font size
 
                 // Add tooltip div
                 const tooltip = d3.select("body").append("div")
@@ -508,15 +518,21 @@
                     .attr("height", squareSize)
                     .style("fill", function(d) { return colorByEvent(d.event); }) // Use the colorByEvent function
                     .style("opacity", function(d) { return d.opacity / 100; }) // Use computed opacity
+                    .style("stroke-width", 0) // Initially no border
                     .on("mouseover", function(event, d) {
+                        d3.select(this)
+                            .style("stroke", "black")
+                            .style("stroke-width", 2);
                         tooltip.transition()
                             .duration(200)
                             .style("opacity", .9);
-                        tooltip.html("Espèce: " + d.espece + "<br/>Stade: " + d.event + "<br/>Date: " + d3.timeFormat("%d/%m")(d.date) + "<br/>Observation: " + d.count)
+                        tooltip.html("Species: " + d.espece + "<br/>Event: " + d.event + "<br/>Date: " + d3.timeFormat("%d/%m")(d.date) + "<br/>Count: " + d.count)
                             .style("left", (event.pageX + 5) + "px")
                             .style("top", (event.pageY - 28) + "px");
                     })
                     .on("mouseout", function(d) {
+                        d3.select(this)
+                            .style("stroke-width", 0); // Remove border on mouse out
                         tooltip.transition()
                             .duration(500)
                             .style("opacity", 0);
