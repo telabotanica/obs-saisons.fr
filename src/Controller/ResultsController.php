@@ -55,7 +55,7 @@ class ResultsController extends AbstractController
         $selectedEventId = $request->query->get('event', []);
 
         // Prise en compte de l'année sélectionner sur le dropdown
-        $selectedYear = $request->query->get('year', [date('Y')]);
+        $selectedYear = $request->query->get('year', [1]);
 
         $observations = $em->getRepository(Observation::class)
             ->findObservationsGraph($selectedSpeciesIds, $selectedEventId, $selectedYear);

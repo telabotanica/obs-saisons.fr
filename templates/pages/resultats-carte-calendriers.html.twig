@@ -357,25 +357,6 @@
             document.querySelector(".no-data").style.display = "block";
         } else {
 
-// TODO : 2nd function processdata nested year chart
-
-            function preprocessData(data) {
-                const nested = d3.groups(data, d => `${d.espece}-${d.event}`);
-                return nested.map(([key, events]) => {
-                    const dates = events.map(d => d.date).sort();
-                    const [espece, event] = key.split('-');
-                    return {
-                        espece,
-                        event,
-                        first: dates[0],
-                        median: dates[Math.floor(dates.length / 2)],
-                        last: dates[dates.length - 1],
-                        values: events
-                    };
-                });
-            }
-
-
             // Function to compute density and assign opacity
             function computeDensity(data) {
                 const density = {};
@@ -407,7 +388,7 @@
                     const maxCount = maxDensity[key];
 
                     // Ensure a minimum opacity if maxCount is less than 20
-                    const minOpacity = 0.30; // Set your desired minimum opacity here
+                    const minOpacity = 0.50; // Set your desired minimum opacity here
                     let opacity = (count / maxCount) * 100; // Scale opacity from 0 to 100
                     if (maxCount < 20) {
                         opacity = Math.max(opacity, minOpacity * 100); // Scale minOpacity to percentage
@@ -459,9 +440,9 @@
                 const densityData = computeDensity(data);
 
                 // Set the dimensions and margins of the graph
-                const margin = {top: 20, right: 30, bottom: 50, left: 200}, // Adjusted left margin
+                const margin = {top: 70, right: 30, bottom: 50, left: 200}, // Adjusted left margin
                     heightPerEvent = 10,
-                    width = 500;
+                    width = 600;
 
                 // Determine the range of dates and unique event-species combinations
                 const eventSpecies = Array.from(new Set(densityData.map(d => d.key)));
@@ -475,7 +456,7 @@
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    .attr("transform", "translate(" + margin.left + "," + (margin.top + 30) + ")");
 
                 // Set the ranges for a single year span (from January 1 to December 31)
                 const year = 2024; // Using a leap year to cover 366 days
@@ -492,7 +473,7 @@
                     .attr("x2", function(d) { return x(d); })
                     .attr("y1", 0)
                     .attr("y2", height)
-                    .attr("stroke", "#ccc")
+                    .attr("stroke", "#000")
                     .attr("stroke-dasharray", "2,2");
 
                 // Add the X Axis
@@ -527,8 +508,138 @@
                         return x(mappedDate) - squareSize / 2; // Center the square
                     })
                     .attr("y", function(d) { return y(d.key) + y.bandwidth() / 2 - squareSize / 2; }) // Center the square
-                    .attr("width", squareSize)
-                    .attr("height", squareSize)
+                    .attr("width", 5)
+                    .attr("height", 17)
+                    .style("fill", function(d) { return colorByEvent(d.event); }) // Use the colorByEvent function
+                    .style("opacity", function(d) { return d.opacity / 100; }) // Use computed opacity
+                    .style("stroke-width", 0) // Initially no border
+                    .on("mouseover", function(event, d) {
+                        d3.select(this)
+                            .style("stroke", "black")
+                            .style("stroke-width", 2);
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        tooltip.html( d.espece + "<br/>" + d.event + "<br/>" + d3.timeFormat("%d/%m")(d.date) + "<br/>" + d.count + " donnée(s)")
+                            .style("left", (event.pageX + 5) + "px")
+                            .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                        d3.select(this)
+                            .style("stroke-width", 0); // Remove border on mouse out
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+
+                // Add the title above the graph
+                svg.append("text")
+                    .attr("x", width / 2)
+                    .attr("y", -50) // Position the title above the graph
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "16px")
+                    .style("font-weight", "bold")
+                    .text("Observations sur l'ensemble des années");
+            }
+
+            function eachYearChart(data) {
+                // Extract years from the data
+                const years = Array.from(new Set(data.map(d => new Date(d.date).getFullYear())));
+
+                // Iterate over each year to generate charts
+                years.forEach(year => {
+                    // Filter data for the current year
+                    const yearData = data.filter(d => new Date(d.date).getFullYear() === year);
+
+                    // Generate chart for the current year
+                    generateGraphForYear(year, yearData);
+                });
+            }
+
+// Function to generate a graph for a specific year
+            function generateGraphForYear(year, data) {
+                // Compute density and assign opacity
+                const densityData = computeDensity(data);
+
+                // Set the dimensions and margins of the graph
+                const margin = {top: 70, right: 30, bottom: 50, left: 200}, // Adjusted left margin
+                    heightPerEvent = 10,
+                    width = 500;
+
+                // Determine the range of dates and unique event-species combinations
+                const eventSpecies = Array.from(new Set(densityData.map(d => d.key)));
+
+                // Calculate the height based on the number of unique event-species combinations
+                const height = 400 + eventSpecies.length * heightPerEvent - margin.top - margin.bottom;
+
+                // Append the svg object to the body of the page
+                const svg = d3.select("#multipleChart")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom + 30) // Additional height for title
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + (margin.top + 30) + ")"); // Adjusted transformation to fit title
+
+                // Add the title on top of the graph
+                svg.append("text")
+                    .attr("x", width / 2)
+                    .attr("y", -30) // Position the title above the graph
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "16px")
+                    .style("font-weight", "bold")
+                    .text(`Observations for the Year ${year}`);
+
+                // Set the ranges for a single year span (from January 1 to December 31)
+                const x = d3.scaleTime().domain([new Date(year, 0, 1), new Date(year, 11, 31)]).range([0, width]);
+                const y = d3.scaleBand().domain(eventSpecies).range([0, height]).padding(0.1);
+
+                // Add vertical grid lines
+                svg.selectAll("line.vertical-grid")
+                    .data(x.ticks(d3.timeMonth))
+                    .enter()
+                    .append("line")
+                    .attr("class", "vertical-grid")
+                    .attr("x1", function(d) { return x(d); })
+                    .attr("x2", function(d) { return x(d); })
+                    .attr("y1", 0)
+                    .attr("y2", height)
+                    .attr("stroke", "#ccc")
+                    .attr("stroke-dasharray", "2,2");
+
+                // Add the X Axis
+                svg.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b")))
+                    .selectAll("text")
+                    .style("font-size", "14px"); // Adjust the font size for X axis labels
+
+                // Add the Y Axis
+                svg.append("g")
+                    .call(d3.axisLeft(y))
+                    .selectAll("text")
+                    .attr("transform", "translate(-10,0)") // Move text slightly to the left
+                    .style("text-anchor", "end") // Align text to the end of the axis
+                    .style("font-size", "14px"); // Adjust the font size for Y axis labels
+
+                // Add tooltip div
+                const tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+
+                // Add squares
+                const squareSize = 10; // Define the size of the squares
+
+                svg.selectAll("rect")
+                    .data(densityData)
+                    .enter().append("rect")
+                    .attr("x", function(d) {
+                        // Map the dates to the selected year for x-axis positioning
+                        const mappedDate = new Date(year, d.date.getMonth(), d.date.getDate());
+                        return x(mappedDate) - squareSize / 2; // Center the square
+                    })
+                    .attr("y", function(d) { return y(d.key) + y.bandwidth() / 2 - squareSize / 2; }) // Center the square
+                    .attr("width", 5)
+                    .attr("height",17)
                     .style("fill", function(d) { return colorByEvent(d.event); }) // Use the colorByEvent function
                     .style("opacity", function(d) { return d.opacity / 100; }) // Use computed opacity
                     .style("stroke-width", 0) // Initially no border
@@ -552,8 +663,12 @@
                     });
             }
 
-            // Call the function to create the chart
-                combinedYearChart(observation);
+// Call the function to create the charts
+            combinedYearChart(observation);
+            if ({{ selectedYear|length }} > 1){
+                eachYearChart(observation);
+            }
+
 
         }
     </script>
