@@ -546,6 +546,9 @@
                 // Extract years from the data
                 const years = Array.from(new Set(data.map(d => new Date(d.date).getFullYear())));
 
+                // Sort years in descending order
+                years.sort((a, b) => b - a);  // Sort in descending order (most recent year first)
+
                 // Iterate over each year to generate charts
                 years.forEach(year => {
                     // Filter data for the current year
