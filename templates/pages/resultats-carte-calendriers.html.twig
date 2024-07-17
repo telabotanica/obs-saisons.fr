@@ -248,6 +248,13 @@
                     }
                 });
 
+                $(document).on('click', function (e) {
+                    const target = $(e.target);
+                    if (!target.closest('.selectMultiple').length) {
+                        $('.selectMultiple').removeClass('open');
+                    }
+                });
+
                 active.append($('<div />').addClass('arrow'));
                 div.append(active).append(list);
 
