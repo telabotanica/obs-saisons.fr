@@ -823,20 +823,21 @@ class ObservationRepository extends ServiceEntityRepository
                     ->setParameter('eventIds', $selectedEventIds);
             }
 
-            if (!empty($selectedYears)) {
-                if (in_array(1, $selectedYears)) {
-                    // If the special value '1' is in the array, we do not filter by year.
-                    $selectedYears = array_filter($selectedYears, function($year) {
-                        return $year != 1;
-                    });
-                }
-
-                if (!empty($selectedYears)) {
-                    $observationQuery
-                        ->andWhere('YEAR(o.date) IN (:years)')
-                        ->setParameter('years', $selectedYears);
-                }
-            }
+//
+//            if (!empty($selectedYears)) {
+//                if (in_array(1, $selectedYears)) {
+//                    // If the special value '1' is in the array, we do not filter by year.
+//                    $selectedYears = array_filter($selectedYears, function($year) {
+//                        return $year != 1;
+//                    });
+//                }
+//
+//                if (!empty($selectedYears)) {
+//                    $observationQuery
+//                        ->andWhere('YEAR(o.date) IN (:years)')
+//                        ->setParameter('years', $selectedYears);
+//                }
+//            }
 
         } catch (\Exception $exception) {
             echo 'An error occurred --> ' . $exception->getMessage();
