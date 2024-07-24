@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Security\Voter\UserVoter;
 use App\Service\CsvService;
 use App\Service\EntityJsonSerialize;
+use App\Service\EntityRandomizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -275,4 +276,34 @@ class ExportController extends AbstractController
 		
 		return $response;
 	}
+
+    /**
+     * @Route("/export/observation/calender-data", name="calender_data")
+     */
+    public function exportForCalenderData(
+        EntityManagerInterface $em,
+        Request $request){
+        //Get repositories
+        $species = $em->getRepository(Species::class)->findAllActive();
+
+        //Get query parameters
+        $selectedSpeciesIds = $request->query->get('species', (new \App\Service\EntityRandomizer)->getRandomSpecies($species, 2));
+        $selectedEventId = $request->query->get('event', []);
+        $selectedYear = $request->query->get('year', [1]);
+
+        //Error handling
+        if(!$selectedSpeciesIds){
+            return new JsonResponse('Missing species param', 400);
+        }
+
+        //Get data
+        $data = $em->getRepository(Observation::class)
+            ->findObservationsGraph(
+                $selectedSpeciesIds,
+                $selectedEventId,
+                $selectedYear
+            );
+
+        return new JsonResponse($data);
+    }
 }
