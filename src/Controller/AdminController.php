@@ -22,6 +22,7 @@ use App\Helper\OriginPageTrait;
 use App\Security\Voter\PostVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
+use App\Service\EmailSender;
 use App\Service\MailchimpSyncContact;
 use App\Service\SlugGenerator;
 use App\Service\Stats;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use function PHPUnit\Framework\isEmpty;
 
 
@@ -553,10 +555,15 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/image/{imageId}/handle-form-submission", name="handle_form_submission", methods={"POST"})
      */
-    public function handleFormSubmission($imageId, Request $request, EntityManagerInterface $manager)
+    public function handleFormSubmission($imageId,
+                                         Request $request,
+                                         EntityManagerInterface $manager,
+                                         EmailSender $mailer,
+                                         RequestStack $requestStack)
     {
-
         $observation = $manager->getRepository(Observation::class)->find($imageId);
+        $individual = $observation->getIndividual();
+        $station = $individual->getStation();
 
         if (!$observation) {
             throw $this->createNotFoundException("L'image à vérifier n'existe pas");
@@ -564,7 +571,6 @@ class AdminController extends AbstractController
 
         $isPictureValid = $request->request->get('confirmRadio');
         $motifRefus = $request->request->get('motif');
-
 
         if ($isPictureValid == 0 Or empty($isPictureValid)) {
             $this->addFlash('error', "Le choix ne peut pas être vide");
@@ -577,9 +583,32 @@ class AdminController extends AbstractController
                 'imageId' => $imageId
             ]);
         }else{
+            $stationLink = $this->router->generate('stations_show', ['slug' => $individual->getStation()->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL);
+
             // Update the observation entity with the form data
             $observation->setIsPictureValid($isPictureValid);
             $observation->setMotifRefus($motifRefus);
+
+            // Get the site baseUrl to generate absolute URL
+            $request = $requestStack->getCurrentRequest();
+            $baseUrl = $request->getSchemeAndHttpHost();
+            $pictureUrl = $baseUrl . $observation->getPicture();
+
+            // Envoie du mail de refus
+            $message = $this->renderView('emails/observation-image-rejected.html.twig', [
+                'user' => $observation->getUser()->getDisplayName(),
+                'observation' => $observation,
+                'individual' => $individual,
+                'pictureUrl' => $pictureUrl,
+                'stationLink' => $stationLink,
+                'station' => $station,
+                'motif' => $motifRefus
+            ]);
+            $mailer->send(
+                $observation->getUser()->getEmail(),
+                $mailer->getSubjectFromTitle($message, 'Image refusée'),
+                $message
+            );
 
             // Persist changes to the database
             $manager->flush();
@@ -588,19 +617,8 @@ class AdminController extends AbstractController
         }
     }
 
-//$isPictureValid = $data['confirmRadio'];
-//if ($isPictureValid == 1){
-//$observation->setIsPictureValid(1);
-//}elseif ($isPictureValid == 2){
-//$observation->setIsPictureValid(2);
-//}else{
-//    echo "mauvaise valeur rentrée";
-//}
 
-
-
-
-//    Fonction qui donne toutes les images qui n'ont pas encore était vérifier
+//    Fonction qui donne toutes les images qui n'ont pas encore été vérifiées
     /**
      * @Route("/admin/images", name="admin_verif_image_list", methods={"GET"})
      *
