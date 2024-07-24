@@ -23,19 +23,19 @@
                         <img class="d-block w-100 fixed-height-img" src="{{ asset(image.picture) }}"
                              alt="Slide {{ loop.index }}">
 
-                        <div class="carousel-caption d-none d-md-block">
+                        <div class="carousel-caption d-none d-md-block bg-dark p-1 rounded-5" style="--bs-bg-opacity: .5;">
                             <p>photo de : {{ image.user.displayName|default('anonyme') }} - Observation : {{ image.event.name }}</p>
                             <p></p>
                         </div>
                     </div>
                 {% endfor %}
                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-                    {#            <span class="carousel-control-prev-icon" aria-hidden="true"></span> #}
-                    <span class="sr-only">Précédent</span>
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+{#                    <span class="sr-only">Précédent</span>#}
                 </a>
                 <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-                    {#            <span class="carousel-control-next-icon" aria-hidden="true"></span> #}
-                    <span class="sr-only">Suivant</span>
+                                <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+{#                    <span class="sr-only">Suivant <img src="assets/"></span>#}
                 </a>
             {% endif %}
         </div>
