@@ -673,6 +673,7 @@ class StationsController extends AbstractController
             $image = $uploadFileService->uploadFile($form->get('picture')->getData());
 
             $observation->setPicture($image);
+            $observation->setIsPictureValid(0);
 
             $manager->flush();
 

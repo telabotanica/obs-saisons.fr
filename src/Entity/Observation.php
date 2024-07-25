@@ -78,6 +78,16 @@ class Observation
      */
     private $deletedAt;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $isPictureValid;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $motifRefus;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -202,6 +212,30 @@ class Observation
     public function setDeletedAt(?\DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getIsPictureValid(): ?int
+    {
+        return $this->isPictureValid;
+    }
+
+    public function setIsPictureValid(?int $isPictureValid): self
+    {
+        $this->isPictureValid = $isPictureValid;
+
+        return $this;
+    }
+
+    public function getMotifRefus(): ?string
+    {
+        return $this->motifRefus;
+    }
+
+    public function setMotifRefus(?string $motifRefus): self
+    {
+        $this->motifRefus = $motifRefus;
 
         return $this;
     }

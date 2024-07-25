@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    {% if erreur is not empty %}
+        <div class="alert alert-success">{{ erreur }}</div>
+    {% endif %}
+    <h2 class="text-center"> Liste des images à vérifier</h2>
+
+    <form method="get" action="{{ path('admin_verif_image_list') }}">
+        <div class="row">
+            <div class="col"><label for="species" class="ms-3">Filtrer par espèces</label>
+                <select name="species" class="form-select m-3">
+                    <option value="" >Toutes espèces</option>
+                    {% for specie in species %}
+                        <option  value="{{ specie.id }}"
+                                {% if selectedSpeciesId == specie.id %}selected{% endif %}>{{ specie.vernacularName }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="statut" class="ms-3">Filtrer par statut</label>
+                <select name="statut" class="form-select m-3">
+                    <option value="0" {{ selectedStatus == '0' ? 'selected' : '' }}>Image à vérifier</option>
+                    <option value="1" {{ selectedStatus == '1' ? 'selected' : '' }}>Image valide</option>
+                    <option value="2" {{ selectedStatus == '2' ? 'selected' : '' }}>Image non valide</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="user" class="ms-3">Filtrer par utilisateur</label>
+                <select class="form-select m-3" name="user">
+                    <option value="">Tous utilisateur</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}"
+                                {% if selectedUserId == user.id %}selected{% endif %}>{{ user.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="stade" class="ms-3">Filtrer par stade</label>
+                <select class="form-select m-3" name="stade">
+                    <option value="">Tous stade</option>
+                    {% for stade in stades %}
+                        <option value="{{ stade.id }}"
+                                {% if selectedEventId == stade.id %}selected{% endif %}>{{ stade.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div><button class="mb-3 ms-1 btn btn-admin" type="submit">Filtrer</button>
+
+
+    </form>
+    <table class="table table-filter" id="admin-table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Utilisateur</th>
+            <th scope="col">Espèce</th>
+            <th scope="col">Stade observé</th>
+            <th scope="col" class="non-wrapping">
+                Date
+                {#                            !!!!!! Laisser la longue ligne sinon la pagination se casse #}
+                <a href="{{ path('admin_verif_image_list', {page: page, species: selectedSpeciesId, statut: selectedStatus, user: selectedUserId, stade: selectedEventId, sort: 'date_asc'}) }}" class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill">
+                        <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"></path>
+                    </svg>
+                </a>
+                <a href="{{ path('admin_verif_image_list', {page: page, species: selectedSpeciesId, statut: selectedStatus, user: selectedUserId, stade: selectedEventId, sort: 'date_desc'}) }}" class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill">
+                        <path d="M7.247 11.14 12.043 5.66c.566-.647.106-1.659-.753-1.659H1.698a1 1 0 0 0-.753 1.659l4.796 5.48a1 1 0 0 0 1.506 0z"></path>
+                    </svg>
+                </a>
+            </th>
+            <th scope="col">Statut</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% if images is empty %}
+            <tr>
+                <td colspan="5">Pas d'image à modérer</td>
+            </tr>
+        {% else %}
+            {% for image in images %}
+                <tr>
+                    <td><img src="{{ image.picture }}" alt="Image de la station" style="width: 100px; height: 100px">
+                    </td>
+                    <td class="td-mail">{{ image.user.email }}</td>
+                    <td>{{ image.individual.species.vernacularName }}</td>
+                    <td>{{ image.event.name }}</td>
+                    <td>{{ image.date|date('d-m-Y') }}</td>
+                    {% if image.isPictureValid == 0 %}
+                        <td><a href="{{ path('admin_verif_image', {imageId: image.id}) }}">A vérifier</a></td>
+                    {% elseif image.isPictureValid == 1 %}
+                        <td><a href="{{ path('admin_verif_image', {imageId: image.id}) }}">Image Valide</a></td>
+                    {% elseif image.isPictureValid == 2 %}
+                        <td><a href="{{ path('admin_verif_image', {imageId: image.id}) }}">Image non Valide</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+
+        {% if totalImages > pageSize %}
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <div>
+                        {% if page > 1 %}
+{#                            !!!!!! Laisser la longue ligne sinon la pagination se casse #}
+                            <a href="?page={{ page - 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedEventId|e('url') }}">Previous</a>
+                            <a href="?page=1&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedEventId|e('url') }}"> << </a>
+                        {% endif %}
+
+                        <span>Page {{ page }} of {{ totalPages }}</span>
+
+                        {% if (page - 1) * pageSize + images|length < totalImages %}
+                            <a href="?page={{ page + 1 }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedEventId|e('url') }}">Next</a>
+                            <a href="?page={{ totalPages }}&species={{ selectedSpeciesId|e('url') }}&statut={{ selectedStatus|e('url') }}&user={{ selectedUserId|e('url') }}&stade={{ selectedEventId|e('url') }}"> >> </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        {% endif %}
+
+
+    </table>
+
+{% endblock %}
