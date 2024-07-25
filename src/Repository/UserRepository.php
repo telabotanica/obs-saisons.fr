@@ -87,6 +87,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result;
     }
 
+    public function findAllActiveMembers(){
+        $usersQuery ='';
+        try{
+            //Requete afin de récupérer les différente utilisateurs pour le filtrage
+            $usersQuery = $this->createQueryBuilder('u')
+                ->select('partial u.{id, name}')
+                ->where('u.status = :status')
+                ->orderBy('u.id', 'ASC')
+                ->setParameter('status', 1);
+        }catch (\Exception $exception){
+            echo 'An error occurd --> ' . $exception;
+        }
+
+
+        return $usersQuery->getQuery()->getResult();
+    }
+
 //	public function findActiveMembersPerYear(int $year)
 //	{
 //		$qb = $this->createQueryBuilder('u')
