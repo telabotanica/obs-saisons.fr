@@ -81,7 +81,7 @@ class Observation
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $is_picture_valid;
+    private $isPictureValid;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -218,12 +218,12 @@ class Observation
 
     public function getIsPictureValid(): ?int
     {
-        return $this->is_picture_valid;
+        return $this->isPictureValid;
     }
 
-    public function setIsPictureValid(?int $is_picture_valid): self
+    public function setIsPictureValid(?int $isPictureValid): self
     {
-        $this->is_picture_valid = $is_picture_valid;
+        $this->isPictureValid = $isPictureValid;
 
         return $this;
     }

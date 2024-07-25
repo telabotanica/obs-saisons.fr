@@ -670,16 +670,16 @@ class ObservationRepository extends ServiceEntityRepository
 
             if ($selectedStatus !== '') {
                 if ($selectedStatus == '0') {
-                    $totalImagesQuery->where("(o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
+                    $totalImagesQuery->where("(o.isPictureValid = :valid OR o.isPictureValid IS NULL) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                         ->setParameter('valid', 0);
                 } else {
-                    $totalImagesQuery->andWhere("(o.is_picture_valid = :status )AND
+                    $totalImagesQuery->andWhere("(o.isPictureValid = :status )AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                         ->setParameter('status', $selectedStatus);
                 }
             } else {
-                $totalImagesQuery->where("(o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
+                $totalImagesQuery->where("(o.isPictureValid = :valid OR o.isPictureValid IS NULL) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('valid', 0);
             }
@@ -716,7 +716,7 @@ class ObservationRepository extends ServiceEntityRepository
         $imagesQuery = '';
         // Requête pour récupérer les images avec les informations associées
         $imagesQuery = $this->createQueryBuilder('o')
-            ->select('partial o.{id, createdAt, is_picture_valid, picture, date}',
+            ->select('partial o.{id, createdAt, isPictureValid, picture, date}',
                 'partial u.{id, name, email}',
                 'partial e.{id, name}',
                 'partial i.{id, name}',
@@ -735,18 +735,18 @@ class ObservationRepository extends ServiceEntityRepository
         //Prise en compte de le requete de filtrage pas statut
         if ($selectedStatus !== '') {
             if ($selectedStatus == 0 ){
-                $imagesQuery->where("(o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
+                $imagesQuery->where("(o.isPictureValid = :valid OR o.isPictureValid IS NULL) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('valid', 0);
             }else{
                 $imagesQuery->where("
-                (o.is_picture_valid = :status AND o.picture IS NOT NULL) AND
+                (o.isPictureValid = :status AND o.picture IS NOT NULL) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                     ->setParameter('status', $selectedStatus);
             }
         } else {
             //cas par défault ou aucun statut n'est rentré en parametre
-            $imagesQuery->where("(o.is_picture_valid = :valid OR o.is_picture_valid IS NULL) AND
+            $imagesQuery->where("(o.isPictureValid = :valid OR o.isPictureValid IS NULL) AND
                                            (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                 ->setParameter('valid', 0);
         }
@@ -776,7 +776,7 @@ class ObservationRepository extends ServiceEntityRepository
         try{
             $imagesQuery = $this->createQueryBuilder('o')
                 ->select(
-                    'partial o.{id, picture, is_picture_valid, updatedAt}',
+                    'partial o.{id, picture, isPictureValid, updatedAt}',
                     'partial u.{id, name, displayName}',
                     'partial e.{id, name}',
                     'partial i.{id}'
@@ -784,7 +784,7 @@ class ObservationRepository extends ServiceEntityRepository
                 ->leftJoin('o.user', 'u')
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
-                ->where("(o.is_picture_valid = :valid AND i.species = :species) AND
+                ->where("(o.isPictureValid = :valid AND i.species = :species) AND
                                             (o.picture IS NOT NULL AND o.picture NOT LIKE '/media%')")
                 ->orderBy('o.createdAt', 'DESC')
                 ->setMaxResults(10)
