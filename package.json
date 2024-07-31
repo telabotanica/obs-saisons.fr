@@ -23,6 +23,7 @@
     "dependencies": {
         "@telabotanica/ckeditor5-build-ods-v2": "^1.1.1",
         "bootstrap": "5.2.3",
+        "d3": "^7.9.0",
         "jquery": "^3.7.1",
         "leaflet-draw": "^1.0.4",
         "leaflet-gesture-handling": "^1.2.2",

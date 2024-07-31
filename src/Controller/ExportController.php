@@ -291,6 +291,8 @@ class ExportController extends AbstractController
         $selectedEventId = $request->query->get('event', []);
         $selectedYear = $request->query->get('year', [1]);
 
+        $serializer = new EntityJsonSerialize();
+
         //Error handling
         if(!$selectedSpeciesIds){
             return new JsonResponse('Missing species param', 400);
@@ -303,7 +305,8 @@ class ExportController extends AbstractController
                 $selectedEventId,
                 $selectedYear
             );
+        $serializedData = $serializer->serializeJsonForCalendar($data);
 
-        return new JsonResponse($data);
+        return new JsonResponse($serializedData, Response::HTTP_OK, ['content-type' => 'application/json']);
     }
 }
