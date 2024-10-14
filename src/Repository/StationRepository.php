@@ -93,7 +93,7 @@ class StationRepository extends ServiceEntityRepository
         }
 
         return $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
-			->addOrderBy('MAX(o.createdAt)', 'DESC')
+			->addOrderBy('s.name', 'ASC')
             ->addOrderBy('s.createdAt', 'DESC')
             ->getQuery()
             ->getResult()

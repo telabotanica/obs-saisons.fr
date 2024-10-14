@@ -91,7 +91,7 @@ class Station
     private $longitude;
 
     /**
-     * @ORM\Column(type="decimal")
+     * @ORM\Column(type="decimal",nullable=true)
      */
     private $altitude;
 
