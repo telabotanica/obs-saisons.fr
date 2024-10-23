@@ -48,6 +48,7 @@ class UserController extends AbstractController
         SessionInterface $session,
         AuthenticationUtils $authenticationUtils,
         Request $request,
+        EntityManagerInterface $manager,
         EmailSender $mailer,
         TokenGeneratorInterface $tokenGenerator,
         UserPasswordEncoderInterface $passwordEncoder)
