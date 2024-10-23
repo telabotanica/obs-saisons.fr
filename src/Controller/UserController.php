@@ -71,7 +71,7 @@ class UserController extends AbstractController
             }
             var_dump(strlen($key));
             var_dump(strlen('Cet utilisateur n’a pas encore été activé.'));
-            if(strpos($key,"pas encore été activé") !== false){
+            if(strpos($key,"pas encore &#233;t&#233; activ&#233;") !== false){
                 $email = $request->request->get('email');
                 $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
                 if (!empty($user)){
