@@ -39,48 +39,53 @@ class UserController extends AbstractController
     use OriginPageTrait;
 
     /**
-     * Login form can be embed in pages.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function loginForm(AuthenticationUtils $authenticationUtils)
-    {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        if (!empty($error)) {
-            $key = $error->getMessageKey();
-            if ('Invalid credentials.' === $key) {
-                $key = 'Mot de passe incorrect';
-            }
-
-            $this->addFlash('error', $key);
-        }
-
-        return $this->render('forms/user/login.html.twig', [
-                'last_username' => $lastUsername,
-        ]);
-    }
-
-    /**
      * @Route("/user/login", name="user_login")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function loginPage(SessionInterface $session)
+    public function loginPage(SessionInterface $session,
+            AuthenticationUtils $authenticationUtils,
+            EntityManagerInterface $manager,
+            Request $request,
+            EmailSender $mailer,
+            TokenGeneratorInterface $tokenGenerator)
     {
         if ($this->isGranted(UserVoter::LOGGED)) {
             // seems to be some dead code here, can't figure how we could arrive here
             $this->addFlash('notice', 'Vous êtes déjà connecté·e.');
             $previousPageUrl = $this->getTargetPath($session, 'main');
+            
             if (null === $previousPageUrl) {
                 return $this->redirectToRoute('homepage');
             }
-
+            
             return $this->redirect($previousPageUrl);
         }
+        $error = $authenticationUtils->getLastAuthenticationError();
+        
+        if (!empty($error)) {
+            $key = $error->getMessageKey();
+            var_dump($key);
+            if ('Invalid credentials.' === $key) {
+                $key = 'Mot de passe incorrect';
+            }
 
+            $this->addFlash('error', $key);
+            return $this->render('pages/user/login.html.twig');
+                
+        }
+        $email = $request->request->get('email');
+        $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
+        if (!empty($user)){
+            if(User::STATUS_PENDING === $user->getStatus()){
+                $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
+                $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
+                return $this->render('pages/user/login.html.twig');
+            }
+        }
+        
         return $this->render('pages/user/login.html.twig');
+        
     }
 
     /**
@@ -118,37 +123,41 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('user_login');
             }
 
-            $user = new User();
-            $user->setCreatedAt(new DateTime());
-            $user->setEmail($request->request->get('email'));
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-            $user->setRoles([User::ROLE_USER]);
-            $user->setStatus(User::STATUS_PENDING);
-
-            $token = $tokenGenerator->generateToken();
-            $user->setResetToken($token);
-
-            $manager->persist($user);
-
-            $manager->flush();
-
-            $message = $this->renderView('emails/register-activation.html.twig', [
-                    'user' => $user,
-                    'url' => $this->generateUrl('user_activate', ['resetToken' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]);
-
-            $mailer->send(
-                $user->getEmail(),
-                $mailer->getSubjectFromTitle($message),
-                $message
-            );
-
-            $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boite de reception.');
-
+            $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
+            $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boîte de reception. Vérifiez vos spams. ');
             return $this->redirectToRoute('homepage');
         }
 
         return $this->redirectToRoute('user_login');
+    }
+
+    public function sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator){
+        $user = new User();
+        $user->setCreatedAt(new DateTime());
+        $user->setEmail($request->request->get('email'));
+        $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+        $user->setRoles([User::ROLE_USER]);
+        $user->setStatus(User::STATUS_PENDING);
+
+        $token = $tokenGenerator->generateToken();
+        $user->setResetToken($token);
+
+        $manager->persist($user);
+
+        $manager->flush();
+
+        $message = $this->renderView('emails/register-activation.html.twig', [
+                'user' => $user,
+                'url' => $this->generateUrl('user_activate', ['resetToken' => $token], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
+
+        $mailer->send(
+            $user->getEmail(),
+            $mailer->getSubjectFromTitle($message),
+            $message
+        );
+
+        
     }
 
     /**
