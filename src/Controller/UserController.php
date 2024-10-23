@@ -63,7 +63,7 @@ class UserController extends AbstractController
         }
         $error = $authenticationUtils->getLastAuthenticationError();
         $email = $request->request->get('email');
-        var_dump($email);
+        var_dump($request);
         $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
         var_dump($user);
         if (!empty($user)){
