@@ -70,8 +70,8 @@ class UserController extends AbstractController
                 var_dump($key);
                 if ('Invalid credentials.' === $key) {
                     $key = 'Mot de passe incorrect';
-                }else if($key === "Cet utilisateur n'a pas été encore activé."){
-                    
+                }else if($key === "Cet utilisateur n’a pas encore été activé."){
+                    var_dump('ok');
                     $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
                     $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
                     return $this->render('pages/user/login.html.twig');
