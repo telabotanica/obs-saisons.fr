@@ -610,9 +610,9 @@ class AdminController extends AbstractController
                 $message
             );
 
-            $this->changeObservation($observation,$isPictureValid,$motifRefus);
+            $this->changeObservation($manager,$observation,$isPictureValid,$motifRefus);
         }else{
-            $this->changeObservation($observation,$isPictureValid);
+            $this->changeObservation($manager,$observation,$isPictureValid);
         }
     }
     public function changeObservation($manager,$observation,$isPictureValid,$motifRefus=null){
