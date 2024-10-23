@@ -69,9 +69,8 @@ class UserController extends AbstractController
             if ($key === 'Invalid credentials.' ) {
                 $key = 'Mot de passe incorrect';
             }
-            var_dump(strlen($key));
-            var_dump(strlen('Cet utilisateur n’a pas encore été activé.'));
-            if(strpos($key,"pas encore &#233;t&#233; activ&#233;") !== false){
+            similar_text($key, 'Cet utilisateur n’a pas encore été activé.');
+            if($error->getMessageKey() === 'Cet utilisateur n’a pas encore été activé.'){
                 $email = $request->request->get('email');
                 $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
                 if (!empty($user)){
