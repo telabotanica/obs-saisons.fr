@@ -611,8 +611,12 @@ class AdminController extends AbstractController
             );
 
             $this->changeObservation($manager,$observation,$isPictureValid,$motifRefus);
+            $this->addFlash('error', "Modification effectuée avec succes");
+            return $this->redirectToRoute('admin_verif_image_list');
         }else{
             $this->changeObservation($manager,$observation,$isPictureValid);
+            $this->addFlash('error', "Modification effectuée avec succes");
+            return $this->redirectToRoute('admin_verif_image_list');
         }
     }
     public function changeObservation($manager,$observation,$isPictureValid,$motifRefus=null){
@@ -623,8 +627,7 @@ class AdminController extends AbstractController
         }
         // Persist changes to the database
         $manager->flush();
-        $this->addFlash('error', "Modification effectuée avec succes");
-        return $this->redirectToRoute('admin_verif_image_list');
+        
     }
 
 //    Fonction qui donne toutes les images qui n'ont pas encore été vérifiées
