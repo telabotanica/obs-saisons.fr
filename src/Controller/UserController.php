@@ -38,17 +38,19 @@ class UserController extends AbstractController
     use TargetPathTrait;
     use OriginPageTrait;
 
+
     /**
      * @Route("/user/login", name="user_login")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function loginPage(SessionInterface $session,
-            AuthenticationUtils $authenticationUtils,
-            EntityManagerInterface $manager,
-            Request $request,
-            EmailSender $mailer,
-            TokenGeneratorInterface $tokenGenerator)
+    public function loginPage(
+        SessionInterface $session,
+        AuthenticationUtils $authenticationUtils,
+        Request $request,
+        EmailSender $mailer,
+        TokenGeneratorInterface $tokenGenerator,
+        UserPasswordEncoderInterface $passwordEncoder)
     {
         if ($this->isGranted(UserVoter::LOGGED)) {
             // seems to be some dead code here, can't figure how we could arrive here
@@ -62,29 +64,23 @@ class UserController extends AbstractController
             return $this->redirect($previousPageUrl);
         }
         $error = $authenticationUtils->getLastAuthenticationError();
-        $email = $request->request->get('email');
-        $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
-        var_dump($user);
-        if (!empty($user)){
-            if(User::STATUS_PENDING === $user->getStatus()){
-                $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
-                $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
-                return $this->render('pages/user/login.html.twig');
-            }
-        }
+        
         if (!empty($error)) {
-            $key = $error->getMessageKey();
-            
-            if ($key === 'Invalid credentials.' ) {
-                $key = 'Mot de passe incorrect';
-            }
-          
-            $this->addFlash('error', $key);
-            
+                $key = $error->getMessageKey();
+                var_dump($key);
+                if ('Invalid credentials.' === $key) {
+                    $key = 'Mot de passe incorrect';
+                }else if($key === "Cet utilisateur n'a pas été encore activé."){
+                    
+                    $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
+                    $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
+                    return $this->render('pages/user/login.html.twig');
+                        
+                }
+    
+                $this->addFlash('error', $key);
                 
         }
-        
-        
         return $this->render('pages/user/login.html.twig');
         
     }
@@ -125,7 +121,7 @@ class UserController extends AbstractController
             }
 
             $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
-            $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boîte de reception. Vérifiez vos spams. ');
+
             return $this->redirectToRoute('homepage');
         }
 
@@ -135,6 +131,7 @@ class UserController extends AbstractController
     public function sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator){
         $user = new User();
         $user->setCreatedAt(new DateTime());
+        die($request->request->get('email'));
         $user->setEmail($request->request->get('email'));
         $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
         $user->setRoles([User::ROLE_USER]);
@@ -158,7 +155,7 @@ class UserController extends AbstractController
             $message
         );
 
-        
+        $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boîte de reception. Vérifiez vos spams. ');
     }
 
     /**
