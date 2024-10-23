@@ -68,21 +68,23 @@ class UserController extends AbstractController
             var_dump($key);
             if ('Invalid credentials.' === $key) {
                 $key = 'Mot de passe incorrect';
+            }elseif('Cet utilisateur n’a pas encore été activé.'){
+                $email = $request->request->get('email');
+                $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
+                if (!empty($user)){
+                    if(User::STATUS_PENDING === $user->getStatus()){
+                        $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
+                        $this->addFlash('notice', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
+                        return $this->render('pages/user/login.html.twig');
+                    }
+                }
             }
-
+            
             $this->addFlash('error', $key);
             return $this->render('pages/user/login.html.twig');
                 
         }
-        $email = $request->request->get('email');
-        $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
-        if (!empty($user)){
-            if(User::STATUS_PENDING === $user->getStatus()){
-                $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
-                $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
-                return $this->render('pages/user/login.html.twig');
-            }
-        }
+        
         
         return $this->render('pages/user/login.html.twig');
         
