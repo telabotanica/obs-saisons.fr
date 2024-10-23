@@ -615,7 +615,7 @@ class AdminController extends AbstractController
             $this->changeObservation($observation,$isPictureValid);
         }
     }
-    public function changeObservation($observation,$isPictureValid,$motifRefus=null){
+    public function changeObservation($manager,$observation,$isPictureValid,$motifRefus=null){
         // Update the observation entity with the form data
         $observation->setIsPictureValid($isPictureValid);
         if($isPictureValid===2){
