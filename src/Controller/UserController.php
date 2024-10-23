@@ -64,6 +64,7 @@ class UserController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $email = $request->request->get('email');
         $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
+        dump($user);
         if (!empty($user)){
             if(User::STATUS_PENDING === $user->getStatus()){
                 $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
