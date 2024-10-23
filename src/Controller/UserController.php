@@ -62,30 +62,24 @@ class UserController extends AbstractController
             return $this->redirect($previousPageUrl);
         }
         $error = $authenticationUtils->getLastAuthenticationError();
-        
+        $email = $request->request->get('email');
+        $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
+        if (!empty($user)){
+            if(User::STATUS_PENDING === $user->getStatus()){
+                $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
+                $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
+                return $this->render('pages/user/login.html.twig');
+            }
+        }
         if (!empty($error)) {
             $key = $error->getMessageKey();
             
             if ($key === 'Invalid credentials.' ) {
                 $key = 'Mot de passe incorrect';
             }
-            $sim=similar_text($key, 'Cet utilisateur n’a pas encore été activé.',$perc);
-
-            var_dump("$sim $perc %");
-            if($error->getMessageKey() === 'Cet utilisateur n’a pas encore été activé.'){
-                $email = $request->request->get('email');
-                $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
-                if (!empty($user)){
-                    if(User::STATUS_PENDING === $user->getStatus()){
-                        $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
-                        $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
-                        return $this->render('pages/user/login.html.twig');
-                    }
-                }
-            }
-            
+          
             $this->addFlash('error', $key);
-            return $this->render('pages/user/login.html.twig');
+            
                 
         }
         
