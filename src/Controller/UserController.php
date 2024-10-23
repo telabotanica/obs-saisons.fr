@@ -65,7 +65,9 @@ class UserController extends AbstractController
         
         if (!empty($error)) {
             $key = $error->getMessageKey();
-            var_dump($key);
+            echo "<pre>";
+            var_dump($error);
+            echo "</pre>";
             if ('Invalid credentials.' === $key) {
                 $key = 'Mot de passe incorrect';
             }else if($key === 'Cet utilisateur n’a pas encore été activé.'){
