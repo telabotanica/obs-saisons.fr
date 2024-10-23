@@ -531,7 +531,7 @@ class AdminController extends AbstractController
         $observation = $manager->getRepository(Observation::class)->find($imageId);
 
         if (!$observation) {
-            throw $this->createNotFoundException("L'image à vérifer n'existe pas");
+            throw $this->createNotFoundException("L'image à vérifier n'existe pas");
         }
         $erreur = $this->get('session')->getFlashBag()->get('error');
         $er2 ='';
@@ -572,30 +572,30 @@ class AdminController extends AbstractController
         $isPictureValid = $request->request->get('confirmRadio');
         $motifRefus = $request->request->get('motif');
 
-        if ($isPictureValid == 0 Or empty($isPictureValid)) {
-            $this->addFlash('error', "Le choix ne peut pas être vide");
+        if ($isPictureValid == 0 OR empty($isPictureValid)) {
+            $this->addFlash('error', "Vous devez choisir si l'image est acceptable ou non.");
             return $this->redirectToRoute('admin_verif_image', [
                 'imageId' => $imageId
             ]);
-        } elseif ($isPictureValid == 2 and (empty($motifRefus) or $motifRefus == "")) {
-            $this->addFlash('error', "Le motif ne peut pas être nul");
-            return $this->redirectToRoute('admin_verif_image', [
-                'imageId' => $imageId
-            ]);
-        }else{
-            $stationLink = $this->router->generate('stations_show', ['slug' => $individual->getStation()->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL);
+        } elseif ($isPictureValid == 2) {
+            if(empty($motifRefus) or $motifRefus == ""){
+                $this->addFlash('error', "Vous devez saisir un motif.");
+                return $this->redirectToRoute('admin_verif_image', [
+                    'imageId' => $imageId
+                ]);
+            }
 
-            // Update the observation entity with the form data
-            $observation->setIsPictureValid($isPictureValid);
-            $observation->setMotifRefus($motifRefus);
+            $stationLink = $this->router->generate('stations_show', ['slug' => $individual->getStation()->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL);
 
             // Get the site baseUrl to generate absolute URL
             $request = $requestStack->getCurrentRequest();
             $baseUrl = $request->getSchemeAndHttpHost();
             $pictureUrl = $baseUrl . $observation->getPicture();
-
-            // Envoie du mail de refus
-            $message = $this->renderView('emails/observation-image-rejected.html.twig', [
+            
+            $template='emails/observation-image-rejected.html.twig';
+            
+            // Envoi du mail de refus
+            $message = $this->renderView($template, [
                 'user' => $observation->getUser()->getDisplayName(),
                 'observation' => $observation,
                 'individual' => $individual,
@@ -610,13 +610,22 @@ class AdminController extends AbstractController
                 $message
             );
 
-            // Persist changes to the database
-            $manager->flush();
-            $this->addFlash('error', "Modification effectué avec succes");
-            return $this->redirectToRoute('admin_verif_image_list');
+            $this->changeObservation($observation,$isPictureValid,$motifRefus);
+        }else{
+            $this->changeObservation($observation,$isPictureValid);
         }
     }
-
+    public function changeObservation($observation,$isPictureValid,$motifRefus=null){
+        // Update the observation entity with the form data
+        $observation->setIsPictureValid($isPictureValid);
+        if($isPictureValid===2){
+            $observation->setMotifRefus($motifRefus);
+        }
+        // Persist changes to the database
+        $manager->flush();
+        $this->addFlash('error', "Modification effectuée avec succes");
+        return $this->redirectToRoute('admin_verif_image_list');
+    }
 
 //    Fonction qui donne toutes les images qui n'ont pas encore été vérifiées
     /**
