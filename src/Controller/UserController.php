@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -51,7 +51,7 @@ class UserController extends AbstractController
         EntityManagerInterface $manager,
         EmailSender $mailer,
         TokenGeneratorInterface $tokenGenerator,
-        UserPasswordEncoderInterface $passwordEncoder)
+        UserPasswordHasherInterface $passwordEncoder)
     {
         if ($this->isGranted(UserVoter::LOGGED)) {
             // seems to be some dead code here, can't figure how we could arrive here
@@ -65,16 +65,16 @@ class UserController extends AbstractController
             return $this->redirect($previousPageUrl);
         }
         $error = $authenticationUtils->getLastAuthenticationError();
-        
+        $userName=$authenticationUtils->getLastUsername();
         if (!empty($error)) {
                 $key = $error->getMessageKey();
-                var_dump($key);
+                
                 if ('Invalid credentials.' === $key) {
                     $key = 'Mot de passe incorrect';
                 }else if($key === "Cet utilisateur n’a pas encore été activé."){
-                    var_dump('ok');
-                    $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
-                    $this->addFlash('error', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
+                    
+                    $this->sendEmailActivation($passwordEncoder,$manager,$mailer,$tokenGenerator,$userName,$request);
+                    $this->addFlash('notice', "Votre profil n'est pas encore activé. Un nouveau courriel d'activation vient de vous être envoyé. Vérifiez vos spams.");
                     return $this->render('pages/user/login.html.twig');
                         
                 }
@@ -106,7 +106,7 @@ class UserController extends AbstractController
             EntityManagerInterface $manager,
             EmailSender $mailer,
             TokenGeneratorInterface $tokenGenerator,
-            UserPasswordEncoderInterface $passwordEncoder
+            UserPasswordHasherInterface $passwordEncoder
     ) {
         if ($request->isMethod('POST') && ('register' === $request->request->get('action'))) {
             $userRepository = $manager->getRepository(User::class);
@@ -120,22 +120,33 @@ class UserController extends AbstractController
 
                 return $this->redirectToRoute('user_login');
             }
-
-            $this->sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator);
-
+            $userName=null;
+            $this->sendEmailActivation($passwordEncoder,$manager,$mailer,$tokenGenerator,$userName,$request);
+            $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boîte de reception. Vérifiez vos spams. ');
             return $this->redirectToRoute('homepage');
         }
 
         return $this->redirectToRoute('user_login');
     }
 
-    public function sendEmailActivation($request,$passwordEncoder,$manager,$mailer,$tokenGenerator){
-        $user = new User();
-        $user->setCreatedAt(new DateTime());
-        die($request->request->get('email'));
-        $user->setEmail($request->request->get('email'));
-        $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-        $user->setRoles([User::ROLE_USER]);
+    public function sendEmailActivation($passwordEncoder,$manager,$mailer,$tokenGenerator,$userName,$request){
+        
+        
+        $emailreq = $request->request->get('email');
+        if (empty($emailreq)){
+            $email = $userName;
+            $user = new User();
+            $user->setEmail($request->request->get('email'));
+            $user->setCreatedAt(new DateTime());
+            $user->setPassword($passwordEncoder->hashPassword($user, $request->request->get('password')));
+            $user->setRoles([User::ROLE_USER]);
+        }else{
+            $email = $emailreq;
+            $userRepository = $manager->getRepository(User::class);
+            $user = $userRepository->findOneBy(['email' => $request->$email]);
+        }
+        
+        
         $user->setStatus(User::STATUS_PENDING);
 
         $token = $tokenGenerator->generateToken();
@@ -156,7 +167,7 @@ class UserController extends AbstractController
             $message
         );
 
-        $this->addFlash('notice', 'Un email d’activation vous a été envoyé. Regardez votre boîte de reception. Vérifiez vos spams. ');
+        
     }
 
     /**
@@ -282,7 +293,7 @@ class UserController extends AbstractController
             Request $request,
             string $token,
             EntityManagerInterface $manager,
-            UserPasswordEncoderInterface $passwordEncoder
+            UserPasswordHasherInterface $passwordEncoder
     ) {
         /**
          * @var User
@@ -295,7 +306,7 @@ class UserController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            $user->setPassword($passwordEncoder->hashPassword($user, $request->request->get('password')));
             $user->setResetToken(null);
             $manager->flush();
 
@@ -480,7 +491,7 @@ class UserController extends AbstractController
     public function parametersEdit(
         Request $request,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordEncoder,
         TokenGeneratorInterface $tokenGenerator,
         EmailSender $mailer
     ) {
@@ -568,7 +579,7 @@ class UserController extends AbstractController
             } elseif (!$passwordEncoder->isPasswordValid($user, $passwordUserSubmitted->getPassword())) {
                 $this->addFlash('error', 'Mot de passe incorrect');
             } else {
-                $user->setPassword($passwordEncoder->encodePassword($user, $vars['password_new']));
+                $user->setPassword($passwordEncoder->hashPassword($user, $vars['password_new']));
                 $user->setResetToken(null);
                 $manager->flush();
 
@@ -625,7 +636,7 @@ class UserController extends AbstractController
     public function userDelete(
         Request $request,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordEncoder,
         MailchimpSyncContact $mailchimpSyncContact
     ) {
         if (!$this->isGranted(UserVoter::LOGGED)) {
