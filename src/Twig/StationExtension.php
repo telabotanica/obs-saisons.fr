@@ -92,7 +92,6 @@ class StationExtension extends AbstractExtension
                     if (
                         $observation->getIndividual()->getSpecies() === $species
                         && in_array($observation->getEvent(), $validEvents)
-                        && !$observation->getIsMissing()
                     ) {
                         $observations[] = $observation;
                     }
