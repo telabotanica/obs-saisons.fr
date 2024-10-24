@@ -66,6 +66,7 @@ class UserController extends AbstractController
         }
         $error = $authenticationUtils->getLastAuthenticationError();
         $userName=$authenticationUtils->getLastUsername();
+        
         if (!empty($error)) {
                 $key = $error->getMessageKey();
                 
@@ -144,8 +145,7 @@ class UserController extends AbstractController
             $email = $userName;
             $userRepository = $manager->getRepository(User::class);
             $user = $userRepository->findOneBy(['email' => $email]);
-            var_dump($email);
-            var_dump($user);
+            
         }
         
         
