@@ -141,9 +141,11 @@ class UserController extends AbstractController
             $user->setPassword($passwordEncoder->hashPassword($user, $request->request->get('password')));
             $user->setRoles([User::ROLE_USER]);
         }else{
-            $email = $emailreq;
+            $email = $$userName;
             $userRepository = $manager->getRepository(User::class);
             $user = $userRepository->findOneBy(['email' => $email]);
+            var_dump($email);
+            var_dump($user);
         }
         
         
