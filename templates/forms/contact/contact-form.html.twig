@@ -46,7 +46,7 @@
     </div>
 {% endblock %}
 {% block form_footer %}
-    <a href="{{ path('homepage') }}" class="button bt-form bt-cancel">Annuler</a>
+    <a id="cancel" href="{{ path('homepage') }}" class="button bt-form bt-cancel">Annuler</a>
     <input type="hidden" name="action" value="{{ action }}">
     <button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
         Envoyer

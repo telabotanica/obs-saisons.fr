@@ -4,7 +4,7 @@ export const onDeleteButton = subject => {
 
         deleteButton.replaceWith(clone);
         clone.addEventListener('click', evt => {
-            let question = 'Êtes vous sûr de vouloir supprimer ce';
+            let question = 'Êtes vous sûr-e de vouloir supprimer ce';
 
             switch (subject) {
                 case 'obs-infos':

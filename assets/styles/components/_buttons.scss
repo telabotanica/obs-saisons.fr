@@ -101,6 +101,16 @@ $button-color-map: (
       }
     }
 
+    &.bt-cancel-ind {
+      @include flex(0, 1, 35%);
+
+      @include button-colors(cancel);
+
+      @include media(sm) {
+        background-color: rgba($grey131117, 0.2);
+      }
+    }
+
     &.bt-valider {
       @include flex-1;
 
@@ -119,6 +129,19 @@ $button-color-map: (
 
       @include media(sm) {
         margin-right: 20px;
+      }
+    }
+
+    &.bt-supprimer-ind {
+      /*@include flex-1;*/
+      padding-top: 12px;
+      padding-bottom: 8px;
+      padding-left:8px;
+      padding-right:8px;
+      @include button-colors(delete);
+
+      @include media(sm) {
+        margin-right: 10px;
       }
     }
   }

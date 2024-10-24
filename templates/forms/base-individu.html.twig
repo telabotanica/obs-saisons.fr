@@ -24,9 +24,9 @@
 					<div class="saisie-footer">
 						{% block form_footer %}
 							{% if 'profile' != action  %}
-								<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer show-on-edit delete-button">supprimer</a>
+								<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer-ind show-on-edit delete-button">supprimer cet individu</a>
 							{% endif %}
-							<a id="cancel" href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-cancel">Annuler</a>
+							<a id="cancel" href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-cancel-ind">Annuler</a>
 							<input type="hidden" name="action" value="{{ action }}">
 							<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
 								Valider
