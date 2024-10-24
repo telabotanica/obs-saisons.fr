@@ -143,7 +143,7 @@ class UserController extends AbstractController
         }else{
             $email = $emailreq;
             $userRepository = $manager->getRepository(User::class);
-            $user = $userRepository->findOneBy(['email' => $request->$email]);
+            $user = $userRepository->findOneBy(['email' => $email]);
         }
         
         
