@@ -133,7 +133,7 @@ class UserController extends AbstractController
         
         
         $emailreq = $request->request->get('email');
-        if (empty($emailreq)){
+        if (!empty($emailreq)){
             $email = $userName;
             $user = new User();
             $user->setEmail($request->request->get('email'));
