@@ -69,13 +69,13 @@ ObsInfosOverlay.prototype.observationListCardHtmlGenerate = function() {
                 <a href="" class="dual-squared-button edit-obs edit-list-icon edit open" data-open="observation" data-observation-id="${observation.id}">
                     <div class="squared-button-label">Éditer</div>
                 </a>
-                <a href="/observation/${observation.id}/delete" class="dual-squared-button delete-icon delete-button">
+                <a id="obs_delete_btn" href="/observation/${observation.id}/delete" class="dual-squared-button delete-icon delete-button" onclick="return confirm('Êtes-vous sûr-e de vouloir supprimer cette observation ?' )">
                     <div class="squared-button-label">Supprimer</div>
                 </a>
             </div>`
         ;
     }
-
+   
     listCardItem.innerHTML =
         `<a href="${this.dataAttrs.pictureUrl}" class="list-card-img" style="background-image:url(${this.dataAttrs.pictureUrl})" target="_blank"></a>
         <div class="item-name-block">
@@ -83,9 +83,8 @@ ObsInfosOverlay.prototype.observationListCardHtmlGenerate = function() {
             <div class="item-name stage">${this.dataAttrs.stage}</div>
             <div class="item-heading-dropdown">${this.dataAttrs.date}</div>
         </div>
-        ${editButtons}`
-    ;
-
+        ${editButtons}`;
+    
     return listCardItem;
 };
 
@@ -102,3 +101,5 @@ ObsInfosOverlay.prototype.closeOverlayOnClickOut = function () {
         }
     });
 };
+
+
