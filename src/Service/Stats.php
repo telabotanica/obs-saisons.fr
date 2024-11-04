@@ -64,6 +64,12 @@ class Stats
         $result['occitanie']['nbStations'] = $this->manager->getRepository(Station::class)->countStationsEachYearPerRegion($year, 12);
         // Nbre de stations Provence
         $result['provence']['nbStations'] = $this->manager->getRepository(Station::class)->countStationsEachYearPerRegion($year, 13);
+
+        $result['provence']['allStations'] = $this->manager->getRepository(Station::class)->countAllStationsInPaca(13);
+        
+        $result['provence']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaSince2015(13);
+
+        $result['provence']['allStationsJune'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaFromJunetoJune(13);
         //nbre users actifs par type en occitanie
         $result['occitanie']['activeMembers'] = $this->manager->getRepository(Observation::class)->findactiveMembersPerYearPerRegion($year, 12);
         //nbre users actifs par type en PProvence

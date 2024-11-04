@@ -265,32 +265,65 @@ class StationRepository extends ServiceEntityRepository
         return $result[0][1] ?? 0;
     }
 
-    // /**
-    //  * @return Station[] Returns an array of Station objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function countAllStationsInPaca($region)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null');
 
-    /*
-    public function findOneBySomeField($value): ?Station
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getSingleScalarResult();
+        
+        return $result;
     }
-    */
+
+    public function countAllStationsInPacaSince2015($region)
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('YEAR(s.createdAt)>=2015');
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+          
+        return $result;
+    }
+
+    public function countAllStationsInPacaFromJunetoJune($region)
+    {
+
+        $current_year=date('Y');
+        $last_year=date('Y')-1;
+
+        $qb = $this->createQueryBuilder('s')
+            ->select('count(s.id)')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere("s.createdAt >= CONCAT('$last_year','/06/01')")
+            ->andWhere("s.createdAt < CONCAT('$current_year','/07/01')");
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+      
+        return $result;
+    }
 }

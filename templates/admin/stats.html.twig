@@ -201,5 +201,24 @@
                 'texte' : 'Top 5 utilisateurs'
             } %}
         </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.allStations,
+                'texte' : 'Nombre global de stations'
+            } %}
+        </div>
+          <div class="col-4">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.allStations2015,
+                'texte' : 'Nombre de stations depuis 2015'
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.allStationsJune,
+                'texte' : 'Nombre de stations de juin 2023 à juin 2024'
+            } %}
+        </div>
+          
     </div>
 {% endblock %}
