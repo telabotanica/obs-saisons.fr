@@ -201,61 +201,6 @@
                 'texte' : 'Top 5 utilisateurs'
             } %}
         </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allStations,
-                'texte' : 'Nombre global de stations'
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allStations2015,
-                'texte' : 'Nombre de stations depuis 2015'
-            } %}
-        </div>
-        <div class="col-4">
-            {% set lastYear = stats.provence.lastYear %}
-            {% set currentYear = stats.provence.currentYear %}
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allStationsJune,
-                'texte' : "Nombre de stations de juin #{lastYear} à juin #{currentYear}"
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allObservations,
-                'texte' : "Nombre global d'observations"
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allObservations2015,
-                'texte' : "Nombre d'observations depuis 2015"
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allObservationsJune,
-                'texte' : "Nombre d'observations de juin #{lastYear} à juin #{currentYear}"
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allObservationsBDR,
-                'texte' : "Nombre global d'observations dans les Bouches-du-Rhône"
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allObservationsBDR2015,
-                'texte' : "Nombre d'observations depuis 2015 dans les Bouches-du-Rhône"
-            } %}
-        </div>
-        <div class="col-4">
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.provence.allObservationsBDRJune,
-                'texte' : "Nombre d'observations de juin #{lastYear} à juin #{currentYear} dans les Bouches-du-Rhône"
-            } %}
-        </div>  
+        
     </div>
 {% endblock %}
