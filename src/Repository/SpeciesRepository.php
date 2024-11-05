@@ -82,14 +82,16 @@ class SpeciesRepository extends ServiceEntityRepository
 
     public function get3mainSpecies($region)
     {
+        $date=date("Y/m/d");
+        
         $species = $this->createQueryBuilder('s')
                 ->select(
                     "CONCAT(s.vernacular_name,' / ',s.scientific_name) AS specie,count(o.id) AS nombre"
                 )
                 ->innerJoin(Individual::class, 'i', Expr\Join::WITH, 'i.species = s.id')
                 ->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
-                ->innerJoin(Station::class, 'st', Expr\Join::WITH, 'st.id = i.station');
-
+                ->innerJoin(Station::class, 'st', Expr\Join::WITH, 'st.id = i.station')
+                ->where("o.date=$date");
         if ($region){
             $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
             $species->andWhere($species->expr()->in('st.department', ':departments'))
