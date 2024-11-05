@@ -299,7 +299,7 @@ class StationRepository extends ServiceEntityRepository
         $result = $qb
             ->getQuery()
             ->getSingleScalarResult();
-          
+             
         return $result;
     }
 
@@ -323,7 +323,9 @@ class StationRepository extends ServiceEntityRepository
         $result = $qb
             ->getQuery()
             ->getSingleScalarResult();
-      
+            
         return $result;
     }
+
+    
 }

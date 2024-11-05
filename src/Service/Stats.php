@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\EventSpecies;
 use App\Entity\Observation;
 use App\Entity\Station;
 use App\Entity\User;
+use App\Entity\Species;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Stats
@@ -65,11 +65,6 @@ class Stats
         // Nbre de stations Provence
         $result['provence']['nbStations'] = $this->manager->getRepository(Station::class)->countStationsEachYearPerRegion($year, 13);
 
-        $result['provence']['allStations'] = $this->manager->getRepository(Station::class)->countAllStationsInPaca(13);
-        
-        $result['provence']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaSince2015(13);
-
-        $result['provence']['allStationsJune'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaFromJunetoJune(13);
         //nbre users actifs par type en occitanie
         $result['occitanie']['activeMembers'] = $this->manager->getRepository(Observation::class)->findactiveMembersPerYearPerRegion($year, 12);
         //nbre users actifs par type en PProvence
@@ -80,7 +75,42 @@ class Stats
         $result['provence']['newMembers'] = $this->manager->getRepository(Observation::class)->findNewMembersPerYearPerRegion($year, 13);
         $result['occitanie']['top3'] = $this->manager->getRepository(Observation::class)->findTop3Species($year, 12);
         $result['provence']['top3'] = $this->manager->getRepository(Observation::class)->findTop3Species($year, 13);
+        
+        return $result;
+    }
 
-        return$result;
+    public function getGlobalStats()
+    {
+        $result['provence']['allStations'] = $this->manager->getRepository(Station::class)->countAllStationsInPaca(13);
+        
+        $result['provence']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaSince2015(13);
+
+        $result['provence']['allStationsJune'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaFromJunetoJune(13);
+        
+        $result['provence']['allObservations'] = $this->manager->getRepository(Observation::class)->countAllObservationsInPaca(13);
+        
+        $result['provence']['allObservations2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsInPacaSince2015(13);
+
+        $result['provence']['allObservationsJune'] = $this->manager->getRepository(Observation::class)->countAllObservationsInPacaFromJunetoJune(13);
+
+        $result['provence']['allObservationsBDR'] = $this->manager->getRepository(Observation::class)->countAllObservationsInBDR();
+        
+        $result['provence']['allObservationsBDR2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsInBDRSince2015();
+
+        $result['threeSpecies'] = $this->manager->getRepository(Species::class)->get3mainSpecies(13);
+
+        $result['threeSpecies2015'] = $this->manager->getRepository(Species::class)->get3mainSpecies2015(13);
+
+        $result['threeSpecies2007'] = $this->manager->getRepository(Species::class)->get3mainSpecies2007(13);
+
+        $result['provence']['allObservationsBDRJune'] = $this->manager->getRepository(Observation::class)->countAllObservationsInBDRFromJunetoJune();
+
+        $result['monitoredSpecies'] = $this->manager->getRepository(Species::class)->countMonitoredSpecies();
+
+        $result['observators'] = $this->manager->getRepository(Observation::class)->countAllObservators();
+        $result['provence']['currentYear'] = date('Y');
+        $result['provence']['lastYear'] = date('Y')-1;
+
+        return $result;
     }
 }

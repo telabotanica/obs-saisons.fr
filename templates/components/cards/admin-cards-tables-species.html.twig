@@ -1,0 +1,12 @@
+<div class="admin-card-stats-table mx-1 my-2">
+    <div class="admin-chiffre-card-body text-center">
+        <span class="fw-bold">{{ texte }}</span>
+    </div>
+    <div class="admin-chiffre-card-body text-center">
+        {% for specie in data %}
+           
+            <p>{{specie.specie}} : {{specie.nombre}} 
+    
+        {% endfor %}
+    </div>
+</div>

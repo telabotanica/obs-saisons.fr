@@ -4,8 +4,13 @@ namespace App\Repository;
 
 use App\Entity\Species;
 use App\Entity\TypeSpecies;
+use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Individual;
+use App\Entity\Observation;
+use Doctrine\ORM\Query\Expr;
+use App\Entity\FrenchRegions;
 
 /**
  * @method Species|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,7 +42,7 @@ class SpeciesRepository extends ServiceEntityRepository
             ->addOrderBy('s.vernacular_name', 'ASC');
 
         $query = $qb->getQuery();
-
+        
         return $query->execute();
     }
 
@@ -71,36 +76,101 @@ class SpeciesRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->eq('s.is_active', $qb->expr()->literal(true)))
             ->addOrderBy('s.vernacular_name', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+        
     }
 
-    // /**
-    //  * @return Species[] Returns an array of Species objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function get3mainSpecies($region)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $species = $this->createQueryBuilder('s')
+                ->select(
+                    "CONCAT(s.vernacular_name,' / ',s.scientific_name) AS specie,count(o.id) AS nombre"
+                )
+                ->innerJoin(Individual::class, 'i', Expr\Join::WITH, 'i.species = s.id')
+                ->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+                ->innerJoin(Station::class, 'st', Expr\Join::WITH, 'st.id = i.station');
 
-    /*
-    public function findOneBySomeField($value): ?Species
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $species->andWhere($species->expr()->in('st.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+                
+        return $species
+            ->groupBy("s.vernacular_name")
+            ->orderBy("nombre","DESC")
+            ->setMaxResults(3)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->execute();
     }
-    */
+
+    public function get3mainSpecies2015($region)
+    {
+        $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+                    
+        $species = $this->createQueryBuilder('s')
+                ->select(
+                    "CONCAT(s.vernacular_name,' / ',s.scientific_name) AS specie,count(o.id) AS nombre"
+                )
+                ->innerJoin(Individual::class, 'i', Expr\Join::WITH, 'i.species = s.id')
+                ->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+                ->innerJoin(Station::class, 'st', Expr\Join::WITH, 'st.id = i.station')
+                ->where("YEAR(o.date)>=2015");
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $species->andWhere($species->expr()->in('st.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+                
+        return $species
+            ->groupBy("s.vernacular_name")
+            ->orderBy("nombre","DESC")
+            ->setMaxResults(3)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function get3mainSpecies2007($region)
+    {
+      
+        $species = $this->createQueryBuilder('s')
+                ->select(
+                    "CONCAT(s.vernacular_name,' / ',s.scientific_name) AS specie,count(o.id) AS nombre"
+                )
+                ->innerJoin(Individual::class, 'i', Expr\Join::WITH, 'i.species = s.id')
+                ->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+                ->innerJoin(Station::class, 'st', Expr\Join::WITH, 'st.id = i.station')
+                ->where("YEAR(o.date)>=2007");
+                
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $species->andWhere($species->expr()->in('st.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+                
+       return $species
+            ->groupBy("s.vernacular_name")
+            ->orderBy("nombre","DESC")
+            ->setMaxResults(3)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function countMonitoredSpecies()
+    {
+      
+        $species = $this->createQueryBuilder('s')
+                ->select(
+                    "COUNT(DISTINCT(s.id))"
+                )
+                ->innerJoin(Individual::class, 'i', Expr\Join::WITH, 'i.species = s.id')
+                ->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
+                ->getQuery()
+                ->getSingleScalarResult();
+        
+              
+       return $species;
+    }
+
+
 }

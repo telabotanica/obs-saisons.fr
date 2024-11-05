@@ -10,6 +10,7 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 
 /**
  * @method Observation|null find($id, $lockMode = null, $lockVersion = null)
@@ -624,35 +625,6 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    // /**
-    //  * @return Observation[] Returns an array of Observation objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Observation
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     //Compte le nombre d'images pour la modération d'images
     public function countImages($selectedStatus, $selectedSpeciesId, $selectedUserId, $selectedEventId)
     {
@@ -799,4 +771,141 @@ class ObservationRepository extends ServiceEntityRepository
 // Execute the query to get the results
         return $imagesQuery->getQuery()->getResult();
     }
+
+    public function countAllObservationsInPaca($region)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
+            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null');
+
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        return $result;
+    }
+
+    public function countAllObservationsInPacaSince2015($region)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
+            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('YEAR(o.date)>=2015');
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+             
+        return $result;
+    }
+
+    public function countAllObservationsInPacaFromJunetoJune($region)
+    {
+
+        $current_year=date('Y');
+        $last_year=date('Y')-1;
+
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
+            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere("o.date >= CONCAT('$last_year','/06/01')")
+            ->andWhere("o.date < CONCAT('$current_year','/07/01')");
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+            
+        return $result;
+    }
+
+    public function countAllObservationsInBDR()
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
+            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('s.department = 13');
+            
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        return $result;
+    }
+
+    public function countAllObservationsInBDRSince2015()
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
+            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('YEAR(o.date)>=2015')
+            ->andWhere('s.department = 13');
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+             
+        return $result;
+    }
+
+    public function countAllObservationsInBDRFromJunetoJune()
+    {
+
+        $current_year=date('Y');
+        $last_year=date('Y')-1;
+
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
+            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere("o.date >= CONCAT('$last_year','/06/01')")
+            ->andWhere("o.date < CONCAT('$current_year','/07/01')")
+            ->andWhere('s.department = 13');
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+            
+        return $result;
+    }
+
+    public function countAllObservators()
+    {
+
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(DISTINCT(o.user))');
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+            
+        return $result;
+    }
+
 }
