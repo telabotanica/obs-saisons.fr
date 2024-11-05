@@ -511,8 +511,18 @@ class AdminController extends AbstractController
 
         // Indicateurs
         $stats = $statsService->getStats($year);
-
+        
         return $this->render('admin/stats.html.twig', [
+            'years' => $years,
+            'min_year' => $minYear,
+            'form' => $form->createView(),
+            'stats' => $stats
+        ]);
+
+        // Indicateurs
+        $stats = $statsService->getGlobalStats($year);
+        
+        return $this->render('admin/global-stats.html.twig', [
             'years' => $years,
             'min_year' => $minYear,
             'form' => $form->createView(),
@@ -520,6 +530,19 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/admin/global-stats", name="admin_global_stats")
+     */
+    public function getGlobalStats(EntityManagerInterface $manager, Request $request, Stats $statsService){
+        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
+
+        // Indicateurs
+        $stats = $statsService->getGlobalStats();
+        
+        return $this->render('admin/global-stats.html.twig', [
+            'stats' => $stats
+        ]);
+    }
 
     /**
      * @Route("/admin/image/{imageId}/dashboard", name="admin_verif_image", methods={"GET"})
@@ -713,125 +736,4 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-
-    /**
-     * @Route("/admin/newsletters", name="admin_newsletters_list")
-     *//*
-    public function newsletterList(EntityManagerInterface $manager)
-    {
-        $newsletters= $manager->getRepository(Post::class)
-            ->findBy(['category' => Post::CATEGORY_NEWSLETTER], ['createdAt' => 'DESC'])
-        ;
-
-        $this->setOrigin($this->generateUrl('admin_newsletters_list'));
-
-        return $this->render('admin/newsletters.html.twig', [
-            'newsletters' => $newsletters
-        ]);
-    }*/
-
-    /**
-     * @Route("/admin/newsletters/create/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_create")
-     *//*
-    public function addNewsletter(
-        $mode,
-        Request $request,
-        EntityManagerInterface $manager,
-        SlugGenerator $slugGenerator,
-        UrlGeneratorInterface $router
-    ) {
-        // TODO Voir affichage de l'image cover
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        $date_created = new \DateTime();
-        $newsletter = new Post();
-        $newsletter->setContent('');
-        $newsletter->setCategory(Post::CATEGORY_NEWSLETTER);
-        $newsletter->setAuthor($this->getUser());
-        $newsletter->setCreatedAt($date_created);
-        $newsletter->setStatus(Post::STATUS_PENDING);
-
-        $form = $this->createForm(NewsletterPostType::class, $newsletter);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newsletter->setSlug($slugGenerator->generateSlug($newsletter->getTitle(), $date_created));
-
-            $manager->persist($newsletter);
-            $manager->flush();
-
-            $this->addFlash('notice', 'La newsletter a été créé');
-
-            $this->setOrigin($this->generateUrl('admin_newsletters_list'));
-
-            return $this->redirectToRoute('admin_newsletters_list');
-        }
-
-        return $this->render('admin/newsletter-create.html.twig', [
-            'post' => $newsletter,
-            'editMode' => $mode,
-            'form' => $form->createView(),
-            'upload' => $router->generate('image_create'),
-        ]);
-    }*/
-
-    /**
-     * @Route("/admin/newsletters/{postId}/show", name="admin_newsletters_show")
-     */
-    /*
-    public function showNewsletter(int $postId, EntityManagerInterface $manager){
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-        $newsletter = $manager->getRepository(Post::class)->find($postId);
-        if (!$newsletter) {
-            throw $this->createNotFoundException('La newsletter n’existe pas');
-        }
-
-        return $this->render('emails/newsletter.html.twig', [
-            'content' => $newsletter->getContent(),
-            'cover' => $newsletter->getCover()
-        ]);
-    }
-*/
-    /**
-     * @Route("/admin/newsletters/{postId}/edit/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_edit")
-     */
-    /*
-    public function editNewsletter(
-        $mode,
-        int $postId,
-        Request $request,
-        EntityManagerInterface $manager,
-        SlugGenerator $slugGenerator,
-        UrlGeneratorInterface $router
-    ) {
-        // TODO Voir affichage de l'image cover
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        $newsletter = $manager->getRepository(Post::class)->find($postId);
-
-        if (!$newsletter) {
-            throw $this->createNotFoundException('La newsletter n’existe pas');
-        }
-
-        $form = $this->createForm(NewsletterPostType::class, $newsletter);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($newsletter);
-            $manager->flush();
-
-            $this->addFlash('notice', 'La newsletter a été modifiée');
-
-            return $this->redirectToRoute('admin_newsletters_list');
-        }
-
-        return $this->render('admin/newsletter-create.html.twig', [
-            'post' => $newsletter,
-            'editMode' => $mode,
-            'form' => $form->createView(),
-            'upload' => $router->generate('image_create'),
-        ]);
-    }
-    */
 }
