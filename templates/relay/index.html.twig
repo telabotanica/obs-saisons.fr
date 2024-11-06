@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block main_content %}
+    {% include 'layout/header.html.twig' with ({
+        'title': 'Menu relais',
+        'subtitle': ''
+    }) %}
+
+    <div class="container">
+        <div class="row">
+            <div class="my-2 col-4 px-2">
+                <button class="btn btn-lg btn-admin" >
+                    <a href="{{ path('relay_global_stats') }}" >
+                        Indicateurs globaux
+                    </a>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

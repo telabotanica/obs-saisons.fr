@@ -13,6 +13,13 @@
 				</a>
 			</div>
 			{%  endif %}
+			{% if app.user and app.user.roles[1] is defined and (app.user.roles[1] == 'ROLE_RELAY') %}
+			<div>
+				<a href="{{ path('home_relay') }}"><img src="{{ asset('media/layout/icons/relay.svg') }}" alt="relay_page" width="64"
+					 height="64" title="admin_logo">
+				</a>
+			</div>
+			{%  endif %}
 			{% if not is_granted(constant('App\\Security\\Voter\\UserVoter::LOGGED')) %}
 				<a href="{{ path('user_login') }}" class="topbar-link">Connexion</a>
 			{% else %}
