@@ -45,7 +45,6 @@ class StationRepository extends ServiceEntityRepository
 	public function countStationsEachYear(int $year)
     {
         $qb = $this->createQueryBuilder('s')
-			->where('s.is_deactivated =0 OR s.is_deactivated is null')
 			->andWhere('YEAR(s.createdAt) <= :year')
 			->setParameter('year', $year)
 			->getQuery()

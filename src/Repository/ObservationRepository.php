@@ -116,14 +116,13 @@ class ObservationRepository extends ServiceEntityRepository
 			->innerJoin('o.individual', 'i')
 			->innerJoin('i.station', 's')
 			->innerJoin('i.user', 'u')
-			->where('YEAR(o.createdAt) = :year')
+			->where('YEAR(o.date) = :year')
 			->andWhere('o.deletedAt is null')
 			->andWhere('i.deletedAt is null')
 			->andWhere('s.deletedAt is null')
 			->andWhere('u.deletedAt is null')
-			->andWhere('u.roles NOT LIKE :role')
+			->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
 			->setParameter('year', $year)
-			->setParameter('role','%ROLE_ADMIN')
 			->getQuery()
 			->getResult()
 		;
@@ -135,15 +134,14 @@ class ObservationRepository extends ServiceEntityRepository
 	{
 		$qb = $this->createQueryBuilder('o')
 			->innerJoin('o.user', 'u')
-			->select('distinct u.id')
-			->where('YEAR(o.createdAt) = :year')
-			->andWhere('u.roles NOT LIKE :role')
+			->select('count(distinct u.id)')
+			->where('YEAR(o.date) = :year')
+            ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
 			->setParameter('year', $year)
-			->setParameter('role','%ROLE_ADMIN')
 			->getQuery()
-			->getResult()
-		;
-		return count($qb);
+			->getResult();
+        
+		return $qb[0][1] ?? 0;
 	}
 
     public function findAllPublic(): array
@@ -153,15 +151,13 @@ class ObservationRepository extends ServiceEntityRepository
         return $qb
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
-//            ->andWhere($qb->expr()->eq('s.isPrivate', $qb->expr()->literal(false)))
-            ->addSelect(['s', 'i'])
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
             ->addSelect('PARTIAL ts.{id, name, reign}')
             ->innerJoin('o.event', 'e')
             ->addSelect('PARTIAL e.{id, bbch_code, name, description}')
-            ->orderBy('o.createdAt', 'DESC')
+            ->orderBy('o.date', 'DESC')
             ->getQuery()
             ->getArrayResult()
         ;
@@ -392,42 +388,44 @@ class ObservationRepository extends ServiceEntityRepository
 			->setParameter('user', $user)
 			->orderBy('o.date', 'DESC')
 			->getQuery()
-			->getResult()
-			;
+			->getResult();
 	}
 
-    public function findTop10perType($reign, $year): array {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery('
-           SELECT s.scientific_name, s.vernacular_name, count(o) as nb_obs
-           FROM App\Entity\Observation o
-           JOIN o.individual i
-           JOIN i.species s
-           JOIN s.type ts
-           JOIN o.user u
-           WHERE o.deletedAt IS NULL
-             AND ts.reign = :reign
-             AND YEAR(o.createdAt) = :year
-           GROUP BY s.id
-           ORDER BY count(o) DESC 
-       ');
-       $query->setParameter('year', $year)
+    public function findTop10perType($reign, $year,$region=null): array {
+        
+        $qb = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->innerJoin('i.species', 'sp')
+            ->innerJoin('sp.type','t')
+            ->select('sp.scientific_name as scientific_name, sp.vernacular_name as vernacular_name, count(o) as obs')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere("YEAR(o.date) = :year")
+            ->andWhere("t.reign = :reign");
+
+       if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+        $qb->setParameter('year', $year)
            ->setParameter('reign', $reign)
+           ->groupBy('sp.id')
+           ->orderBy('count(o)', 'DESC')
            ->setMaxResults(10);
 
-       return $query->getResult();
+       return $qb->getQuery()->getResult();
     }
 
     public function findTop3Species(int $year, $region = null){
         $qb = $this->createQueryBuilder('o')
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
-            ->innerJoin('o.user', 'u')
             ->innerJoin('i.species', 'sp')
-            ->innerJoin('sp.type', 'ts')
             ->select('sp.scientific_name as scientific_name, sp.vernacular_name as vernacular_name, count(o) as obs')
             ->andWhere('o.deletedAt is null')
-            ->andWhere('YEAR(o.createdAt) >= 2015');
+            ->andWhere("YEAR(o.date) = :year")
+            ->setParameter('year',$year);
 
         if ($region){
             $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
@@ -445,29 +443,33 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllActiveStationsPerYear(){
+    public function countAllActiveStationsPerYear($year){
         $qb = $this->createQueryBuilder('o');
 
         return $qb
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
-            ->select(['YEAR(o.createdAt) as year, COUNT(DISTINCT s) as Nb_stations_actives'])
+            ->select(['YEAR(o.date) as year, COUNT(DISTINCT s) as Nb_stations_actives'])
+            ->where("YEAR(o.date)=:year")
+            ->setParameter("year",$year)
             ->andWhere('o.deletedAt IS NULL')
             ->andWhere('i.deletedAt IS NULL')
             ->andWhere('s.deletedAt IS NULL')
+            ->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
             ->groupBy('year')
-            ->orderBy('year', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
-    public function countAllActiveCitiesPerYear(){
+    public function countAllActiveCitiesPerYear($year){
         $qb = $this->createQueryBuilder('o');
 
         return $qb
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
-            ->select(['YEAR(o.createdAt) as year, COUNT(DISTINCT s.inseeCode) as Nb_communes_actives'])
+            ->select(['YEAR(o.date) as year, COUNT(DISTINCT s.inseeCode) as Nb_communes_actives'])
+            ->where("YEAR(o.date)=:year")
+            ->setParameter("year",$year)
             ->andWhere('o.deletedAt IS NULL')
             ->andWhere('i.deletedAt IS NULL')
             ->andWhere('s.deletedAt IS NULL')
@@ -498,11 +500,12 @@ class ObservationRepository extends ServiceEntityRepository
 
         return $qb
             ->innerJoin('o.user', 'u')
-            ->select('u.email, u.displayName, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
-            ->where('YEAR(o.createdAt) = :year')
+            ->select('u.email, u.displayName as pseudo, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
+            ->where('YEAR(o.date) = :year')
             ->setParameter('year', $year)
             ->groupBy('o.user')
             ->orderBy('count(o)', 'DESC')
+            ->setMaxResults(12)
             ->getQuery()
             ->getResult();
     }
@@ -550,10 +553,10 @@ class ObservationRepository extends ServiceEntityRepository
             ->andWhere('i.deletedAt is null')
             ->andWhere('s.deletedAt is null')
             ->andWhere('u.deletedAt is null')
-            ->andWhere('u.roles NOT LIKE :role')
+            ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
             ->andWhere('u.status = 1')
             ->setParameter('year', $year)
-            ->setParameter('role','%ROLE_ADMIN')
+            
         ;
 
         if ($region){
@@ -576,11 +579,12 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('i.station', 's')
             ->innerJoin('o.user', 'u')
             ->select('count(o.id) as obs, count(DISTINCT u) as active_members, u.profileType as type')
-            ->where('YEAR(o.createdAt) = :year')
+            ->where('YEAR(o.date) = :year')
             ->andWhere('o.deletedAt is null')
             ->andWhere('i.deletedAt is null')
             ->andWhere('s.deletedAt is null')
             ->andWhere('u.deletedAt is null')
+            ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
             ->setParameter('year', $year)
             ->groupBy('u.profileType');
 
@@ -603,11 +607,12 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('i.station', 's')
             ->innerJoin('o.user', 'u')
             ->select('u.email, u.displayName, u.postCode, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
-            ->where('YEAR(o.createdAt) = :year')
+            ->where('YEAR(o.date) = :year')
             ->andWhere('o.deletedAt is null')
             ->andWhere('i.deletedAt is null')
             ->andWhere('s.deletedAt is null')
             ->andWhere('u.deletedAt is null')
+            ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
             ->setParameter('year', $year)
             ->groupBy('o.user')
             ->orderBy('count(o)', 'DESC');
@@ -699,9 +704,9 @@ class ObservationRepository extends ServiceEntityRepository
             ->leftJoin('i.species', 's');
 
         if ($sort === 'date_asc') {
-            $imagesQuery->orderBy('o.createdAt', 'ASC');
+            $imagesQuery->orderBy('o.date', 'ASC');
         } else {
-            $imagesQuery->orderBy('o.createdAt', 'DESC');
+            $imagesQuery->orderBy('o.date', 'DESC');
         }
 
         //Prise en compte de le requete de filtrage pas statut

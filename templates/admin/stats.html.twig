@@ -74,19 +74,19 @@
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.membersPerStatus,
-                'texte' : 'Membres par status'
+                'texte' : 'Membres par statut'
             } %}
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.activeStationsPerYear,
-                'texte' : 'Stations actives (année / nombre d\'obs)'
+                'texte' : 'Stations actives (année / stations)'
             } %}
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.activeCitiesPerYear,
-                'texte' : 'Communes actives (année / nombre d\'obs)'
+                'texte' : "Communes actives (année / communes)"
             } %}
         </div>
 

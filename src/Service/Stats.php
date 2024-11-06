@@ -44,9 +44,9 @@ class Stats
         // Array du nombre de users par status
         $result['membersPerStatus'] = $this->manager->getRepository(User::class)->findTotalMembersPerStatus();
         // Array des stations actives par année
-        $result['activeStationsPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveStationsPerYear();
+        $result['activeStationsPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveStationsPerYear($year);
         // Array des communes actives par année
-        $result['activeCitiesPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveCitiesPerYear();
+        $result['activeCitiesPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveCitiesPerYear($year);
 
         // Top 12 utilisateurs
         $result['top12Users'] = $this->manager->getRepository(Observation::class)->top12UsersPerYear($year);
