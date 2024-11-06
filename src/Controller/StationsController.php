@@ -724,7 +724,7 @@ class StationsController extends AbstractController
             $observation,
             'Vous n’êtes pas autorisé à supprimer cette observation'
         );
-
+        
         $manager->remove($observation);
         $manager->flush();
 		
