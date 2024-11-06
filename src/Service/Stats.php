@@ -30,8 +30,6 @@ class Stats
         $result['newMembers'] = $this->manager->getRepository(User::class)->findNewMembersPerYear($year);
         //Nbre de membres actifs dans l'année
         $result['activeMembers'] = $this->manager->getRepository(Observation::class)->findActiveMembersPerYear($year);
-        // Nbre de stations avec au moins 1 donnée ($nbStationsWithData[0])
-        $result['nbStationsWithData'] = $this->manager->getRepository(Observation::class)->countStationsWithData();
 
         // Top 10 obs par type
         $result['top10Animal'] = $this->manager->getRepository(Observation::class)->findTop10perType('animaux', $year);
@@ -81,6 +79,9 @@ class Stats
 
     public function getGlobalStats()
     {
+        // Nbre de stations avec au moins 1 donnée ($nbStationsWithData[0])
+        $result['nbStationsWithData'] = $this->manager->getRepository(Observation::class)->countStationsWithData();
+
         $result['provence']['allStations'] = $this->manager->getRepository(Station::class)->countAllStationsInPaca(13);
         
         $result['provence']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaSince2015(13);

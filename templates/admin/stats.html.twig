@@ -27,17 +27,7 @@
                 'texte' : textObs
             } %}
         </div>
-        <div class="col-6">
-            {% if stats.nbStationsWithData <= 1 %}
-                {% set textObs = 'Station avec données' %}
-            {% else %}
-                {% set textObs = 'Stations avec données' %}
-            {% endif %}
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.nbStationsWithData,
-                'texte' : textObs
-            } %}
-        </div>
+        
         <div class="col-6">
             {% if stats.obsPerYear <= 1 %}
                 {% set textObs = 'Observation' %}
@@ -89,7 +79,6 @@
                 'texte' : "Communes actives (année / communes)"
             } %}
         </div>
-
     </div>
     <div class="row">
         <div class="col-6">
@@ -122,6 +111,8 @@
                 'texte' : 'Top 12 utilisateurs'
             } %}
         </div>
+
+    
     </div>
     <h2 class="text-center">ODS Occitanie</h2>
     <div class="row">

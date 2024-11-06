@@ -615,7 +615,8 @@ class ObservationRepository extends ServiceEntityRepository
             ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
             ->setParameter('year', $year)
             ->groupBy('o.user')
-            ->orderBy('count(o)', 'DESC');
+            ->orderBy('count(o)', 'DESC')
+            ->setMaxResults(5);
 
         if ($region){
             $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
