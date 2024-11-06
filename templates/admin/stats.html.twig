@@ -142,8 +142,38 @@
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.activeStationsPerYear,
+                'texte' : 'Stations actives (année / stations)'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.activeCitiesPerYear,
+                'texte' : "Communes actives (année / communes)"
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.occitanie.top3,
                 'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top10Animal,
+                'texte' : 'Top 10 animaux'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top10Plantes,
+                'texte' : 'Top 10 plantes'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top10Champignons,
+                'texte' : 'Top 10 champignons'
             } %}
         </div>
         <div class="col-12">
@@ -182,8 +212,38 @@
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.activeStationsPerYear,
+                'texte' : 'Stations actives (année / stations)'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.activeCitiesPerYear,
+                'texte' : "Communes actives (année / communes)"
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.provence.top3,
                 'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top10Animal,
+                'texte' : 'Top 10 animaux'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top10Plantes,
+                'texte' : 'Top 10 plantes'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top10Champignons,
+                'texte' : 'Top 10 champignons'
             } %}
         </div>
         <div class="col-12">

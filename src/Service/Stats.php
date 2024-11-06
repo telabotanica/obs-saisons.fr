@@ -50,6 +50,14 @@ class Stats
         $result['top12Users'] = $this->manager->getRepository(Observation::class)->top12UsersPerYear($year);
 
         // Par Région
+
+        $result['occitanie']['activeStationsPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveStationsPerYear($year,12);
+        
+        $result['provence']['activeStationsPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveStationsPerYear($year,13);
+
+        $result['occitanie']['activeCitiesPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveCitiesPerYear($year,12);
+
+        $result['provence']['activeCitiesPerYear'] = $this->manager->getRepository(Observation::class)->countAllActiveCitiesPerYear($year,13);
         //Nbr d'obs et de users inscrits dans l'année en Occitanie
         $result['occitanie']['obsPerYear'] = $this->manager->getRepository(Observation::class)->findObsAndUserPerYearPerRegion($year, 12);
         //Nbr d'obs et de users inscrits dans l'année en Provence
@@ -73,7 +81,14 @@ class Stats
         $result['provence']['newMembers'] = $this->manager->getRepository(Observation::class)->findNewMembersPerYearPerRegion($year, 13);
         $result['occitanie']['top3'] = $this->manager->getRepository(Observation::class)->findTop3Species($year, 12);
         $result['provence']['top3'] = $this->manager->getRepository(Observation::class)->findTop3Species($year, 13);
-        
+
+        $result['occitanie']['top10Animal'] = $this->manager->getRepository(Observation::class)->findTop10perType('animaux', $year,12);
+        $result['occitanie']['top10Plantes'] = $this->manager->getRepository(Observation::class)->findTop10perType('plantes', $year,12);
+        $result['occitanie']['top10Champignons'] = $this->manager->getRepository(Observation::class)->findTop10perType('champignons', $year,12);
+
+        $result['provence']['top10Animal'] = $this->manager->getRepository(Observation::class)->findTop10perType('animaux', $year,13);
+        $result['provence']['top10Plantes'] = $this->manager->getRepository(Observation::class)->findTop10perType('plantes', $year,13);
+        $result['provence']['top10Champignons'] = $this->manager->getRepository(Observation::class)->findTop10perType('champignons', $year,13);
         return $result;
     }
 

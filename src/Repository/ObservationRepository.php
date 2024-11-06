@@ -443,10 +443,8 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllActiveStationsPerYear($year){
-        $qb = $this->createQueryBuilder('o');
-
-        return $qb
+    public function countAllActiveStationsPerYear($year,$region=null){
+        $qb = $this->createQueryBuilder('o')
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
             ->select(['YEAR(o.date) as year, COUNT(DISTINCT s) as Nb_stations_actives'])
@@ -456,15 +454,19 @@ class ObservationRepository extends ServiceEntityRepository
             ->andWhere('i.deletedAt IS NULL')
             ->andWhere('s.deletedAt IS NULL')
             ->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
-            ->groupBy('year')
+            ->groupBy('year');
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+        return $qb
             ->getQuery()
             ->getResult();
     }
 
-    public function countAllActiveCitiesPerYear($year){
-        $qb = $this->createQueryBuilder('o');
-
-        return $qb
+    public function countAllActiveCitiesPerYear($year,$region=null){
+        $qb = $this->createQueryBuilder('o')
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
             ->select(['YEAR(o.date) as year, COUNT(DISTINCT s.inseeCode) as Nb_communes_actives'])
@@ -474,7 +476,13 @@ class ObservationRepository extends ServiceEntityRepository
             ->andWhere('i.deletedAt IS NULL')
             ->andWhere('s.deletedAt IS NULL')
             ->groupBy('year')
-            ->orderBy('year', 'DESC')
+            ->orderBy('year', 'DESC');
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+        return $qb
             ->getQuery()
             ->getResult();
     }
