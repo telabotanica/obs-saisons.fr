@@ -10,6 +10,17 @@ use App\Entity\User;
 class RelayController extends AbstractController
 {
     /**
+     * @Route("/relay", name="relay_home_page")
+     */
+    public function index(){
+        $this->denyAccessUnlessGranted('ROLE_RELAY');
+        
+        return $this->render('relay/index.html.twig', [
+           
+        ]);
+    }
+
+    /**
      * @Route("/relay/global-stats", name="relay_global_stats")
      */
     public function getGlobalStats(Stats $statsService){
@@ -22,4 +33,5 @@ class RelayController extends AbstractController
             'stats' => $stats
         ]);
     }
+
 }
