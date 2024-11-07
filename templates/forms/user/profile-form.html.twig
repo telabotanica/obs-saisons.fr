@@ -86,10 +86,16 @@
     {% if isUserDashboardAdmin %}
         <div class="_2-col-form">
             <div class="form-col check">
-                {{ form_widget(profileForm.roles
-                ) }}
+                {{ form_widget(profileForm.roles) }}
             </div>
         </div>
+        
+        <div class="_2-col-form">
+            <div class="form-col check">
+                {{ form_widget(profileForm.typeRelays) }}
+            </div>
+        </div>
+        
     {% endif %}
 
     {% include 'forms/components/upload-block.html.twig' with { formField: profileForm.avatar } %}

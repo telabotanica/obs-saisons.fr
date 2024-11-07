@@ -37,7 +37,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/relay/global-stats, roles: ROLE_RELAY }
+         - { path: ^/relay/, roles: ROLE_RELAY }
 
     role_hierarchy:
         ROLE_RELAY: ROLE_USER

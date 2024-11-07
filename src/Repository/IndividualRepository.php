@@ -22,7 +22,7 @@ class IndividualRepository extends ServiceEntityRepository
 
     public function findSpeciesIndividualsForStation(Station $station): array
     {
-        return $this->createQueryBuilder('i')
+        $result = $this->createQueryBuilder('i')
             ->leftJoin('i.species', 'species')
             ->leftJoin('i.station', 'station')
             ->where('station = :station')
@@ -31,6 +31,8 @@ class IndividualRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+        
+        return $result;
     }
 
     public function findAllIndividualsInStation(Station $station)

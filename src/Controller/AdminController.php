@@ -9,8 +9,6 @@ use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\ImageVerificationType;
-use App\Form\NewsletterPostType;
-use App\Form\NewsPostType;
 use App\Form\PagePostType;
 use App\Form\ProfileType;
 use App\Form\SpeciesPostType;
@@ -19,7 +17,6 @@ use App\Form\StatsType;
 use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
 use App\Helper\OriginPageTrait;
-use App\Security\Voter\PostVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
 use App\Service\EmailSender;
@@ -30,17 +27,25 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use function PHPUnit\Framework\isEmpty;
-
+use Symfony\Component\Security\Core\Security;
 
 class AdminController extends AbstractController
 {
     use OriginPageTrait;
+
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(Security $security)
+    {
+       $this->security = $security;
+    }
 
     /**
      * @Route("/admin", name="home_admin")
@@ -84,7 +89,7 @@ class AdminController extends AbstractController
         if (!$speciesPost) {
             $speciesPost = new Post();
             $speciesPost->setContent('');
-            $speciesPost->setAuthor($this->getUser());
+            $speciesPost->setAuthor($this->security->getUser());
             $speciesPost->setCategory(Post::CATEGORY_SPECIES);
             $speciesPost->setTitle('Fiche espèce '.$species->getScientificName());
             $speciesPost->setCreatedAt(new \DateTime());
@@ -283,14 +288,28 @@ class AdminController extends AbstractController
 
 			// Add role admin if selected
 			$role = $form->get('roles')->getData();
-			$exist = false;
+            sort($role);
+			$has_role=false;
 			foreach ($role as $roleElem){
-				if($roleElem == 'ROLE_ADMIN'){
-					$exist = true;
-				}
+                
+                switch($roleElem){
+                    case 'ROLE_ADMIN':
+                        $user->setRoles(['ROLE_ADMIN','ROLE_RELAY','ROLE_USER']);
+                        $has_role=true;
+                        break;
+                    case 'ROLE_RELAY':
+                        $user->setRoles(['ROLE_RELAY','ROLE_USER']);
+                        $has_role=true;
+                        break;
+                }
+                if ($has_role){
+                    break;
+                }else{
+                    $user->setRoles(['ROLE_USER']);
+                }
+				
 			}
-			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
-
+			
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
@@ -526,20 +545,6 @@ class AdminController extends AbstractController
             'years' => $years,
             'min_year' => $minYear,
             'form' => $form->createView(),
-            'stats' => $stats
-        ]);
-    }
-
-    /**
-     * @Route("/admin/global-stats", name="admin_global_stats")
-     */
-    public function getGlobalStats(EntityManagerInterface $manager, Request $request, Stats $statsService){
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        // Indicateurs
-        $stats = $statsService->getGlobalStats();
-        
-        return $this->render('admin/global-stats.html.twig', [
             'stats' => $stats
         ]);
     }

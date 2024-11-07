@@ -6,7 +6,6 @@ use App\Entity\Individual;
 use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\TypeSpecies;
-use App\Service\UploadService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -26,11 +25,11 @@ class IndividualType extends AbstractType
     private $security;
     private $station;
     private $individuals;
+    private $isEdit;
 
     public function __construct(
         ManagerRegistry $manager,
-        Security $security,
-        UploadService $uploadFileService
+        Security $security
     ) {
         $this->manager = $manager;
         $this->security = $security;
@@ -53,6 +52,7 @@ class IndividualType extends AbstractType
             ->add('species', EntityType::class, [
                 'class' => Species::class,
                 'choice_label' => function (Species $species) {
+                    
                     $vernacularName = $species->getVernacularName();
                     if (in_array($species, $this->stationAllSpecies)) {
                         $vernacularName .= ' (+)';
@@ -135,10 +135,9 @@ class IndividualType extends AbstractType
 
     private function setIndividuals(Station $station): self
     {
-        $this->individuals = $this->manager->getRepository(Individual::class)
-            ->findSpeciesIndividualsForStation($station)
+        $this->individuals = $this->manager->getRepository(Individual::class)->findSpeciesIndividualsForStation($station)
         ;
-
+        
         return $this;
     }
 

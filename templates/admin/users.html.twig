@@ -27,7 +27,10 @@
                 {% elseif user.status == 2 %}
                     <td>En attente d'activation</td>
                 {% endif %}
-                <td>{{ user.roles[1] is defined ? 'Admin' : 'User' }}</td>
+                {% set role = user.roles[0] %} 
+                {% set replace= 'ROLE_' %}
+                {% set replace_with_value = '' %} 
+                <td>{{ role|replace({ (replace): replace_with_value }) }}</td>
                 <td><a href="{{ path('admin_user_dashboard', {userId:user.id}) }}">Voir</a></td>
             </tr>
         {% else %}
