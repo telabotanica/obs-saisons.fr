@@ -46,7 +46,7 @@ class TypeRelaysImportCommand extends Command
 
         try {
             $connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
-            $connection->executeQuery('DELETE FROM '.$cmd->getTableName());
+            $connection->executeQuery('TRUNCATE TABLE '.$cmd->getTableName());
             $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
             $connection->commit();
 
