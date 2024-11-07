@@ -73,7 +73,7 @@ class ProfileType extends AbstractType
                 ],
             ])
 			->add('roles', ChoiceType::class, [
-				'label'=>'Role',
+				'label'=>'Rôle',
 				'choices' => [
 					'Droits' => [
 						'Admin' => 'ROLE_ADMIN',
