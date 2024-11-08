@@ -464,7 +464,7 @@ class User implements UserInterface
         return $this->typeRelays;
     }
 
-    public function setTypeRelays(TypeRelays $type): self
+    public function setTypeRelays(?TypeRelays $type): self
     {
         $this->typeRelays = $type;
 
