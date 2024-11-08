@@ -19,9 +19,15 @@
             </div>
             <div class="my-2 col-4 px-2">
                 <button class="btn btn-lg btn-admin" >
-                    <a href="{{ path('relay_global_stats') }}" >
+                    {% if app.user.typeRelays.id == 1 %}
+                    <a href="{{ path('relay_static_page_edit',{slug: 'ods-occitanie'}) }}" >
                         Modifier la page de présentation
                     </a>
+                    {% elseif app.user.typeRelays.id == 2 %}
+                    <a href="{{ path('relay_static_page_edit',{slug: 'ods-provence'}) }}" >
+                        Modifier la page de présentation
+                    </a>
+                    {% endif %}
                 </button>
             </div>
             

@@ -32,7 +32,10 @@ trait OriginPageTrait
 
     public function getOrigin()
     {
-        return $this->session->get('origin');
+        if (isset($this->session)){
+            return $this->session->get('origin');
+
+        }
     }
 
     public function generateOriginUrl(string $defaultRoute = 'homepage')
