@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Édition de la page statique : {{ page.title }}
+{% endblock %}
+
+{% block main_content %}
+    {% include 'layout/header.html.twig' with ({
+        'title': page.title,
+        'subtitle': 'Édition de la page statique',
+    }) %}
+
+    <a href="{{ path('relay_home_page') }}">Retour</a>
+    <br>
+    <a href="{{ path(page.slug) }}">Voir la page</a>
+
+    <section class="group-form">
+        {% include 'forms/post/page-post-form.html.twig' with ({
+            'page':page,
+            'editMode':editMode,
+            'form':form,
+            'upload':upload,
+           
+        }) %}
+        
+    </section>
+{% endblock %}
+
