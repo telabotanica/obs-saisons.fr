@@ -6,17 +6,17 @@
 			<h2 class="site-title">Contribuez à la recherche sur le changement climatique !</h2>
 		{% endif %}
 		<div class="right-links">
-			{% if app.user and app.user.roles[1] is defined and (app.user.roles[1] == 'ROLE_ADMIN') %}
+			{% if is_granted('ROLE_ADMIN') %}
 			<div>
 				<a href="{{ path('home_admin') }}"><img src="{{ asset('media/layout/icons/admin-generic.svg') }}" alt="admin_page" width="64"
-					 height="64" title="admin_logo">
+					 height="64" title="menu_admin">
 				</a>
 			</div>
 			{%  endif %}
 			{% if is_granted('ROLE_RELAY') %}
 			<div>
 				<a href="{{ path('relay_home_page') }}"><img src="{{ asset('media/layout/icons/relay.svg') }}" alt="relay_page" width="64"
-					 height="64" title="relay_logo">
+					 height="64" title="menu_relais">
 				</a>
 			</div>
 			{% endif %}
