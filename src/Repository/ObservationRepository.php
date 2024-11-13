@@ -786,12 +786,13 @@ class ObservationRepository extends ServiceEntityRepository
         return $imagesQuery->getQuery()->getResult();
     }
 
-    public function countAllObservationsInPaca($region)
+    public function countAllObservations($region)
     {
         $qb = $this->createQueryBuilder('o')
             ->select('count(o.id)')
-            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
-            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
             ->where('s.is_deactivated =0 OR s.is_deactivated is null');
 
         if ($region){
@@ -807,12 +808,13 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllObservationsInPacaSince2015($region)
+    public function countAllObservationsSince2015($region)
     {
         $qb = $this->createQueryBuilder('o')
             ->select('count(o.id)')
-            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
-            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
             ->where('s.is_deactivated =0 OR s.is_deactivated is null')
             ->andWhere('YEAR(o.date)>=2015');
         if ($region){
@@ -836,8 +838,9 @@ class ObservationRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('o')
             ->select('count(o.id)')
-            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
-            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
             ->where('s.is_deactivated =0 OR s.is_deactivated is null')
             ->andWhere("o.date >= CONCAT('$last_year','/06/01')")
             ->andWhere("o.date < CONCAT('$current_year','/07/01')");
@@ -854,15 +857,42 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllObservationsInBDR()
+    public function countAllObservationsCurrentYear($region)
     {
+
+        $current_year=date('Y');
+    
         $qb = $this->createQueryBuilder('o')
             ->select('count(o.id)')
-            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
-            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
             ->where('s.is_deactivated =0 OR s.is_deactivated is null')
-            ->andWhere('s.department = 13');
+            ->andWhere("YEAR(o.date) = $current_year");
+        if ($region){
+            $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+            $qb->andWhere($qb->expr()->in('s.department', ':departments'))
+                ->setParameter(':departments', $departments);
+        }
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
             
+        return $result;
+    }
+
+    public function countAllObservationsByDpt($department)
+    {
+
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere('s.department = :department')
+            ->setParameter(":department",$department);
         $result = $qb
             ->getQuery()
             ->getSingleScalarResult();
@@ -870,15 +900,17 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllObservationsInBDRSince2015()
+    public function countAllObservationsByDptSince2015($department)
     {
         $qb = $this->createQueryBuilder('o')
             ->select('count(o.id)')
-            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
-            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
             ->where('s.is_deactivated =0 OR s.is_deactivated is null')
             ->andWhere('YEAR(o.date)>=2015')
-            ->andWhere('s.department = 13');
+            ->andWhere('s.department = :department')
+            ->setParameter(":department",$department);
 
         $result = $qb
             ->getQuery()
@@ -887,7 +919,7 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllObservationsInBDRFromJunetoJune()
+    public function countAllObservationsByDptFromJunetoJune($department)
     {
 
         $current_year=date('Y');
@@ -895,12 +927,36 @@ class ObservationRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('o')
             ->select('count(o.id)')
-            ->innerJoin(User::class, 'u', Expr\Join::WITH, 'u.id = o.user')
-            ->innerJoin(Station::class, 's', Expr\Join::WITH, 'u.id = s.user')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
             ->where('s.is_deactivated =0 OR s.is_deactivated is null')
             ->andWhere("o.date >= CONCAT('$last_year','/06/01')")
             ->andWhere("o.date < CONCAT('$current_year','/07/01')")
-            ->andWhere('s.department = 13');
+            ->andWhere('s.department = :department')
+            ->setParameter(":department",$department);
+
+        $result = $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+            
+        return $result;
+    }
+
+    public function countAllObservationsByDptCurrentYear($department)
+    {
+
+        $current_year=date('Y');
+        
+        $qb = $this->createQueryBuilder('o')
+            ->select('count(o.id)')
+            ->innerJoin('o.individual', 'i')
+			->innerJoin('i.station', 's')
+			->innerJoin('i.user', 'u')
+            ->where('s.is_deactivated =0 OR s.is_deactivated is null')
+            ->andWhere("YEAR(o.date) = $current_year")
+            ->andWhere('s.department = :department')
+            ->setParameter(":department",$department);
 
         $result = $qb
             ->getQuery()

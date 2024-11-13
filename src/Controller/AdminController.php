@@ -539,7 +539,7 @@ class AdminController extends AbstractController
         ]);
 
         // Indicateurs
-        $stats = $statsService->getGlobalStats($year);
+        $stats = $statsService->getGlobalStats($department);
         
         return $this->render('admin/global-stats.html.twig', [
             'years' => $years,

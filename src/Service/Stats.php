@@ -92,40 +92,82 @@ class Stats
         return $result;
     }
 
-    public function getGlobalStats()
+    public function getGlobalStats($departmentOcc,$departmentPaca)
     {
-        // Nbre de stations avec au moins 1 donnée ($nbStationsWithData[0])
-        $result['nbStationsWithData'] = $this->manager->getRepository(Observation::class)->countStationsWithData();
+        $result = [];
 
-        $result['provence']['allStations'] = $this->manager->getRepository(Station::class)->countAllStationsInPaca(13);
+        $result = array_merge($this->getGeneralStats(),$this->getGlobalStatsProvence($departmentPaca),$this->getGlobalStatsOccitanie($departmentOcc));
         
-        $result['provence']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaSince2015(13);
+        return $result;
+    }
+
+    public function getGlobalStatsProvence($departmentPaca){
+        $result['provence']['dpt']=$departmentPaca;
+
+        $result['provence']['allStations'] = $this->manager->getRepository(Station::class)->countAllStations(13);
+        
+        $result['provence']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsSince2015(13);
 
         $result['provence']['allStationsJune'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaFromJunetoJune(13);
         
-        $result['provence']['allObservations'] = $this->manager->getRepository(Observation::class)->countAllObservationsInPaca(13);
+        $result['provence']['allObservations'] = $this->manager->getRepository(Observation::class)->countAllObservations(13);
         
-        $result['provence']['allObservations2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsInPacaSince2015(13);
+        $result['provence']['allObservations2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsSince2015(13);
 
         $result['provence']['allObservationsJune'] = $this->manager->getRepository(Observation::class)->countAllObservationsInPacaFromJunetoJune(13);
 
-        $result['provence']['allObservationsBDR'] = $this->manager->getRepository(Observation::class)->countAllObservationsInBDR();
+        $result['provence']['allObservationsDpt'] = $this->manager->getRepository(Observation::class)->countAllObservationsByDpt($departmentPaca);
         
-        $result['provence']['allObservationsBDR2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsInBDRSince2015();
+        $result['provence']['allObservationsDpt2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsByDptSince2015($departmentPaca);
 
-        $result['threeSpecies'] = $this->manager->getRepository(Species::class)->get3mainSpecies(13);
+        $result['provence']['threeSpecies'] = $this->manager->getRepository(Species::class)->get3mainSpecies(13);
 
-        $result['threeSpecies2015'] = $this->manager->getRepository(Species::class)->get3mainSpecies2015(13);
+        $result['provence']['threeSpecies2015'] = $this->manager->getRepository(Species::class)->get3mainSpecies2015(13);
 
-        $result['threeSpecies2007'] = $this->manager->getRepository(Species::class)->get3mainSpecies2007(13);
+        $result['provence']['threeSpecies2007'] = $this->manager->getRepository(Species::class)->get3mainSpecies2007(13);
 
-        $result['provence']['allObservationsBDRJune'] = $this->manager->getRepository(Observation::class)->countAllObservationsInBDRFromJunetoJune();
+        $result['provence']['allObservationsDptJune'] = $this->manager->getRepository(Observation::class)->countAllObservationsByDptFromJunetoJune($departmentPaca);
 
+        
+        return $result;
+    }
+
+    public function getGeneralStats(){
         $result['monitoredSpecies'] = $this->manager->getRepository(Species::class)->countMonitoredSpecies();
-
+        $result['nbStationsWithData'] = $this->manager->getRepository(Observation::class)->countStationsWithData();
         $result['observators'] = $this->manager->getRepository(Observation::class)->countAllObservators();
-        $result['provence']['currentYear'] = date('Y');
-        $result['provence']['lastYear'] = date('Y')-1;
+        $result['currentYear'] = date('Y');
+        $result['lastYear'] = date('Y')-1;
+
+        return $result;
+    }
+
+    public function getGlobalStatsOccitanie($departmentOcc){
+        $result['occitanie']['dpt']=$departmentOcc;
+    
+        $result['occitanie']['allStations'] = $this->manager->getRepository(Station::class)->countAllStations(12);
+        
+        $result['occitanie']['allStations2015'] = $this->manager->getRepository(Station::class)->countAllStationsSince2015(12);
+
+        $result['occitanie']['allStationsJune'] = $this->manager->getRepository(Station::class)->countAllStationsInPacaFromJunetoJune(12);
+        
+        $result['occitanie']['allObservations'] = $this->manager->getRepository(Observation::class)->countAllObservations(12);
+        
+        $result['occitanie']['allObservations2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsSince2015(12);
+
+        $result['occitanie']['allObservationsYear'] = $this->manager->getRepository(Observation::class)->countAllObservationsCurrentYear(12);
+
+        $result['occitanie']['allObservationsDpt'] = $this->manager->getRepository(Observation::class)->countAllObservationsByDpt($departmentOcc);
+        
+        $result['occitanie']['allObservationsDpt2015'] = $this->manager->getRepository(Observation::class)->countAllObservationsByDptSince2015($departmentOcc);
+
+        $result['occitanie']['threeSpecies'] = $this->manager->getRepository(Species::class)->get3mainSpecies(12);
+
+        $result['occitanie']['threeSpecies2015'] = $this->manager->getRepository(Species::class)->get3mainSpecies2015(12);
+
+        $result['occitanie']['threeSpecies2007'] = $this->manager->getRepository(Species::class)->get3mainSpecies2007(12);
+
+        $result['occitanie']['allObservationsDptYear'] = $this->manager->getRepository(Observation::class)->countAllObservationsByDptCurrentYear($departmentOcc);
 
         return $result;
     }

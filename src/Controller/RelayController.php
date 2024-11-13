@@ -13,6 +13,9 @@ use App\Service\BreadcrumbsGenerator;
 use App\Form\PagePostType;
 use App\Helper\OriginPageTrait;
 use Symfony\Component\Security\Core\Security;
+use App\Entity\FrenchRegions;
+use App\Form\GlobalStatsTypeOcc;
+use App\Form\GlobalStatsTypePaca;
 
 class RelayController extends AbstractController
 {
@@ -39,17 +42,99 @@ class RelayController extends AbstractController
     }
 
     /**
-     * @Route("/relay/global-stats", name="relay_global_stats")
+     * @Route("/relay/global-stats/{mode}", name="relay_global_stats")
      */
-    public function getGlobalStats(Stats $statsService){
+    public function getGlobalStats(Stats $statsService,Request $request,int $mode=null){
         $this->denyAccessUnlessGranted('ROLE_RELAY');
 
-        // Indicateurs
-        $stats = $statsService->getGlobalStats();
+        if (empty($mode)){
+            $dptsOcc = $this->getDptIndexed(12);
         
-        return $this->render('relay/global-stats.html.twig', [
-            'stats' => $stats
-        ]);
+            $dptsPaca = $this->getDptIndexed(13);
+            $departments=[$dptsOcc[0],$dptsPaca[0]];
+            
+            $formOcc = $this->createForm(GlobalStatsTypeOcc::class,$departments, ['departmentsOcc'=>$dptsOcc[0]]);
+            $formOcc->handleRequest($request);
+            
+            if ($formOcc->isSubmitted() && $formOcc->isValid()){
+                $departmentOcc = $formOcc->get('departmentsOcc')->getData();
+                
+            }else{
+                $departmentOcc=$dptsOcc[0]['09'];
+            }
+            
+            $formPaca = $this->createForm(GlobalStatsTypePaca::class,$departments, ['departmentsPaca'=>$dptsPaca[0]]);
+            $formPaca->handleRequest($request);
+            
+            if ($formPaca->isSubmitted() && $formPaca->isValid()){
+                $departmentPaca = $formPaca->get('departmentsPaca')->getData();
+                
+            }else{
+
+                $departmentPaca=$dptsPaca[0]['04'];
+            }
+            // Indicateurs
+            $stats = $statsService->getGlobalStats($departmentOcc,$departmentPaca);
+            
+            return $this->render('relay/global-stats.html.twig', [
+                'stats' => $stats,
+                'departmentsOcc' => $dptsOcc[1],
+                'departmentsPaca' => $dptsPaca[1],
+                'formOcc' => $formOcc->createView(),
+                'formPaca' => $formPaca->createView()
+            ]);
+        }else if($mode===1){
+            $dptsOcc = $this->getDptIndexed(12);
+        
+            $dptsPaca = $this->getDptIndexed(13);
+            $departments=[$dptsOcc[0],$dptsPaca[0]];
+            
+            $formOcc = $this->createForm(GlobalStatsTypeOcc::class,$departments, ['departmentsOcc'=>$dptsOcc[0]]);
+            $formOcc->handleRequest($request);
+            
+            if ($formOcc->isSubmitted() && $formOcc->isValid()){
+                $departmentOcc = $formOcc->get('departmentsOcc')->getData();
+                
+            }else{
+                $departmentOcc=$dptsOcc[0]['09'];
+                
+            }
+            
+            // Indicateurs
+            $stats = array_merge($statsService->getGlobalStatsOccitanie($departmentOcc),$statsService->getGeneralStats());
+            
+            return $this->render('relay/global-stats.html.twig', [
+                'stats' => $stats,
+                'departmentsOcc' => $dptsOcc[1],
+                'formOcc' => $formOcc->createView()
+            ]);
+        }else if($mode===2){
+            $dptsOcc = $this->getDptIndexed(12);
+        
+            $dptsPaca = $this->getDptIndexed(13);
+            $departments=[$dptsOcc[0],$dptsPaca[0]];
+            
+            $formPaca = $this->createForm(GlobalStatsTypePaca::class,$departments, ['departmentsPaca'=>$dptsPaca[0]]);
+            $formPaca->handleRequest($request);
+            
+            if ($formPaca->isSubmitted() && $formPaca->isValid()){
+                $departmentPaca = $formPaca->get('departmentsPaca')->getData();
+                
+            }else{
+                $departmentPaca=$dptsPaca[0]['04'];
+                
+            }
+            
+            // Indicateurs
+            $stats = array_merge($statsService->getGlobalStatsProvence($departmentPaca),$statsService->getGeneralStats());
+            
+            return $this->render('relay/global-stats.html.twig', [
+                'stats' => $stats,
+                'departmentsPaca' => $dptsPaca[1],
+                'formPaca' => $formPaca->createView()
+            ]);
+        }
+        
     }
 
     /**
@@ -103,6 +188,15 @@ class RelayController extends AbstractController
             'upload' => $router->generate('image_create'),
             'origin' => $this->getOrigin(),
         ]);
+    }
+
+    public function getDptIndexed($region){
+        $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+        $dptIndexed = [];
+        foreach ($departments as $dpt){
+            $dptIndexed[$dpt] = $dpt;
+        }
+        return [$dptIndexed,$departments];
     }
 
 }

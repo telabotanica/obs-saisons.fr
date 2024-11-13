@@ -1,0 +1,55 @@
+{% set lastYear = stats.lastYear %}
+{% set currentYear = stats.currentYear %}
+<h3>Statistiques par département Occitanie</h3>
+    {{ form_start(formOcc) }}
+    {{ form_widget(formOcc._token) }}
+    {{ form_widget(formOcc.departmentsOcc) }}
+    {% set departmentOcc = stats.occitanie.dpt %}
+    {% if departmentOcc == "11" %}
+        {% set nomDpt = 'Aude' %}
+    {% elseif departmentOcc == "12" %}
+        {% set nomDpt = 'Aveyron' %}
+    {% elseif departmentOcc == "30" %}
+        {% set nomDpt = 'Gard' %}
+    {% elseif departmentOcc == "31" %}
+        {% set nomDpt = 'Haute-Garonne' %}
+    {% elseif departmentOcc == "32" %}
+        {% set nomDpt = 'Gers' %}
+    {% elseif departmentOcc == "34" %}
+        {% set nomDpt = 'Hérault' %}
+    {% elseif departmentOcc == "46" %}
+        {% set nomDpt = 'Lot' %}
+    {% elseif departmentOcc == "48" %}
+        {% set nomDpt = 'Lozère' %}
+    {% elseif departmentOcc == "65" %}
+        {% set nomDpt = 'Hautes-Pyrénées' %}
+    {% elseif departmentOcc == "66" %}
+        {% set nomDpt = 'Pyrénées-Orientales' %}
+    {% elseif departmentOcc == "81" %}
+        {% set nomDpt = 'Tarn' %}
+    {% elseif departmentOcc == "82" %}
+        {% set nomDpt = 'Tarn-et-Garonne' %}
+    {% elseif departmentOcc == "09" %}
+        {% set nomDpt = 'Ariège' %}
+    {% endif %}
+    {{ form_end(formOcc, {'render_rest': false}) }}  
+<div class="row">
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allObservationsDpt,
+            'texte' : "Nombre global d'observations (#{nomDpt})"
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allObservationsDpt2015,
+            'texte' : "Nombre d'observations depuis 2015 (#{nomDpt})"
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allObservationsDptYear,
+            'texte' : "Nombre d'observations en #{currentYear} (#{nomDpt})"
+        } %}
+    </div> 
+</div> 

@@ -9,22 +9,24 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StatsType extends AbstractType
+class GlobalStatsTypeOcc extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-		$years = $options['years'];
+		$departmentsOcc = $options['departmentsOcc'];
+        $departmentsPaca = $options['departmentsPaca'];
 		$builder
-			->add('years', ChoiceType::class,
-			['choices' => $years,
+			->add('departmentsOcc', ChoiceType::class,
+			['choices' => $departmentsOcc,
 				'attr' => [
 					'onChange' => 'this.form.submit()',
 					'class' => 'my-2 form-select text-center'
-				]])
-		;
+				]]);
+          
 	
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-			$year = $event->getData();
+		
+            $departmentPaca = $event->getData();
 			$form = $event->getForm();
 			// ... adding the name field if needed
 			
@@ -34,8 +36,8 @@ class StatsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-			'years' => null
-            // Configure your form options here
+			'departmentsOcc' => null,
+            'departmentsPaca' => null
         ]);
     }
 }
