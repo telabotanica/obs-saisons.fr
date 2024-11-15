@@ -264,7 +264,7 @@ class StationRepository extends ServiceEntityRepository
         return $result[0][1] ?? 0;
     }
 
-    public function countAllStationsInPaca($region)
+    public function countAllStations($region)
     {
         $qb = $this->createQueryBuilder('s')
             ->select('count(s.id)')
@@ -283,7 +283,7 @@ class StationRepository extends ServiceEntityRepository
         return $result;
     }
 
-    public function countAllStationsInPacaSince2015($region)
+    public function countAllStationsSince2015($region)
     {
         $qb = $this->createQueryBuilder('s')
             ->select('count(s.id)')
