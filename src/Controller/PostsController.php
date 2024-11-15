@@ -202,7 +202,7 @@ class PostsController extends AbstractController
     ) {
         $newsPost = $manager->getRepository(Post::class)
             ->find($postId);
-
+        
         if (null === $newsPost) {
             throw new NotFoundHttpException('L’article demandé n’existe pas');
         }
@@ -383,7 +383,7 @@ class PostsController extends AbstractController
 	
 		if ($eventPost->getStatus(Post::STATUS_ACTIVE)){
 			$this->denyAccessUnlessGranted(
-				User::ROLE_ADMIN,
+				'ROLE_RELAY',
 				$eventPost,
 				'L’évènement est déjà publié et ne peut pas être modifié'
 			);
@@ -447,7 +447,7 @@ class PostsController extends AbstractController
 	
 		if ($post->getStatus(Post::STATUS_ACTIVE)){
 			$this->denyAccessUnlessGranted(
-				User::ROLE_ADMIN,
+				'ROLE_RELAY',
 				$post,
 				'L’évènement est déjà publié et ne peut pas être modifié'
 			);
@@ -491,21 +491,19 @@ class PostsController extends AbstractController
 		}
 		$postSlug =$url.$cat.$post->getSlug();
 		
-		// Si Admin on publie le post, sinon s'il n'est pas encore publié l'utilisateur le soumet à validation
-		if ($this->isGranted(User::ROLE_ADMIN, $post)){
+		// Si Admin ou Relay on publie le post, sinon s'il n'est pas encore publié l'utilisateur le soumet à validation
+		if ($this->isGranted('ROLE_RELAY', $post)){
 			$post->setStatus(Post::STATUS_ACTIVE);
 			$manager->flush();
-			
-			//TODO envoyer un email de validation à l'auteur pour le tenir au courant
 			
 			$this->addFlash('notice', 'La publication a été activée');
 		} else if ($this->isGranted(
 			PostVoter::EDIT,
 			$post
-		)){
+		    )){
 			if ($post->getStatus(Post::STATUS_ACTIVE)){
 				$this->denyAccessUnlessGranted(
-					User::ROLE_ADMIN,
+					'ROLE_RELAY',
 					$post,
 					'L’évènement est déjà publié et ne peut pas être modifié'
 				);

@@ -18,9 +18,9 @@
 			Modifier
 		</a>
 		<a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
-			{% if is_granted('ROLE_ADMIN') %}
-			Publier
-				{% else %}
+			{% if is_granted('ROLE_RELAY') %}
+				Publier
+			{% else %}
 				Soumettre à validation
 			{% endif %}
 		</a>
