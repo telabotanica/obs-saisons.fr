@@ -508,7 +508,7 @@ class ObservationRepository extends ServiceEntityRepository
 
         return $qb
             ->innerJoin('o.user', 'u')
-            ->select('u.email, u.displayName as pseudo, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
+            ->select('u.name as nom, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
             ->where('YEAR(o.date) = :year')
             ->setParameter('year', $year)
             ->groupBy('o.user')
@@ -614,7 +614,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('o.individual', 'i')
             ->innerJoin('i.station', 's')
             ->innerJoin('o.user', 'u')
-            ->select('u.email, u.displayName, u.postCode, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
+            ->select('u.name as nom, u.postCode, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
             ->where('YEAR(o.date) = :year')
             ->andWhere('o.deletedAt is null')
             ->andWhere('i.deletedAt is null')
