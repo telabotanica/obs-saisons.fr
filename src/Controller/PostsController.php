@@ -151,7 +151,7 @@ class PostsController extends AbstractController
 	
 		if ($newsPost->getStatus(Post::STATUS_ACTIVE)){
 			$this->denyAccessUnlessGranted(
-				User::ROLE_ADMIN,
+				'ROLE_RELAY',
 				$newsPost,
 				'L’actualité est déjà publié et ne peut pas être modifié'
 			);
@@ -215,7 +215,7 @@ class PostsController extends AbstractController
 	
 		if ($newsPost->getStatus(Post::STATUS_ACTIVE)){
 			$this->denyAccessUnlessGranted(
-				User::ROLE_ADMIN,
+				'ROLE_RELAY',
 				$newsPost,
 				'L’actualité est déjà publié et ne peut pas être modifié'
 			);
@@ -328,7 +328,7 @@ class PostsController extends AbstractController
 	
 		if ($eventPost->getStatus(Post::STATUS_ACTIVE)){
 			$this->denyAccessUnlessGranted(
-				User::ROLE_ADMIN,
+				'ROLE_RELAY',
 				$eventPost,
 				'L’évènement est déjà publié et ne peut pas être modifié'
 			);

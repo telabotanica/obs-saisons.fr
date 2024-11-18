@@ -351,7 +351,7 @@ class UserController extends AbstractController
             }
         }
 
-        $categorizedPosts = $editablePosts->getFilteredPosts($user, $this->isGranted(User::ROLE_ADMIN));
+        $categorizedPosts = $editablePosts->getFilteredPosts($user, $this->isGranted('ROLE_RELAY'));
         $this->setOrigin($request->getPathInfo());
 
         return $this->render('pages/user/dashboard.html.twig', [

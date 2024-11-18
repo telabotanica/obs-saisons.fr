@@ -19,10 +19,6 @@ class ImageController extends AbstractController
     {
         $this->denyAccessUnlessGranted(UserVoter::LOGGED);
 
-        if (!$this->getUser()->isAdmin()) {
-            throw new AccessDeniedException('You shall not pass');
-        }
-
         $path = $uploadService->uploadFile(
             $request->files->get('upload')
         );

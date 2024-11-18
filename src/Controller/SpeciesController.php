@@ -8,9 +8,7 @@ use App\Entity\Species;
 use App\Entity\EventSpecies;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\DateService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Parameter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 

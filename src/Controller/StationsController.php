@@ -313,7 +313,7 @@ class StationsController extends AbstractController
         int $stationId,
 		StationService $stationService
     ) {
-		$isAdmin = $this->isGranted(User::ROLE_ADMIN);
+		$isAdmin = $this->isGranted('ROLE_RELAY');
 		
         if (!$this->isGranted(UserVoter::LOGGED)) {
             return $this->redirectToRoute('user_login');
@@ -741,7 +741,6 @@ class StationsController extends AbstractController
 	 * @Route("/station/{stationId}/deactivate", name="station_deactivate")
 	 */
 	public function stationDesactivate(
-		Request $request,
 		EntityManagerInterface $manager,
 		int $stationId,
 		StationService $stationService

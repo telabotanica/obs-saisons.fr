@@ -2,22 +2,10 @@ $( document ).ready( () => {
     const wysiwygs = Array.from( document.querySelectorAll( '.wysiwyg-editor' ) );
 
     if ( wysiwygs.length > 0 ) {
-        import( /* webpackChunkName: "ckeditor" */ '@telabotanica/ckeditor5-build-ods-v2' ).then( ( { default: ClassicEditor } ) => {
+        import( '@telabotanica/ckeditor5-build-ods-v2' ).then( ( { default: ClassicEditor } ) => {
             wysiwygs.forEach( ( wysiwyg ) => {
                 const textarea    = wysiwyg.querySelector( 'textarea' );
                 textarea.required = false;
-
-                /*
-                let toolbar = [
-                    'heading', '|',
-                    'bold', 'italic', 'underline', 'link', 'bulletedList', 'numberedList', '|',
-                    'fontFamily', 'fontSize', 'fontColor', '|',
-                    'removeFormat', '|',
-                    'alignment', 'indent', 'outdent', '|',
-                    'blockQuote', 'insertTable', 'mediaEmbed', '|',
-                    'undo', 'redo'
-                ];*/
-
                 let simpleUpload = {};
 
                 if ( wysiwyg.getAttribute( 'data-upload' ) ) {

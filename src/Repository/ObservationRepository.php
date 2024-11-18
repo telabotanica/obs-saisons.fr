@@ -532,7 +532,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->andWhere('u.deletedAt is null')
             ->andWhere('u.roles NOT LIKE :role')
             ->setParameter('year', $year)
-            ->setParameter('role','%ROLE_ADMIN%');
+            ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')");
 
         if ($region){
             $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
