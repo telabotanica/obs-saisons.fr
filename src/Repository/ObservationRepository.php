@@ -530,7 +530,6 @@ class ObservationRepository extends ServiceEntityRepository
             ->andWhere('i.deletedAt is null')
             ->andWhere('s.deletedAt is null')
             ->andWhere('u.deletedAt is null')
-            ->andWhere('u.roles NOT LIKE :role')
             ->setParameter('year', $year)
             ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')");
 
@@ -543,10 +542,10 @@ class ObservationRepository extends ServiceEntityRepository
 
         $result = $allObsThisYear
             ->getQuery()
-            ->getResult()
+            ->getScalarResult()
         ;
 
-        return $result[0];
+        return $result;
     }
 
     public function findNewMembersPerYearPerRegion(int $year, $region=null)
