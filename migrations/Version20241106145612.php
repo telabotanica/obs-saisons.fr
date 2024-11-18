@@ -21,7 +21,7 @@ final class Version20241106145612 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE type_relays (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE user ADD type_relays_id INT DEFAULT NULL, CHANGE roles roles JSON NOT NULL');
+        $this->addSql('ALTER TABLE user ADD type_relays_id INT DEFAULT NULL, CHANGE roles roles TEXT NOT NULL');
         $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D6498F677BB2 FOREIGN KEY (type_relays_id) REFERENCES type_relays (id)');
         $this->addSql('CREATE INDEX IDX_8D93D6498F677BB2 ON user (type_relays_id)');
     }
@@ -32,6 +32,6 @@ final class Version20241106145612 extends AbstractMigration
         $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D6498F677BB2');
         $this->addSql('DROP TABLE type_relays');
         $this->addSql('DROP INDEX IDX_8D93D6498F677BB2 ON user');
-        $this->addSql('ALTER TABLE user DROP type_relays_id, CHANGE roles roles JSON NOT NULL');
+        $this->addSql('ALTER TABLE user DROP type_relays_id, CHANGE roles roles TEXT NOT NULL');
     }
 }
