@@ -2,11 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\FrenchRegions;
-use App\Entity\Observation;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -104,47 +101,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $usersQuery->getQuery()->getResult();
     }
 
-//	public function findActiveMembersPerYear(int $year)
-//	{
-//		$qb = $this->createQueryBuilder('u')
-//			->innerJoin(Observation::class, 'o', Expr\Join::WITH, 'u.id = o.userId')
-//			->addSelect('o')
-//			->where('YEAR(o.createdAt) = :year')
-//			->andWhere('u.roles NOT LIKE :role')
-//			->setParameter('year', $year)
-//			->setParameter('role','%ROLE_ADMIN')
-//			->getQuery()
-//			->getResult()
-//		;
-//		return count($qb);
-//	}
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

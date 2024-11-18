@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
+use App\Entity\TypeRelays;
 use App\Entity\User;
+use App\Repository\TypeRelaysRepository;
 use App\Service\UploadService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -72,16 +73,29 @@ class ProfileType extends AbstractType
                 ],
             ])
 			->add('roles', ChoiceType::class, [
-				'label'=>'Role',
+				'label'=>'Rôle',
 				'choices' => [
 					'Droits' => [
 						'Admin' => 'ROLE_ADMIN',
-						'Utilisateur' => 'ROLE_USER',
+                        'Relais'=> 'ROLE_RELAY',
+						'Utilisateur' => 'ROLE_USER'
 					],
 				],
 				'attr'=> ['class'=> 'form-control bg-light'],
 				'multiple' => true,
 			])
+            ->add('typeRelays', EntityType::class, array(
+                'class' => TypeReLays::class,
+                'choice_label' => function(TypeRelays $type) {
+                    return sprintf('(%d) %s (%s)', $type->getId(), $type->getName(),$type->getCode());
+                },
+                'query_builder' => function (TypeRelaysRepository $er) {
+                     return $er->createQueryBuilder('t');
+                },
+                'required'=>false,
+                'empty_data' => null,
+                'attr'=> ['class'=> 'form-control bg-light']
+            ))
             // user picture removal request
             ->add('isDeletePicture', null, [
                 'mapped' => false,

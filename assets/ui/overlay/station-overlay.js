@@ -37,7 +37,6 @@ StationOverlay.prototype.editFormPreSetFields = function() {
 
     if (this.overlay.classList.contains('edit')) {
         this.overlay.querySelector('.saisie-header').textContent = 'Modifier la station';
-
         for(const [key, data] of Object.entries(lthis.stationData)) {
             const field = document.getElementById('station_' + key);
 

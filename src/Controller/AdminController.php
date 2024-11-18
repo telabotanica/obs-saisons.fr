@@ -9,8 +9,6 @@ use App\Entity\Species;
 use App\Entity\Station;
 use App\Entity\User;
 use App\Form\ImageVerificationType;
-use App\Form\NewsletterPostType;
-use App\Form\NewsPostType;
 use App\Form\PagePostType;
 use App\Form\ProfileType;
 use App\Form\SpeciesPostType;
@@ -19,7 +17,6 @@ use App\Form\StatsType;
 use App\Form\UserEmailEditAdminType;
 use App\Form\UserPasswordEditAdminType;
 use App\Helper\OriginPageTrait;
-use App\Security\Voter\PostVoter;
 use App\Service\BreadcrumbsGenerator;
 use App\Service\EditablePosts;
 use App\Service\EmailSender;
@@ -30,17 +27,25 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use function PHPUnit\Framework\isEmpty;
-
+use Symfony\Component\Security\Core\Security;
 
 class AdminController extends AbstractController
 {
     use OriginPageTrait;
+
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(Security $security)
+    {
+       $this->security = $security;
+    }
 
     /**
      * @Route("/admin", name="home_admin")
@@ -84,7 +89,7 @@ class AdminController extends AbstractController
         if (!$speciesPost) {
             $speciesPost = new Post();
             $speciesPost->setContent('');
-            $speciesPost->setAuthor($this->getUser());
+            $speciesPost->setAuthor($this->security->getUser());
             $speciesPost->setCategory(Post::CATEGORY_SPECIES);
             $speciesPost->setTitle('Fiche espèce '.$species->getScientificName());
             $speciesPost->setCreatedAt(new \DateTime());
@@ -283,14 +288,28 @@ class AdminController extends AbstractController
 
 			// Add role admin if selected
 			$role = $form->get('roles')->getData();
-			$exist = false;
+            sort($role);
+			$has_role=false;
 			foreach ($role as $roleElem){
-				if($roleElem == 'ROLE_ADMIN'){
-					$exist = true;
-				}
+                
+                switch($roleElem){
+                    case 'ROLE_ADMIN':
+                        $user->setRoles(['ROLE_ADMIN','ROLE_RELAY','ROLE_USER']);
+                        $has_role=true;
+                        break;
+                    case 'ROLE_RELAY':
+                        $user->setRoles(['ROLE_RELAY','ROLE_USER']);
+                        $has_role=true;
+                        break;
+                }
+                if ($has_role){
+                    break;
+                }else{
+                    $user->setRoles(['ROLE_USER']);
+                }
+				
 			}
-			$exist ? $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']) : $user->setRoles(['ROLE_USER']);
-
+			
             $manager->flush();
 
             $this->addFlash('success', 'Le profile de l’utilisateur a été modifié.');
@@ -511,15 +530,24 @@ class AdminController extends AbstractController
 
         // Indicateurs
         $stats = $statsService->getStats($year);
-
+        
         return $this->render('admin/stats.html.twig', [
             'years' => $years,
             'min_year' => $minYear,
             'form' => $form->createView(),
             'stats' => $stats
         ]);
-    }
 
+        // Indicateurs
+        $stats = $statsService->getGlobalStats($department);
+        
+        return $this->render('admin/global-stats.html.twig', [
+            'years' => $years,
+            'min_year' => $minYear,
+            'form' => $form->createView(),
+            'stats' => $stats
+        ]);
+    }
 
     /**
      * @Route("/admin/image/{imageId}/dashboard", name="admin_verif_image", methods={"GET"})
@@ -531,7 +559,7 @@ class AdminController extends AbstractController
         $observation = $manager->getRepository(Observation::class)->find($imageId);
 
         if (!$observation) {
-            throw $this->createNotFoundException("L'image à vérifer n'existe pas");
+            throw $this->createNotFoundException("L'image à vérifier n'existe pas");
         }
         $erreur = $this->get('session')->getFlashBag()->get('error');
         $er2 ='';
@@ -572,30 +600,30 @@ class AdminController extends AbstractController
         $isPictureValid = $request->request->get('confirmRadio');
         $motifRefus = $request->request->get('motif');
 
-        if ($isPictureValid == 0 Or empty($isPictureValid)) {
-            $this->addFlash('error', "Le choix ne peut pas être vide");
+        if ($isPictureValid == 0 OR empty($isPictureValid)) {
+            $this->addFlash('error', "Vous devez choisir si l'image est acceptable ou non.");
             return $this->redirectToRoute('admin_verif_image', [
                 'imageId' => $imageId
             ]);
-        } elseif ($isPictureValid == 2 and (empty($motifRefus) or $motifRefus == "")) {
-            $this->addFlash('error', "Le motif ne peut pas être nul");
-            return $this->redirectToRoute('admin_verif_image', [
-                'imageId' => $imageId
-            ]);
-        }else{
-            $stationLink = $this->router->generate('stations_show', ['slug' => $individual->getStation()->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL);
+        } elseif ($isPictureValid == 2) {
+            if(empty($motifRefus) or $motifRefus == ""){
+                $this->addFlash('error', "Vous devez saisir un motif.");
+                return $this->redirectToRoute('admin_verif_image', [
+                    'imageId' => $imageId
+                ]);
+            }
 
-            // Update the observation entity with the form data
-            $observation->setIsPictureValid($isPictureValid);
-            $observation->setMotifRefus($motifRefus);
+            $stationLink = $this->router->generate('stations_show', ['slug' => $individual->getStation()->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL);
 
             // Get the site baseUrl to generate absolute URL
             $request = $requestStack->getCurrentRequest();
             $baseUrl = $request->getSchemeAndHttpHost();
             $pictureUrl = $baseUrl . $observation->getPicture();
-
-            // Envoie du mail de refus
-            $message = $this->renderView('emails/observation-image-rejected.html.twig', [
+            
+            $template='emails/observation-image-rejected.html.twig';
+            
+            // Envoi du mail de refus
+            $message = $this->renderView($template, [
                 'user' => $observation->getUser()->getDisplayName(),
                 'observation' => $observation,
                 'individual' => $individual,
@@ -610,13 +638,25 @@ class AdminController extends AbstractController
                 $message
             );
 
-            // Persist changes to the database
-            $manager->flush();
-            $this->addFlash('error', "Modification effectué avec succes");
+            $this->changeObservation($manager,$observation,$isPictureValid,$motifRefus);
+            $this->addFlash('error', "Modification effectuée avec succes");
+            return $this->redirectToRoute('admin_verif_image_list');
+        }else{
+            $this->changeObservation($manager,$observation,$isPictureValid);
+            $this->addFlash('error', "Modification effectuée avec succes");
             return $this->redirectToRoute('admin_verif_image_list');
         }
     }
-
+    public function changeObservation($manager,$observation,$isPictureValid,$motifRefus=null){
+        // Update the observation entity with the form data
+        $observation->setIsPictureValid($isPictureValid);
+        if($isPictureValid===2){
+            $observation->setMotifRefus($motifRefus);
+        }
+        // Persist changes to the database
+        $manager->flush();
+        
+    }
 
 //    Fonction qui donne toutes les images qui n'ont pas encore été vérifiées
     /**
@@ -701,125 +741,4 @@ class AdminController extends AbstractController
         ]);
     }
 
-
-
-    /**
-     * @Route("/admin/newsletters", name="admin_newsletters_list")
-     *//*
-    public function newsletterList(EntityManagerInterface $manager)
-    {
-        $newsletters= $manager->getRepository(Post::class)
-            ->findBy(['category' => Post::CATEGORY_NEWSLETTER], ['createdAt' => 'DESC'])
-        ;
-
-        $this->setOrigin($this->generateUrl('admin_newsletters_list'));
-
-        return $this->render('admin/newsletters.html.twig', [
-            'newsletters' => $newsletters
-        ]);
-    }*/
-
-    /**
-     * @Route("/admin/newsletters/create/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_create")
-     *//*
-    public function addNewsletter(
-        $mode,
-        Request $request,
-        EntityManagerInterface $manager,
-        SlugGenerator $slugGenerator,
-        UrlGeneratorInterface $router
-    ) {
-        // TODO Voir affichage de l'image cover
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        $date_created = new \DateTime();
-        $newsletter = new Post();
-        $newsletter->setContent('');
-        $newsletter->setCategory(Post::CATEGORY_NEWSLETTER);
-        $newsletter->setAuthor($this->getUser());
-        $newsletter->setCreatedAt($date_created);
-        $newsletter->setStatus(Post::STATUS_PENDING);
-
-        $form = $this->createForm(NewsletterPostType::class, $newsletter);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $newsletter->setSlug($slugGenerator->generateSlug($newsletter->getTitle(), $date_created));
-
-            $manager->persist($newsletter);
-            $manager->flush();
-
-            $this->addFlash('notice', 'La newsletter a été créé');
-
-            $this->setOrigin($this->generateUrl('admin_newsletters_list'));
-
-            return $this->redirectToRoute('admin_newsletters_list');
-        }
-
-        return $this->render('admin/newsletter-create.html.twig', [
-            'post' => $newsletter,
-            'editMode' => $mode,
-            'form' => $form->createView(),
-            'upload' => $router->generate('image_create'),
-        ]);
-    }*/
-
-    /**
-     * @Route("/admin/newsletters/{postId}/show", name="admin_newsletters_show")
-     */
-    /*
-    public function showNewsletter(int $postId, EntityManagerInterface $manager){
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-        $newsletter = $manager->getRepository(Post::class)->find($postId);
-        if (!$newsletter) {
-            throw $this->createNotFoundException('La newsletter n’existe pas');
-        }
-
-        return $this->render('emails/newsletter.html.twig', [
-            'content' => $newsletter->getContent(),
-            'cover' => $newsletter->getCover()
-        ]);
-    }
-*/
-    /**
-     * @Route("/admin/newsletters/{postId}/edit/{mode}", defaults={"mode"="wysiwyg"}, name="admin_newsletters_edit")
-     */
-    /*
-    public function editNewsletter(
-        $mode,
-        int $postId,
-        Request $request,
-        EntityManagerInterface $manager,
-        SlugGenerator $slugGenerator,
-        UrlGeneratorInterface $router
-    ) {
-        // TODO Voir affichage de l'image cover
-        $this->denyAccessUnlessGranted(User::ROLE_ADMIN);
-
-        $newsletter = $manager->getRepository(Post::class)->find($postId);
-
-        if (!$newsletter) {
-            throw $this->createNotFoundException('La newsletter n’existe pas');
-        }
-
-        $form = $this->createForm(NewsletterPostType::class, $newsletter);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($newsletter);
-            $manager->flush();
-
-            $this->addFlash('notice', 'La newsletter a été modifiée');
-
-            return $this->redirectToRoute('admin_newsletters_list');
-        }
-
-        return $this->render('admin/newsletter-create.html.twig', [
-            'post' => $newsletter,
-            'editMode' => $mode,
-            'form' => $form->createView(),
-            'upload' => $router->generate('image_create'),
-        ]);
-    }
-    */
 }

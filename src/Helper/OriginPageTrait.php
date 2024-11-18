@@ -7,8 +7,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 trait OriginPageTrait
 {
-    public SessionInterface $session;
-    public UrlGeneratorInterface $router;
+    private SessionInterface $session;
+    private UrlGeneratorInterface $router;
 
     public function __construct(
         SessionInterface $session,
@@ -20,16 +20,22 @@ trait OriginPageTrait
 
     public function setOrigin(string $origin)
     {
-        if ($this->session->has('origin')) {
-            $this->session->remove('origin');
+        if (isset($this->session)){
+            if ($this->session->has('origin')) {
+                $this->session->remove('origin');
+            }
+    
+            $this->session->set('origin', $origin);
         }
-
-        $this->session->set('origin', $origin);
+        
     }
 
     public function getOrigin()
     {
-        return $this->session->get('origin');
+        if (isset($this->session)){
+            return $this->session->get('origin');
+
+        }
     }
 
     public function generateOriginUrl(string $defaultRoute = 'homepage')

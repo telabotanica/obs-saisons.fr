@@ -1,0 +1,42 @@
+<h3>Statistiques par département PACA</h4>
+{% set lastYear = stats.lastYear %}
+{% set currentYear = stats.currentYear %}
+{{ form_start(formPaca) }}
+{{ form_widget(formPaca.departmentsPaca) }}
+{{ form_widget(formPaca._token) }}
+{% set departmentPaca = stats.provence.dpt %}
+{% if departmentPaca == "04" %}
+    {% set nomDpt = 'Alpes-de-Haute-Provence' %}
+{% elseif departmentPaca == "05" %}
+    {% set nomDpt = 'Hautes-Alpes' %}
+{% elseif departmentPaca == "06" %}
+    {% set nomDpt = 'Alpes-Maritimes' %}
+{% elseif departmentPaca == "13" %}
+    {% set nomDpt = 'Bouches-du-Rhône' %}
+{% elseif departmentPaca == "83" %}
+    {% set nomDpt = 'Var' %}
+{% elseif departmentPaca == "84" %}
+    {% set nomDpt = 'Vaucluse' %}
+{% endif %}
+{{ form_end(formPaca, {'render_rest': false}) }}  
+<div class="row">
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.provence.allObservationsDpt,
+            'texte' : "Nombre global d'observations (#{nomDpt})"
+        } %}
+    </div>
+    
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.provence.allObservationsDpt2015,
+            'texte' : "Nombre d'observations depuis 2015 (#{nomDpt})"
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.provence.allObservationsDptJune,
+            'texte' : "Nombre d'observations de juin #{lastYear} à juin #{currentYear} (#{nomDpt})"
+        } %}
+    </div>
+</div>  

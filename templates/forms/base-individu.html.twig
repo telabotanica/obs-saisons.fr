@@ -1,0 +1,40 @@
+<section class="saisie-container{{ isPage|default(false)? ' page' }}">
+	<h3 class="saisie-header">
+		{% block form_title%}{% endblock %}
+	</h3>
+
+	<div class="saisie ods-form">
+		{{ form_start(form, {
+			'attr' : {
+				'id' : "#{action}_form",
+				'data-name' : action,
+				'data-form-action-reset' : ''
+			}
+		}) }}
+			{% block form_container %}
+				{# Form here #}
+				{% block form %}
+
+				{% endblock %}
+				{# End Form #}
+
+				{% block form_submission %}
+					{{ form_errors(form) }}
+					{{ form_widget(form._token) }}
+					<div class="saisie-footer">
+						{% block form_footer %}
+							{% if 'profile' != action  %}
+								<a id="{{ action }}_delete" href="" class="button bt-form bt-supprimer-ind show-on-edit delete-button">supprimer cet individu</a>
+							{% endif %}
+							<a id="cancel" href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-cancel-ind">Annuler</a>
+							<input type="hidden" name="action" value="{{ action }}">
+							<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
+								Valider
+							</button>
+						{% endblock %}
+					</div>
+				{% endblock %}
+			{% endblock %}
+		{{ form_end(form, {'render_rest': false}) }}
+	</div>
+</section>

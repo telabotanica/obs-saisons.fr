@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and (app.user.id == eventPost.author.id ) and constant('App\\Entity\\Post::STATUS_PENDING') == eventPost.status)%}
+    {% if is_granted('ROLE_RELAY') or (is_granted('ROLE_USER') and (app.user.id == eventPost.author.id ) and constant('App\\Entity\\Post::STATUS_PENDING') == eventPost.status)%}
 
         {% include 'components/buttons/dual-squared-button.html.twig' with {
             buttons: [

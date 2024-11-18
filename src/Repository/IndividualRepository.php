@@ -22,7 +22,7 @@ class IndividualRepository extends ServiceEntityRepository
 
     public function findSpeciesIndividualsForStation(Station $station): array
     {
-        return $this->createQueryBuilder('i')
+        $result = $this->createQueryBuilder('i')
             ->leftJoin('i.species', 'species')
             ->leftJoin('i.station', 'station')
             ->where('station = :station')
@@ -31,6 +31,8 @@ class IndividualRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+        
+        return $result;
     }
 
     public function findAllIndividualsInStation(Station $station)
@@ -38,37 +40,11 @@ class IndividualRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('i')
             ->where('i.station = (:station)')
             ->setParameter('station', $station)
+            ->orderBy('i.species', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
 
-    // /**
-    //  * @return Individual[] Returns an array of Individual objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Individual
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
 }

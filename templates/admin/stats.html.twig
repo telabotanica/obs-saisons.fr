@@ -27,17 +27,7 @@
                 'texte' : textObs
             } %}
         </div>
-        <div class="col-6">
-            {% if stats.nbStationsWithData <= 1 %}
-                {% set textObs = 'Station avec données' %}
-            {% else %}
-                {% set textObs = 'Stations avec données' %}
-            {% endif %}
-            {% include 'components/cards/admin-cards.html.twig' with {
-                'data' : stats.nbStationsWithData,
-                'texte' : textObs
-            } %}
-        </div>
+        
         <div class="col-6">
             {% if stats.obsPerYear <= 1 %}
                 {% set textObs = 'Observation' %}
@@ -74,22 +64,21 @@
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.membersPerStatus,
-                'texte' : 'Membres par status'
+                'texte' : 'Membres par statut'
             } %}
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.activeStationsPerYear,
-                'texte' : 'Stations actives (année / nombre d\'obs)'
+                'texte' : 'Stations actives (année / stations)'
             } %}
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.activeCitiesPerYear,
-                'texte' : 'Communes actives (année / nombre d\'obs)'
+                'texte' : "Communes actives (année / communes)"
             } %}
         </div>
-
     </div>
     <div class="row">
         <div class="col-6">
@@ -122,6 +111,8 @@
                 'texte' : 'Top 12 utilisateurs'
             } %}
         </div>
+
+    
     </div>
     <h2 class="text-center">ODS Occitanie</h2>
     <div class="row">
@@ -151,8 +142,38 @@
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.activeStationsPerYear,
+                'texte' : 'Stations actives (année / stations)'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.activeCitiesPerYear,
+                'texte' : "Communes actives (année / communes)"
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.occitanie.top3,
                 'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top10Animal,
+                'texte' : 'Top 10 animaux'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top10Plantes,
+                'texte' : 'Top 10 plantes'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.occitanie.top10Champignons,
+                'texte' : 'Top 10 champignons'
             } %}
         </div>
         <div class="col-12">
@@ -191,8 +212,38 @@
         </div>
         <div class="col-6">
             {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.activeStationsPerYear,
+                'texte' : 'Stations actives (année / stations)'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.activeCitiesPerYear,
+                'texte' : "Communes actives (année / communes)"
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
                 'data' : stats.provence.top3,
                 'texte' : 'Top 3 espèces'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top10Animal,
+                'texte' : 'Top 10 animaux'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top10Plantes,
+                'texte' : 'Top 10 plantes'
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards-tables.html.twig' with {
+                'data' : stats.provence.top10Champignons,
+                'texte' : 'Top 10 champignons'
             } %}
         </div>
         <div class="col-12">
@@ -201,5 +252,6 @@
                 'texte' : 'Top 5 utilisateurs'
             } %}
         </div>
+        
     </div>
 {% endblock %}

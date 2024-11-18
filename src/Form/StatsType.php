@@ -16,7 +16,7 @@ class StatsType extends AbstractType
 		$years = $options['years'];
 		$builder
 			->add('years', ChoiceType::class,
-			['choices' => $options['years'],
+			['choices' => $years,
 				'attr' => [
 					'onChange' => 'this.form.submit()',
 					'class' => 'my-2 form-select text-center'

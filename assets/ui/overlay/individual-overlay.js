@@ -37,8 +37,9 @@ IndividualOverlay.prototype.setOverlayEditForm = function() {
 };
 
 IndividualOverlay.prototype.editFormPreSetFields = function() {
+    console.log(this.overlay.classList);
     if (this.overlay.classList.contains('edit')) {
-        this.overlay.querySelector('.saisie-header').textContent = 'Modifier l’individu';
+        document.querySelector('.saisie-title-action').innerHTML = '•  Modifier l’individu';
 
         if (this.individualData.name) {
             document.getElementById('individual_name').value = this.individualData.name;
@@ -53,6 +54,8 @@ IndividualOverlay.prototype.editFormPreSetFields = function() {
                 this.speciesEl.querySelector('.species-option.species-' + this.individualData.species.id)
             );
         }
+    }else{
+        document.querySelector('.saisie-title-action').innerHTML = '•  Saisir un individu';
     }
 };
 

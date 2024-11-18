@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/relay-return-button.html.twig' %}
+    <h2 class="text-center">Indicateurs globaux</h2>
+    {% if app.request.get('mode') == null and is_granted('ROLE_ADMIN') %}
+        {% include 'relay/components/global_stats_dpt_paca.html.twig'%}
+        {% include 'relay/components/global_stats_dpt_occ.html.twig'%}
+        {% include 'relay/components/global_stats_paca.html.twig'%}
+        {% include 'relay/components/global_stats_occ.html.twig'%}
+    {% elseif app.request.get('mode') == 2 %}
+        {% include 'relay/components/global_stats_dpt_paca.html.twig'%}
+        {% include 'relay/components/global_stats_paca.html.twig'%} 
+    {% elseif app.request.get('mode') == 1 %}
+        {% include 'relay/components/global_stats_dpt_occ.html.twig'%}
+        {% include 'relay/components/global_stats_occ.html.twig'%}
+    {% endif %}
+    <h3 class="text-center">ODS</h3>
+    <div class='row'>
+        <div class="col-6">
+            
+            {% set textObs = 'Nombre global de stations avec données' %}
+           
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.nbStationsWithData,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.monitoredSpecies,
+                'texte' : "Nombre d'espèces suivies"
+            } %}
+        </div> 
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.observators,
+                'texte' : "Nombre d'observateurs"
+            } %}
+        </div>
+           
+    </div>
+{% endblock %}

@@ -170,7 +170,7 @@
             {% endif %}
         {% endif %}
 		<div class="overlay hidden {{ isUserDashboardAdmin ? 'admin-' : '' }}profile edit">
-			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: "Modifiez #{ isUserDashboardAdmin ? 'son' : 'votre' } profil" } %}
+			{% include 'forms/user/profile-form.html.twig' with {action:'profile', form: profileForm, title: "Modifier #{ isUserDashboardAdmin ? 'son' : 'votre' } profil" } %}
 		</div>
 		<div class="overlay hidden station">
 			{% include 'forms/station/station-form.html.twig' with {action:'station', form: stationForm} %}

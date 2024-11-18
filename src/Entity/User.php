@@ -17,6 +17,8 @@ class User implements UserInterface
 
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_RELAY = 'ROLE_RELAY';
+
 
     /**
      * @ORM\Id()
@@ -125,6 +127,12 @@ class User implements UserInterface
      */
     private $legacyId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\TypeRelays")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $typeRelays;
+
     public function __construct()
     {
         $this->isNewsletterSubscriber = false;
@@ -133,6 +141,16 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * A unique identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->getEmail();
     }
 
     /**
@@ -440,4 +458,18 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getTypeRelays(): ?TypeRelays
+    {
+        return $this->typeRelays;
+    }
+
+    public function setTypeRelays(?TypeRelays $type): self
+    {
+        $this->typeRelays = $type;
+
+        return $this;
+    }
+
+
 }

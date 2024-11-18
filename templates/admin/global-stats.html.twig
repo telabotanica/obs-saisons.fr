@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block main_content %}
+    {% include 'components/buttons/admin-return-button.html.twig' %}
+    <h2 class="text-center">Indicateurs globaux</h2>
+
+    
+    <h3 class="text-center">ODS Provence</h3>
+    <div class="row">
+        
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allStations,
+                'texte' : 'Nombre global de stations'
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allStations2015,
+                'texte' : 'Nombre de stations depuis 2015'
+            } %}
+        </div>
+        <div class="col-4">
+            {% set lastYear = stats.provence.lastYear %}
+            {% set currentYear = stats.provence.currentYear %}
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allStationsJune,
+                'texte' : "Nombre de stations de juin #{lastYear} à juin #{currentYear}"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allObservations,
+                'texte' : "Nombre global d'observations"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allObservations2015,
+                'texte' : "Nombre d'observations depuis 2015"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allObservationsJune,
+                'texte' : "Nombre d'observations de juin #{lastYear} à juin #{currentYear}"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allObservationsBDR,
+                'texte' : "Nombre global d'observations dans les Bouches-du-Rhône"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allObservationsBDR2015,
+                'texte' : "Nombre d'observations depuis 2015 dans les Bouches-du-Rhône"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.provence.allObservationsBDRJune,
+                'texte' : "Nombre d'observations de juin #{lastYear} à juin #{currentYear} dans les Bouches-du-Rhône"
+            } %}
+        </div>  
+        
+        <div class="col-4">
+            {% include 'components/cards/admin-cards-tables-species.html.twig' with {
+                'data' : stats.threeSpecies,
+                'texte' : "Trois espèces les plus observées aujourd'hui"
+            } %}
+        </div>  
+        <div class="col-4">
+            {% include 'components/cards/admin-cards-tables-species.html.twig' with {
+                'data' : stats.threeSpecies2007,
+                'texte' : "Trois espèces les plus observées depuis 2007"
+            } %}
+        </div>
+        <div class="col-4">
+            {% include 'components/cards/admin-cards-tables-species.html.twig' with {
+                'data' : stats.threeSpecies2015,
+                'texte' : "Trois espèces les plus observées depuis 2015"
+            } %}
+        </div>
+        <h3 class="text-center">ODS</h3>
+        <div class="col-6">
+            
+            {% set textObs = 'Nombre global de stations avec données' %}
+           
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.nbStationsWithData,
+                'texte' : textObs
+            } %}
+        </div>
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.monitoredSpecies,
+                'texte' : "Nombre d'espèces suivies"
+            } %}
+        </div> 
+        <div class="col-6">
+            {% include 'components/cards/admin-cards.html.twig' with {
+                'data' : stats.observators,
+                'texte' : "Nombre d'observateurs"
+            } %}
+        </div>     
+    </div>
+{% endblock %}

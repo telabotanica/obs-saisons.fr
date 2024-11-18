@@ -1,0 +1,62 @@
+{% set lastYear = stats.lastYear %}
+{% set currentYear = stats.currentYear %}
+<h3 class='text-center'>ODS Occitanie</h3>
+<div class='row'>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allStations,
+            'texte' : 'Nombre global de stations'
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allStations2015,
+            'texte' : 'Nombre de stations depuis 2015'
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allStationsJune,
+            'texte' : "Nombre de stations en #{currentYear}"
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allObservations,
+            'texte' : "Nombre global d'observations"
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allObservations2015,
+            'texte' : "Nombre d'observations depuis 2015"
+        } %}
+    </div>
+
+    <div class="col-4">
+        {% include 'components/cards/admin-cards.html.twig' with {
+            'data' : stats.occitanie.allObservationsYear,
+            'texte' : "Nombre d'observations en #{currentYear}"
+        } %}
+    </div>
+    
+    
+    <div class="col-4">
+        {% include 'components/cards/admin-cards-tables-species.html.twig' with {
+            'data' : stats.occitanie.threeSpecies,
+            'texte' : "Trois espèces les plus observées aujourd'hui"
+        } %}
+    </div>  
+    <div class="col-4">
+        {% include 'components/cards/admin-cards-tables-species.html.twig' with {
+            'data' : stats.occitanie.threeSpecies2007,
+            'texte' : "Trois espèces les plus observées depuis 2007"
+        } %}
+    </div>
+    <div class="col-4">
+        {% include 'components/cards/admin-cards-tables-species.html.twig' with {
+            'data' : stats.occitanie.threeSpecies2015,
+            'texte' : "Trois espèces les plus observées depuis 2015"
+        } %}
+    </div>
+</div>

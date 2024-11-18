@@ -24,7 +24,7 @@ Overlay.prototype.closeOverlay = function() {
 Overlay.prototype.closeOverlayOnButtonClick = function() {
     const lthis = this;
 
-    this.overlay.querySelector('.bt-cancel').addEventListener('click', evt => {
+    document.getElementById('cancel').addEventListener('click', evt => {
         evt.preventDefault();
 
         lthis.closeOverlay();

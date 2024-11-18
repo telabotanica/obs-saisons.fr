@@ -10,6 +10,7 @@
 	background-color: #fff;
 	box-shadow: 0 0 20px 0 grey(0, 0.15);
 	transition: right 0.2s ease;
+	
 
 	@include media(md) {
 		height: 100vh;
@@ -24,6 +25,7 @@
 		@include gap(margin, "h");
 		padding-top: 0;
 		box-shadow: unset;
+		overflow-y: scroll;
 	}
 
 	&.open {

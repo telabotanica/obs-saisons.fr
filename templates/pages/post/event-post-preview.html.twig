@@ -14,13 +14,13 @@
 		<a class="button bt-form bt-supprimer delete-button" href="{{ path('post_delete', {postId:post.id}) }}">
 			Supprimer
 		</a>
-		<a href="{{ path('event_post_edit', {postId:post.id}) }}" class="button bt-form bt-cancel">
+		<a id="cancel" href="{{ path('event_post_edit', {postId:post.id}) }}" class="button bt-form bt-cancel">
 			Modifier
 		</a>
 		<a href="{{ path('post_publish', {postId:post.id}) }}" class="button bt-form bt-valider">
-			{% if is_granted('ROLE_ADMIN') %}
-			Publier
-				{% else %}
+			{% if is_granted('ROLE_RELAY') %}
+				Publier
+			{% else %}
 				Soumettre à validation
 			{% endif %}
 		</a>
