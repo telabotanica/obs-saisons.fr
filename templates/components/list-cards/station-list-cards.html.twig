@@ -11,12 +11,14 @@
         observations#: array
             [...] Observation
 #}
-<div id="{{ listCard.species.vernacularName|slugify }}" class="list-cards-item" data-id="{{ id }}">
+<div id="{{ listCard.species.vernacularName|slugify }}" class="list-cards-item " data-id="{{ id }}">
+    
     <div class="list-card-img" style="background-image:url({{ "/media/species/#{listCard.species.picture}.jpg" }})"></div>
-
+    
     <div class="item-name-block">
         <a href="" class="item-heading-dropdown right-arrow-orange-icon">{{ listCard.species.vernacularName|capitalize }}</a>
         <div class="item-name scientific-name">{{ listCard.species.scientificName }}</div>
+        <a href="" class="item-heading-dropdown item-name">Voir les détails</a>
     </div>
 
     {% if listCard.individuals is defined %}
