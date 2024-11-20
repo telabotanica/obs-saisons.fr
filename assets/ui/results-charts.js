@@ -1,5 +1,6 @@
 $( document ).ready( () => {
     const charts = Array.from(document.getElementsByClassName('chart'));
+    console.log(charts);
     if (charts.length > 0) {
         import(/* webpackChunkName: "plotly" */ 'plotly.js-dist' ).then(({default: Plotly}) => {
 
@@ -128,7 +129,7 @@ function displayPhenologicalChart( Plotly, chart, criteria, allObs ) {
             scalegroup: event
         } );
     }
-
+    console.log(data);
     const subtitle = ( criteria.year === "0" ) ? 'Toutes les années' : `Année ${criteria.year}`;
     const layout = {
         title: `Calendrier phénologique de l’espèce ${criteria.species.name} <br> ${subtitle}, ${locality( criteria )}`,
@@ -161,7 +162,7 @@ function displayEvolutionChart( Plotly, chart, criteria, allObs ) {
             hoverinfo: 'text'
         } );
     }
-
+    console.log(data.length);
     const multipleEvents = ( obsArray.length > 1 ) ? 'début et de pleine ' : '';
     const title = `Dates moyennes de ${multipleEvents}${criteria.event.name} pour l’espèce ${criteria.species.name} <br> ${locality( criteria )}`;
 
@@ -205,15 +206,20 @@ function retrieveData( url, handleData, previousPageData = [] ) {
         success: data => {
             if ( data.data ) {
                 if (data.links.next) {
-                    retrieveData(data.links.next, handleData, previousPageData.concat(data.data))
+                    retrieveData(data.links.next, handleData, previousPageData.concat(data.data));
+                    
                 } else {
                     handleData( data.data );
+                    
                 }
             } else {
                 handleData( data );
+                
             }
+            
         }
     });
+    
 }
 
 function indexObsForPhenologicalChart( allObs ) {
