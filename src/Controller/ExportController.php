@@ -306,7 +306,10 @@ class ExportController extends AbstractController
                 $selectedYear
             );
         $serializedData = $serializer->serializeJsonForCalendar($data);
-
-        return new JsonResponse($serializedData, Response::HTTP_OK, ['content-type' => 'application/json']);
+        return new Response(
+            $serializedData,
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+            );
     }
 }

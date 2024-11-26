@@ -122,38 +122,18 @@ $(document).ready(function () {
         }
 
         //binding all select with obs retrieval
-        $('#observation-calendar-chart > #selectMultiple >  select').on('change', function () {
+        $('#observation-calendar-chart > #selectMultiple >  select').on('change', async function () {
             const criteria = {
                 species: $('#species-calendar-chart').val(),
                 event: $('#event-calendar-chart').val(),
                 year: $('#year-calendar-chart').val()
             };
-            console.log(criteria);
+            
+            let data = await retrieveData(generatedUrl(criteria));
+            
+            let observationByYearSelected = handleData(data, criteria)
 
-
-            retrieveData(generatedUrl(criteria), (data, criteria) => {
-
-                const selectedYears = criteria.year;
-                const observationByYearSelected = [];
-
-                data.forEach(observation => {
-                    const observationYear = new Date(observation.date).getFullYear().toString();
-
-                    if (selectedYears.includes(observationYear)) {
-                        observationByYearSelected.push({
-                            date: new Date(observation.date).toLocaleDateString('en-GB'), // Format date to 'dd-mm-yy'
-                            event: observation.event.displayName,
-                            eventObsName: observation.event.name,
-                            espece: observation.individual.species.displayName
-                        });
-                    }
-                });
-                console.log("data retrieved")
-                console.log(observationByYearSelected)
-
-                displayCalendars(data, observationByYearSelected, criteria);
-            });
-
+            displayCalendars(observationByYearSelected, criteria);
 
         })
 
@@ -190,48 +170,50 @@ function generatedUrl(criteria) {
         url += 'year' + temp + '=' + criteria.year[i] + '&';
     }
 
-    console.log("url generated")
     return url;
 }
 
-
-// function handleData(data, criteria){
-//     const selectedYears = criteria.year
-//     const observationByYearSelected = [];
-//
-//     data.forEach(observation => {
-//         const observationYear = new Date(observation.date).getFullYear().toString();
-//
-//         if (selectedYears.includes(observationYear)) {
-//             observationByYearSelected.push({
-//                 date: new Date(observation.date).toLocaleDateString('en-GB'), // Format date to 'dd-mm-yy'
-//                 event: `${observation.event.name} ${observation.event.stadeBbch}`,
-//                 eventObsName: observation.event.name,
-//                 espece: observation.individual.species.vernacularName
-//             });
-//         }
-//     });
-//
-//     return observationByYearSelected;
-// }
-
-function retrieveData(url, handleData, criteria) {
-    $.ajax({
+async function retrieveData(url) {
+	let data
+    await $.ajax({
         method: "GET",
         url: url,
-        type: "json",
-        success: data => {
-            console.log(data)
-            handleData(data, criteria);
+        dataType: "json",
+        success: d => {
+			data = d
         }
     })
+    return data
 }
+
+ function handleData(data, criteria){
+     const selectedYears = criteria.year
+     const observationByYearSelected = [];
+
+     for (let observation of data) {
+		 
+         const observationYear = new Date(observation.date).getFullYear().toString();
+
+         if (selectedYears.includes(observationYear) || selectedYears == "") {
+             observationByYearSelected.push({
+                 date: new Date(observation.date).toLocaleDateString('en-GB'), // Format date to 'dd-mm-yy'
+                 event: `${observation.event.displayName}`,
+                 eventObsName: observation.event.name,
+                 espece: observation.individual.species.displayName
+             });
+         }
+     }
+     return observationByYearSelected;
+ }
+
+
 
 // Function to compute density and assign opacity
 function computeDensity(data) {
     const density = {};
 
     // Compute the density for each event and date
+    let i = 0
     data.forEach(d => {
         const key = `${d.espece} - ${d.event}`;
         const date = d.date.toDateString();
@@ -298,7 +280,7 @@ function colorByEvent(event) {
 // Combined Year Chart function
 function combinedYearChart(data) {
     // Parse the date / time
-    const parseDate = d3.timeParse("%d-%m-%y");
+    const parseDate = d3.timeParse("%d/%m/%Y");
 
     // Convert dates and prepare data
     data.forEach(function (d) {
@@ -371,12 +353,13 @@ function combinedYearChart(data) {
 
     // Add squares
     const squareSize = 10; // Define the size of the squares
-
+	let i = 1
     svg.selectAll("rect")
         .data(densityData)
         .enter().append("rect")
         .attr("x", function (d) {
             // Map the dates to the selected year for x-axis positioning
+            
             const mappedDate = new Date(year, d.date.getMonth(), d.date.getDate());
             return x(mappedDate) - squareSize / 2; // Center the square
         })
@@ -421,134 +404,9 @@ function combinedYearChart(data) {
         .text("Observations sur l'ensemble des années");
 }
 
-// function combinedSelectedYearChart(data) {
-//     // Parse the date / time
-//     const parseDate = d3.timeParse("%d-%m-%y");
-//
-//     // Convert dates and prepare data
-//     data.forEach(function (d) {
-//         d.date = parseDate(d.date);
-//     });
-//
-//     // Compute density and assign opacity
-//     const densityData = computeDensity(data);
-//
-//     // Set the dimensions and margins of the graph
-//     const margin = {top: 70, right: 30, bottom: 50, left: 200}, // Adjusted left margin
-//         heightPerEvent = 10,
-//         width = 600;
-//
-//     // Determine the range of dates and unique event-species combinations
-//     const eventSpecies = Array.from(new Set(densityData.map(d => d.key)));
-//
-//     // Calculate the height based on the number of unique event-species combinations
-//     const height = 400 + eventSpecies.length * heightPerEvent - margin.top - margin.bottom;
-//
-//     // Append the svg object to the body of the page
-//     const svg = d3.select("#combinedSelectedYearChart")
-//         .append("svg")
-//         .attr("width", width + margin.left + margin.right)
-//         .attr("height", height + margin.top + margin.bottom)
-//         .append("g")
-//         .attr("transform", "translate(" + margin.left + "," + (margin.top + 30) + ")");
-//
-//     // Set the ranges for a single year span (from January 1 to December 31)
-//     const year = 2024; // Using a leap year to cover 366 days
-//     const x = d3.scaleTime().domain([new Date(year, 0, 1), new Date(year, 11, 31)]).range([0, width]);
-//     const y = d3.scaleBand().domain(eventSpecies).range([0, height]).padding(0.1);
-//
-//     // Add vertical grid lines
-//     svg.selectAll("line.vertical-grid")
-//         .data(x.ticks(d3.timeMonth))
-//         .enter()
-//         .append("line")
-//         .attr("class", "vertical-grid")
-//         .attr("x1", function (d) {
-//             return x(d);
-//         })
-//         .attr("x2", function (d) {
-//             return x(d);
-//         })
-//         .attr("y1", 0)
-//         .attr("y2", height)
-//         .attr("stroke", "#000")
-//         .attr("stroke-dasharray", "2,2");
-//
-//     // Add the X Axis
-//     svg.append("g")
-//         .attr("transform", "translate(0," + height + ")")
-//         .call(d3.axisBottom(x).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b")))
-//         .selectAll("text")
-//         .style("font-size", "14px"); // Adjust the font size
-//
-//     // Add the Y Axis
-//     svg.append("g")
-//         .call(d3.axisLeft(y))
-//         .selectAll("text")
-//         .attr("transform", "translate(-10,0)") // Move text slightly to the left
-//         .style("text-anchor", "end")// Align text to the end of the axis
-//         .style("font-size", "12px"); // Adjust the font size
-//
-//     // Add tooltip div
-//     const tooltip = d3.select("body").append("div")
-//         .attr("class", "tooltip")
-//         .style("opacity", 0);
-//
-//     // Add squares
-//     const squareSize = 10; // Define the size of the squares
-//
-//     svg.selectAll("rect")
-//         .data(densityData)
-//         .enter().append("rect")
-//         .attr("x", function (d) {
-//             // Map the dates to the selected year for x-axis positioning
-//             const mappedDate = new Date(year, d.date.getMonth(), d.date.getDate());
-//             return x(mappedDate) - squareSize / 2; // Center the square
-//         })
-//         .attr("y", function (d) {
-//             return y(d.key) + y.bandwidth() / 2 - squareSize / 2;
-//         }) // Center the square
-//         .attr("width", 3)
-//         .attr("height", 17)
-//         .style("fill", function (d) {
-//             return colorByEvent(d.event);
-//         }) // Use the colorByEvent function
-//         .style("opacity", function (d) {
-//             return d.opacity / 100;
-//         }) // Use computed opacity
-//         .style("stroke-width", 0) // Initially no border
-//         .on("mouseover", function (event, d) {
-//             d3.select(this)
-//                 .style("stroke", "black")
-//                 .style("stroke-width", 2);
-//             tooltip.transition()
-//                 .duration(200)
-//                 .style("opacity", .9);
-//             tooltip.html(d.espece + "<br/>" + d.event + "<br/>" + d3.timeFormat("%d/%m")(d.date) + "<br/>" + d.count + " donnée(s)")
-//                 .style("left", (event.pageX + 5) + "px")
-//                 .style("top", (event.pageY - 28) + "px");
-//         })
-//         .on("mouseout", function (d) {
-//             d3.select(this)
-//                 .style("stroke-width", 0); // Remove border on mouse out
-//             tooltip.transition()
-//                 .duration(500)
-//                 .style("opacity", 0);
-//         });
-//
-//     // Add the title above the graph
-//     svg.append("text")
-//         .attr("x", width / 2)
-//         .attr("y", -50) // Position the title above the graph
-//         .attr("text-anchor", "middle")
-//         .style("font-size", "16px")
-//         .style("font-weight", "bold")
-//         .text("Observations sur l'ensemble des années sélectionnées");
-// }
 
 // Function to create charts for each year
 function eachYearChart(data) {
-
     data = data.filter(d => d.date && !isNaN(new Date(d.date)));
     // Extract years from the data
     const years = Array.from(new Set(data.map(d => new Date(d.date).getFullYear())));
@@ -568,7 +426,6 @@ function eachYearChart(data) {
 
 // Function to generate a graph for a specific year
 function generateGraphForYear(year, data) {
-
     // Parse the date / time
     const parseDate = d3.timeParse("%d-%m-%y");
 
@@ -700,9 +557,9 @@ function checkMultipleYears(dataBySelectedYear, criteria) {
     }
 }
 
-function displayCalendars(data, dataBySelectedYear, criteria) {
+function displayCalendars(dataBySelectedYear, criteria) {
     checkMultipleYears(dataBySelectedYear, criteria);
-    combinedYearChart(data);
+    combinedYearChart(dataBySelectedYear);
 }
 
 
@@ -713,7 +570,6 @@ function checkCalendarDivs() {
 }
 
 function initOnChange() {
-    console.log("initOnChange")
     $('#species-calendar-chart').change();
     $('#event-calendar-chart').change();
     $('#year-calendar-chart').change();

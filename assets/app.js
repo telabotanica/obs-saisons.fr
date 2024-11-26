@@ -36,7 +36,6 @@ import './ui/scientific-name';
 import './ui/accordion-block-toggle';
 import './ui/results-charts';
 import './ui/results-map';
-import './ui/results-yearly-graph';
 import './ui/switch-to-next-post';
 import './ui/user-delete-admin-confirm';
 import './ui/full-page-form-init';
