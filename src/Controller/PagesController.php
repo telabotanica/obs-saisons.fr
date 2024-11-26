@@ -430,4 +430,25 @@ class PagesController extends AbstractController
             'page' => $page,
         ]);
     }
+
+    /**
+     * @Route("/calendrier", name="calendrier")
+     */
+    public function calendrier(
+        BreadcrumbsGenerator $breadcrumbsGenerator,
+        EntityManagerInterface $em
+    ) {
+        $page = $em->getRepository(Post::class)->findOneBy(
+            ['category' => Post::CATEGORY_PAGE, 'slug' => 'calendrier']
+        );
+        if(empty($page)){
+            $page = new Post();
+            $page->setSlug('calendrier'); 
+        }
+        return $this->render('pages/static-page.html.twig', [
+            'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
+            'title' => 'Calendrier des saisons',
+            'page' => $page,
+        ]);
+    }
 }

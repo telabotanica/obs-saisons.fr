@@ -15,6 +15,7 @@ class BreadcrumbsGenerator
         'event_posts_list' => 'Évènements',
         'participer' => 'Comment participer',
         'especes' => 'Espèces à observer',
+        'calendrier' => 'Calendrier des espèces',
         'my_stations' => 'Saisir mes données',
         'resultats' => 'Résultats',
         'outils-ressources' => 'Outils & ressources',
@@ -42,6 +43,7 @@ class BreadcrumbsGenerator
 		'ods-occitanie'=> 'ODS Occitanie',
         'mentions-legales' => 'Mentions légales',
         'expositions' => 'Expositions',
+        'calendrier' => 'Calendrier des espèces',
     ];
     const EDITABLE_PAGES = [
         'a-propos',
@@ -65,6 +67,7 @@ class BreadcrumbsGenerator
         'ods-occitanie',
         'mentions-legales',
         'expositions',
+        'calendrier'
     ];
 	
 	const SUBMENU = [
