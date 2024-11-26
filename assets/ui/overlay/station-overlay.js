@@ -38,8 +38,14 @@ StationOverlay.prototype.editFormPreSetFields = function() {
     if (this.overlay.classList.contains('edit')) {
         this.overlay.querySelector('.saisie-header').textContent = 'Modifier la station';
         for(const [key, data] of Object.entries(lthis.stationData)) {
-            const field = document.getElementById('station_' + key);
-
+            var type='';
+            if (key.includes('exact')){
+                type = key.replace('exactL','exact_l');
+            }else{
+                type=key;
+            }
+            const field = document.getElementById('station_' + type);
+            console.log(key+ " "+data);
             switch (key) {
                 case 'name':
                 case 'description':
@@ -48,7 +54,6 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                     break;
                 case 'longitude':
                     field.value = data;
-                    field.dispatchEvent(new Event('blur'));
                     break;
                 case 'habitat':
                     const habitatOption = Array.from(field.childNodes).find(
@@ -62,6 +67,12 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                     break;
                 case 'headerImage':
                     lthis.fileUploadHandler.preSetFile(data);
+                    break;
+                case 'exactLatitude':
+                    field.value = data;
+                    break;
+                case 'exactLongitude':
+                    field.value = data;
                     break;
                 default:
                     break;

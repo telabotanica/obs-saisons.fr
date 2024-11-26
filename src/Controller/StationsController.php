@@ -75,6 +75,7 @@ class StationsController extends AbstractController
 
         $limit = 11;
         $station = new Station();
+        
         $form = $this->createForm(StationType::class, $station, [
             'action' => $this->generateUrl('stations_new'),
         ]);
@@ -141,7 +142,7 @@ class StationsController extends AbstractController
 				$stations = $stationRepository->findAllActive($user);
             }
         } else {
-//            $stations = $stationRepository->findAllActive();
+
             $stations = $stationRepository->findAll();
         }
 
@@ -334,7 +335,7 @@ class StationsController extends AbstractController
 		// Prevent user to delete station with multiple contributors
 		$contributorsCount = $stationService->countContributors($station);
 		if ($contributorsCount > 1 && !$isAdmin){
-			$this->addFlash('error', "La station n'a pas été supprimée, d'autres utilisateurs contribuent à cette station. Veuillez contacter un administrateur.");
+			$this->addFlash('error', "La station n'a pas été supprimée, d'autres utilisateurs contribuent à cette station.  contacter un administrateur.");
 			
 			return $this->redirectToRoute('my_stations');
 		}
@@ -766,7 +767,7 @@ class StationsController extends AbstractController
 		// Prevent user to deactivate station with multiple contributors
 		$contributorsCount = $stationService->countContributors($station);
 		if ($contributorsCount > 1 && !$isAdmin){
-			$this->addFlash('error', "La station n'a pas été désactivée, d'autres utilisateurs contribuent à cette station. Veuillez contacter un administrateur.");
+			$this->addFlash('error', "La station n'a pas été désactivée, d'autres utilisateurs contribuent à cette station.  contacter un administrateur.");
 			
 			return $this->redirectToRoute('stations_show', [
 				'slug'=> $station->getSlug()
@@ -776,7 +777,7 @@ class StationsController extends AbstractController
 		$station->setIsDeactivated(true);
 		$manager->flush();
 		
-		$this->addFlash('notice', "La station a été désactivée. Si c'est une erreur, veuillez contacter un administrateur pour la réactiver");
+		$this->addFlash('notice', "La station a été désactivée. Si c'est une erreur,  contacter un administrateur pour la réactiver");
 		
 		return $this->redirectToRoute('my_stations');
 	}

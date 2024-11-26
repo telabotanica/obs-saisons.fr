@@ -16,7 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\File;
@@ -46,10 +45,16 @@ class StationType extends AbstractType
             ->add('name', TextType::class, ['required' => true])
             ->add('description', TextareaType::class, ['required' => false])
             ->add('latitude', NumberType::class, [
+                'html5' => true,
+            ])
+            ->add('exact_latitude', NumberType::class, [
                 'required' => true,
                 'html5' => true,
             ])
             ->add('longitude', NumberType::class, [
+                'html5' => true,
+            ])
+            ->add('exact_longitude', NumberType::class, [
                 'required' => true,
                 'html5' => true,
             ])
@@ -121,16 +126,6 @@ class StationType extends AbstractType
     {
         $station = $formEvent->getData();
         $isDeletePicture = $station['isDeletePicture'] ?? false;
-
-        /*
-        $imageData = $station['headerImage'] instanceof UploadedFile ? $station['headerImage'] : null;
-        $this->headerImage = $this->uploadFileService->setFile(
-            $imageData,// input file data
-            $this->previousHeaderImage,
-            $isDeletePicture// removal requested
-        );
-        $station['headerImage'] = $this->headerImage;
-        */
         $formEvent->setData($station);
     }
 

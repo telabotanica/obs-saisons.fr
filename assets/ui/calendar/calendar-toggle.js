@@ -6,7 +6,6 @@ domready(() => {
     Array.from(document.querySelectorAll('a.item-heading-dropdown')).forEach(dropdown =>
         dropdown.addEventListener('click', event => {
             event.preventDefault();
-
             const id = dropdown.closest('.list-cards-item').dataset.id;
 
             animateDropdownArrow(dropdown);

@@ -44,13 +44,13 @@
                 'class': 'form-col',
                 'lang': 'en-US'
             },
-            'label': 'Latitude *',
+            'label': 'Latitude commune*',
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
-                'min': 41.3332,
-                'max': 51.0890,
-                'step': 0.00001,
+                'min': 41.33321,
+                'max': 51.08901,
+                'step': 0.000001,
                 'data-name': 'latitude',
                 'placeholder': 'Décimal, ex: 48.76638'
             }
@@ -60,14 +60,48 @@
                 'class': 'form-col ml',
                 'lang': 'en-US'
             },
-            'label': 'Longitude *',
+            'label': 'Longitude commune*',
             'label_attr': {'class': 'light-label'},
+            'attr': {
+                'class': 'text-field ods-input',
+                'min': -5.174701,
+                'max': 9.560001,
+                'step': 0.0000001,
+                'data-name': 'longitude',
+                'placeholder': 'Décimal, ex: 6.045905'
+            }
+        }) }}
+    </div>
+    <div class="_2-col-form field-group">
+        {{ form_row(stationForm.exact_latitude, {
+            'row_attr': {
+                'class': 'form-col',
+                'lang': 'en-US'
+            },
+            'label': 'Latitude exacte',
+            'label_attr': {'id':'exactLatitude','class': 'light-label'},
+            'attr': {
+                'class': 'text-field ods-input',
+                'min': 41.33321,
+                'max': 51.08901,
+                'step': 0.000001,
+                'data-name': 'exact_latitude',
+                'placeholder': 'Décimal, ex: 48.76638'
+            }
+        }) }}
+        {{ form_row(stationForm.exact_longitude, {
+            'row_attr': {
+                'class': 'form-col ml',
+                'lang': 'en-US'
+            },
+            'label': 'Longitude exacte',
+            'label_attr': {'id':'exactLongitude','class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
                 'min': -5.17470,
                 'max': 9.56000,
                 'step': 0.000001,
-                'data-name': 'longitude',
+                'data-name': 'exact_longitude',
                 'placeholder': 'Décimal, ex: 6.045905'
             }
         }) }}

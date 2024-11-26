@@ -51,8 +51,8 @@ Location.prototype.formatCoordinates = function (coordinates) {
     }
 
     return {
-        'lat': lat.toFixed(4),
-        'lng': lng.toFixed(5)
+        'lat': lat,
+        'lng': lng
     };
 };
 

@@ -20,6 +20,7 @@ export function OdsPlaces(clientCallback) {
      */
     this.clientCallback = clientCallback;
     this.searchResults = [];
+    this.cities = [];
 }
 
 OdsPlaces.prototype.init = function() {
@@ -33,6 +34,11 @@ OdsPlaces.prototype.initForm = function() {
     this.placesResults = $('.ods-places-results');
     this.placesResultsContainer = $('.ods-places-results-container');
     this.placesCloseButton = $('.ods-places-close');
+    this.placesLatitude = $('#station_latitude');
+    this.placesLongitude = $('#station_longitude');
+    this.placesExactLatitude = $('#station_exact_latitude');
+    this.placesExactLongitude = $('#station_exact_longitude');
+    this.placesTown = $("#station_locality");
 };
 
 OdsPlaces.prototype.initEvts = function() {
@@ -74,8 +80,29 @@ OdsPlaces.prototype.launchSearch = function (evt) {
     }
 };
 
+OdsPlaces.prototype.searchCity = function (city) {
+    const params = {'city':  city};
+
+    return $.ajax({
+        method: "GET",
+            url: NOMINATIM_OSM_URL,
+            data: {...NOMINATIM_OSM_DEFAULT_PARAMS, ...params},
+            success:async function(response){
+                var cities = await response;
+                var latCity = cities[0].lat;
+                latCity = Math.round(latCity * 1000000) / 1000000;
+                var lngCity = cities[0].lon;
+                lngCity = Math.round(lngCity * 1000000) / 1000000;
+                $('#station_latitude').val(latCity);
+                $('#station_longitude').val(lngCity);
+            }
+    });
+    
+};
+
 OdsPlaces.prototype.nominatimOsmResponseCallback = function(data) {
     this.places.siblings('label').removeClass('loading');
+    console.log(data);
     if (0 < data.length) {
         this.searchResults = data;
         this.setSuggestions();
@@ -111,21 +138,29 @@ OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
     const validGeometry = undefined !== suggestion.lat && undefined !== suggestion.lon,
         validAddressData = undefined !== suggestion.address,
         validDisplayName = undefined !== suggestion['display_name'];
+        
 
     return (validGeometry && validAddressData && validDisplayName);
 };
 
 OdsPlaces.prototype.onSuggestionSelected = function() {
     const lthis = this;
-
+    
     $('.ods-places-suggestion').off('click').on('click', function (evt) {
-        const $thisSuggestion = $(this),
-            suggestion = lthis.searchResults.find(suggestion => suggestion['place_id'] === $thisSuggestion.data('placeId'));
-
+        const $thisSuggestion = $(this),suggestion = lthis.searchResults.find(suggestion => suggestion['place_id'] === $thisSuggestion.data('placeId'));
         evt.preventDefault();
-
         lthis.places.val($thisSuggestion.text());
-        lthis.clientCallback(suggestion);
+        var town = suggestion['address']['municipality'];
+        lthis.placesTown.val(town);
+        var lat = suggestion['lat'];
+        lat = Math.round(lat * 1000000) / 1000000;
+        var lng = suggestion['lon'];
+        lng = Math.round(lng * 1000000) / 1000000;
+        lthis.placesExactLatitude.val(lat);
+        lthis.placesExactLongitude.val(lng);
+        if (town){
+            lthis.searchCity(town);
+        }
         lthis.placesCloseButton.trigger('click');
 
     }).off('keydown').on('keydown', function (evt) {
@@ -148,6 +183,7 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
             lthis.places.focus();
         }
     });
+    
 };
 
 OdsPlaces.prototype.resetOnClick = function () {
