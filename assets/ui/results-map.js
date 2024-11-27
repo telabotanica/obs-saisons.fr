@@ -1,12 +1,12 @@
 import { createMap } from "./create-map";
-
+var load =false;
 $( document ).ready( () => {
     const $map = $('#results-map');
 
     if ( $map.length > 0 ) {
-        let map = createMap( 'results-map' );
+        var map = createMap( 'results-map' );
         map.cluster = [];
-
+        
         // choose both region and department is not allowed
         $( '#region' ).on( 'change', function() {
             $( '#department' ).val( 0 );
@@ -18,21 +18,31 @@ $( document ).ready( () => {
         // binding all select with obs retrieval
         $( '.criteria-container > select' ).on( 'change', function() {
             // filter species
-            const criteria = filterCriteria();
+            filterCriteria(map,load);
             // retrieve obs
-            retrieveObs( criteria, map );
+            
         } );
 
+        $( '#myRange' ).on( 'change', function() {
+            // filter species
+            filterCriteria(map,load);
+            // retrieve obs
+            
+        } );
         // initiate map
         $( '#year' ).delay( 1000 ).change();
     }
 } );
 
 function retrieveObs( criteria, map ) {
+    console.log(criteria);
+    var url = dataRoute+"?year="+criteria.year+"&month="+criteria.month+"&typeSpecies="+criteria.typeSpeciesId+"&species="+criteria.speciesId+"&event="+criteria.eventId+"&department="+criteria.department+"&region="+criteria.region;
+    console.log(url);
     $.ajax({
         method: "GET",
-        url: `${dataRoute}?year=${criteria.year}&typeSpecies=${criteria.typeSpeciesId}&species=${criteria.speciesId}&event=${criteria.eventId}&department=${criteria.department}&region=${criteria.region}`,
+        url: url,
         success: function ( data ) {
+            console.log(data);
             // clear map before display new data
             for ( let i = 0; i < map.markers.length; i++ ){
                 map.removeLayer( map.markers[i] );
@@ -64,7 +74,7 @@ function retrieveObs( criteria, map ) {
     });
 }
 
-function filterCriteria() {
+function filterCriteria(map,load) {
     const typeSpeciesId = $( '#type-species > option:selected' ).val();
 
     // empty species and empty events if typeSpecies changes
@@ -116,12 +126,62 @@ function filterCriteria() {
         })
     }
 
-    return {
+    var slider = document.getElementById("myRange");
+    var months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    document.getElementById("demo").innerHTML = months[slider.value];
+   
+    slider.oninput = function() {
+        document.getElementById("demo").innerHTML = months[slider.value];
+        switch(document.getElementById("demo").innerHTML){
+            case "Janvier":
+                $('#myRange').val("0");
+                break;
+            case "Février":
+                $('#myRange').val("1");
+                break;
+            case "Mars":
+                $('#myRange').val("2");
+                break;
+            case "Avril":
+                $('#myRange').val("3");
+                break;
+            case "Mai":
+                $('#myRange').val("4");
+                break;
+            case "Juin":
+                $('#myRange').val("5");
+                break;
+            case "Juillet":
+                $('#myRange').val("6");
+                break;
+            case "Août":
+                $('#myRange').val("7");
+                break;
+            case "Septembre":
+                $('#myRange').val("8");
+                break;
+            case "Octobre":
+                $('#myRange').val("9");
+                break;
+            case "Novembre":
+                $('#myRange').val("10");
+                break;
+            case "Décembre":
+                $('#myRange').val("11");
+                break;
+        }
+    }
+    const criteria = {
         'typeSpeciesId': typeSpeciesId,
         'speciesId': speciesId,
         'eventId': $( '#events > option:selected' ).val(),
         'year': $( '#year' ).val(),
+        'month' : parseInt($('#myRange').val())+1,
         'region': $( '#region' ).val(),
-        'department': $( '#department' ).val(),
-    }
+        'department': $( '#department' ).val()
+    };
+    
+    map.cluster = [];
+    retrieveObs( criteria, map );
+    
 }

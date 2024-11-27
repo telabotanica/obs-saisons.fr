@@ -244,7 +244,8 @@ class ObservationRepository extends ServiceEntityRepository
         ?string $department,
         ?string $region,
         ?string $station,
-        ?string $individual
+        ?string $individual,
+        ?string $month
     ): QueryBuilder {
         $qb = $this->createQueryBuilder('o')
             ->addSelect('PARTIAL o.{id, picture, isMissing, details, updatedAt, date, user, individual, event}')
@@ -267,7 +268,11 @@ class ObservationRepository extends ServiceEntityRepository
                 ->setParameter(':year', $year)
             ;
         }
-
+        if ($month) {
+            $qb->andWhere($qb->expr()->eq('MONTH(o.date)', ':month'))
+                ->setParameter(':month', $month)
+            ;
+        }
         if ($typeSpecies) {
             $qb->andWhere($qb->expr()->eq('ts.id', ':typeSpecies'))
                 ->setParameter(':typeSpecies', $typeSpecies)

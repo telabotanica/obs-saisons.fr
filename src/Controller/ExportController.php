@@ -86,6 +86,7 @@ class ExportController extends AbstractController
                 $request->query->get('region'),
                 $request->query->get('station'),
                 $request->query->get('individual'),
+                $request->query->get('month')
             );
 
         $serializer = new EntityJsonSerialize();
@@ -93,7 +94,7 @@ class ExportController extends AbstractController
         $pager = new Pagerfanta(
             new QueryAdapter($qb)
         );
-
+        
         $pager->setCurrentPage($request->query->get('page') ?? 1);
         $pager->setMaxPerPage($request->query->get('size') ?? 9000);
 
