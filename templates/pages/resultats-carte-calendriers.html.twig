@@ -48,7 +48,7 @@
         </select>
         {% set month = 'now'|date('m') - 1%}
         <div class="slidecontainer">
-            <input type="range" min="0" max="11" class="slider" value="{{month}}" id="myRange">
+            <input type="range" min="0" max="12" class="slider" value="{{month}}" id="myRange">
             <output><span id="demo"></span></output>
         </div>
         <select name="region" id="region" class="criteria-list">

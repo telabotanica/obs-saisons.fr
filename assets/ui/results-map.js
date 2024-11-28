@@ -127,7 +127,7 @@ function filterCriteria(map,load) {
     }
 
     var slider = document.getElementById("myRange");
-    var months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    var months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre","Tous les mois"];
     document.getElementById("demo").innerHTML = months[slider.value];
    
     slider.oninput = function() {
@@ -168,6 +168,9 @@ function filterCriteria(map,load) {
                 break;
             case "Décembre":
                 $('#myRange').val("11");
+                break;
+            case "Tous les mois":
+                $('#myRange').val("12");
                 break;
         }
     }

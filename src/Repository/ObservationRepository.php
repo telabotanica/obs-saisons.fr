@@ -268,7 +268,7 @@ class ObservationRepository extends ServiceEntityRepository
                 ->setParameter(':year', $year)
             ;
         }
-        if ($month) {
+        if (!empty($month) AND $month != 13) {
             $qb->andWhere($qb->expr()->eq('MONTH(o.date)', ':month'))
                 ->setParameter(':month', $month)
             ;
