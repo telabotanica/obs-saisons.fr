@@ -30,7 +30,7 @@ $( function() {
             
         } );
         // initiate map
-        $( '#year' ).delay( 1000 ).change();
+        $( '#year' ).delay( 1000 ).on('change');
     }
 } );
 

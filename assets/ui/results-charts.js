@@ -93,8 +93,8 @@ $( function() {
 
             // display charts
             filterCriteria();
-            $( '#event-evolution-chart' ).change();
-            $( '#year-phenological-chart' ).change();
+            $( '#event-evolution-chart' ).on('change');
+            $( '#year-phenological-chart' ).on('change');
         });
     }
 } );
@@ -129,7 +129,7 @@ function displayPhenologicalChart( Plotly, chart, criteria, allObs ) {
             scalegroup: event
         } );
     }
-    console.log(data);
+   
     const subtitle = ( criteria.year === "0" ) ? 'Toutes les années' : `Année ${criteria.year}`;
     const layout = {
         title: `Calendrier phénologique de l’espèce ${criteria.species.name} <br> ${subtitle}, ${locality( criteria )}`,
