@@ -105,7 +105,7 @@ StationOverlay.prototype.closeOverlayOnEscapeKey = function() {
     document.body.addEventListener('keydown', function(evt) {
         const ESC_KEY_STRING = /^Esc(ape)?/;
 
-        if(27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+        if('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
             const openedOverlay = !lthis.overlay.classList.contains('hidden');
 
             if (openedOverlay) {

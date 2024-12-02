@@ -1,4 +1,4 @@
-$( document ).ready( () => {
+$( function() {
     const charts = Array.from(document.getElementsByClassName('chart'));
     console.log(charts);
     if (charts.length > 0) {

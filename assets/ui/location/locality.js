@@ -49,15 +49,15 @@ OdsPlaces.prototype.initEvts = function() {
         this.places.off('keydown').on('keydown', evt => {
             const suggestionEl = $('.ods-places-suggestion');
 
-            if (27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+            if ('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
                 evt.preventDefault();
 
                 this.placesCloseButton.trigger('click');
-                this.places.focus();
-            } else if((40 === evt.keyCode || 'ArrowDown' === evt.key) && 0 <  suggestionEl.length) {
+                this.places.on('focus');
+            } else if(('ArrowDown' === evt.key) && 0 <  suggestionEl.length) {
                 evt.preventDefault();
 
-                suggestionEl.first().focus();
+                suggestionEl.first().on('focus');
             }
         });
     }
@@ -168,19 +168,19 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
 
         const $thisSuggestion = $(this);
 
-        if (13 === evt.keyCode || 'Enter' === evt.key) {
+        if ('ArrowUp' === evt.key || 'Enter' === evt.key) {
             $thisSuggestion.trigger('click');
-        } else if (38 === evt.keyCode || 'ArrowUp'=== evt.key) {
+        } else if ('ArrowUp'=== evt.key) {
             if(0 < $thisSuggestion.prev().length) {
-                $thisSuggestion.prev().focus();
+                $thisSuggestion.prev().on('focus');
             } else {
-                lthis.places.focus();
+                lthis.places.on('focus');
             }
-        } else if((40 === evt.keyCode || 'ArrowDown' === evt.key) && 0 < $thisSuggestion.next().length) {
-            $thisSuggestion.next().focus();
-        } else if (27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+        } else if(( 'ArrowDown' === evt.key) && 0 < $thisSuggestion.next().length) {
+            $thisSuggestion.next().on('focus');
+        } else if ('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
             lthis.placesCloseButton.trigger('click');
-            lthis.places.focus();
+            lthis.places.on('focus');
         }
     });
     

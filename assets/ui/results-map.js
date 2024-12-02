@@ -1,6 +1,6 @@
 import { createMap } from "./create-map";
 var load =false;
-$( document ).ready( () => {
+$( function() {
     const $map = $('#results-map');
 
     if ( $map.length > 0 ) {
