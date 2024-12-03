@@ -98,7 +98,6 @@ StationLocation.prototype.loadLocationInfosFromOdsService = function() {
         data: query,
         success: function (data) {
             let locationInformations = JSON.parse(data);
-            console.log(locationInformations);
             lthis.phenoclimWarningToggle(locationInformations.commune_phenoclim);
             // updates location informations fields
             locality.value = locationInformations.commune;

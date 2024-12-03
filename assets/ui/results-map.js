@@ -6,7 +6,7 @@ $( function() {
     if ( $map.length > 0 ) {
         var map = createMap( 'results-map' );
         map.cluster = [];
-        
+        filterCriteria(map);
         // choose both region and department is not allowed
         $( '#region' ).on( 'change', function() {
             $( '#department' ).val( 0 );
@@ -74,7 +74,7 @@ function retrieveObs( criteria, map ) {
     });
 }
 
-function filterCriteria(map,load) {
+function filterCriteria(map) {
     const typeSpeciesId = $( '#type-species > option:selected' ).val();
 
     // empty species and empty events if typeSpecies changes

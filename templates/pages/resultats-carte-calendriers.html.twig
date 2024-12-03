@@ -81,41 +81,46 @@
 
     <div id="phenological-chart-container">
         <select name="species" id="species-phenological-chart" class="criteria-list">
-            <option value="0" class="default-criteria" disabled>Choisissez une espèce</option>
+            <option value="0" class="default-criteria" selected>Toutes les espèces</option>
+            {% set species_id = null %}
             {% for species in allSpecies %}
-                <option
-                        value="{{ species.id }}"
-                        {% if 'Lilas' == species.vernacularName %} selected{% endif %}
-                >
+                <option value="{{ species.id }}">
                     {{ species.vernacularName }}
+                {% set species_id = species.id %}
                 </option>
             {% endfor %}
         </select>
 
         <select name="year" id="year-phenological-chart" class="criteria-list">
             <option value="0">Toutes les années</option>
+            {% set year = null %}
             {% for i in minYear..'now'|date('Y') %}*
                 <option value="{{ i }}">{{ i }}</option>
+                {% set year = i %}
             {% endfor %}
         </select>
 
         <select name="region" id="region-phenological-chart" class="criteria-list">
             <option value="0">Toutes les régions</option>
+            {% set region_id = null %}
             {% for id, region in regions %}
                 <option value="{{ id }}">{{ region }}</option>
+                {% set region_id = id %}
             {% endfor %}
         </select>
 
         <select name="department" id="department-phenological-chart" class="criteria-list">
             <option value="0">Tous les départements</option>
+            {% set dpt_id = null %}
             {% for id, department in departments %}
                 <option value="{{ id }}">{{ department }}</option>
+                {% set dpt_id = id %}
             {% endfor %}
         </select>
 
-        <div class="no-data alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au
+        <div id="alerte_pheno" class="no-data alert alert-danger">Aucune donnée pour les critères demandés, veuillez modifier au
             moins un de vos critères</div>
-        <div class="chart"></div>
+        <div id='chart' class="chart"></div>
     </div>
 
     {% include 'layout/header.html.twig' with ({
@@ -168,7 +173,7 @@
 
 
     <script>
-        let exportRoute = "{{ path('export_filtered')|escape('js') }}";
+        let exportRoute = "{{ path('observations_for_charts') }}";
         let eventsEvolutionRoute = "{{ path('events_evolution')|escape('js') }}";
     </script>
 

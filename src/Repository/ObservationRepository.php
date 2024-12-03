@@ -982,4 +982,83 @@ class ObservationRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function getObsForCharts($objet){
+        
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT
+                MONTH(o.date) AS mois,
+                e.name AS etape,
+                COUNT(o.id) AS nb_obs,
+                (
+                SELECT
+                    COUNT(o3.id)
+                FROM
+                    observation o3
+                INNER JOIN event e3 ON
+                    o3.event_id = e3.id
+                INNER JOIN individual i3 ON o3.individual_id = i3.id
+                INNER JOIN species sp3 ON i3.species_id = sp3.id
+                INNER JOIN station s3 ON i3.station_id=s3.id
+                WHERE
+                    o3.is_missing = 1 AND o3.deleted_at IS NULL AND e3.id <= 7 AND MONTH(o3.date) = mois AND e3.name = etape".$this->setParams($objet,'3').
+                "GROUP BY
+                    MONTH(o3.date),
+                    e3.name
+            ) AS nb_obs_manquantes,
+            (
+                SELECT
+                    COUNT(o2.id)
+                FROM
+                    observation o2
+                INNER JOIN event e2 ON
+                    o2.event_id = e2.id
+                INNER JOIN individual i2 ON o2.individual_id = i2.id
+                INNER JOIN species sp2 ON i2.species_id = sp2.id
+                INNER JOIN station s2 ON i2.station_id=s2.id
+                WHERE
+                    o2.deleted_at IS NULL AND e2.id <= 7".$this->setParams($objet,'2').
+            ") AS nb_obs_total
+            FROM
+                observation o
+            INNER JOIN event e ON
+                o.event_id = e.id
+            INNER JOIN individual i ON o.individual_id = i.id
+            INNER JOIN species sp ON i.species_id = sp.id
+            INNER JOIN station s ON i.station_id=s.id
+            WHERE
+                o.deleted_at IS NULL AND e.id <= 7 AND s.deleted_at IS NULL".$this->setParams($objet,'').
+            "GROUP BY
+                mois,
+                etape ORDER BY mois";
+        
+        $stmt = $conn->prepare($sql);
+        $results = $stmt->executeQuery()->fetchAllAssociative();
+        return $results;
+    }
+
+    public function setParams($objet,$numero){
+        $params='';
+        if(!empty($objet)){
+            if (!empty($objet->year AND $objet->year !=0)){
+                $year=$objet->year;
+                $params.=" AND YEAR(o$numero.date)=$year";
+            }
+            if (!empty($objet->region AND $objet->region!=0)){
+                $region=$objet->region;
+                $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+                $str_dpts=implode(',',$departments);
+                $params.=" AND s$numero.department IN ($str_dpts)";
+            }
+            if (!empty($objet->dpt AND $objet->dpt!=0)){
+                $dpt=$objet->dpt;
+                $params.=" AND s$numero.department = $dpt";
+            }
+            if (!empty($objet->specy AND $objet->specy!=0)){
+                $specy=$objet->specy;
+                $params.=" AND sp$numero.id = $specy";
+            }
+        }
+        return "$params ";
+    }
+
 }
