@@ -32,6 +32,6 @@
         "leaflet.markercluster": "^1.5.3",
         "orejime": "^2.2.1",
         "places.js": "^1.19.0",
-        "plotly.js-dist": "^2.11.1"
+        "plotly.js-dist": "^2.35.2"
     }
 }
