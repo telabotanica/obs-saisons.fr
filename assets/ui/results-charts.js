@@ -273,7 +273,7 @@ function getInfoforFirstChart(Plotly){
                 };
                 // Regroupement des données par mois et par étape
                 const mois = Array.from(new Set(results.map(item => item.mois))); // Récupère les mois distincts
-                const etapes = Array.from(new Set(results.map(item => item.etape))); // Récupère les étapes distinctes
+                const etapes = ["1ère apparition","feuillaison", "floraison", "fructification", "sénescence"];
                 const moisNom = mois.map(month => moisNoms[month]);
                 const couleurs = {
                     "feuillaison": "#bcd35f",  
@@ -282,6 +282,7 @@ function getInfoforFirstChart(Plotly){
                     "sénescence": "#bb381c",
                     "1ère apparition":"#4d4d4dff"  
                 };
+                
                 // Créer une trace pour chaque étape
                 const traces = etapes.map(etape => {
                     return {
