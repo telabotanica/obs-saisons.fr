@@ -41,7 +41,6 @@ $( function() {
 
 function retrieveObs( criteria, map ) {
     var url = dataRoute+"?year="+criteria.year+"&month="+criteria.month+"&typeSpecies="+criteria.typeSpeciesId+"&species="+criteria.speciesId+"&event="+criteria.eventId+"&department="+criteria.department+"&region="+criteria.region+"&cumul="+criteria.cumul;
-    console.log(url);
     $.ajax({
         method: "GET",
         url: url,
