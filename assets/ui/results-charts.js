@@ -262,7 +262,11 @@ function getInfoforFirstChart(Plotly){
                 { "mois": "12", "etape": "fructification", "nb_obs": 7, "nb_obs_manquantes": 4 },
                 { "mois": "12", "etape": "sénescence", "nb_obs": 22, "nb_obs_manquantes": 17 }
             ]; */
-            if(results){
+            const txt_obs = "Nombre d'observations utilisées dans le graphique : ";
+            if(results.length>0){
+
+                const nb_obs_total = results[0].nb_obs_total.toString();
+                $('#nb_obs').html(txt_obs+nb_obs_total);
                 const moisNoms = {
                     "1": "Janvier", "2": "Février", "3": "Mars", "4": "Avril", "5": "Mai", "6": "Juin", 
                     "7": "Juillet", "8": "Août", "9": "Septembre", "10": "Octobre", "11": "Novembre", "12": "Décembre"
@@ -275,7 +279,8 @@ function getInfoforFirstChart(Plotly){
                     "feuillaison": "#bcd35f",  
                     "floraison": "#ed7c1c",  
                     "fructification": "#5fbcd3",  
-                    "sénescence": "#bb381c"  
+                    "sénescence": "#bb381c",
+                    "1ère apparition":"#4d4d4dff"  
                 };
                 // Créer une trace pour chaque étape
                 const traces = etapes.map(etape => {
@@ -291,6 +296,19 @@ function getInfoforFirstChart(Plotly){
                         marker: { color: couleurs[etape] }
                     };
                 });
+                /* const tracesManquantes = etapes.map(etape => {
+                    return {
+                        x: moisNom,
+                        y: mois.map(mois_ => {
+                            const entry = results.find(d => d.mois === mois_ && d.etape === etape);
+                            return entry ? entry.nb_obs_manquantes : 0;
+                        }),
+                        name: `Observations manquantes - ${etape}`,
+                        type: 'bar',
+                        barmode: 'group',
+                        
+                    };
+                }); */
     
                 const layout = {
                     title: 'Nombre d\'observations par mois et étape',
@@ -301,6 +319,11 @@ function getInfoforFirstChart(Plotly){
     
                 Plotly.newPlot('chart', [...traces], layout);
                 $('#alerte_pheno').hide();
+                $('#chart').show();
+            }else{
+                $('#nb_obs').html(txt_obs + "0");
+                $('#alerte_pheno').show();
+                $('#chart').hide();
             }
             
         }

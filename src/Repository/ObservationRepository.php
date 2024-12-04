@@ -1000,7 +1000,7 @@ class ObservationRepository extends ServiceEntityRepository
                 INNER JOIN species sp3 ON i3.species_id = sp3.id
                 INNER JOIN station s3 ON i3.station_id=s3.id
                 WHERE
-                    o3.is_missing = 1 AND o3.deleted_at IS NULL AND e3.id <= 7 AND MONTH(o3.date) = mois AND e3.name = etape".$this->setParams($objet,'3').
+                    o3.is_missing = 1 AND o3.deleted_at IS NULL AND MONTH(o3.date) = mois AND e3.name = etape".$this->setParams($objet,'3').
                 "GROUP BY
                     MONTH(o3.date),
                     e3.name
@@ -1016,7 +1016,7 @@ class ObservationRepository extends ServiceEntityRepository
                 INNER JOIN species sp2 ON i2.species_id = sp2.id
                 INNER JOIN station s2 ON i2.station_id=s2.id
                 WHERE
-                    o2.deleted_at IS NULL AND e2.id <= 7".$this->setParams($objet,'2').
+                    o2.deleted_at IS NULL ".$this->setParams($objet,'2').
             ") AS nb_obs_total
             FROM
                 observation o
@@ -1026,7 +1026,7 @@ class ObservationRepository extends ServiceEntityRepository
             INNER JOIN species sp ON i.species_id = sp.id
             INNER JOIN station s ON i.station_id=s.id
             WHERE
-                o.deleted_at IS NULL AND e.id <= 7 AND s.deleted_at IS NULL".$this->setParams($objet,'').
+                o.deleted_at IS NULL AND s.deleted_at IS NULL".$this->setParams($objet,'').
             "GROUP BY
                 mois,
                 etape ORDER BY mois";

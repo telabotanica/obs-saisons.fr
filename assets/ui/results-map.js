@@ -35,14 +35,11 @@ $( function() {
 } );
 
 function retrieveObs( criteria, map ) {
-    console.log(criteria);
     var url = dataRoute+"?year="+criteria.year+"&month="+criteria.month+"&typeSpecies="+criteria.typeSpeciesId+"&species="+criteria.speciesId+"&event="+criteria.eventId+"&department="+criteria.department+"&region="+criteria.region;
-    console.log(url);
     $.ajax({
         method: "GET",
         url: url,
         success: function ( data ) {
-            console.log(data);
             // clear map before display new data
             for ( let i = 0; i < map.markers.length; i++ ){
                 map.removeLayer( map.markers[i] );
