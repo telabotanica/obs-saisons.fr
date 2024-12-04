@@ -11,6 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @method Observation|null find($id, $lockMode = null, $lockVersion = null)
@@ -245,7 +246,8 @@ class ObservationRepository extends ServiceEntityRepository
         ?string $region,
         ?string $station,
         ?string $individual,
-        ?string $month
+        ?string $month,
+        ?string $cumul
     ): QueryBuilder {
         $qb = $this->createQueryBuilder('o')
             ->addSelect('PARTIAL o.{id, picture, isMissing, details, updatedAt, date, user, individual, event}')
@@ -269,9 +271,14 @@ class ObservationRepository extends ServiceEntityRepository
             ;
         }
         if (!empty($month) AND $month != 13) {
-            $qb->andWhere($qb->expr()->eq('MONTH(o.date)', ':month'))
-                ->setParameter(':month', $month)
-            ;
+            if($cumul==="1"){
+                $qb->andWhere('MONTH(o.date) BETWEEN 1 AND :month')
+                    ->setParameter('month', $month);
+            }else{
+                $qb->andWhere($qb->expr()->eq('MONTH(o.date)', ':month'))
+                    ->setParameter(':month', $month);
+            }
+            
         }
         if ($typeSpecies) {
             $qb->andWhere($qb->expr()->eq('ts.id', ':typeSpecies'))

@@ -5,7 +5,6 @@ $( function() {
 
     if ( $map.length > 0 ) {
         var map = createMap( 'results-map' );
-        map.cluster = [];
         filterCriteria(map);
         // choose both region and department is not allowed
         $( '#region' ).on( 'change', function() {
@@ -29,44 +28,73 @@ $( function() {
             // retrieve obs
             
         } );
+        $( '#cumul' ).on( 'change', function() {
+            // filter species
+            filterCriteria(map,load);
+            // retrieve obs
+            
+        } );
         // initiate map
         $( '#year' ).delay( 1000 ).on('change');
     }
 } );
 
 function retrieveObs( criteria, map ) {
-    var url = dataRoute+"?year="+criteria.year+"&month="+criteria.month+"&typeSpecies="+criteria.typeSpeciesId+"&species="+criteria.speciesId+"&event="+criteria.eventId+"&department="+criteria.department+"&region="+criteria.region;
+    var url = dataRoute+"?year="+criteria.year+"&month="+criteria.month+"&typeSpecies="+criteria.typeSpeciesId+"&species="+criteria.speciesId+"&event="+criteria.eventId+"&department="+criteria.department+"&region="+criteria.region+"&cumul="+criteria.cumul;
+    console.log(url);
     $.ajax({
         method: "GET",
         url: url,
         success: function ( data ) {
-            // clear map before display new data
-            for ( let i = 0; i < map.markers.length; i++ ){
-                map.removeLayer( map.markers[i] );
+      
+            if (!map.cluster) {
+                map.cluster = L.markerClusterGroup();  
             }
-            map.removeLayer( map.cluster );
 
-            // create clusters and markers
-            const renderer = L.canvas( { padding: 0.5 } );
-            map.cluster = L.markerClusterGroup();
-            data.data.forEach( obs => {
-                if ( !obs.isMissing ) {
-                    let marker = L.circleMarker( [ obs.individual.station.lat, obs.individual.station.lon ], {
+            // Vider les layers du cluster si map.cluster est initialisé
+            map.cluster.clearLayers();
+
+            // Retirer la couche de cluster de la carte
+            if (map.hasLayer(map.cluster)) {
+                map.removeLayer(map.cluster);
+            }
+
+            // Réinitialiser les markers
+            map.markers = [];
+
+            // Ajouter le groupe de clusters à la carte à nouveau
+            map.addLayer(map.cluster);
+
+            // Créer des clusters et des markers avec les nouvelles données
+            const renderer = L.canvas({ padding: 0.5 });
+
+            data.data.forEach(obs => {
+                if (!obs.isMissing) {
+                    // Créer un nouveau marker
+                    let marker = L.circleMarker([obs.individual.station.lat, obs.individual.station.lon], {
                         renderer: renderer,
                         color: '#3388ff'
-                    } );
+                    });
+
                     const url = stationUrlTemplate.replace('slugPlaceHolder', obs.individual.station.slug);
                     marker.bindPopup(
                         `<b>${obs.individual.species.displayName}</b><br>
                         ${obs.event.displayName}<br> ${obs.date.displayDate} <br>
-                        <a href="${url}" target="_blank">${obs.individual.station.locality} (${obs.individual.station.habitat})</a>` );
-                    map.cluster.addLayer( marker );
-                    map.addLayer( map.cluster );
+                        <a href="${url}" target="_blank">${obs.individual.station.locality} (${obs.individual.station.habitat})</a>`
+                    );
 
-                    // keep reference of markers
-                    map.markers.push( marker );
+                    // Ajouter le marker au cluster
+                    map.cluster.addLayer(marker);
+
+                    // Ajouter le cluster à la carte (si nécessaire)
+                    map.addLayer(map.cluster);
+
+                    // Garder une référence des markers
+                    map.markers.push(marker);
                 }
             });
+
+            
         }
     });
 }
@@ -171,6 +199,11 @@ function filterCriteria(map) {
                 break;
         }
     }
+    if ($('#cumul').is(':checked')){
+        $('#cumul').val(1);
+    }else{
+        $('#cumul').val(0);
+    }
     const criteria = {
         'typeSpeciesId': typeSpeciesId,
         'speciesId': speciesId,
@@ -178,10 +211,9 @@ function filterCriteria(map) {
         'year': $( '#year' ).val(),
         'month' : parseInt($('#myRange').val())+1,
         'region': $( '#region' ).val(),
-        'department': $( '#department' ).val()
+        'department': $( '#department' ).val(),
+        'cumul': $('#cumul').val()
     };
-    
-    map.cluster = [];
     retrieveObs( criteria, map );
     
 }

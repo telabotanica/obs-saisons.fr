@@ -86,11 +86,11 @@ class ExportController extends AbstractController
                 $request->query->get('region'),
                 $request->query->get('station'),
                 $request->query->get('individual'),
-                $request->query->get('month')
+                $request->query->get('month'),
+                $request->query->get('cumul')
             );
 
         $serializer = new EntityJsonSerialize();
-
         $pager = new Pagerfanta(
             new QueryAdapter($qb)
         );
