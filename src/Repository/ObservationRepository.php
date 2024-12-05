@@ -1046,25 +1046,30 @@ class ObservationRepository extends ServiceEntityRepository
     public function setParams($objet,$numero){
         $params='';
         if(!empty($objet)){
-            if (!empty($objet->year AND $objet->year !=0)){
+            if (!empty($objet->year) AND preg_match('~\b\d{4}\b\+?~',$objet->year)){
                 $year=$objet->year;
                 $params.=" AND YEAR(o$numero.date)=$year";
             }
-            if (!empty($objet->region AND $objet->region!=0)){
+            if (!empty($objet->region) AND preg_match('^\d+$^',$objet->region) AND intval($objet->region)<14){
                 $region=$objet->region;
                 $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
-                $str_dpts=implode(',',$departments);
+                $str_dpts="";
+                foreach ($departments as $dpt){
+                    $str_dpts.="'".$dpt."',";
+                }
+                $str_dpts=rtrim($str_dpts,",");
                 $params.=" AND s$numero.department IN ($str_dpts)";
             }
-            if (!empty($objet->dpt AND $objet->dpt!=0)){
+            if (!empty($objet->dpt) AND ((preg_match('^\d+$^',$objet->dpt) AND intval($objet->dpt) < 99) OR preg_match('^\dA$^',$objet->dpt) OR preg_match('^\dB$^',$objet->dpt))){
                 $dpt=$objet->dpt;
-                $params.=" AND s$numero.department = $dpt";
+                $params.=" AND s$numero.department = '$dpt'";
             }
-            if (!empty($objet->specy AND $objet->specy!=0)){
+            if (!empty($objet->specy) AND preg_match('^\d+$^',$objet->specy)){
                 $specy=$objet->specy;
                 $params.=" AND sp$numero.id = $specy";
             }
         }
+        
         return "$params ";
     }
 
