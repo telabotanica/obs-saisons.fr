@@ -45,7 +45,6 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                 type=key;
             }
             const field = document.getElementById('station_' + type);
-            console.log(key+ " "+data);
             switch (key) {
                 case 'name':
                 case 'description':

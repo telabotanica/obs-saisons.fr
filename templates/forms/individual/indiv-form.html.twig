@@ -36,6 +36,31 @@
             }
         }) }}
     </div>
+    <div class="form-col small ml check">
+            {{ form_row(individualForm.isDead, {
+                'row_attr': {'class': 'ods-checkbox'},
+                'label': 'Mort',
+                'label_attr': {'class': 'checkbox-label ods-form-label'},
+                'attr': {
+                    'class': 'ods-checkbox-input',
+                    'data-name': 'isDead'
+                },
+                'help': "Si vous souhaitez signaler que l'individu est mort, vous pouvez cocher cette case.",
+                'help_attr': {'class': 'field-help-text'}
+            }) }}
+    </div>
+    <div class="_2-col-form">
+        {{ form_row(individualForm.commentaireMort, {
+            'row_attr': {'class': 'form-col'},
+            'label': 'Ajouter une précision sur la mort',
+            'attr': {
+                'class': 'textarea-field text-field ods-input',
+                'rows': 3,
+                'data-name': 'commentaireMort',
+                'placeholder': "Si nécessaire, vous pouvez noter quelques précisions ici sur la mort de l'individu"
+            }
+        }) }}
+    </div>
 {% endblock %}
 
 {% block form_javascript %}{% endblock %}

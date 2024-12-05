@@ -70,6 +70,8 @@ class EntityJsonSerialize
                 'id',
                 'name',
                 'details',
+                'isDead',
+                'commentaireMort',
                 'species',
                 'station',
             ],

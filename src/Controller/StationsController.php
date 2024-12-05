@@ -482,8 +482,8 @@ class StationsController extends AbstractController
         }
 
         $individual = $manager->getRepository(Individual::class)
-            ->find($individualId)
-        ;
+            ->find($individualId);
+        
         if (!$individual) {
             throw $this->createNotFoundException('L’individu n’existe pas');
         }
