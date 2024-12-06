@@ -73,7 +73,7 @@ class Individual
     private $isDead;
 
      /**
-     * @ORM\Column(type="text", options={"default" : ""})
+     * @ORM\Column(type="text", nullable=true)
      */
     private $commentaireMort;
 
@@ -203,7 +203,7 @@ class Individual
      *
      * @return  self
      */ 
-    public function setIsDead($isDead)
+    public function setIsDead(?bool $isDead)
     {
         $this->isDead = $isDead;
 
@@ -223,7 +223,7 @@ class Individual
      *
      * @return  self
      */ 
-    public function setCommentaireMort($commentaireMort)
+    public function setCommentaireMort(?string $commentaireMort)
     {
         $this->commentaireMort = $commentaireMort;
 

@@ -121,7 +121,7 @@ class ExportController extends AbstractController
                 'next' => $pager->hasNextPage() ? $url.'?'.http_build_query(array_merge($params, ['page' => $pager->getNextPage()])) : null,
             ],
         ];
-
+      
         return new Response(
             json_encode($ret),
             Response::HTTP_OK,

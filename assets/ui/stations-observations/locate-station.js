@@ -50,6 +50,7 @@ StationLocation.prototype.initSearchLocality = function() {
 };
 
 StationLocation.prototype.odsPlacesCallback = function(localityData) {
+
     const addressData = localityData.address,
         locationNameType = ['village', 'city', 'locality', 'municipality', 'county'].find(locationNameType => addressData[locationNameType] !== undefined);
     if(!!locationNameType) {

@@ -36,8 +36,8 @@ OdsPlaces.prototype.initForm = function() {
     this.placesCloseButton = $('.ods-places-close');
     this.placesLatitude = $('#station_latitude');
     this.placesLongitude = $('#station_longitude');
-    this.placesExactLatitude = $('#station_exact_latitude');
-    this.placesExactLongitude = $('#station_exact_longitude');
+    this.placesTownLatitude = $('#station_town_latitude');
+    this.placesTownLongitude = $('#station_town_longitude');
     this.placesTown = $("#station_locality");
 };
 
@@ -93,8 +93,8 @@ OdsPlaces.prototype.searchCity = function (city) {
                 latCity = Math.round(latCity * 1000000) / 1000000;
                 var lngCity = cities[0].lon;
                 lngCity = Math.round(lngCity * 1000000) / 1000000;
-                $('#station_latitude').val(latCity);
-                $('#station_longitude').val(lngCity);
+                $('#station_town_latitude').val(latCity);
+                $('#station_town_longitude').val(lngCity);
             }
     });
     
@@ -135,6 +135,7 @@ OdsPlaces.prototype.setSuggestions = function() {
 };
 
 OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
+    console.log(suggestion);
     const validGeometry = undefined !== suggestion.lat && undefined !== suggestion.lon,
         validAddressData = undefined !== suggestion.address,
         validDisplayName = undefined !== suggestion['display_name'];
@@ -156,8 +157,8 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lat = Math.round(lat * 1000000) / 1000000;
         var lng = suggestion['lon'];
         lng = Math.round(lng * 1000000) / 1000000;
-        lthis.placesExactLatitude.val(lat);
-        lthis.placesExactLongitude.val(lng);
+        lthis.placesLatitude.val(lat);
+        lthis.placesLongitude.val(lng);
         if (town){
             lthis.searchCity(town);
         }

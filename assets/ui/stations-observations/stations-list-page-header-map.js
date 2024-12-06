@@ -36,15 +36,8 @@ const retrieveStations = (map, query) => {
                 data.forEach(station => {
                     let privateIcon = '',
                         markerColor = '#3388ff',
-                        latitude = station.latitude,
-                        longitude = station.longitude;
-
-                    if (station.isPrivate) {
-                        privateIcon = '<div class="private-icon cadenas-icon"></div>';
-                        markerColor = '#524d4b';
-                        latitude = Number.parseFloat(station.latitude).toFixed(2);
-                        longitude = Number.parseFloat(station.longitude).toFixed(2);
-                    }
+                        latitude = station.townLatitude,
+                        longitude = station.townLongitude;
 
                     const marker = L.circleMarker([latitude, longitude], {
                             renderer: renderer,

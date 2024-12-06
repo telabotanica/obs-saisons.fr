@@ -3,7 +3,6 @@ import {onDeleteButton} from "../handle-delete-button";
 export function Overlay(openOverlayButton) {
     this.openOverlayButton = openOverlayButton;
     this.dataAttrs = this.openOverlayButton.dataset;
-    console.log(this.dataAttrs);
     this.overlay = document.querySelector('.overlay.' + this.dataAttrs.open);
     this.form = this.overlay.querySelector('form');
 }

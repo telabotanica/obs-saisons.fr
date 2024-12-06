@@ -8,8 +8,8 @@ domready(() => {
     if (headerMap && headerMap.classList.contains('show-map')) {
         stationHeaderMap.createLocationMap(
             {
-                lat: headerMap.dataset.latitude,
-                lng: headerMap.dataset.longitude,
+                lat: headerMap.dataset.town_latitude,
+                lng: headerMap.dataset.town_longitude,
             },
             DEFAULT_CITY_ZOOM,
             'station-single-header-map',

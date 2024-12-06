@@ -44,7 +44,7 @@
                 'class': 'form-col',
                 'lang': 'en-US'
             },
-            'label': 'Latitude commune*',
+            'label': 'Latitude exacte',
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
@@ -60,7 +60,7 @@
                 'class': 'form-col ml',
                 'lang': 'en-US'
             },
-            'label': 'Longitude commune*',
+            'label': 'Longitude exacte',
             'label_attr': {'class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
@@ -73,35 +73,35 @@
         }) }}
     </div>
     <div class="_2-col-form field-group">
-        {{ form_row(stationForm.exact_latitude, {
+        {{ form_row(stationForm.town_latitude, {
             'row_attr': {
                 'class': 'form-col',
                 'lang': 'en-US'
             },
-            'label': 'Latitude exacte',
-            'label_attr': {'id':'exactLatitude','class': 'light-label'},
+            'label': 'Latitude de la commune',
+            'label_attr': {'id':'townLatitude','class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
                 'min': 41.33321,
                 'max': 51.08901,
                 'step': 0.000001,
-                'data-name': 'exact_latitude',
+                'data-name': 'town_latitude',
                 'placeholder': 'Décimal, ex: 48.76638'
             }
         }) }}
-        {{ form_row(stationForm.exact_longitude, {
+        {{ form_row(stationForm.town_longitude, {
             'row_attr': {
                 'class': 'form-col ml',
                 'lang': 'en-US'
             },
-            'label': 'Longitude exacte',
-            'label_attr': {'id':'exactLongitude','class': 'light-label'},
+            'label': 'Longitude de la commune',
+            'label_attr': {'id':'townLongitude','class': 'light-label'},
             'attr': {
                 'class': 'text-field ods-input',
                 'min': -5.17470,
                 'max': 9.56000,
                 'step': 0.000001,
-                'data-name': 'exact_longitude',
+                'data-name': 'town_longitude',
                 'placeholder': 'Décimal, ex: 6.045905'
             }
         }) }}

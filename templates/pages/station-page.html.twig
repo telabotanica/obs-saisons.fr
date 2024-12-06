@@ -112,13 +112,26 @@
 
 		{% include 'components/calendar-tab.html.twig' %}
 	{% endfor %}
-
-	{% if not individuals|length > 0 %}
+	{% if app.user == station.user and station.isPrivate %}
+        {% set addIndividual = true %}
+    {% elseif app.user != station.user and station.isPrivate %}
+        {% set addIndividual = false %}
+    {% elseif station.isPrivate == 0 %}
+        {% set addIndividual = true %}
+    {% endif %}
+	{% if not individuals|length > 0 and addIndividual %}
 		<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
 			<div class="add-list-card">
 				<div class="icon-add-list-card add-square-icon"></div>
 				<div class="add-card-text">C’est un peu vide n’est-ce pas ? <br> Commencez par ajouter un individu :)</div>
 				<a href="" class="button bt-add open open-individual-form-all-station" data-open="individual" data-all-species="1" data-station="{{ station.id }}">Ajouter un individu</a>
+			</div>
+		</div>
+	{% elseif not individuals|length > 0 and not addIndividual %}
+		<div class="list-cards-item-add" data-id="{{ addListCardId|default(0) }}">
+			<div class="add-list-card">
+				<div class="icon-add-list-card add-square-icon"></div>
+				<div class="add-card-text">Cette station est privée : vous ne pouvez pas y ajouter d'individu.</div>
 			</div>
 		</div>
 	{% endif %}

@@ -39,8 +39,8 @@ StationOverlay.prototype.editFormPreSetFields = function() {
         this.overlay.querySelector('.saisie-header').textContent = 'Modifier la station';
         for(const [key, data] of Object.entries(lthis.stationData)) {
             var type='';
-            if (key.includes('exact')){
-                type = key.replace('exactL','exact_l');
+            if (key.includes('town')){
+                type = key.replace('townL','town_l');
             }else{
                 type=key;
             }
@@ -67,10 +67,10 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                 case 'headerImage':
                     lthis.fileUploadHandler.preSetFile(data);
                     break;
-                case 'exactLatitude':
+                case 'townLatitude':
                     field.value = data;
                     break;
-                case 'exactLongitude':
+                case 'townLongitude':
                     field.value = data;
                     break;
                 default:

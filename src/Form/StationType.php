@@ -47,14 +47,14 @@ class StationType extends AbstractType
             ->add('latitude', NumberType::class, [
                 'html5' => true,
             ])
-            ->add('exact_latitude', NumberType::class, [
+            ->add('town_latitude', NumberType::class, [
                 'required' => true,
                 'html5' => true,
             ])
             ->add('longitude', NumberType::class, [
                 'html5' => true,
             ])
-            ->add('exact_longitude', NumberType::class, [
+            ->add('town_longitude', NumberType::class, [
                 'required' => true,
                 'html5' => true,
             ])

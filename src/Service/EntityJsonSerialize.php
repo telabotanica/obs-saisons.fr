@@ -250,8 +250,8 @@ class EntityJsonSerialize
             'locality' => $station->getLocality(),
             'inseeCode' => $station->getInseeCode(),
             'habitat' => $station->getHabitat(),
-            'lat' => $station->getLatitude(),
-            'lon' => $station->getLongitude(),
+            'lat' => $station->getTownLatitude(),
+            'lon' => $station->getTownLongitude(),
             'altitude' => $station->getAltitude(),
             'slug' => $station->getSlug(),
         ];
