@@ -29,10 +29,10 @@ StationLocation.prototype.initEvts = function() {
 };
 
 StationLocation.prototype.handleCoordinates = function() {
-    if (!!this.latitudeEl.value && !!this.longitudeEl.value) {
+    if (!!document.getElementById('station_latitude').value && !!document.getElementById('station_longitude').value) {
         this.handleNewLocation({
-            'lat': this.latitudeEl.value,
-            'lng': this.longitudeEl.value
+            'lat': document.getElementById('station_latitude').value,
+            'lng': document.getElementById('station_longitude').value
         });
     }
 };

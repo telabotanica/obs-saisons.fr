@@ -158,7 +158,9 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lthis.placesLatitude.val(lat);
         lthis.placesLongitude.val(lng);
         var sl = new StationLocation();
-        sl.onLocation();
+        sl.updateCoordinatesFields();
+        sl.getAltitude();
+        sl.handleCoordinates();
         lthis.placesCloseButton.trigger('click');
 
     }).off('keydown').on('keydown', function (evt) {
