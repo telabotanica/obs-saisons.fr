@@ -1,5 +1,5 @@
 import {debounce} from "../../lib/debounce";
-
+import { StationLocation } from "../stations-observations/locate-station";
 const NOMINATIM_OSM_URL = 'https://nominatim.openstreetmap.org/search';
 const NOMINATIM_OSM_DEFAULT_PARAMS = {
     'format': 'json',
@@ -149,14 +149,16 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         const $thisSuggestion = $(this),suggestion = lthis.searchResults.find(suggestion => suggestion['place_id'] === $thisSuggestion.data('placeId'));
         evt.preventDefault();
         lthis.places.val($thisSuggestion.text());
-        var town = suggestion['address']['municipality'];
+        /* var town = suggestion['address']['municipality'];
         lthis.placesTown.val(town);
         var lat = suggestion['lat'];
         lat = Math.round(lat * 1000000) / 1000000;
         var lng = suggestion['lon'];
         lng = Math.round(lng * 1000000) / 1000000;
         lthis.placesLatitude.val(lat);
-        lthis.placesLongitude.val(lng);
+        lthis.placesLongitude.val(lng); */
+        var sl = new StationLocation();
+        sl.onLocation();
         lthis.placesCloseButton.trigger('click');
 
     }).off('keydown').on('keydown', function (evt) {
