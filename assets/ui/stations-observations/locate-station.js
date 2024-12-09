@@ -98,7 +98,7 @@ StationLocation.prototype.getAltitude = async function(){
             locality.value = locationInformations.commune;
             inseeCode.value = locationInformations.code_insee;
             altitude.value = locationInformations.alt;
-            if (this.coordinates == 'undefined'){
+            if (this.coordinates == undefined){
                 this.coordinates = new Object();
             }
             this.coordinates.lat=document.getElementById('station_latitude').value;
