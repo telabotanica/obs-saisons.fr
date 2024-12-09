@@ -157,8 +157,12 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lthis.placesLatitude.val(lat);
         lthis.placesLongitude.val(lng);
         var sl = new StationLocation();
+        var coordonnees = new Object();
+        coordonnees.lat=lat;
+        coordonnees.lng=lng;
+        console.log(coordonnees);
         /* sl.updateCoordinatesFields(); */
-        sl.handleCoordinates();
+        sl.handleCoordinates(coordonnees);
         sl.getAltitude();
         lthis.placesCloseButton.trigger('click');
 
