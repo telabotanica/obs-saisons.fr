@@ -1,5 +1,5 @@
 import {debounce} from "../../lib/debounce";
-import {StationLocation} from "../stations-observations/locate-station";
+
 const NOMINATIM_OSM_URL = 'https://nominatim.openstreetmap.org/search';
 const NOMINATIM_OSM_DEFAULT_PARAMS = {
     'format': 'json',
@@ -157,11 +157,6 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lng = Math.round(lng * 1000000) / 1000000;
         lthis.placesLatitude.val(lat);
         lthis.placesLongitude.val(lng);
-        if (town){
-            lthis.searchCity(town);
-            var sl = new StationLocation();
-            await sl.getAltitude(town);
-        }
         lthis.placesCloseButton.trigger('click');
 
     }).off('keydown').on('keydown', function (evt) {
