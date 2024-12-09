@@ -65,8 +65,8 @@ StationLocation.prototype.odsPlacesCallback = function(localityData) {
 
 StationLocation.prototype.updateCoordinatesFields = function() {
     //updates coordinates fields
-    document.getElementById('station_latitude').value = Math.floor(this.coordinates.lat * 100000) / 100000;
-    document.getElementById('station_longitude').value = Math.floor(this.coordinates.lng * 100000) / 100000;
+    document.getElementById('station_latitude').value = Math.floor(this.coordinates.lat * 1000000) / 1000000;
+    document.getElementById('station_longitude').value = Math.floor(this.coordinates.lng * 1000000) / 1000000;
 };
 
 StationLocation.prototype.getAltitude = async function(){
