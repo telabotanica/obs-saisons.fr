@@ -65,11 +65,11 @@ StationLocation.prototype.odsPlacesCallback = function(localityData) {
 
 StationLocation.prototype.updateCoordinatesFields = function() {
     //updates coordinates fields
-    document.getElementById('station_latitude').value = this.coordinates.lat;
-    document.getElementById('station_longitude').value = this.coordinates.lng;
+    document.getElementById('station_latitude').value = Math.floor(this.coordinates.lat * 100000) / 100000;
+    document.getElementById('station_longitude').value = Math.floor(this.coordinates.lng * 100000) / 100000;
 };
 
-StationLocation.prototype.getAltitude = async function(town){
+StationLocation.prototype.getAltitude = async function(){
     const lthis = this,
         locality = document.getElementById('station_locality'),
         inseeCode = document.getElementById('station_inseeCode'),
@@ -79,8 +79,8 @@ StationLocation.prototype.getAltitude = async function(town){
             inseeCode.parentElement.querySelector('label')
         ],
         query = {
-            'lat': document.getElementById('station_latitude'),
-            'lon': document.getElementById('station_longitude')
+            'lat': document.getElementById('station_latitude').value,
+            'lon': document.getElementById('station_longitude').value
         };
         
         
