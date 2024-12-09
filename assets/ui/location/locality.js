@@ -151,10 +151,9 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lthis.places.val($thisSuggestion.text());
         var town = suggestion['address']['municipality'];
         lthis.placesTown.val(town);
+        console.log(town);
         var lat = suggestion['lat'];
-        lat = Math.round(lat * 1000000) / 1000000;
         var lng = suggestion['lon'];
-        lng = Math.round(lng * 1000000) / 1000000;
         lthis.placesLatitude.val(lat);
         lthis.placesLongitude.val(lng);
         var sl = new StationLocation();
