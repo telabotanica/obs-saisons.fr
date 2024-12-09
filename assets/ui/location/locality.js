@@ -1,5 +1,5 @@
 import {debounce} from "../../lib/debounce";
-
+import {StationLocation} from "../stations-observations/locate-station";
 const NOMINATIM_OSM_URL = 'https://nominatim.openstreetmap.org/search';
 const NOMINATIM_OSM_DEFAULT_PARAMS = {
     'format': 'json',
@@ -102,7 +102,6 @@ OdsPlaces.prototype.searchCity = function (city) {
 
 OdsPlaces.prototype.nominatimOsmResponseCallback = function(data) {
     this.places.siblings('label').removeClass('loading');
-    console.log(data);
     if (0 < data.length) {
         this.searchResults = data;
         this.setSuggestions();
@@ -135,7 +134,6 @@ OdsPlaces.prototype.setSuggestions = function() {
 };
 
 OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
-    console.log(suggestion);
     const validGeometry = undefined !== suggestion.lat && undefined !== suggestion.lon,
         validAddressData = undefined !== suggestion.address,
         validDisplayName = undefined !== suggestion['display_name'];
@@ -147,7 +145,7 @@ OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
 OdsPlaces.prototype.onSuggestionSelected = function() {
     const lthis = this;
     
-    $('.ods-places-suggestion').off('click').on('click', function (evt) {
+    $('.ods-places-suggestion').off('click').on('click', async function (evt) {
         const $thisSuggestion = $(this),suggestion = lthis.searchResults.find(suggestion => suggestion['place_id'] === $thisSuggestion.data('placeId'));
         evt.preventDefault();
         lthis.places.val($thisSuggestion.text());
@@ -161,6 +159,8 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lthis.placesLongitude.val(lng);
         if (town){
             lthis.searchCity(town);
+            var sl = new StationLocation();
+            await sl.getAltitude(town);
         }
         lthis.placesCloseButton.trigger('click');
 

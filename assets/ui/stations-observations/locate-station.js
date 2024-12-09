@@ -23,7 +23,6 @@ StationLocation.prototype.initEvts = function() {
     this.initSearchLocality();
     // reset phenoclim warning message
     this.phenoclimWarningToggle(false);
-    this.onLocation();
     this.toggleMap();
 };
 
@@ -62,21 +61,13 @@ StationLocation.prototype.odsPlacesCallback = function(localityData) {
     }
 };
 
-
-StationLocation.prototype.onLocation = function() {
-    document.getElementById('map-container').addEventListener('location', function () {
-        this.updateCoordinatesFields();
-        this.loadLocationInfosFromOdsService();
-    }.bind(this));
-};
-
 StationLocation.prototype.updateCoordinatesFields = function() {
     //updates coordinates fields
     this.latitudeEl.value = this.coordinates.lat;
     this.longitudeEl.value = this.coordinates.lng;
 };
 
-StationLocation.prototype.loadLocationInfosFromOdsService = function() {
+StationLocation.prototype.getAltitude = async function(town){
     const lthis = this,
         locality = document.getElementById('station_locality'),
         inseeCode = document.getElementById('station_inseeCode'),
@@ -85,25 +76,22 @@ StationLocation.prototype.loadLocationInfosFromOdsService = function() {
             locality.parentElement.querySelector('label'),
             inseeCode.parentElement.querySelector('label')
         ],
-        query = {
-            'lat': this.coordinates.lat,
-            'lon': this.coordinates.lng
-        };
-
+        latitude = document.getElementById('station_latitude').value,
+        longitude= document.getElementById('station_longitude').value;
+        
     // displays loading gif
     labels.forEach(label => label.classList.add('loading'));
-
+    var url = "https://api.elevationapi.com/api/Elevation/line/"+latitude+","+longitude+"/"+getNearLocation(this.coordinates.lat)+","+getNearLocation(this.coordinates.lng)+"?dataSet=SRTM_GL3&reduceResolution=5";
+    console.log(url);
     $.ajax({
         method: "GET",
-        url: ODS_LOCATION_INFO_SERVICE_URL,
-        data: query,
+        url: url,
         success: function (data) {
-            let locationInformations = JSON.parse(data);
-            lthis.phenoclimWarningToggle(locationInformations.commune_phenoclim);
+            console.log(data);
+            var elevation = Math.trunc(data.geoPoints[0].elevation);
+            console.log(elevation);
             // updates location informations fields
-            locality.value = locationInformations.commune;
-            inseeCode.value = locationInformations.code_insee;
-            altitude.value = locationInformations.alt;
+            altitude.value = elevation;
             // stops displaying loading gif
             labels.forEach(label => label.classList.remove('loading'));
         },
@@ -138,4 +126,8 @@ StationLocation.prototype.phenoclimWarningToggle = function(isPhenoclim) {
     }
 };
 
+function getNearLocation($coordonnee){
+    $coordonnee = Math.floor($coordonnee * 1000) / 1000;
+    return $coordonnee;
+}
 
