@@ -162,9 +162,6 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         coordonnees.lat=lat;
         coordonnees.lng=lng;
         console.log(coordonnees);
-        /* sl.updateCoordinatesFields(); */
-        var loc = new Location();
-        loc.handleNewLocation(coordonnees);
         sl.getAltitude();
         lthis.placesCloseButton.trigger('click');
 

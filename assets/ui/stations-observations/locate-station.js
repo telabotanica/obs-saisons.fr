@@ -98,6 +98,8 @@ StationLocation.prototype.getAltitude = async function(){
             locality.value = locationInformations.commune;
             inseeCode.value = locationInformations.code_insee;
             altitude.value = locationInformations.alt;
+            this.coordinates.lat=document.getElementById('station_latitude').value;
+            this.coordinates.lng=document.getElementById('station_longitude').value;
             if (locality.value){
                 const ods = new OdsPlaces();
                 await ods.searchCity(locality.value);
