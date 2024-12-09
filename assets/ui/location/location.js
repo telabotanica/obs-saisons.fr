@@ -14,6 +14,9 @@ export function Location(mapIdAttr = DEFAULT_MAP_ID_ATTR) {
     this.setUpdateMapElement();
     this.map = {};
     this.setDefaultMapData();
+    this.coordinates = new Object();
+    this.coordinates.lat=null;
+    this.coordinates.lng=null;
 }
 
 Location.prototype.setUpdateMapElement = function() {

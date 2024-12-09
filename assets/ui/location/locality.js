@@ -1,6 +1,6 @@
 import {debounce} from "../../lib/debounce";
 import { StationLocation } from "../stations-observations/locate-station";
-import { Location } from "./location";
+
 const NOMINATIM_OSM_URL = 'https://nominatim.openstreetmap.org/search';
 const NOMINATIM_OSM_DEFAULT_PARAMS = {
     'format': 'json',
