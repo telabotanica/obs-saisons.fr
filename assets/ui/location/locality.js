@@ -160,7 +160,6 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         var sl = new StationLocation();
         sl.updateCoordinatesFields();
         sl.getAltitude();
-        sl.handleCoordinates();
         lthis.placesCloseButton.trigger('click');
 
     }).off('keydown').on('keydown', function (evt) {
