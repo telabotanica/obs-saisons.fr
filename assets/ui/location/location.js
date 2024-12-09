@@ -21,7 +21,7 @@ Location.prototype.setUpdateMapElement = function() {
 };
 
 Location.prototype.setDefaultMapData = function () {
-    if (this.coordinates == null){
+    if (this.coordinates == undefined){
         this.coordinates = DEFAULT_POSITION;
         console.log('ok');
     }

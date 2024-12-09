@@ -89,6 +89,7 @@ OdsPlaces.prototype.searchCity = function (city) {
             url: NOMINATIM_OSM_URL,
             data: {...NOMINATIM_OSM_DEFAULT_PARAMS, ...params},
             success:async function(response){
+                console.log('city');
                 var cities = await response;
                 var latCity = cities[0].lat;
                 latCity = Math.round(latCity * 1000000) / 1000000;
