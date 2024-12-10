@@ -45,7 +45,7 @@ function retrieveObs( criteria, map ) {
         method: "GET",
         url: url,
         success: function ( data ) {
-            console.log(data);
+            
             if (!map.cluster) {
                 map.cluster = L.markerClusterGroup();  
             }
@@ -71,7 +71,7 @@ function retrieveObs( criteria, map ) {
                 if (!obs.isMissing) {
                     console.log(obs.individual.station);
                     // Créer un nouveau marker
-                    let marker = L.circleMarker([obs.individual.station.lat, obs.individual.station.lon], {
+                    let marker = L.circleMarker([obs.individual.station.town_lat, obs.individual.station.town_lon], {
                         renderer: renderer,
                         color: '#3388ff'
                     });

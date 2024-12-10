@@ -297,19 +297,7 @@ function getInfoforFirstChart(Plotly){
                         marker: { color: couleurs[etape] }
                     };
                 });
-                /* const tracesManquantes = etapes.map(etape => {
-                    return {
-                        x: moisNom,
-                        y: mois.map(mois_ => {
-                            const entry = results.find(d => d.mois === mois_ && d.etape === etape);
-                            return entry ? entry.nb_obs_manquantes : 0;
-                        }),
-                        name: `Observations manquantes - ${etape}`,
-                        type: 'bar',
-                        barmode: 'group',
-                        
-                    };
-                }); */
+                
     
                 const layout = {
                     title: 'Nombre d\'observations par mois et étape',

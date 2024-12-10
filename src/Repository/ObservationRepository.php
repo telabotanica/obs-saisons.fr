@@ -258,7 +258,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('o.user', 'u')
             ->addSelect('PARTIAL u.{id, displayName}')
             ->innerJoin('i.station', 'st')
-            ->addSelect('PARTIAL st.{id, locality, inseeCode, habitat, town_latitude, town_longitude, altitude, slug, department}')
+            ->addSelect('PARTIAL st.{id, locality, inseeCode, habitat, latitude, town_latitude, longitude, town_longitude, altitude, slug, department}')
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
