@@ -976,5 +976,46 @@ class ObservationRepository extends ServiceEntityRepository
             
         return $result;
     }
+    
+    public function findObservationsGraph($selectedSpeciesIds, $selectedEventIds, $selectedYears)
+    {
+        $observationQuery = '';
+        $containsValue = false;
+        try {
+            $observationQuery = $this->createQueryBuilder('o')
+            ->select(
+                'partial o.{id, date}',
+                'partial e.{id, name, bbch_code}',
+                'partial i.{id}',
+                'partial s.{id, vernacular_name}'
+                )
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->leftJoin('i.species', 's');
+                
+                for ($i = 0; $i < count($selectedSpeciesIds); $i++) {
+                    if ($selectedSpeciesIds[$i] != '') {
+                        $containsValue = true;
+                        break;
+                    }
+                }
+                
+                if ($containsValue){
+                    $observationQuery
+                    ->andWhere('s.id IN (:speciesIds)')
+                    ->setParameter('speciesIds', $selectedSpeciesIds);
+                }
+                
+                if (!empty($selectedEventIds)) {
+                    $observationQuery
+                    ->andWhere('e.id IN (:eventIds)')
+                    ->setParameter('eventIds', $selectedEventIds);
+                }
+                
+        } catch (\Exception $exception) {
+            echo 'An error occurred --> ' . $exception->getMessage();
+        }
+        return $observationQuery->getQuery()->getResult();
+    }
 
 }

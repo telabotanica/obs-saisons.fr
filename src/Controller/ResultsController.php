@@ -12,6 +12,7 @@ use App\Entity\TypeSpecies;
 use App\Service\BreadcrumbsGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ResultsController extends AbstractController
@@ -21,7 +22,8 @@ class ResultsController extends AbstractController
      */
     public function results(
         BreadcrumbsGenerator $breadcrumbsGenerator,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        Request $request
     ) {
         $typeSpecies = $em->getRepository(TypeSpecies::class)->findAll();
 
@@ -33,6 +35,37 @@ class ResultsController extends AbstractController
 
         $allEventSpecies = $em->getRepository(EventSpecies::class)->findAllScalarIds();
 
+        // Prise en compte de l'id de l'espece sélectionner sur le dropdown
+        $selectedSpeciesIds = $request->query->get('species', []);
+        
+        if (empty($selectedSpeciesIds)) {
+            // Fetch 7 random species if none are selected
+            $selectedSpeciesIds = [];
+            $randomIndexes = array_rand($species, 2);
+            foreach ((array)$randomIndexes as $index) {
+                $selectedSpeciesIds[] = $species[$index]->getId();
+            }
+        } else {
+            if (!is_array($selectedSpeciesIds)) {
+                $selectedSpeciesIds = [$selectedSpeciesIds];
+            }
+        }
+        
+        // Prise en compte de l'id de l'event sélectionner sur le dropdown
+        $selectedEventId = $request->query->get('event', []);
+        
+        // Prise en compte de l'année sélectionner sur le dropdown
+        $selectedYear = $request->query->get('year', [1]);
+        
+        $observations = $em->getRepository(Observation::class)
+        ->findObservationsGraph($selectedSpeciesIds, $selectedEventId, $selectedYear);
+        
+        // flatten array, eventsIds list indexed by species
+        $speciesEvents = [];
+        foreach ($allEventSpecies as $eventSpecies) {
+            $speciesEvents[$eventSpecies['species_id']] = $eventSpecies['events_ids'];
+        }
+        
         // flatten array, eventsIds list indexed by species
         $speciesEvents = [];
         foreach ($allEventSpecies as $eventSpecies) {
@@ -50,13 +83,17 @@ class ResultsController extends AbstractController
         );
 
         return $this->render('pages/resultats-carte-calendriers.html.twig', [
+            'observations' => $observations,
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'allTypeSpecies' => $typeSpecies,
             'allSpecies' => $species,
             'minYear' => $minYear,
             'eventsIds' => $eventsIds,
             'events' => $events,
+            'selectedYear' => $selectedYear,
             'speciesEvents' => $speciesEvents,
+            'selectedSpeciesIds' => $selectedSpeciesIds,
+            'selectedEventId' => $selectedEventId,
             'regions' => FrenchRegions::getRegionsList(),
             'departments' => FrenchRegions::getDepartmentsList(),
             'page' => $page,
