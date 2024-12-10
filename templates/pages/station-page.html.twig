@@ -187,12 +187,11 @@
 		{# sets individuals ids list string in data attribute for squared button #}
 		{% if individuals is not empty %}
 			{% set individualsIds = individualsIdsArray|default([])|merge(individuals|map(i => i.id))|removeDuplicates|join(',') %}
-
-			{# displays open observation form button #}
-			<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-individuals-ids="{{ individualsIds|default }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
-				Saisir une observation
-			</a>
-		{% endif %}
+				{# displays open observation form button #}
+				<a href="" class="button bt-open-form open open-observation-form-all-station{{ disable ? ' disabled' }}" data-open="observation" data-req-login="true" data-station="{{ station.id }}" data-individuals-ids="{{ individualsIds|default }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
+					Saisir une observation
+				</a>
+			{% endif %}
 	{% endif %}
 	{% if observations %}
 		{# displays observation informations overlay #}

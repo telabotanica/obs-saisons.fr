@@ -200,6 +200,25 @@
     }
 }
 
+.dead-individu-name {
+    color: white;
+    @include font_default_semi_bold;
+    font-size: 12px;
+    letter-spacing: 1px;
+
+    @include media(sm) {
+        margin-right: 5px;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    @include media(md) {
+        margin-left: 10px;
+        @include font-title-bold;
+        font-size: 18px;
+    }
+}
+
 .table-action {
     @include display-flex;
     @include align-items-center;

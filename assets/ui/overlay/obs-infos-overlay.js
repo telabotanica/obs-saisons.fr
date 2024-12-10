@@ -4,7 +4,24 @@
 
 import {onOpenOverlay} from "./overlay-open";
 import {Overlay} from "./overlay";
+import domready from 'mf-js/modules/dom/ready';
 
+domready(() => {
+    var buttons = $('.dual-squared-button.edit-calendar-icon.open');
+    var container = $('.dual-blocks-container');
+    if (buttons.length > 0){
+        for (var i = 0;i<buttons.length;i++){
+            
+            if (buttons[i].getAttribute('data-individuals-deaths')==1){
+                console.log(buttons[i].getAttribute('data-individuals-deaths'));
+                
+                container[i].removeChild(buttons[i]);
+                
+            }
+
+        }
+    }
+});
 export function ObsInfosOverlay(openOverlayButton) {
     Overlay.call(this, openOverlayButton);
 }

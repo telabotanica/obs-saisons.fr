@@ -27,7 +27,8 @@ export function createMap(
     isDraggable = true,
     hasMarker = false,
 ) {
-    const map = L.map(elementIdAttr, {zoomControl: hasZoomControl, gestureHandling: true}).setView([lat, lng], zoom);
+    console.log(lat);
+    const map = L.map(elementIdAttr, {zoomControl: hasZoomControl, GestureHandling: true}).setView([lat, lng], zoom);
     map.markers = [];
 
     L.tileLayer(
@@ -37,7 +38,7 @@ export function createMap(
     }).addTo(map);
 
     map.addLayer(new L.FeatureGroup());
-
+    
     if (hasMarker) {
         const marker = createMarker({'lat': lat, 'lng': lng});
 

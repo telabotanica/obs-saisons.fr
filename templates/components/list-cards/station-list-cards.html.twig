@@ -1,16 +1,3 @@
-{#
-    #: optionnal,
-    *: required,
-    [int..int]: array indexes ([...] if no precise length defined)
-
-    id*: int
-    listCard*: object
-        species*: Species
-        individuals#: array
-            [...] Individual
-        observations#: array
-            [...] Observation
-#}
 <div id="{{ listCard.species.vernacularName|slugify }}" class="list-cards-item " data-id="{{ id }}">
     
     <div class="list-card-img" style="background-image:url({{ "/media/species/#{listCard.species.picture}.jpg" }})"></div>
@@ -52,8 +39,10 @@
         }] %}
         {% if show %}
             {% set individualsIds = [] %}
+            {% set individualsMortalities = [] %}
             {% for individual in  listCard.individuals %}
                 {% set individualsIds = individualsIds|merge([individual.id]) %}
+                {% set individualsMortalities = individualsMortalities|merge([individual.isDead]) %}
             {% endfor %}
             {% set buttons = buttons|merge([{
                 'icon': 'edit-calendar',
@@ -74,6 +63,10 @@
                     {
                         'name': 'individuals-ids',
                         'value': individualsIds|join(',')
+                    },
+                    {
+                        'name': 'individuals-deaths',
+                        'value': individualsMortalities|join(',')
                     },
                     {
                         'name': 'req-login',
