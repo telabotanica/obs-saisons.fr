@@ -27,7 +27,6 @@ export function createMap(
     isDraggable = true,
     hasMarker = false,
 ) {
-    console.log(lat);
     const map = L.map(elementIdAttr, {zoomControl: hasZoomControl, GestureHandling: true}).setView([lat, lng], zoom);
     map.markers = [];
 

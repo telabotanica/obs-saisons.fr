@@ -1,4 +1,3 @@
-import domready from "mf-js/modules/dom/ready";
 $(function() {
     const charts = Array.from(document.getElementsByClassName('chart'));
    
@@ -208,60 +207,10 @@ function getInfoforFirstChart(Plotly){
     var data_sent='{"year":'+year+',"region":'+region+',"specy":'+species+',"dpt":"'+dpt+'"}';
     $.ajax({
         method: "POST",
-        url: exportRoute,
+        url: obsRoute,
         data:data_sent,
         success: function(response) {
             var results = response.results;
-            /* results = [
-                { "mois": "1", "etape": "feuillaison", "nb_obs": 20, "nb_obs_manquantes": 8 },
-                { "mois": "1", "etape": "floraison", "nb_obs": 10, "nb_obs_manquantes": 5 },
-                { "mois": "1", "etape": "fructification", "nb_obs": 10, "nb_obs_manquantes": 2 },
-                { "mois": "1", "etape": "sénescence", "nb_obs": 17, "nb_obs_manquantes": 5 },
-                { "mois": "2", "etape": "feuillaison", "nb_obs": 13, "nb_obs_manquantes": 7 },
-                { "mois": "2", "etape": "floraison", "nb_obs": 17, "nb_obs_manquantes": 10 },
-                { "mois": "2", "etape": "fructification", "nb_obs": 9, "nb_obs_manquantes": 3 },
-                { "mois": "2", "etape": "sénescence", "nb_obs": 13, "nb_obs_manquantes": 8 },
-                { "mois": "3", "etape": "feuillaison", "nb_obs": 21, "nb_obs_manquantes": 13 },
-                { "mois": "3", "etape": "floraison", "nb_obs": 18, "nb_obs_manquantes": 7 },
-                { "mois": "3", "etape": "fructification", "nb_obs": 5, "nb_obs_manquantes": 4 },
-                { "mois": "3", "etape": "sénescence", "nb_obs": 22, "nb_obs_manquantes": 11 },
-                { "mois": "4", "etape": "feuillaison", "nb_obs": 20, "nb_obs_manquantes": 13 },
-                { "mois": "4", "etape": "floraison", "nb_obs": 26, "nb_obs_manquantes": 19 },
-                { "mois": "4", "etape": "fructification", "nb_obs": 7, "nb_obs_manquantes": 4 },
-                { "mois": "4", "etape": "sénescence", "nb_obs": 23, "nb_obs_manquantes": 14 },
-                { "mois": "5", "etape": "feuillaison", "nb_obs": 10, "nb_obs_manquantes": 5 },
-                { "mois": "5", "etape": "floraison", "nb_obs": 17, "nb_obs_manquantes": 8 },
-                { "mois": "5", "etape": "fructification", "nb_obs": 7, "nb_obs_manquantes": 1 },
-                { "mois": "5", "etape": "sénescence", "nb_obs": 20, "nb_obs_manquantes": 6 },
-                { "mois": "6", "etape": "feuillaison", "nb_obs": 16, "nb_obs_manquantes": 7 },
-                { "mois": "6", "etape": "floraison", "nb_obs": 23, "nb_obs_manquantes": 10 },
-                { "mois": "6", "etape": "fructification", "nb_obs": 4, "nb_obs_manquantes": 1 },
-                { "mois": "6", "etape": "sénescence", "nb_obs": 28, "nb_obs_manquantes": 16 },
-                { "mois": "7", "etape": "feuillaison", "nb_obs": 16, "nb_obs_manquantes": 8 },
-                { "mois": "7", "etape": "floraison", "nb_obs": 8, "nb_obs_manquantes": 4 },
-                { "mois": "7", "etape": "fructification", "nb_obs": 12, "nb_obs_manquantes": 6 },
-                { "mois": "7", "etape": "sénescence", "nb_obs": 24, "nb_obs_manquantes": 16 },
-                { "mois": "8", "etape": "feuillaison", "nb_obs": 17, "nb_obs_manquantes": 8 },
-                { "mois": "8", "etape": "floraison", "nb_obs": 22, "nb_obs_manquantes": 12 },
-                { "mois": "8", "etape": "fructification", "nb_obs": 12, "nb_obs_manquantes": 5 },
-                { "mois": "8", "etape": "sénescence", "nb_obs": 24, "nb_obs_manquantes": 12 },
-                { "mois": "9", "etape": "feuillaison", "nb_obs": 12, "nb_obs_manquantes": 5 },
-                { "mois": "9", "etape": "floraison", "nb_obs": 18, "nb_obs_manquantes": 12 },
-                { "mois": "9", "etape": "fructification", "nb_obs": 8, "nb_obs_manquantes": 4 },
-                { "mois": "9", "etape": "sénescence", "nb_obs": 17, "nb_obs_manquantes": 11 },
-                { "mois": "10", "etape": "feuillaison", "nb_obs": 21, "nb_obs_manquantes": 7 },
-                { "mois": "10", "etape": "floraison", "nb_obs": 21, "nb_obs_manquantes": 12 },
-                { "mois": "10", "etape": "fructification", "nb_obs": 7, "nb_obs_manquantes": 3 },
-                { "mois": "10", "etape": "sénescence", "nb_obs": 13, "nb_obs_manquantes": 6 },
-                { "mois": "11", "etape": "feuillaison", "nb_obs": 20, "nb_obs_manquantes": 14 },
-                { "mois": "11", "etape": "floraison", "nb_obs": 21, "nb_obs_manquantes": 8 },
-                { "mois": "11", "etape": "fructification", "nb_obs": 6, "nb_obs_manquantes": 2 },
-                { "mois": "11", "etape": "sénescence", "nb_obs": 14, "nb_obs_manquantes": 8 },
-                { "mois": "12", "etape": "feuillaison", "nb_obs": 19, "nb_obs_manquantes": 10 },
-                { "mois": "12", "etape": "floraison", "nb_obs": 15, "nb_obs_manquantes": 8 },
-                { "mois": "12", "etape": "fructification", "nb_obs": 7, "nb_obs_manquantes": 4 },
-                { "mois": "12", "etape": "sénescence", "nb_obs": 22, "nb_obs_manquantes": 17 }
-            ]; */
             const txt_obs = "Nombre d'observations utilisées dans le graphique : ";
             if(results.length>0){
 
