@@ -13,8 +13,6 @@ domready(() => {
         for (var i = 0;i<buttons.length;i++){
             
             if (buttons[i].getAttribute('data-individuals-deaths')==1){
-                console.log(buttons[i].getAttribute('data-individuals-deaths'));
-                
                 container[i].removeChild(buttons[i]);
                 
             }

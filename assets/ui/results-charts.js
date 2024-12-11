@@ -226,8 +226,8 @@ function getInfoforFirstChart(Plotly){
                 const moisNom = mois.map(month => moisNoms[month]);
                 const couleurs = {
                     "feuillaison": "#bcd35f",  
-                    "floraison": "#ed7c1c",  
-                    "fructification": "#5fbcd3",  
+                    "floraison": "#5fbcd3",  
+                    "fructification": "#ed7c1c",  
                     "sénescence": "#bb381c",
                     "1ère apparition":"#4d4d4dff"  
                 };

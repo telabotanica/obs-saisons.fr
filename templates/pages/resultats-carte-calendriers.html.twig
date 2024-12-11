@@ -77,11 +77,61 @@
         let dataRoute = "{{ path('export_filtered')|escape('js') }}";
         let stationUrlTemplate = "{{ path('stations_show', {slug: 'slugPlaceHolder'})|escape('js') }}";
     </script>
-
+        {% include 'layout/header.html.twig' with ({
+            'title': 'Observation des espèces au cours des années',
+            'subtitle': 'Ces graphiques représentent les données brutes saisies par les observateur.rice.s.'
+        }) %}
+        <div id='allDataChart' class="container mt-5" id="observation-calendar-chart">
+        
+            <div class="mb-3 selectMultiple" id="selectMultiple" data-placeholder="Select species">
+                <label for="species" class="form-label">Filtrer par espèces</label>
+                    <select name="species[]" id="species-calendar-chart" class="form-select criteria-list" multiple>
+                        {% for specie in allSpecies %}
+                            <option value="{{ specie.id }}" {% if specie.id in selectedSpeciesIds %}selected{% endif %}>
+                                {{ specie.vernacularName }}
+                            </option>
+                        {% endfor %}
+                    </select>
+            </div>
+            <div class="mb-3 selectMultiple" id="selectMultiple-stade" data-placeholder="Select event">
+                <label for="event" class="form-label">Filtrer par stade</label>
+                <div>
+                    <select class="form-select criteria-list" name="event[]" multiple id="event-calendar-chart">
+                        <option value="0">Tous stades</option>
+                        {% for event in events %}
+                            <option value="{{ event.id }}" {% if event.id in selectedEventId %}selected{% endif %}>
+                                {{ event.name }}{% if event.stadeBbch is not empty %} - {{ event.stadeBbch }}{% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 selectMultiple" id="selectMultiple-year" data-placeholder="Select year">
+                <label for="year" class="form-label">Filtrer par année</label>
+                <div>
+                    <select class="form-select criteria-list" name="year[]" multiple id="year-calendar-chart">
+                        <option value="1">Toutes les années</option>
+                        {% for i in minYear..'now'|date('Y') %}
+                            <option value="{{ i }}"{% if i in selectedYear %} selected{% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            {% if observations is empty %}
+                <div id="alerteCalendar" class="alert alert-danger">
+                    Aucune donnée pour les critères demandés, veuillez modifier au moins un de vos critères
+                </div>
+            {% endif %}
+            <div id="combinedYearChart" class="mt-5"></div>
+            <div id="combinedSelectedYearChart" class="mt-5"></div>
+        </div>
+    <script>
+        let calendarRoute = "{{ path('calender_data')|escape('js') }}";
+    </script>
+    <div id="multipleChart" class="mt-5"></div>
 
     {% include 'layout/header.html.twig' with ({
-        'title': 'Histogramme des différents stades par espèce',
-        'subtitle': 'Ces graphiques représentent les données brutes saisies par les observateur.rice.s.'
+        'title': 'Histogramme des différents stades par espèce'
     }) %}
 
     <div id="phenological-chart-container">

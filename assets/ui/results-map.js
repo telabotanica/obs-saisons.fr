@@ -69,7 +69,6 @@ function retrieveObs( criteria, map ) {
 
             data.data.forEach(obs => {
                 if (!obs.isMissing) {
-                    console.log(obs.individual.station);
                     // Créer un nouveau marker
                     let marker = L.circleMarker([obs.individual.station.town_lat, obs.individual.station.town_lon], {
                         renderer: renderer,

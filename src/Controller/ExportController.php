@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\EntityRandomizer;
 
 class ExportController extends AbstractController
 {
@@ -276,4 +277,44 @@ class ExportController extends AbstractController
 		
 		return $response;
 	}
+
+    /**
+     * @Route("/export/observation/calender-data", name="calender_data")
+     */
+    public function exportForCalenderData(
+        EntityManagerInterface $em,
+        Request $request){
+        
+        $serializer = new EntityJsonSerialize();
+        $species = $em->getRepository(Species::class)->findAllActive();
+        /* dd($request->query->get('year'));
+        if (empty($request->query->get('species'))) {
+            $data = $em->getRepository(Observation::class)->findAllPublic();
+        } else { */
+            //Get query parameters
+            $selectedSpeciesIds = $request->query->get('species');
+            $selectedEventId = $request->query->get('event');
+            $selectedYear = $request->query->get('year');
+    
+            //Error handling
+            if(!$selectedSpeciesIds){
+                return new JsonResponse('Missing species param', 400);
+            }
+    
+            //Get data
+            $data = $em->getRepository(Observation::class)
+                ->findObservationsGraph(
+                    $selectedSpeciesIds,
+                    $selectedEventId,
+                    $selectedYear
+                );
+                
+        /* } */
+        $serializedData = $serializer->serializeJsonForCalendar($data);
+        return new Response(
+            $serializedData,
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+            );
+    }
 }

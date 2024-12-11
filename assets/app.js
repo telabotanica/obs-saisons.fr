@@ -58,4 +58,8 @@ import './ui/stations-observations/stations-list-page-header-map';
  * OVERLAY *
  * ******* */
 import './ui/overlay/overlay-open';
+/* *********** *
+ * D3 Calendar *
+ * *********** */
+import './ui/observation-calendar-chart';
 
