@@ -89,7 +89,6 @@ OdsPlaces.prototype.searchCity = function (city) {
             url: NOMINATIM_OSM_URL,
             data: {...NOMINATIM_OSM_DEFAULT_PARAMS, ...params},
             success:async function(response){
-                console.log('city');
                 var cities = await response;
                 var latCity = cities[0].lat;
                 latCity = Math.round(latCity * 1000000) / 1000000;
@@ -153,16 +152,14 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
         lthis.places.val($thisSuggestion.text());
         var town = suggestion['address']['municipality'];
         lthis.placesTown.val(town);
-        console.log(town);
         var lat = suggestion['lat'];
         var lng = suggestion['lon'];
-        lthis.placesLatitude.val(lat);
-        lthis.placesLongitude.val(lng);
-        var sl = new StationLocation();
         var coordonnees = new Object();
-        coordonnees.lat=lat;
-        coordonnees.lng=lng;
-        console.log(coordonnees);
+        coordonnees.lat=Math.floor(lat * 1000000) / 1000000;
+        coordonnees.lng=Math.floor(lng * 1000000) / 1000000;
+        lthis.placesLatitude.val(coordonnees.lat);
+        lthis.placesLongitude.val(coordonnees.lng);
+        var sl = new StationLocation();
         sl.getAltitude();
         lthis.placesCloseButton.trigger('click');
 
