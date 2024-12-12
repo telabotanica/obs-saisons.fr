@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\EntityRandomizer;
 
 class ExportController extends AbstractController
 {
@@ -286,11 +285,10 @@ class ExportController extends AbstractController
         Request $request){
         
         $serializer = new EntityJsonSerialize();
-        $species = $em->getRepository(Species::class)->findAllActive();
-        /* dd($request->query->get('year'));
+        
         if (empty($request->query->get('species'))) {
             $data = $em->getRepository(Observation::class)->findAllPublic();
-        } else { */
+        } else { 
             //Get query parameters
             $selectedSpeciesIds = $request->query->get('species');
             $selectedEventId = $request->query->get('event');
@@ -309,7 +307,7 @@ class ExportController extends AbstractController
                     $selectedYear
                 );
                 
-        /* } */
+        }
         $serializedData = $serializer->serializeJsonForCalendar($data);
         return new Response(
             $serializedData,

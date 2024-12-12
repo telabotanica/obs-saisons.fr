@@ -10,8 +10,6 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr;
-use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @method Observation|null find($id, $lockMode = null, $lockVersion = null)
@@ -147,21 +145,24 @@ class ObservationRepository extends ServiceEntityRepository
 
     public function findAllPublic(): array
     {
-        $qb = $this->createQueryBuilder('o');
-
-        return $qb
+        return $this->createQueryBuilder('o')
+            ->addSelect('PARTIAL o.{id, picture, isMissing, details, updatedAt, date, individual, event}')
             ->innerJoin('o.individual', 'i')
-            ->innerJoin('i.station', 's')
+            ->addSelect('PARTIAL i.{id, name, species, station,details}')
+            ->innerJoin('o.event', 'e')
+            ->addSelect('PARTIAL e.{id, name, bbch_code,name,description}')
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
             ->addSelect('PARTIAL ts.{id, name, reign}')
-            ->innerJoin('o.event', 'e')
-            ->addSelect('PARTIAL e.{id, bbch_code, name, description}')
-            ->orderBy('o.date', 'DESC')
+            ->innerJoin('i.station', 'st')
+            ->addSelect('PARTIAL st.{id, name, description,habitat,locality,latitude,longitude,altitude,inseeCode,department}')
+            ->where('st.isPrivate=0')
+            ->andWhere('o.deletedAt is null')
+			->andWhere('i.deletedAt is null')
+			->andWhere('s.deletedAt is null')
             ->getQuery()
-            ->getArrayResult()
-        ;
+            ->getArrayResult();
     }
 
     public function findMinYear(): string
