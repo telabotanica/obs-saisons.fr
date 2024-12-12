@@ -103,7 +103,7 @@ StationLocation.prototype.getAltitude = async function(){
                 lthis.coordinates.lng=$('#station_longitude').val();
             
             }
-            lthis.handleCoordinates();
+           /*  lthis.handleCoordinates(); */
 
             if (locality.value){
                 const ods = new OdsPlaces();
