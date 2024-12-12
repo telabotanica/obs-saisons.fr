@@ -102,7 +102,7 @@ StationLocation.prototype.getAltitude = async function(){
                 this.coordinates.lat=$('#station_latitude').val()
                 this.coordinates.lng=$('#station_longitude').val();
             }
-            this.handleNewLocation(this.coordinates);
+            this.handleCoordinates();
 
             if (locality.value){
                 const ods = new OdsPlaces();
