@@ -103,7 +103,7 @@ StationLocation.prototype.getAltitude = async function(){
             }
             lthis.coordinates.lat=$('#station_latitude').val()
             lthis.coordinates.lng=$('#station_longitude').val();
-
+            
             if (locality.value){
                 const ods = new OdsPlaces();
                 await ods.searchCity(locality.value);
@@ -145,6 +145,7 @@ StationLocation.prototype.phenoclimWarningToggle = function(isPhenoclim) {
 
 StationLocation.prototype.onLocation = function() {
     document.getElementById('map-container').addEventListener('location', function () {
+        console.log('locate');
         this.updateCoordinatesFields();
         this.getAltitude();
     }.bind(this));
