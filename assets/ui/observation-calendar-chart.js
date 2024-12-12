@@ -399,12 +399,12 @@ function generateGraphForYear(years, data) {
     let label = "Observations pour ";
     if (years.length > 1) {
 		label += "les années ";
+	}else if (years.length==1){
+		label += "l'année ";
 	}else if(years.includes('1')){
         label="toutes les années";
-    }else {
-		label += "l'année ";
-	}
-    
+    }
+    console.log(label);
     years.forEach(function(y) {
 		label += y + " ";
 	})
@@ -434,7 +434,7 @@ function generateGraphForYear(years, data) {
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("font-weight", "bold")
-        .text(`Observations pour l'année ${label}`);
+        .text(label);
     // Set the ranges for a single year span (from January 1 to December 31)
     const x = d3.scaleTime().domain([new Date(year, 0, 1), new Date(year, 11, 31)]).range([0, width]);
     const y = d3.scaleBand().domain(eventSpecies).range([0, height]).padding(0.1);
