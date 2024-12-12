@@ -97,12 +97,12 @@ StationLocation.prototype.getAltitude = async function(){
             locality.value = locationInformations.commune;
             inseeCode.value = locationInformations.code_insee;
             altitude.value = locationInformations.alt;
-            if (this.coordinates == undefined){
-                this.coordinates = new Object();
-                this.coordinates.lat=$('#station_latitude').val()
-                this.coordinates.lng=$('#station_longitude').val();
+            if (lthis.coordinates == undefined){
+                lthis.coordinates = new Object();
+                lthis.coordinates.lat=$('#station_latitude').val()
+                lthis.coordinates.lng=$('#station_longitude').val();
             }
-            this.handleCoordinates();
+            lthis.handleCoordinates();
 
             if (locality.value){
                 const ods = new OdsPlaces();
