@@ -160,7 +160,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->where('st.isPrivate=0')
             ->andWhere('o.deletedAt is null')
 			->andWhere('i.deletedAt is null')
-			->andWhere('s.deletedAt is null')
+			->andWhere('st.deletedAt is null')
             ->getQuery()
             ->getArrayResult();
     }
@@ -1081,10 +1081,10 @@ class ObservationRepository extends ServiceEntityRepository
         try {
             $observationQuery = $this->createQueryBuilder('o')
             ->select(
-                'partial o.{id, date}',
-                'partial e.{id, name, bbch_code}',
-                'partial i.{id}',
-                'partial s.{id, vernacular_name}'
+                    'partial o.{id, date}',
+                    'partial e.{id, name, bbch_code}',
+                    'partial i.{id}',
+                    'partial s.{id, vernacular_name}'
                 )
                 ->leftJoin('o.event', 'e')
                 ->leftJoin('o.individual', 'i')
