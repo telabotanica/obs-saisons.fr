@@ -59,7 +59,7 @@ var zoneTexte = document.querySelector('textarea');
 
 
 
-$( document ).ready( () => {
+$( function() {
     const wysiwygs = Array.from( document.querySelectorAll( '.wysiwyg-editor' ) );
 
     if ( wysiwygs.length > 0 ) {

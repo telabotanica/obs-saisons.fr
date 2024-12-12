@@ -1,23 +1,3 @@
-{#
-    *: required
-    #: optionnal
-    [int..int]: array indexes ([...] if no precise length defined)
-
-    id*: int
-    show*: bool
-    canAdminStation*: bool
-    listCard*: Object
-        species*: Species
-        individuals#: array
-            [...] Individual
-        eventsSpecies#: array
-            [...] EventSpecies
-        observations#: array
-            [...] Observation
-        allObsYears#: array
-            [...] date(Y)
-
-#}
 {% set canAdminStation = app.user.id|default('none') == station.user.id or is_granted('ROLE_ADMIN') %}
 {% set eventsSpecies = listCard.eventsSpecies %}
 {% set periodsNames = constant('App\\Entity\\Event::DISPLAY_LABELS') %}
@@ -65,7 +45,11 @@
                             data-details="{{ individual.details }}"
                         ></a>
                     {% endif %}
-                    <h5 class="individu-name">{{ individual.name|capitalize }}</h5>
+                    {% set className = "individu-name" %}
+                    {% if individual.isDead %}
+                        {% set className = "dead-individu-name" %}
+                    {% endif %}
+                    <h5 class="{{className}}">{{ individual.name|capitalize }}</h5>
                     {% if canAdminStation or individual.user.id == app.user.id|default %}
                         <a
                             href=""
@@ -78,7 +62,7 @@
                         ></a>
                     {% endif %}
                 </div>
-                {% if show %}
+                {% if show and not individual.isDead %}
                     <a href="" class="table-action open{{ disable ? ' disabled' }}" data-open="observation" data-individuals-ids="{{ individual.id }}" data-species="{{ individual.species.id }}" data-species-name="{{ individual.species.vernacularName }}" {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
                         <div>Saisir une observation</div>
                     </a>

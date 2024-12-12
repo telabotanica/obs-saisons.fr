@@ -1,18 +1,3 @@
-{#
-    #: optionnal,
-    *: required,
-    |: default,
-    [int..int]: array indexes ([...] if no precise length defined)
-
-    dual_squared_buttons||data#: array
-        [0..1](button) object
-            url#: string (the href of link)
-            icon*: string ($icons in icons.scss)
-            data_attr#: object
-                action*: string (e.g. "open")
-                target*: string (e.g. "indiv" to record new individual of a given species)
-            label*: string
-#}
 <div class="dual-blocks-container">
     {% for button in buttons %}
         {% set dataAttributesString = '' %}
@@ -26,8 +11,10 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
+        
         <a href="{{ button.url|default }}" class="dual-squared-button {{ button.icon }}-icon {{ button.action|default }}{{ disable ? ' disabled' }}" {{ dataAttributesString }} {{ disable ? 'style=cursor:not-allowed; aria-disabled=true title="connexion obligatoire"' }}>
             <div class="squared-button-label">{{ button.label }}</div>
         </a>
+       
     {% endfor %}
 </div>

@@ -35,6 +35,7 @@ import './ui/switch-tabs';
 import './ui/scientific-name';
 import './ui/accordion-block-toggle';
 import './ui/results-charts';
+import './ui/results-charts2';
 import './ui/results-map';
 import './ui/switch-to-next-post';
 import './ui/user-delete-admin-confirm';
@@ -57,4 +58,8 @@ import './ui/stations-observations/stations-list-page-header-map';
  * OVERLAY *
  * ******* */
 import './ui/overlay/overlay-open';
+/* *********** *
+ * D3 Calendar *
+ * *********** */
+import './ui/observation-calendar-chart';
 

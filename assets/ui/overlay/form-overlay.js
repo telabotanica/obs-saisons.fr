@@ -27,7 +27,6 @@ FormOverlay.prototype.closeOverlay = function () {
 FormOverlay.prototype.setOverlayEditForm = function() {
     if (this.openOverlayButton.classList.contains('edit')) {
         const editionPath = `/${this.dataAttrs.open}/`;
-
         this.overlay.classList.add('edit');
         this.form.action = editionPath + 'edit';
         this.form.dataset.formActionReset = editionPath + 'new';

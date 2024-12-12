@@ -39,13 +39,12 @@ StationOverlay.prototype.editFormPreSetFields = function() {
         this.overlay.querySelector('.saisie-header').textContent = 'Modifier la station';
         for(const [key, data] of Object.entries(lthis.stationData)) {
             var type='';
-            if (key.includes('exact')){
-                type = key.replace('exactL','exact_l');
+            if (key.includes('town')){
+                type = key.replace('townL','town_l');
             }else{
                 type=key;
             }
             const field = document.getElementById('station_' + type);
-            console.log(key+ " "+data);
             switch (key) {
                 case 'name':
                 case 'description':
@@ -68,10 +67,10 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                 case 'headerImage':
                     lthis.fileUploadHandler.preSetFile(data);
                     break;
-                case 'exactLatitude':
+                case 'townLatitude':
                     field.value = data;
                     break;
-                case 'exactLongitude':
+                case 'townLongitude':
                     field.value = data;
                     break;
                 default:
@@ -105,7 +104,7 @@ StationOverlay.prototype.closeOverlayOnEscapeKey = function() {
     document.body.addEventListener('keydown', function(evt) {
         const ESC_KEY_STRING = /^Esc(ape)?/;
 
-        if(27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+        if('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
             const openedOverlay = !lthis.overlay.classList.contains('hidden');
 
             if (openedOverlay) {

@@ -1,4 +1,5 @@
 import {debounce} from "../../lib/debounce";
+import { StationLocation } from "../stations-observations/locate-station";
 
 const NOMINATIM_OSM_URL = 'https://nominatim.openstreetmap.org/search';
 const NOMINATIM_OSM_DEFAULT_PARAMS = {
@@ -36,8 +37,8 @@ OdsPlaces.prototype.initForm = function() {
     this.placesCloseButton = $('.ods-places-close');
     this.placesLatitude = $('#station_latitude');
     this.placesLongitude = $('#station_longitude');
-    this.placesExactLatitude = $('#station_exact_latitude');
-    this.placesExactLongitude = $('#station_exact_longitude');
+    this.placesTownLatitude = $('#station_town_latitude');
+    this.placesTownLongitude = $('#station_town_longitude');
     this.placesTown = $("#station_locality");
 };
 
@@ -49,15 +50,15 @@ OdsPlaces.prototype.initEvts = function() {
         this.places.off('keydown').on('keydown', evt => {
             const suggestionEl = $('.ods-places-suggestion');
 
-            if (27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+            if ('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
                 evt.preventDefault();
 
                 this.placesCloseButton.trigger('click');
-                this.places.focus();
-            } else if((40 === evt.keyCode || 'ArrowDown' === evt.key) && 0 <  suggestionEl.length) {
+                this.places.on('focus');
+            } else if(('ArrowDown' === evt.key) && 0 <  suggestionEl.length) {
                 evt.preventDefault();
 
-                suggestionEl.first().focus();
+                suggestionEl.first().on('focus');
             }
         });
     }
@@ -88,13 +89,14 @@ OdsPlaces.prototype.searchCity = function (city) {
             url: NOMINATIM_OSM_URL,
             data: {...NOMINATIM_OSM_DEFAULT_PARAMS, ...params},
             success:async function(response){
+                console.log('city');
                 var cities = await response;
                 var latCity = cities[0].lat;
                 latCity = Math.round(latCity * 1000000) / 1000000;
                 var lngCity = cities[0].lon;
                 lngCity = Math.round(lngCity * 1000000) / 1000000;
-                $('#station_latitude').val(latCity);
-                $('#station_longitude').val(lngCity);
+                $('#station_town_latitude').val(latCity);
+                $('#station_town_longitude').val(lngCity);
             }
     });
     
@@ -102,7 +104,6 @@ OdsPlaces.prototype.searchCity = function (city) {
 
 OdsPlaces.prototype.nominatimOsmResponseCallback = function(data) {
     this.places.siblings('label').removeClass('loading');
-    console.log(data);
     if (0 < data.length) {
         this.searchResults = data;
         this.setSuggestions();
@@ -146,21 +147,23 @@ OdsPlaces.prototype.validateSuggestionData = function(suggestion) {
 OdsPlaces.prototype.onSuggestionSelected = function() {
     const lthis = this;
     
-    $('.ods-places-suggestion').off('click').on('click', function (evt) {
+    $('.ods-places-suggestion').off('click').on('click', async function (evt) {
         const $thisSuggestion = $(this),suggestion = lthis.searchResults.find(suggestion => suggestion['place_id'] === $thisSuggestion.data('placeId'));
         evt.preventDefault();
         lthis.places.val($thisSuggestion.text());
         var town = suggestion['address']['municipality'];
         lthis.placesTown.val(town);
+        console.log(town);
         var lat = suggestion['lat'];
-        lat = Math.round(lat * 1000000) / 1000000;
         var lng = suggestion['lon'];
-        lng = Math.round(lng * 1000000) / 1000000;
-        lthis.placesExactLatitude.val(lat);
-        lthis.placesExactLongitude.val(lng);
-        if (town){
-            lthis.searchCity(town);
-        }
+        lthis.placesLatitude.val(lat);
+        lthis.placesLongitude.val(lng);
+        var sl = new StationLocation();
+        var coordonnees = new Object();
+        coordonnees.lat=lat;
+        coordonnees.lng=lng;
+        console.log(coordonnees);
+        sl.getAltitude();
         lthis.placesCloseButton.trigger('click');
 
     }).off('keydown').on('keydown', function (evt) {
@@ -168,19 +171,19 @@ OdsPlaces.prototype.onSuggestionSelected = function() {
 
         const $thisSuggestion = $(this);
 
-        if (13 === evt.keyCode || 'Enter' === evt.key) {
+        if ('ArrowUp' === evt.key || 'Enter' === evt.key) {
             $thisSuggestion.trigger('click');
-        } else if (38 === evt.keyCode || 'ArrowUp'=== evt.key) {
+        } else if ('ArrowUp'=== evt.key) {
             if(0 < $thisSuggestion.prev().length) {
-                $thisSuggestion.prev().focus();
+                $thisSuggestion.prev().on('focus');
             } else {
-                lthis.places.focus();
+                lthis.places.on('focus');
             }
-        } else if((40 === evt.keyCode || 'ArrowDown' === evt.key) && 0 < $thisSuggestion.next().length) {
-            $thisSuggestion.next().focus();
-        } else if (27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+        } else if(( 'ArrowDown' === evt.key) && 0 < $thisSuggestion.next().length) {
+            $thisSuggestion.next().on('focus');
+        } else if ('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
             lthis.placesCloseButton.trigger('click');
-            lthis.places.focus();
+            lthis.places.on('focus');
         }
     });
     

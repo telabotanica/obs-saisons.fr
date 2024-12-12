@@ -144,9 +144,9 @@ class Station
      *      notInRangeMessage = "Vous devez entrer un point en France métropolitaine"
      * )
      *
-     * @ORM\Column(type="decimal", precision=9, scale=6)
+     * @ORM\Column(type="decimal", precision=9, scale=6,nullable=true)
      */
-    private $exact_latitude;
+    private $town_latitude;
 
     /**
      * @Assert\Range(
@@ -155,9 +155,9 @@ class Station
      *      notInRangeMessage = "Vous devez entrer un point en France métropolitaine"
      * )
      *
-     * @ORM\Column(type="decimal", precision=9, scale=6)
+     * @ORM\Column(type="decimal", precision=9, scale=6,nullable=true)
      */
-    private $exact_longitude;
+    private $town_longitude;
 
     public function getId(): ?int
     {
@@ -385,9 +385,9 @@ class Station
     /**
      * Get min = 41.3332,
      */ 
-    public function getExactLatitude() :string
+    public function getTownLatitude() :?string
     {
-        return $this->exact_latitude;
+        return $this->town_latitude;
     }
 
     /**
@@ -395,9 +395,9 @@ class Station
      *
      * @return  self
      */ 
-    public function setExactLatitude(string $exact_latitude) 
+    public function setTownLatitude(?string $town_latitude) 
     {
-        $this->exact_latitude = $exact_latitude;
+        $this->town_latitude = $town_latitude;
 
         return $this;
     }
@@ -407,9 +407,9 @@ class Station
     /**
      * Get min = -5.17470,
      */ 
-    public function getExactLongitude() :string
+    public function getTownLongitude() :?string
     {
-        return $this->exact_longitude;
+        return $this->town_longitude;
     }
 
     /**
@@ -417,9 +417,9 @@ class Station
      *
      * @return  self
      */ 
-    public function setExactLongitude(string $exact_longitude) 
+    public function setTownLongitude(?string $town_longitude) 
     {
-        $this->exact_longitude = $exact_longitude;
+        $this->town_longitude = $town_longitude;
 
         return $this;
     }
