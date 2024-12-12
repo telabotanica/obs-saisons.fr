@@ -97,11 +97,13 @@ StationLocation.prototype.getAltitude = async function(){
             locality.value = locationInformations.commune;
             inseeCode.value = locationInformations.code_insee;
             altitude.value = locationInformations.alt;
-            if (this.coordinates == undefined){
-                this.coordinates = new Object();
+            if (lthis.coordinates == undefined){
+                lthis.coordinates = new Object();
+               
             }
-            this.coordinates.lat=document.getElementById('station_latitude').value;
-            this.coordinates.lng=document.getElementById('station_longitude').value;
+            lthis.coordinates.lat=$('#station_latitude').val()
+            lthis.coordinates.lng=$('#station_longitude').val();
+            
             if (locality.value){
                 const ods = new OdsPlaces();
                 await ods.searchCity(locality.value);
@@ -143,6 +145,7 @@ StationLocation.prototype.phenoclimWarningToggle = function(isPhenoclim) {
 
 StationLocation.prototype.onLocation = function() {
     document.getElementById('map-container').addEventListener('location', function () {
+        console.log('locate');
         this.updateCoordinatesFields();
         this.getAltitude();
     }.bind(this));

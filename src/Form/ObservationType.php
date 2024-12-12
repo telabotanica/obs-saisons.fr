@@ -200,7 +200,7 @@ class ObservationType extends AbstractType
     private function setIndividuals(Station $station): self
     {
         $this->individuals = $this->manager->getRepository(Individual::class)
-            ->findSpeciesIndividualsForStation($station);
+            ->findSpeciesIndividualsForStation($station,true);
 
         return $this;
     }
