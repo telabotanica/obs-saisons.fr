@@ -24,7 +24,7 @@ IndividualOverlay.prototype.init = function() {
 IndividualOverlay.prototype.setOverlayEditForm = function() {
     if (this.openOverlayButton.classList.contains('edit')) {
         this.individualData = JSON.parse(this.dataAttrs.individual);
-
+        console.log(this.individualData);
         const individualPath =  '/individual/',
             formActionReset = `/station/${this.individualData.station.id}${individualPath}new`,
             editionPath = individualPath + this.individualData.id;
@@ -37,7 +37,6 @@ IndividualOverlay.prototype.setOverlayEditForm = function() {
 };
 
 IndividualOverlay.prototype.editFormPreSetFields = function() {
-    console.log(this.overlay.classList);
     if (this.overlay.classList.contains('edit')) {
         document.querySelector('.saisie-title-action').innerHTML = '•  Modifier l’individu';
 
@@ -46,6 +45,14 @@ IndividualOverlay.prototype.editFormPreSetFields = function() {
         }
         if (this.individualData.details) {
             document.getElementById('individual_details').value = this.individualData.details;
+        }
+
+        if (this.individualData.isDead) {
+            document.getElementById('individual_isDead').value = 1;
+            document.getElementById('individual_isDead').checked=true;
+        }
+        if (this.individualData.commentaireMort) {
+            document.getElementById('individual_commentaireMort').value = this.individualData.commentaireMort;
         }
 
         this.speciesEl.classList.remove('disabled');

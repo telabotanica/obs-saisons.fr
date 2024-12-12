@@ -1,13 +1,20 @@
-{#
-    *: required
-    [int..int]: array indexes ([...] if no precise length defined)
-
-    station*: Station
-    observations*: array
-        [...] Observations
-#}
 {% set headerImage = '' %}
-{% if not show or station.latitude == null or station.longitude == null %}
+{% if app.user == station.user and station.isPrivate %}
+    {% set lat = station.latitude %}
+    {% set lng = station.longitude %}
+    {% set txt_loc = ' (localisation exacte)' %}
+
+{% elseif app.user != station.user and station.isPrivate %}
+    {% set lat = station.townLatitude %}
+    {% set lng = station.townLongitude %}
+    {% set txt_loc = ' (localisation approximative)' %}
+
+{% elseif station.isPrivate == 0 %}
+    {% set lat = station.latitude %}
+    {% set lng = station.longitude %}
+    {% set txt_loc = ' (localisation exacte)' %}
+{% endif %}
+{% if station.latitude == null or station.longitude == null %}
     {% set headerImage = station.headerImage != null ? station.headerImage : asset('media/layout/image-placeholder.svg')%}
 {% endif %}
 
@@ -17,7 +24,8 @@
 {% endfor %}
 
 <div class="hero-header">
-    <div id="station-single-header-map" class="hero-header-media-part map{{ show ? ' show-map'}}" data-latitude="{{ station.latitude }}" data-longitude="{{ station.longitude }}" style="background-image:linear-gradient(180deg,rgba(131,117,105,0.3),rgba(131,117,105,0.3)),url({{ headerImage }});">
+    
+    <div id="station-single-header-map" class="hero-header-media-part map show-map" data-latitude="{{ lat }}" data-longitude="{{ lng }}" style="background-image:linear-gradient(180deg,rgba(131,117,105,0.3),rgba(131,117,105,0.3)),url({{ headerImage }});">
         {% if show and images|first is not empty %}
             <div class="contributions-mini-block" style="background-image: url({{ images|last }});">
                 {% if images|length > 1 %}
@@ -32,10 +40,14 @@
         <h3 class="hero-header-title"><span class="lighter">{{ station.name|capitalize }} &nbsp;•</span> &nbsp;Observations</h3>
         <p class="hero-header-subtitle">{{ station.description|default }}</p>
 
-            {% if show %}
+            {% if show and app.user == station.user and station.isPrivate %}
+                <div class="hero-header-detail map">Lat. : {{ station.latitude }} &nbsp;• &nbsp;Long. : {{ station.longitude }}</div>
+            {% elseif app.user != station.user and station.isPrivate %}
+                <div class="hero-header-detail map">Lat. : {{ station.townLatitude }} &nbsp;• &nbsp;Long. : {{ station.townLongitude }}</div>
+            {% elseif station.isPrivate == 0 %}
                 <div class="hero-header-detail map">Lat. : {{ station.latitude }} &nbsp;• &nbsp;Long. : {{ station.longitude }}</div>
             {% endif %}
-        <div class="hero-header-detail map">Commune : {{ station.locality }}</div>
+        <div class="hero-header-detail map">Commune : {{ station.locality }}{{txt_loc}}</div>
 
     </div>
 

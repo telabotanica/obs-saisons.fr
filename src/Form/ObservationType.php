@@ -20,7 +20,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\File;
@@ -201,7 +200,7 @@ class ObservationType extends AbstractType
     private function setIndividuals(Station $station): self
     {
         $this->individuals = $this->manager->getRepository(Individual::class)
-            ->findSpeciesIndividualsForStation($station);
+            ->findSpeciesIndividualsForStation($station,true);
 
         return $this;
     }

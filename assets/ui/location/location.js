@@ -14,6 +14,8 @@ export function Location(mapIdAttr = DEFAULT_MAP_ID_ATTR) {
     this.setUpdateMapElement();
     this.map = {};
     this.setDefaultMapData();
+    
+    
 }
 
 Location.prototype.setUpdateMapElement = function() {
@@ -21,6 +23,7 @@ Location.prototype.setUpdateMapElement = function() {
 };
 
 Location.prototype.setDefaultMapData = function () {
+    
     this.coordinates = DEFAULT_POSITION;
     this.zoom = DEFAULT_ZOOM;
 };
@@ -51,8 +54,8 @@ Location.prototype.formatCoordinates = function (coordinates) {
     }
 
     return {
-        'lat': lat.toFixed(4),
-        'lng': lng.toFixed(5)
+        'lat': lat,
+        'lng': lng
     };
 };
 

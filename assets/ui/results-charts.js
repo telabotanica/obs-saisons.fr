@@ -1,8 +1,9 @@
-$( document ).ready( () => {
+$(function() {
     const charts = Array.from(document.getElementsByClassName('chart'));
+   
     if (charts.length > 0) {
-        import(/* webpackChunkName: "plotly" */ 'plotly.js-dist' ).then(({default: Plotly}) => {
-
+        import('plotly.js-dist' ).then(({default: Plotly}) => {
+            
             // choose both region and department is not allowed
             $('#region-phenological-chart').on('change', function() {
                 $('#department-phenological-chart').val(0);
@@ -18,38 +19,10 @@ $( document ).ready( () => {
             });
 
             // binding all select with obs retrieval
-            $( '#phenological-chart-container > select' ).on( 'change', function() {
-                const criteria = {
-                    year: $( '#year-phenological-chart' ).val(),
-                    species: {
-                        id: $( '#species-phenological-chart' ).val(),
-                        name: $( '#species-phenological-chart option:selected' ).text()
-                    },
-                    region: {
-                        id: $( '#region-phenological-chart' ).val(),
-                        name: $( '#region-phenological-chart option:selected' ).text()
-                    },
-                    department: {
-                        id: $( '#department-phenological-chart' ).val(),
-                        name: $( '#department-phenological-chart option:selected' ).text()
-                    }
-                };
-
-                retrieveData(
-                `${exportRoute}?year=${criteria.year}&species=${criteria.species.id}&region=${criteria.region.id}&department=${criteria.department.id}`,
-                    ( data ) => {
-                    if ( data.length ) {
-                        displayPhenologicalChart(
-                            Plotly,
-                            $( '#phenological-chart-container > .chart' )[0],
-                            criteria,
-                            indexObsForPhenologicalChart( data )
-                        );
-                        $( '#phenological-chart-container > .no-data' ).hide();
-                    } else {
-                        $( '#phenological-chart-container > .no-data' ).show();
-                    }
-                } );
+            $( '#phenological-chart-container > select' ).on( 'change', async function() {
+                
+                getInfoforFirstChart(Plotly);
+                
             } );
 
             $( '#evolution-chart-container > select' ).on( 'change', function() {
@@ -92,59 +65,15 @@ $( document ).ready( () => {
 
             // display charts
             filterCriteria();
-            $( '#event-evolution-chart' ).change();
-            $( '#year-phenological-chart' ).change();
+            $( '#event-evolution-chart' ).on('change');
+            $( '#year-phenological-chart' ).on('change');
+            getInfoforFirstChart(Plotly);
         });
     }
 } );
 
 function unpack( rows, key ) {
     return rows.map( row => { return row[key]; } );
-}
-
-function displayPhenologicalChart( Plotly, chart, criteria, allObs ) {
-    const data = [];
-    for ( const [event, obs] of Object.entries( allObs ) ) {
-        data.push( {
-            type: 'violin',
-            x: unpack( obs, 'day' ),
-            text: unpack( obs, 'displayDate' ),
-            points: 'outliers',
-            box: {
-                visible: true
-            },
-            boxpoints: false,
-            line: {
-                color: 'black'
-            },
-            fillcolor: '#8dd3c7',
-            opacity: 0.6,
-            meanline: {
-                visible: true
-            },
-            y0: event,
-            name: event,
-            legendgroup: event,
-            scalegroup: event
-        } );
-    }
-
-    const subtitle = ( criteria.year === "0" ) ? 'Toutes les années' : `Année ${criteria.year}`;
-    const layout = {
-        title: `Calendrier phénologique de l’espèce ${criteria.species.name} <br> ${subtitle}, ${locality( criteria )}`,
-        xaxis: {
-            zeroline: false,
-            tickvals: [15,45,75,105,135,165,195,225,255,285,315,345],
-            ticktext: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
-        },
-        violingap: 0,
-        violingroupgap: 0,
-        violinmode: "overlay",
-        height: 650,
-        showlegend: false,
-    };
-
-    Plotly.newPlot( chart, data, layout );
 }
 
 function displayEvolutionChart( Plotly, chart, criteria, allObs ) {
@@ -161,7 +90,7 @@ function displayEvolutionChart( Plotly, chart, criteria, allObs ) {
             hoverinfo: 'text'
         } );
     }
-
+    
     const multipleEvents = ( obsArray.length > 1 ) ? 'début et de pleine ' : '';
     const title = `Dates moyennes de ${multipleEvents}${criteria.event.name} pour l’espèce ${criteria.species.name} <br> ${locality( criteria )}`;
 
@@ -205,30 +134,20 @@ function retrieveData( url, handleData, previousPageData = [] ) {
         success: data => {
             if ( data.data ) {
                 if (data.links.next) {
-                    retrieveData(data.links.next, handleData, previousPageData.concat(data.data))
+                    retrieveData(data.links.next, handleData, previousPageData.concat(data.data));
+                    
                 } else {
                     handleData( data.data );
+                    
                 }
             } else {
                 handleData( data );
+                
             }
+            
         }
     });
-}
-
-function indexObsForPhenologicalChart( allObs ) {
-    const obsIndexedByEvent = {};
-    allObs.forEach( obs => {
-        if (!obsIndexedByEvent[obs.event.name]) {
-            obsIndexedByEvent[obs.event.name] = [];
-        }
-        obsIndexedByEvent[obs.event.name].push( {
-            day: obs.date.dayOfYear,
-            displayDate: obs.date.displayDate
-        } );
-    });
-
-    return obsIndexedByEvent;
+    
 }
 
 function locality( criteria ) {
@@ -278,4 +197,73 @@ function filterCriteria() {
             }
         })
     }
+}
+
+function getInfoforFirstChart(Plotly){
+    var year = $("#year-phenological-chart").val();
+    var region = $("#region-phenological-chart").val();
+    var species = $("#species-phenological-chart").val();
+    var dpt = $("#department-phenological-chart").val();
+    var data_sent='{"year":'+year+',"region":'+region+',"specy":'+species+',"dpt":"'+dpt+'"}';
+    $.ajax({
+        method: "POST",
+        url: obsRoute,
+        data:data_sent,
+        success: function(response) {
+            var results = response.results;
+            const txt_obs = "Nombre d'observations utilisées dans le graphique : ";
+            if(results.length>0){
+
+                const nb_obs_total = results[0].nb_obs_total.toString();
+                $('#nb_obs').html(txt_obs+nb_obs_total);
+                const moisNoms = {
+                    "1": "Janvier", "2": "Février", "3": "Mars", "4": "Avril", "5": "Mai", "6": "Juin", 
+                    "7": "Juillet", "8": "Août", "9": "Septembre", "10": "Octobre", "11": "Novembre", "12": "Décembre"
+                };
+                // Regroupement des données par mois et par étape
+                const mois = Array.from(new Set(results.map(item => item.mois))); // Récupère les mois distincts
+                const etapes = ["1ère apparition","feuillaison", "floraison", "fructification", "sénescence"];
+                const moisNom = mois.map(month => moisNoms[month]);
+                const couleurs = {
+                    "feuillaison": "#bcd35f",  
+                    "floraison": "#5fbcd3",  
+                    "fructification": "#ed7c1c",  
+                    "sénescence": "#bb381c",
+                    "1ère apparition":"#4d4d4dff"  
+                };
+                
+                // Créer une trace pour chaque étape
+                const traces = etapes.map(etape => {
+                    return {
+                        x: moisNom,
+                        y: mois.map(mois_ => {
+                            const entry = results.find(d => d.mois === mois_ && d.etape === etape);
+                            return entry ? entry.nb_obs : 0;
+                        }),
+                        name: `Observations - ${etape}`,
+                        type: 'bar',
+                        barmode: 'group',
+                        marker: { color: couleurs[etape] }
+                    };
+                });
+                
+    
+                const layout = {
+                    title: 'Nombre d\'observations par mois et étape',
+                    xaxis: { title: 'Mois' },
+                    yaxis: { title: 'Nombre d\'observations' },
+                    barmode: 'group' 
+                };
+    
+                Plotly.newPlot('chart', [...traces], layout);
+                $('#alerte_pheno').hide();
+                $('#chart').show();
+            }else{
+                $('#nb_obs').html(txt_obs + "0");
+                $('#alerte_pheno').show();
+                $('#chart').hide();
+            }
+            
+        }
+    });
 }

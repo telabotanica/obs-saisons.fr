@@ -6,7 +6,10 @@
         'title': title,
         'subtitle': subtitle|default
     }) %}
-
+    {% set slug = page.slug %}
+    {% if is_granted('ROLE_ADMIN')%}
+        <a href="{{ path('admin_static_page_edit',{slug: slug}) }}" >Modifier l'article</a>
+    {% endif %}
     <div class="rich-text-block">
         {{ page.content|default|raw }}
     </div>

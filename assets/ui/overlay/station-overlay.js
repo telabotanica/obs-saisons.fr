@@ -38,8 +38,13 @@ StationOverlay.prototype.editFormPreSetFields = function() {
     if (this.overlay.classList.contains('edit')) {
         this.overlay.querySelector('.saisie-header').textContent = 'Modifier la station';
         for(const [key, data] of Object.entries(lthis.stationData)) {
-            const field = document.getElementById('station_' + key);
-
+            var type='';
+            if (key.includes('town')){
+                type = key.replace('townL','town_l');
+            }else{
+                type=key;
+            }
+            const field = document.getElementById('station_' + type);
             switch (key) {
                 case 'name':
                 case 'description':
@@ -48,7 +53,6 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                     break;
                 case 'longitude':
                     field.value = data;
-                    field.dispatchEvent(new Event('blur'));
                     break;
                 case 'habitat':
                     const habitatOption = Array.from(field.childNodes).find(
@@ -62,6 +66,12 @@ StationOverlay.prototype.editFormPreSetFields = function() {
                     break;
                 case 'headerImage':
                     lthis.fileUploadHandler.preSetFile(data);
+                    break;
+                case 'townLatitude':
+                    field.value = data;
+                    break;
+                case 'townLongitude':
+                    field.value = data;
                     break;
                 default:
                     break;
@@ -94,7 +104,7 @@ StationOverlay.prototype.closeOverlayOnEscapeKey = function() {
     document.body.addEventListener('keydown', function(evt) {
         const ESC_KEY_STRING = /^Esc(ape)?/;
 
-        if(27 === evt.keyCode || ESC_KEY_STRING.test(evt.key)) {
+        if('Escape' === evt.key || ESC_KEY_STRING.test(evt.key)) {
             const openedOverlay = !lthis.overlay.classList.contains('hidden');
 
             if (openedOverlay) {

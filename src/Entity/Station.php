@@ -75,7 +75,7 @@ class Station
      *      notInRangeMessage = "Vous devez entrer un point en France métropolitaine"
      * )
      *
-     * @ORM\Column(type="decimal", precision=8, scale=5)
+     * @ORM\Column(type="decimal", precision=9, scale=6,nullable=true)
      */
     private $latitude;
 
@@ -86,7 +86,7 @@ class Station
      *      notInRangeMessage = "Vous devez entrer un point en France métropolitaine"
      * )
      *
-     * @ORM\Column(type="decimal", precision=8, scale=5)
+     * @ORM\Column(type="decimal", precision=9, scale=6,nullable=true)
      */
     private $longitude;
 
@@ -136,6 +136,28 @@ class Station
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $is_deactivated;
+
+    /**
+     * @Assert\Range(
+     *      min = 41.3332,
+     *      max = 51.0890,
+     *      notInRangeMessage = "Vous devez entrer un point en France métropolitaine"
+     * )
+     *
+     * @ORM\Column(type="decimal", precision=9, scale=6,nullable=true)
+     */
+    private $town_latitude;
+
+    /**
+     * @Assert\Range(
+     *      min = -5.17470,
+     *      max = 9.56000,
+     *      notInRangeMessage = "Vous devez entrer un point en France métropolitaine"
+     * )
+     *
+     * @ORM\Column(type="decimal", precision=9, scale=6,nullable=true)
+     */
+    private $town_longitude;
 
     public function getId(): ?int
     {
@@ -356,6 +378,48 @@ class Station
     public function setIsDeactivated(?bool $is_deactivated): self
     {
         $this->is_deactivated = $is_deactivated;
+
+        return $this;
+    }
+
+    /**
+     * Get min = 41.3332,
+     */ 
+    public function getTownLatitude() :?string
+    {
+        return $this->town_latitude;
+    }
+
+    /**
+     * Set min = 41.3332,
+     *
+     * @return  self
+     */ 
+    public function setTownLatitude(?string $town_latitude) 
+    {
+        $this->town_latitude = $town_latitude;
+
+        return $this;
+    }
+
+   
+
+    /**
+     * Get min = -5.17470,
+     */ 
+    public function getTownLongitude() :?string
+    {
+        return $this->town_longitude;
+    }
+
+    /**
+     * Set min = -5.17470,
+     *
+     * @return  self
+     */ 
+    public function setTownLongitude(?string $town_longitude) 
+    {
+        $this->town_longitude = $town_longitude;
 
         return $this;
     }

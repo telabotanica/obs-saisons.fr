@@ -86,14 +86,15 @@ class ExportController extends AbstractController
                 $request->query->get('region'),
                 $request->query->get('station'),
                 $request->query->get('individual'),
+                $request->query->get('month'),
+                $request->query->get('cumul')
             );
 
         $serializer = new EntityJsonSerialize();
-
         $pager = new Pagerfanta(
             new QueryAdapter($qb)
         );
-
+        
         $pager->setCurrentPage($request->query->get('page') ?? 1);
         $pager->setMaxPerPage($request->query->get('size') ?? 9000);
 
@@ -120,7 +121,7 @@ class ExportController extends AbstractController
                 'next' => $pager->hasNextPage() ? $url.'?'.http_build_query(array_merge($params, ['page' => $pager->getNextPage()])) : null,
             ],
         ];
-
+      
         return new Response(
             json_encode($ret),
             Response::HTTP_OK,
@@ -275,4 +276,43 @@ class ExportController extends AbstractController
 		
 		return $response;
 	}
+
+    /**
+     * @Route("/export/observation/calender-data", name="calender_data")
+     */
+    public function exportForCalenderData(
+        EntityManagerInterface $em,
+        Request $request){
+        
+        $serializer = new EntityJsonSerialize();
+        
+        if (empty($request->query->get('species'))) {
+            $data = $em->getRepository(Observation::class)->findAllPublic();
+        } else { 
+            //Get query parameters
+            $selectedSpeciesIds = $request->query->get('species');
+            $selectedEventId = $request->query->get('event');
+            $selectedYear = $request->query->get('year');
+    
+            //Error handling
+            if(!$selectedSpeciesIds){
+                return new JsonResponse('Missing species param', 400);
+            }
+    
+            //Get data
+            $data = $em->getRepository(Observation::class)
+                ->findObservationsGraph(
+                    $selectedSpeciesIds,
+                    $selectedEventId,
+                    $selectedYear
+                );
+                
+        }
+        $serializedData = $serializer->serializeJsonForCalendar($data);
+        return new Response(
+            $serializedData,
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+            );
+    }
 }

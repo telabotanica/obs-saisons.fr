@@ -20,19 +20,20 @@ class IndividualRepository extends ServiceEntityRepository
         parent::__construct($registry, Individual::class);
     }
 
-    public function findSpeciesIndividualsForStation(Station $station): array
+    public function findSpeciesIndividualsForStation(Station $station,$forObsForm = null): array
     {
         $result = $this->createQueryBuilder('i')
             ->leftJoin('i.species', 'species')
             ->leftJoin('i.station', 'station')
             ->where('station = :station')
             ->setParameter('station', $station)
-            ->orderBy('i.species', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-        
-        return $result;
+            ->orderBy('i.species', 'ASC');
+        if($forObsForm){
+            $result->andWhere('i.isDead=0');
+        }
+        return $result
+                ->getQuery()
+                ->getResult();
     }
 
     public function findAllIndividualsInStation(Station $station)

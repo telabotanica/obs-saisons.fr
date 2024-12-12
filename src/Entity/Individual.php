@@ -67,6 +67,16 @@ class Individual
      */
     private $legacyId;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default" : 0})
+     */
+    private $isDead;
+
+     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentaireMort;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -176,6 +186,46 @@ class Individual
     public function setLegacyId(int $legacyId): self
     {
         $this->legacyId = $legacyId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of is_dead
+     */ 
+    public function getIsDead()
+    {
+        return $this->isDead;
+    }
+
+    /**
+     * Set the value of is_dead
+     *
+     * @return  self
+     */ 
+    public function setIsDead(?bool $isDead)
+    {
+        $this->isDead = $isDead;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of commentaire_mort
+     */ 
+    public function getCommentaireMort()
+    {
+        return $this->commentaireMort;
+    }
+
+    /**
+     * Set the value of commentaire_mort
+     *
+     * @return  self
+     */ 
+    public function setCommentaireMort(?string $commentaireMort)
+    {
+        $this->commentaireMort = $commentaireMort;
 
         return $this;
     }

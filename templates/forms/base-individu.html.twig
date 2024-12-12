@@ -28,7 +28,7 @@
 							{% endif %}
 							<a id="cancel" href="{{ isPage|default(false)? path('homepage') }}" class="button bt-form bt-cancel-ind">Annuler</a>
 							<input type="hidden" name="action" value="{{ action }}">
-							<button id="{{ action }}_submit" type="submit" name={{ action }}[submit]" class="button bt-form bt-valider">
+							<button id="{{ action }}_submit" type="submit" name="{{ action }}[submit]" class="button bt-form bt-valider">
 								Valider
 							</button>
 						{% endblock %}

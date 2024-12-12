@@ -18,8 +18,6 @@ class FrenchRegions
                 '43' => 'Haute-Loire',
                 '63' => 'Puy-de-Dôme',
                 '69' => 'Rhône',
-//                '69D' => 'Rhône',
-//                '69M' => 'Métropole de Lyon',
                 '73' => 'Savoie',
                 '74' => 'Haute-Savoie',
             ],

@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
@@ -80,8 +81,9 @@ class IndividualType extends AbstractType
                 'placeholder' => 'Choisir une espèce',
             ])
             ->add('details', TextareaType::class, ['required' => false])
-            ->add('submit', SubmitType::class)
-        ;
+            ->add('isDead', CheckboxType::class, ['required' => false])
+            ->add('commentaireMort', TextareaType::class, ['required' => false])
+            ->add('submit', SubmitType::class);   
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,

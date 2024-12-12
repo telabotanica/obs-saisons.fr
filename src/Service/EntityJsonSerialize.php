@@ -70,6 +70,8 @@ class EntityJsonSerialize
                 'id',
                 'name',
                 'details',
+                'isDead',
+                'commentaireMort',
                 'species',
                 'station',
             ],
@@ -250,6 +252,8 @@ class EntityJsonSerialize
             'habitat' => $station->getHabitat(),
             'lat' => $station->getLatitude(),
             'lon' => $station->getLongitude(),
+            'town_lat' => $station->getTownLatitude(),
+            'town_lon' => $station->getTownLongitude(),
             'altitude' => $station->getAltitude(),
             'slug' => $station->getSlug(),
         ];
@@ -267,5 +271,24 @@ class EntityJsonSerialize
         }
 
         return ['date' => $date, 'displayedDate' => $displayedDate];
+    }
+
+    public function serializeJsonForCalendar(array $observations){
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $context = [
+            AbstractNormalizer::CALLBACKS => [
+                'date' => Closure::fromCallable('self::dateCallback'),
+                'event' => Closure::fromCallable('self::eventCallback'),
+                'individual' => Closure::fromCallable('self::individualCallBack'),
+            ],
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+                'user',
+            ],
+        ];
+        
+        return $serializer->serialize($observations, 'json', $context);
     }
 }

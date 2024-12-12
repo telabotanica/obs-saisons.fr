@@ -34,7 +34,7 @@ class MailchimpSyncContact
         $this->logger = $logger;
         $this->params = $params;
         $this->httpClient = HttpClient::createForBaseUri($this->params->get('brevo.api_base_uri'), [
-//            'auth_basic' => 'key:'.$this->params->get('mailchimp.api_key'),
+
             'headers' => [
                 'Content-Type' => 'application/json',
                 'api-key' => $this->params->get('brevo.api_key'),

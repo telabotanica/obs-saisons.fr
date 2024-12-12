@@ -10,7 +10,6 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\Expr;
 
 /**
  * @method Observation|null find($id, $lockMode = null, $lockVersion = null)
@@ -146,21 +145,24 @@ class ObservationRepository extends ServiceEntityRepository
 
     public function findAllPublic(): array
     {
-        $qb = $this->createQueryBuilder('o');
-
-        return $qb
+        return $this->createQueryBuilder('o')
+            ->addSelect('PARTIAL o.{id, picture, isMissing, details, updatedAt, date, individual, event}')
             ->innerJoin('o.individual', 'i')
-            ->innerJoin('i.station', 's')
+            ->addSelect('PARTIAL i.{id, name, species, station,details}')
+            ->innerJoin('o.event', 'e')
+            ->addSelect('PARTIAL e.{id, name, bbch_code,name,description}')
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
             ->addSelect('PARTIAL ts.{id, name, reign}')
-            ->innerJoin('o.event', 'e')
-            ->addSelect('PARTIAL e.{id, bbch_code, name, description}')
-            ->orderBy('o.date', 'DESC')
+            ->innerJoin('i.station', 'st')
+            ->addSelect('PARTIAL st.{id, name, description,habitat,locality,latitude,longitude,altitude,inseeCode,department}')
+            ->where('st.isPrivate=0')
+            ->andWhere('o.deletedAt is null')
+			->andWhere('i.deletedAt is null')
+			->andWhere('st.deletedAt is null')
             ->getQuery()
-            ->getArrayResult()
-        ;
+            ->getArrayResult();
     }
 
     public function findMinYear(): string
@@ -244,7 +246,9 @@ class ObservationRepository extends ServiceEntityRepository
         ?string $department,
         ?string $region,
         ?string $station,
-        ?string $individual
+        ?string $individual,
+        ?string $month,
+        ?string $cumul
     ): QueryBuilder {
         $qb = $this->createQueryBuilder('o')
             ->addSelect('PARTIAL o.{id, picture, isMissing, details, updatedAt, date, user, individual, event}')
@@ -255,7 +259,7 @@ class ObservationRepository extends ServiceEntityRepository
             ->innerJoin('o.user', 'u')
             ->addSelect('PARTIAL u.{id, displayName}')
             ->innerJoin('i.station', 'st')
-            ->addSelect('PARTIAL st.{id, locality, inseeCode, habitat, latitude, longitude, altitude, slug, department}')
+            ->addSelect('PARTIAL st.{id, locality, inseeCode, habitat, latitude, town_latitude, longitude, town_longitude, altitude, slug, department}')
             ->innerJoin('i.species', 'sp')
             ->addSelect('PARTIAL sp.{id, vernacular_name, scientific_name}')
             ->innerJoin('sp.type', 'ts')
@@ -267,7 +271,16 @@ class ObservationRepository extends ServiceEntityRepository
                 ->setParameter(':year', $year)
             ;
         }
-
+        if (!empty($month) AND $month != 13) {
+            if($cumul==="1"){
+                $qb->andWhere('MONTH(o.date) BETWEEN 1 AND :month')
+                    ->setParameter('month', $month);
+            }else{
+                $qb->andWhere($qb->expr()->eq('MONTH(o.date)', ':month'))
+                    ->setParameter(':month', $month);
+            }
+            
+        }
         if ($typeSpecies) {
             $qb->andWhere($qb->expr()->eq('ts.id', ':typeSpecies'))
                 ->setParameter(':typeSpecies', $typeSpecies)
@@ -976,5 +989,137 @@ class ObservationRepository extends ServiceEntityRepository
             
         return $result;
     }
+
+    public function getObsForCharts($objet){
+        
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT
+                MONTH(o.date) AS mois,
+                e.name AS etape,
+                COUNT(o.id) AS nb_obs,
+                (
+                SELECT
+                    COUNT(o3.id)
+                FROM
+                    observation o3
+                INNER JOIN event e3 ON
+                    o3.event_id = e3.id
+                INNER JOIN individual i3 ON o3.individual_id = i3.id
+                INNER JOIN species sp3 ON i3.species_id = sp3.id
+                INNER JOIN station s3 ON i3.station_id=s3.id
+                WHERE
+                    o3.is_missing = 1 AND o3.deleted_at IS NULL AND MONTH(o3.date) = mois AND e3.name = etape".$this->setParams($objet,'3').
+                "GROUP BY
+                    MONTH(o3.date),
+                    e3.name
+            ) AS nb_obs_manquantes,
+            (
+                SELECT
+                    COUNT(o2.id)
+                FROM
+                    observation o2
+                INNER JOIN event e2 ON
+                    o2.event_id = e2.id
+                INNER JOIN individual i2 ON o2.individual_id = i2.id
+                INNER JOIN species sp2 ON i2.species_id = sp2.id
+                INNER JOIN station s2 ON i2.station_id=s2.id
+                WHERE
+                    o2.deleted_at IS NULL ".$this->setParams($objet,'2').
+            ") AS nb_obs_total
+            FROM
+                observation o
+            INNER JOIN event e ON
+                o.event_id = e.id
+            INNER JOIN individual i ON o.individual_id = i.id
+            INNER JOIN species sp ON i.species_id = sp.id
+            INNER JOIN station s ON i.station_id=s.id
+            WHERE
+                o.deleted_at IS NULL AND s.deleted_at IS NULL".$this->setParams($objet,'').
+            "GROUP BY
+                mois,
+                etape ORDER BY mois";
+        
+        $stmt = $conn->prepare($sql);
+        $results = $stmt->executeQuery()->fetchAllAssociative();
+        return $results;
+    }
+
+    public function setParams($objet,$numero){
+        $params='';
+        if(!empty($objet)){
+            if (!empty($objet->year) AND preg_match('~\b\d{4}\b\+?~',$objet->year)){
+                $year=$objet->year;
+                $params.=" AND YEAR(o$numero.date)=$year";
+            }
+            if (!empty($objet->region) AND preg_match('^\d+$^',$objet->region) AND intval($objet->region)<14){
+                $region=$objet->region;
+                $departments = FrenchRegions::getDepartmentsIdsByRegionId($region);
+                $str_dpts="";
+                foreach ($departments as $dpt){
+                    $str_dpts.="'".$dpt."',";
+                }
+                $str_dpts=rtrim($str_dpts,",");
+                $params.=" AND s$numero.department IN ($str_dpts)";
+            }
+            if (!empty($objet->dpt) AND ((preg_match('^\d+$^',$objet->dpt) AND intval($objet->dpt) < 99) OR preg_match('^\dA$^',$objet->dpt) OR preg_match('^\dB$^',$objet->dpt))){
+                $dpt=$objet->dpt;
+                $params.=" AND s$numero.department = '$dpt'";
+            }
+            if (!empty($objet->specy) AND preg_match('^\d+$^',$objet->specy)){
+                $specy=$objet->specy;
+                $params.=" AND sp$numero.id = $specy";
+            }
+        }
+        
+        return "$params ";
+    }
+
+    public function findObservationsGraph($selectedSpeciesIds, $selectedEventIds, $selectedYears)
+    {
+        $observationQuery = '';
+        $containsValue = false;
+        try {
+            $observationQuery = $this->createQueryBuilder('o')
+            ->select(
+                    'partial o.{id, date}',
+                    'partial e.{id, name, bbch_code}',
+                    'partial i.{id}',
+                    'partial s.{id, vernacular_name}'
+                )
+                ->leftJoin('o.event', 'e')
+                ->leftJoin('o.individual', 'i')
+                ->leftJoin('i.species', 's');
+                
+                for ($i = 0; $i < count($selectedSpeciesIds); $i++) {
+                    if ($selectedSpeciesIds[$i] != '') {
+                        $containsValue = true;
+                        break;
+                    }
+                }
+                
+                if ($containsValue){
+                    $observationQuery
+                    ->andWhere('s.id IN (:speciesIds)')
+                    ->setParameter('speciesIds', array_unique($selectedSpeciesIds));
+                }
+              
+                if (!empty($selectedEventIds)) {
+                    $observationQuery
+                    ->andWhere('e.id IN (:eventIds)')
+                    ->setParameter('eventIds', array_unique($selectedEventIds));
+                }
+                if (!empty($selectedYears)) {
+                    $observationQuery
+                    ->andWhere('YEAR(o.date) IN (:years)')
+                    ->setParameter('years', array_unique($selectedYears));
+                }
+                
+        } catch (\Exception $exception) {
+            echo 'An error occurred --> ' . $exception->getMessage();
+        }
+       
+        return $observationQuery->getQuery()->getResult();
+    }
+
 
 }

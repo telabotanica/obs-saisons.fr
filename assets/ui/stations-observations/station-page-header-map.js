@@ -4,7 +4,7 @@ import {Location, DEFAULT_CITY_ZOOM} from "../location/location";
 domready(() => {
     const stationHeaderMap = new Location(),
         headerMap = document.getElementById('station-single-header-map');
-
+    
     if (headerMap && headerMap.classList.contains('show-map')) {
         stationHeaderMap.createLocationMap(
             {

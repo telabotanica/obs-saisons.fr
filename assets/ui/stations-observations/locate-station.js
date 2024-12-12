@@ -21,17 +21,18 @@ StationLocation.prototype.initEvts = function() {
     this.handleCoordinates();
     this.onCoordinates();
     this.initSearchLocality();
+    this.onLocation();
     // reset phenoclim warning message
     this.phenoclimWarningToggle(false);
-    this.onLocation();
     this.toggleMap();
+
 };
 
 StationLocation.prototype.handleCoordinates = function() {
-    if (!!this.latitudeEl.value && !!this.longitudeEl.value) {
+    if (!!document.getElementById('station_latitude').value && !!document.getElementById('station_longitude').value) {
         this.handleNewLocation({
-            'lat': this.latitudeEl.value,
-            'lng': this.longitudeEl.value
+            'lat': document.getElementById('station_latitude').value,
+            'lng': document.getElementById('station_longitude').value
         });
     }
 };
@@ -50,6 +51,7 @@ StationLocation.prototype.initSearchLocality = function() {
 };
 
 StationLocation.prototype.odsPlacesCallback = function(localityData) {
+
     const addressData = localityData.address,
         locationNameType = ['village', 'city', 'locality', 'municipality', 'county'].find(locationNameType => addressData[locationNameType] !== undefined);
     if(!!locationNameType) {
@@ -61,21 +63,13 @@ StationLocation.prototype.odsPlacesCallback = function(localityData) {
     }
 };
 
-
-StationLocation.prototype.onLocation = function() {
-    document.getElementById('map-container').addEventListener('location', function () {
-        this.updateCoordinatesFields();
-        this.loadLocationInfosFromOdsService();
-    }.bind(this));
-};
-
 StationLocation.prototype.updateCoordinatesFields = function() {
     //updates coordinates fields
-    this.latitudeEl.value = this.coordinates.lat;
-    this.longitudeEl.value = this.coordinates.lng;
+    document.getElementById('station_latitude').value = Math.floor(this.coordinates.lat * 1000000) / 1000000;
+    document.getElementById('station_longitude').value = Math.floor(this.coordinates.lng * 1000000) / 1000000;
 };
 
-StationLocation.prototype.loadLocationInfosFromOdsService = function() {
+StationLocation.prototype.getAltitude = async function(){
     const lthis = this,
         locality = document.getElementById('station_locality'),
         inseeCode = document.getElementById('station_inseeCode'),
@@ -85,25 +79,36 @@ StationLocation.prototype.loadLocationInfosFromOdsService = function() {
             inseeCode.parentElement.querySelector('label')
         ],
         query = {
-            'lat': this.coordinates.lat,
-            'lon': this.coordinates.lng
+            'lat': document.getElementById('station_latitude').value,
+            'lon': document.getElementById('station_longitude').value
         };
-
+        
+        
     // displays loading gif
     labels.forEach(label => label.classList.add('loading'));
-
     $.ajax({
         method: "GET",
         url: ODS_LOCATION_INFO_SERVICE_URL,
         data: query,
-        success: function (data) {
+        success: async function (data) {
             let locationInformations = JSON.parse(data);
-            console.log(locationInformations);
             lthis.phenoclimWarningToggle(locationInformations.commune_phenoclim);
             // updates location informations fields
             locality.value = locationInformations.commune;
             inseeCode.value = locationInformations.code_insee;
             altitude.value = locationInformations.alt;
+            if (lthis.coordinates == undefined){
+                lthis.coordinates = new Object();
+               
+            }
+            lthis.coordinates.lat=$('#station_latitude').val()
+            lthis.coordinates.lng=$('#station_longitude').val();
+            
+            if (locality.value){
+                const ods = new OdsPlaces();
+                await ods.searchCity(locality.value);
+                
+            }
             // stops displaying loading gif
             labels.forEach(label => label.classList.remove('loading'));
         },
@@ -138,4 +143,11 @@ StationLocation.prototype.phenoclimWarningToggle = function(isPhenoclim) {
     }
 };
 
+StationLocation.prototype.onLocation = function() {
+    document.getElementById('map-container').addEventListener('location', function () {
+        console.log('locate');
+        this.updateCoordinatesFields();
+        this.getAltitude();
+    }.bind(this));
+};
 

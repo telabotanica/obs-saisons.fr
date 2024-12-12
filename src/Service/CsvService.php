@@ -28,6 +28,7 @@ class CsvService
             // Colonnes titre du csv
             ['Observation id','Date', 'IsMissing', 'Détails', 'Date de création', 'Mise à jour', 'Date de suppression','id de l\'espèce', 'Nom vernaculaire', 'Nom scientifique', 'Type', 'Plante / Animal', 'id de l\'individu', 'Nom de l\'individu', 'Détail de l\'individu', 'stade phénologique','bbch_code','station ID', 'Nom de la station', 'Description de la station', 'Localité de la station', 'Habitat','Latitude', 'Longitude', 'Altitude', 'Code INSEE', 'Département']
         ];
+       
         // Lignes de data du csv
         foreach ($data as $ob){
             $obsDate = $ob['date'] ? $ob['date']->format('Y-m-d') : null;
@@ -35,36 +36,48 @@ class CsvService
             $createDate = $ob['createdAt'] ? $ob['createdAt']->format('Y-m-d') : null;
             $updateDate = $ob['updatedAt'] ? $ob['updatedAt']->format('Y-m-d') : null;
             $deletionDate = $ob['deletedAt'] ? $ob['deletedAt']->format('Y-m-d') : null;
-
-            $list[] = [
-                $ob['id'],
-                $obsDate,
-                $missing,
-                $ob['details'],
-                $createDate,
-                $updateDate,
-                $deletionDate,
-                $ob['individual']['species']['id'],
-                $ob['individual']['species']['vernacular_name'],
-                $ob['individual']['species']['scientific_name'],
-                $ob['individual']['species']['type']['name'],
-                $ob['individual']['species']['type']['reign'],
-                $ob['individual']['id'],
-                $ob['individual']['name'],
-                $ob['individual']['details'],
-                $ob['event']['name'],
-                $ob['event']['bbch_code'],
-                $ob['individual']['station']['id'],
-                $ob['individual']['station']['name'],
-                $ob['individual']['station']['description'],
-                $ob['individual']['station']['locality'],
-                $ob['individual']['station']['habitat'],
-                $ob['individual']['station']['latitude'],
-                $ob['individual']['station']['longitude'],
-                $ob['individual']['station']['altitude'],
-                $ob['individual']['station']['inseeCode'],
-                $ob['individual']['station']['department']
-            ];
+            if(!empty($ob['individual'])){
+                $list[] = [
+                    $ob['id'],
+                    $obsDate,
+                    $missing,
+                    $ob['details'],
+                    $createDate,
+                    $updateDate,
+                    $deletionDate,
+                    $ob['individual']['species']['id'],
+                    $ob['individual']['species']['vernacular_name'],
+                    $ob['individual']['species']['scientific_name'],
+                    $ob['individual']['species']['type']['name'],
+                    $ob['individual']['species']['type']['reign'],
+                    $ob['individual']['id'],
+                    $ob['individual']['name'],
+                    $ob['individual']['details'],
+                    $ob['event']['name'],
+                    $ob['event']['bbch_code'],
+                    $ob['individual']['station']['id'],
+                    $ob['individual']['station']['name'],
+                    $ob['individual']['station']['description'],
+                    $ob['individual']['station']['locality'],
+                    $ob['individual']['station']['habitat'],
+                    $ob['individual']['station']['latitude'],
+                    $ob['individual']['station']['longitude'],
+                    $ob['individual']['station']['altitude'],
+                    $ob['individual']['station']['inseeCode'],
+                    $ob['individual']['station']['department']
+                ];
+            }else{
+                $list[] = [
+                    $ob['id'],
+                    $obsDate,
+                    $missing,
+                    $ob['details'],
+                    $createDate,
+                    $updateDate,
+                    $deletionDate
+                ];
+            }
+            
         }
         return $this->createCsv($list, 'export_all_ods');
     }
