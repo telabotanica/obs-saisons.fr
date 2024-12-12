@@ -101,6 +101,7 @@ StationLocation.prototype.getAltitude = async function(){
                 lthis.coordinates = new Object();
                 lthis.coordinates.lat=$('#station_latitude').val()
                 lthis.coordinates.lng=$('#station_longitude').val();
+            
             }
             lthis.handleCoordinates();
 
