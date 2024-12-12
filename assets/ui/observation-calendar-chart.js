@@ -137,7 +137,7 @@ async function getDataforCalendar(){
         criteria.year=[];
     }
     let data = await retrieveData(generatedUrl(criteria));
-    console.log(data);
+   
     if(data.length > 0){
         $('#alerteCalendar').hide();
         $('#combinedYearChart').show();
