@@ -255,6 +255,7 @@ class EntityJsonSerialize
             'town_lat' => $station->getTownLatitude(),
             'town_lon' => $station->getTownLongitude(),
             'altitude' => $station->getAltitude(),
+            'isPrivate' => $station->getIsPrivate(),
             'slug' => $station->getSlug(),
         ];
     }
