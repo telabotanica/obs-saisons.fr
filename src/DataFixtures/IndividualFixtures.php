@@ -28,6 +28,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
             $individual->setDetails($faker->text(200));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $individual->setIsDead(false);
 
             $manager->persist($individual);
 
@@ -42,6 +43,7 @@ class IndividualFixtures extends Fixture implements DependentFixtureInterface
             $individual->setDetails($faker->text(200));
             $individual->setStation($this->getReference('station-'.$faker->randomDigit));
             $individual->setCreatedAt($faker->dateTimeThisDecade('now', 'Europe/Paris'));
+            $individual->setIsDead(true);
 
             $manager->persist($individual);
 
