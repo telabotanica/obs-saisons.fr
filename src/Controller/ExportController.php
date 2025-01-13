@@ -121,6 +121,20 @@ class ExportController extends AbstractController
                 'next' => $pager->hasNextPage() ? $url.'?'.http_build_query(array_merge($params, ['page' => $pager->getNextPage()])) : null,
             ],
         ];
+
+        // Anonymiser les données si la station est privée
+        foreach ($ret['data'] as &$observation) {
+            if ($observation['individual']['station']['isPrivate']) {
+                // Modifier les informations utilisateur
+                $observation['user']['id'] = 'anonyme';
+                $observation['user']['displayName'] = 'anonyme';
+
+                // Modifier les informations de la station
+                $observation['individual']['station']['lat'] = 'privée';
+                $observation['individual']['station']['lon'] = 'privée';
+            }
+        }
+        unset($observation);
       
         return new Response(
             json_encode($ret),
