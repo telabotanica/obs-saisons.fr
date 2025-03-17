@@ -100,7 +100,15 @@ class ObservationRepository extends ServiceEntityRepository
     {
         $nowYear = date('Y');
         $allObsThisYear = $this->createQueryBuilder('o')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
+            ->innerJoin('i.user', 'u')
             ->where('YEAR(o.createdAt) = :nowYear')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('i.deletedAt is null')
+            ->andWhere('s.deletedAt is null')
+            ->andWhere('u.deletedAt is null')
+            ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
             ->setParameter('nowYear', $nowYear)
             ->getQuery()
             ->getResult()
@@ -133,8 +141,14 @@ class ObservationRepository extends ServiceEntityRepository
 	{
 		$qb = $this->createQueryBuilder('o')
 			->innerJoin('o.user', 'u')
+            ->innerJoin('o.individual', 'i')
+            ->innerJoin('i.station', 's')
 			->select('count(distinct u.id)')
 			->where('YEAR(o.date) = :year')
+            ->andWhere('o.deletedAt is null')
+            ->andWhere('i.deletedAt is null')
+            ->andWhere('s.deletedAt is null')
+            ->andWhere('u.deletedAt is null')
             ->andWhere("u.email NOT IN ('admin@example.org','contact@obs-saisons.org')")
 			->setParameter('year', $year)
 			->getQuery()
@@ -521,8 +535,9 @@ class ObservationRepository extends ServiceEntityRepository
 
         return $qb
             ->innerJoin('o.user', 'u')
-            ->select('u.name as nom, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
-            ->where('YEAR(o.date) = :year')
+//            ->select('u.displayName as nom, count(o) as obs_total, count(o.deletedAt) as obs_deleted, count(o) - count(o.deletedAt) as obs_online')
+            ->select('u.email as nom, count(o) as obs_total_online')
+            ->where('YEAR(o.createdAt) = :year')
             ->setParameter('year', $year)
             ->groupBy('o.user')
             ->orderBy('count(o)', 'DESC')
