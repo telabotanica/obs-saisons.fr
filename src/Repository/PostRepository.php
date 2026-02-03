@@ -52,20 +52,18 @@ class PostRepository extends ServiceEntityRepository
 //        }
         $queryParameterSet->setParameter('val', $category);
         if (Post::CATEGORY_EVENT === $category) {
-            $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'DESC')
+            $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'ASC')
                 ->addOrderBy('p.endDate', 'DESC');
         } else {
-            $queryOrdered = $queryParameterSet->orderBy('p.createdAt', 'DESC');
+            $queryOrdered = $queryParameterSet->orderBy('p.createdAt', 'ASC');
         }
 
         $this->posts = $queryOrdered->getQuery()->getResult();
 
-        /*
         // uncomment to filter outdated events
         if (Post::CATEGORY_EVENT === $this->category) {
             $this->posts = array_filter($this->posts, 'self::filterOutdatedEventscallback');
         }
-        */
 
         return $this;
     }

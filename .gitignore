@@ -29,6 +29,9 @@ yarn-error.log
 ###< friendsofphp/php-cs-fixer ###
 
 /public/images/
+/public/IMG/
+/public/documents/
+/public/sites/
 
 ###> phpunit/phpunit ###
 /phpunit.xml

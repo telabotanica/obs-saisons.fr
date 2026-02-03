@@ -31,6 +31,10 @@
 		{%  endif %}
 	{% endfor %}
 
+	{%  if nbPosts == 0 %}
+		<h2>Aucun évènement à venir </h2>
+	{% endif %}
+
 	{% include 'components/pagination.html.twig' with {routePath: path('event_posts_list')} %}
 
 {% endblock %}
