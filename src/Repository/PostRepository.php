@@ -55,7 +55,7 @@ class PostRepository extends ServiceEntityRepository
             $queryOrdered = $queryParameterSet->addOrderBy('p.startDate', 'ASC')
                 ->addOrderBy('p.endDate', 'DESC');
         } else {
-            $queryOrdered = $queryParameterSet->orderBy('p.createdAt', 'ASC');
+            $queryOrdered = $queryParameterSet->orderBy('p.createdAt', 'DESC');
         }
 
         $this->posts = $queryOrdered->getQuery()->getResult();
