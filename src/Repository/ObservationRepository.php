@@ -42,14 +42,12 @@ class ObservationRepository extends ServiceEntityRepository
 
     public function findAllObsContributorsCountInStation(array $stationIndividuals): int
     {
-        $contributorsCount = count(
-            $this->createQueryBuilder('o')
-                ->where('o.individual IN (:individuals)')
-                ->setParameter('individuals', $stationIndividuals)
-                ->groupBy('o.user')
-                ->getQuery()
-                ->getResult()
-        );
+        $contributorsCount = (int) $this->createQueryBuilder('o')
+            ->select('COUNT(DISTINCT o.user)')
+            ->where('o.individual IN (:individuals)')
+            ->setParameter('individuals', $stationIndividuals)
+            ->getQuery()
+            ->getSingleScalarResult();
 
         // if the station exists there is at least one contributor
         if (0 >= $contributorsCount) {
@@ -96,6 +94,7 @@ class ObservationRepository extends ServiceEntityRepository
         ;
     }
 
+    //Affichage sur page accueil (date de création de l'obs)
     public function findObsCountThisYear(): int
     {
         $nowYear = date('Y');
@@ -116,7 +115,8 @@ class ObservationRepository extends ServiceEntityRepository
 
         return count($allObsThisYear);
     }
-	
+
+    //Affichage sur page résultat (date de l'obs)
 	public function findObsCountPerYear(int $year): int
 	{
 		$allObsThisYear = $this->createQueryBuilder('o')

@@ -1,0 +1,49 @@
+# Files and directories to exclude from AI context, indexing, and LLM prompts
+# Keep this list conservative: ignore generated artifacts, dependencies, caches, secrets, and user uploads.
+
+# Dependency directories
+node_modules/
+vendor/
+
+# Build and compiled assets
+public/build/
+public/assets/
+public/bundles/
+assets/build/
+dist/
+
+# Symfony caches and logs
+var/
+var/cache/
+var/log/
+.tmp/
+tmp/
+
+# Test artifacts
+coverage/
+.phpunit.result.cache
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.dist
+config/secrets/
+
+# User-generated content (large, not needed for code review)
+public/uploads/
+public/media/
+public/files/
+
+# IDE and VCS noise
+.git/
+.gitattributes
+.gitignore
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and maps
+*.log
+*.map

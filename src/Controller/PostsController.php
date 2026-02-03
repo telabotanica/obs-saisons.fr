@@ -254,6 +254,7 @@ class PostsController extends AbstractController
         return $this->render('pages/post/event-posts-list.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
             'eventPosts' => $eventPosts,
+            'nbPosts' => count($eventPosts),
             'pagination' => [
                 'currentPage' => $page,
                 'lastPage' => $lastPage,
