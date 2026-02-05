@@ -87,6 +87,45 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
             $manager->persist($eventPost);
         }
 
+        // AJOUT : Création des pages statiques
+        $pages = [
+            'a-propos' => 'À propos de l\'Observatoire des Saisons',
+            'participer' => 'Participer',
+            'outils-ressources' => 'Outils et ressources',
+            'relais' => 'Relais',
+            'aide' => 'Aide',
+            'faq' => 'FAQ',
+            'glossaire' => 'Glossaire',
+            'resultats-scientifiques' => 'Résultats scientifiques',
+            'lettres-de-printemps' => 'Lettres de printemps',
+            'resultats' => 'Résultats',
+            'outils' => 'Outils',
+            'ressources-pedagogiques' => 'Ressources pédagogiques',
+            'transmettre' => 'Transmettre',
+            'devenir-relais' => 'Devenir relais',
+            'se-former' => 'Se former',
+            'les-relais-ods' => 'Les relais ODS',
+            'ods-provence' => 'ODS Provence',
+            'ods-occitanie' => 'ODS Occitanie',
+            'mentions-legales' => 'Mentions légales',
+            'expositions' => 'Expositions',
+            'calendrier' => 'Calendrier',
+            'explorer-les-donnees' => 'Explorer les données',
+        ];
+
+        foreach ($pages as $slug => $title) {
+            $page = new Post();
+            $page->setCategory(Post::CATEGORY_PAGE);
+            $page->setSlug($slug);
+            $page->setTitle($title);
+            $page->setContent('<p>Contenu de test pour la page ' . $title . '</p>');
+            $page->setCreatedAt(new \DateTime());
+            $page->setStatus(Post::STATUS_ACTIVE);
+            $page->setAuthor($this->getReference('user-0'));
+
+            $manager->persist($page);
+        }
+
         $manager->flush();
     }
 
