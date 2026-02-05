@@ -4,12 +4,15 @@ import {Location, DEFAULT_CITY_ZOOM} from "../location/location";
 domready(() => {
     const stationHeaderMap = new Location(),
         headerMap = document.getElementById('station-single-header-map');
-    
+
     if (headerMap && headerMap.classList.contains('show-map')) {
+        const lat = headerMap.dataset.approxlocation ? Math.round(headerMap.dataset.latitude * 100) / 100 : headerMap.dataset.latitude;
+        const lng = headerMap.dataset.approxlocation ? Math.round(headerMap.dataset.longitude * 100) / 100 : headerMap.dataset.longitude;
+
         stationHeaderMap.createLocationMap(
             {
-                lat: headerMap.dataset.latitude,
-                lng: headerMap.dataset.longitude,
+                lat: lat,
+                lng: lng,
             },
             DEFAULT_CITY_ZOOM,
             'station-single-header-map',
