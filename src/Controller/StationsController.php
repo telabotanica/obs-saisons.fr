@@ -51,7 +51,9 @@ class StationsController extends AbstractController
 
         return $this->render('pages/stations.html.twig', [
             'stations' => $stationRepository->findAllPaginatedOrderedStations($page, $limit),
-            'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)->getBreadcrumbs(),
+            'breadcrumbs' => $breadcrumbsGenerator->setToRemoveFromPath('/'.$page)
+                ->setActiveTrail()
+                ->getBreadcrumbs(),
             'stationForm' => $form->createView(),
             'pagination' => [
                 'currentPage' => $page,

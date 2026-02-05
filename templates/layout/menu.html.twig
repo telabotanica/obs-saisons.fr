@@ -13,7 +13,7 @@
 
 		{% for menuItem, menuItemTitle in constant('App\\Service\\BreadcrumbsGenerator::MENU') %}
 			{#    Si l'item n'existe pas dans les sous menu -> pas de dropdown        #}
-			{% if menuItem == 'a-propos' or menuItem =='participer' or menuItem =='especes' or menuItem =='my_stations' %}
+			{% if menuItem == 'a-propos' or menuItem =='participer' or menuItem =='especes' or menuItem =='stations' %}
 				<a class="nav-item{{ 'my_stations' == menuItem ? ' featured' }}{{ activeMenuItem == menuItem ? ' active' }}"
 				   href="{{ path(menuItem) }}">
 					{{ menuItemTitle }}
@@ -21,7 +21,7 @@
 			{% else %}
 				{% if 'my_stations' != menuItem or app.user %}
 					<a class="">
-						<a class="nav-item{{ 'my_stations' == menuItem ? ' featured' }}{{ activeMenuItem == menuItem ? ' show' }} "
+						<a class="nav-item{{ 'stations' == menuItem ? ' featured' }}{{ activeMenuItem == menuItem ? ' show' }} "
 						   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							{{ menuItemTitle }}
 						</a>
