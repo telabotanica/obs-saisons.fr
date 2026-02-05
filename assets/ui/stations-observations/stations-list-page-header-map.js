@@ -34,19 +34,11 @@ const retrieveStations = (map, query) => {
                 map.cluster = L.markerClusterGroup();
 
                 data.forEach(station => {
-                    let privateIcon = '',
-                        markerColor = '#3388ff',
-                        latitude = station.latitude,
-                        longitude = station.longitude;
+                    let privateIcon = station.isPrivate ? '<div class="private-icon cadenas-icon"></div>' : '',
+                        markerColor = station.isPrivate ? '#524d4b' : '#3388ff',
+                        latitude = station.isPrivate ? Math.round(station.latitude * 10000) / 10000  : station.latitude,
+                        longitude = station.isPrivate ? Math.round(station.longitude * 10000) / 10000  : station.longitude;
 
-                    if (station.isPrivate){
-                        console.log(station)
-                        privateIcon = '<div class="private-icon cadenas-icon"></div>';
-                        markerColor = '#524d4b';
-                        latitude = station.townLatitude ? station.townLatitude : Math.round(station.latitude * 10000) / 10000;
-                        longitude = station.townLongitude ? station.townLongitude : Math.round(station.longitude * 10000) / 10000;
-
-                    }
                     const marker = L.circleMarker([latitude, longitude], {
                             renderer: renderer,
                             color: markerColor
