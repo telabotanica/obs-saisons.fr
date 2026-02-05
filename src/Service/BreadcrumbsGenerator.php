@@ -16,7 +16,7 @@ class BreadcrumbsGenerator
         'participer' => 'Comment participer',
         'especes' => 'Espèces à observer',
         /* 'calendrier' => 'Calendrier des espèces', */
-        'my_stations' => 'Saisir mes données',
+        'stations' => 'Saisir mes données',
         'resultats' => 'Résultats',
         'outils-ressources' => 'Outils & ressources',
         'relais' => 'Relais et déclinaisons',
