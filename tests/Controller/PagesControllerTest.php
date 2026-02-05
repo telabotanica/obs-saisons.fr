@@ -40,9 +40,27 @@ class PagesControllerTest extends WebTestCase
         foreach ($pages as $page) {
             $crawler = $client->request('GET', $page);
 
+            $statusCode = $client->getResponse()->getStatusCode();
+
+            // Afficher les détails si erreur 500
+            if ($statusCode === 500) {
+                echo "\n=== ERROR ON PAGE: $page ===\n";
+                echo $client->getResponse()->getContent();
+                echo "\n=========================\n";
+
+                // Optionnel : afficher les logs
+                if ($client->getProfile()) {
+                    $exception = $client->getProfile()->getCollector('exception');
+                    if ($exception && $exception->hasException()) {
+                        echo "\nException: " . $exception->getException()->getMessage() . "\n";
+                        echo $exception->getException()->getTraceAsString() . "\n";
+                    }
+                }
+            }
+
             $this->assertEquals(
                 200,
-                $client->getResponse()->getStatusCode(),
+                $statusCode,
                 sprintf('Assert page %s is StatusCode 200', $page)
             );
         }
