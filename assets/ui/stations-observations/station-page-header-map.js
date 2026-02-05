@@ -6,8 +6,8 @@ domready(() => {
         headerMap = document.getElementById('station-single-header-map');
 
     if (headerMap && headerMap.classList.contains('show-map')) {
-        const lat = headerMap.dataset.approxlocation ? Math.round(headerMap.dataset.latitude * 100) / 100 : headerMap.dataset.latitude;
-        const lng = headerMap.dataset.approxlocation ? Math.round(headerMap.dataset.longitude * 100) / 100 : headerMap.dataset.longitude;
+        const lat = headerMap.dataset.approxlocation ? Math.round(headerMap.dataset.latitude * 10000) / 10000 : headerMap.dataset.latitude;
+        const lng = headerMap.dataset.approxlocation ? Math.round(headerMap.dataset.longitude * 10000) / 10000 : headerMap.dataset.longitude;
 
         stationHeaderMap.createLocationMap(
             {
