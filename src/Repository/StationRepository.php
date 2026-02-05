@@ -84,6 +84,7 @@ class StationRepository extends ServiceEntityRepository
             ->leftJoin(Individual::class, 'i', Expr\Join::WITH, 's.id = i.station')
             ->leftJoin(Observation::class, 'o', Expr\Join::WITH, 'i.id = o.individual')
             ->addSelect('s')
+            ->addSelect('MAX(COALESCE(o.updatedAt, o.date)) as HIDDEN last_activity')
             ->groupBy('s.id')
         ;
         if ($user) {
@@ -92,7 +93,7 @@ class StationRepository extends ServiceEntityRepository
         }
 
         return $qb->andWhere('s.is_deactivated =0 OR s.is_deactivated is null')
-			->addOrderBy('s.name', 'ASC')
+			->orderBy('last_activity', 'DESC')
             ->addOrderBy('s.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
