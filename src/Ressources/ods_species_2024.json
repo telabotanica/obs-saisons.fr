@@ -34,7 +34,7 @@
     "scientific_name": "Cistus monspeliensis L.",
     "description": "Le Ciste de Montpellier est un arbrisseau de 1 à 2 mètres de haut, à port dressé, peu dense, plus grand que le Ciste cotonneux . Il est reconnaissable à son feuillage vert sombre, à son odeur musquée et à sa floraison blanche (celle du Ciste cotonneux est rose et ses feuilles sont grisâtres car recouvertes de poils denses).\nComme la plupart des autres espèces de cistes, il a tendance à s’hybrider avec des espèces voisines.\nIl n’y a pas de bourgeon écailleux, mais les ébauches de feuilles permettent de repérer les rameaux qui démarrent en automne, fin d’hiver ou début de printemps. Les boutons floraux sont alors visibles.\nSes feuilles,  d’un vert assez sombre, sont opposées, simples, rugueuses et poisseuses, elles n’ont pas de pétiole. Beaucoup plus longues que larges, elles sont entières avec le bord du limbe enroulé en dessous.\nSes fleurs (1), de 2 à 4 centimètres de diamètre, sont hermaphrodites, généralement groupées de 2 à 10 en grappes terminales. Portées par un pédoncule dressé souvent visqueux, elles présentent 5 sépales velus en forme de cœur renversé et 5 pétales blancs aplatis sur leur face extérieure\nSes fruits (2) sont globuleux, pratiquement dépourvus de poils sauf au sommet, s’ouvrant spontanément à maturité (5 loges internes) pour libérer de fines graines un peu rugueuses.",
     "type_id": "",
-    "type_name": "arbres",
+    "type_name": "herbacées",
     "bbch_list": "61, 65, 85",
     "is_active": 1,
     "picture": "ciste_de_montpellier"
@@ -54,7 +54,7 @@
     "scientific_name": "Thymus vulgaris",
     "description": "Le Thym commun, aussi appelé Farigoule, est un sous-arbrisseau d'environ 10 à 30 cm, d'un vert blanchâtre ou grisâtre, très aromatique.\nSes tiges sont ligneuses, dressées ou ascendantes, tortueuses, formant un petit buisson très serré.\nSes rameaux sont velus.\nSes feuilles sont petites, lancéolées ou linéaires, et densément couvertes de poils courts en dessous.\nSes fleurs sont rosées ou blanchâtres, en têtes globuleuses ou en épis. Le calice est velu, à tube un peu bossu en avant à la base.",
     "type_id": "",
-    "type_name": "arbres",
+    "type_name": "herbacées",
     "bbch_list": "61, 65",
     "is_active": 1,
     "picture": "thym"
