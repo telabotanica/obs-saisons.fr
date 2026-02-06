@@ -205,7 +205,7 @@ class PagesController extends AbstractController
         return $this->render('pages/static-page.html.twig', [
             'breadcrumbs' => $breadcrumbsGenerator->getBreadcrumbs(),
             'title' => 'Lettres de printemps',
-            'subtitle' => 'Chaque année, nous faisons le bilan ! Découvrez les bilans annuels de l’Observatoire des Saisons : les lettres de printemps.',
+            'subtitle' => 'Jusqu\'en 2022, nous éditions un bilan annuel sous la forme d\'une lettre de printemps. Depuis, nous proposons des actualités au fil de l\'année.',
             'page' => $page,
         ]);
     }
