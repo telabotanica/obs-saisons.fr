@@ -2,10 +2,7 @@
 
 {% set title = 'Résultats' %}
 {% set subtitle =
-    "Les scientifiques ont besoin de temps pour analyser vos données, en attendant, vous pouvez explorer et visualiser toutes les données à l’aide de <a href=#{path('explorer-les-donnees')}><strong>cartes et de graphiques dynamiques</strong></a>.<br>
-    Exportez <a href=#{path('explorer-les-donnees')}#export><strong>les données</strong></a> de l’Observatoire des Saisons.<br>
-    Accédez aux <a href=#{path('lettres-de-printemps')}><strong>lettres de printemps</strong></a> pour consulter les bilans annuels de l’Observatoire.<br>
-    Accédez aux <a href=#{path('resultats-scientifiques')}><strong>résultats scientifiques</strong></a> pour trouver les articles scientifiques et vulgarisés issus de vos observations." %}
+    "Les scientifiques ont besoin de temps pour analyser vos données, en attendant, vous pouvez explorer et visualiser toutes les données à l’aide de <strong>cartes et de graphiques dynamiques</strong>.<br>Vous pouvez également télécharger l'ensemble des données." %}
 {% set first_year = max(years|default(["now"|date("Y")])) %}
 
 {% block main_content %}
