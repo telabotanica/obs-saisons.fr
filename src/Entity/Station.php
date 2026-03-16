@@ -284,9 +284,9 @@ class Station
         return $this;
     }
 
-    public function setAltitude(string $altitude): self
+    public function setAltitude(?string $altitude): self
     {
-        $this->altitude = $altitude;
+        $this->altitude = $altitude ?? "0";
 
         return $this;
     }
