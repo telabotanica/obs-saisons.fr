@@ -6,10 +6,12 @@ when@dev:
     monolog:
         handlers:
             main:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: debug
-                channels: ["!event"]
+                level: warning
+                action_level: warning
+                channels: [ "!event" ]
+                max_files: 2
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -21,7 +23,12 @@ when@dev:
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine", "!console"]
+                channels: [ "!event", "!doctrine", "!console" ]
+            deprecation:
+                type: rotating_file
+                channels: [ deprecation ]
+                path: '%kernel.project_dir%/var/log/deprecation.log'
+                max_files: 2
 
 when@test:
     monolog:
@@ -33,9 +40,11 @@ when@test:
                 excluded_http_codes: [404, 405]
                 channels: ["!event"]
             nested:
-                type: stream
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                type: rotating_file
+                path: "%kernel.logs_dir%/var/log/error_test.log"
                 level: debug
+                formatter: monolog.formatter.json
+                max_files: 5
 
 when@prod:
     monolog:
@@ -44,22 +53,20 @@ when@prod:
                 type: fingers_crossed
                 action_level: error
                 handler: nested
-                excluded_http_codes: [404, 405]
+                excluded_http_codes: [ 404, 405 ]
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: rotating_file
-#                path: php://stderr
                 path: '%kernel.project_dir%/var/log/prod.log'
-                level: debug
+                level: error
                 formatter: monolog.formatter.json
                 max_files: 10
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
+                channels: [ "!event", "!doctrine" ]
             deprecation:
                 type: rotating_file
-                max_files: 5
-                channels: [deprecation]
-#                path: php://stderr
-                path: '%kernel.project_dir%/var/log/depreciation.log'
+                channels: [ deprecation ]
+                path: '%kernel.project_dir%/var/log/deprecation.log'
+                max_files: 2
