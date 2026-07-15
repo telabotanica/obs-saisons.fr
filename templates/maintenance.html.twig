@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Maintenance | Observatoire des Saisons</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/media/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/media/favicon/favicon-16x16.png') }}">
+    <link rel="shortcut icon" href="{{ asset('media/layout/icons/logo_ods.svg') }}" type="image/svg+xml">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<section class="global-layout">
+    <div class="pages-container">
+        <img class="logo" src="{{ asset('media/layout/icons/logo_ods.svg') }}" alt="Observatoire des Saisons">
+        <span class="leaf-icon ods-inline-block"></span>
+        <h1 class="text-primary">L'Observatoire des saisons est temporairement en maintenance</h1>
+        <p>Il sera de nouveau en ligne très prochainement.</p>
+    </div>
+</section>
+</body>
+</html>
